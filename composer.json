@@ -1,5 +1,5 @@
 {
-    "name": "blocs\/admin",
+    "name": "blocs/admin",
     "type": "library",
     "description": "A basic package for blocs",
     "keywords": [
@@ -17,7 +17,8 @@
         }
     ],
     "require": {
-        "laravel\/ui": "@dev"
+        "linear/blocs": "@dev",
+        "laravel/ui": "@dev"
     },
     "autoload": {
         "psr-4": {

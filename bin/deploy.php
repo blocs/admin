@@ -10,15 +10,15 @@ define('COMPOSER_DIR', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__
 
 $file_loc = COMPOSER_DIR.'/storage/blocs_update.json';
 if (is_file($file_loc)) {
-    $update_json_data = _decode_json($file_loc);
+    $update_json_data = json_decode(file_get_contents($file_loc), true);
 } else {
     $update_json_data = [];
 }
 
 /* Copy directory */
 
-foreach (['public', 'resource'] as $target_dir) {
-    $update_json_data = _copy_dir(COMPOSER_DIR.'/vendor/blocs/admin/'.$target_dir, $sysdocs_dir.'/'.$target_dir, $update_json_data);
+foreach (['public', 'resources'] as $target_dir) {
+    $update_json_data = _copy_dir(COMPOSER_DIR.'/vendor/blocs/admin/'.$target_dir, COMPOSER_DIR.'/'.$target_dir, $update_json_data);
     echo <<< END_of_TEXT
 Copy "{$target_dir}"
 
@@ -29,11 +29,6 @@ ksort($update_json_data);
 file_put_contents($file_loc, json_encode($update_json_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($file_loc, 0666);
 
 /* Private function */
-
-function _decode_json($file_loc)
-{
-    return is_file($file_loc) ? json_decode(file_get_contents($file_loc), true) : [];
-}
 
 function _copy_dir($dir_name, $new_dir, $update_json_data)
 {
