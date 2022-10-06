@@ -59,7 +59,7 @@ function _copy_file($original_file, $target_file, $update_json_data)
     $new_contents = file_get_contents($original_file);
 
     $file_key = substr($target_file, strlen(COMPOSER_DIR));
-    if (is_file($target_file)) {
+    if (is_file($target_file) && filesize($target_file)) {
         $target_file = str_replace(DIRECTORY_SEPARATOR, '/', realpath($target_file));
         $old_contents = file_get_contents($target_file);
         if ($new_contents === $old_contents) {

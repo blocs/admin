@@ -27,10 +27,5 @@
             "Blocs\\": "src\/",
             "Blocs\\Controllers\\": "controller\/"
         }
-    },
-    "scripts": {
-        "post-update-cmd": [
-            "php vendor/blocs/admin/bin/deploy.php"
-        ]
     }
 }
