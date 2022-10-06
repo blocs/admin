@@ -1,0 +1,38 @@
+<!-- data-bloc='pager' -->
+
+<!-- data-query=$pager_url data-val='./' data-none=$pager_url -->
+<!-- data-query=$pager_separator data-val='?' data-if="strpos($pager_url, '?') === false" -->
+<!-- data-query=$pager_separator data-val='&' data-unless="strpos($pager_url, '?') === false" -->
+
+<div class='box-footer clearfix' data-exist=$pager['total']>
+	<ul class='pagination pagination-sm no-margin pull-right'>
+
+		<li data-exist=$pager['first']>
+			<!-- data-attribute='href' data-val="{$pager_url}{$pager_separator}{$_(PAGER_ITEM_NAME)}={$pager['first']}" -->
+			<a>&laquo;</a>
+		</li>
+
+		<li data-exist=$pager['prev']>
+			<!-- data-attribute='href' data-val="{$pager_url}{$pager_separator}{$_(PAGER_ITEM_NAME)}={$pager['prev']}" -->
+			<a>&lt;</a>
+		</li>
+
+		<!-- data-attribute='class' data-val='active' data-if="$page == $pager['current']" -->
+		<li data-repeat=$pager['pages']>
+			<!-- data-attribute='href' data-val="{$pager_url}{$pager_separator}{$_(PAGER_ITEM_NAME)}={$page}" data-unless="$page == $pager['current']" -->
+			<a data-val=$page></a>
+		</li>
+
+		<li data-exist=$pager['next']>
+			<!-- data-attribute='href' data-val="{$pager_url}{$pager_separator}{$_(PAGER_ITEM_NAME)}={$pager['next']}" -->
+			<a>&gt;</a>
+		</li>
+
+		<li data-exist=$pager['last']>
+			<!-- data-attribute='href' data-val="{$pager_url}{$pager_separator}{$_(PAGER_ITEM_NAME)}={$pager['last']}" -->
+			<a>&raquo;</a>
+		</li>
+
+	</ul>
+</div>
+<!-- data-endbloc -->

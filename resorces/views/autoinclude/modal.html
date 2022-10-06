@@ -1,0 +1,169 @@
+<!-- data-bloc='modal_insert' -->
+
+<!-- 新規作成のモーダル -->
+	<!-- ボタン設定 -->
+		<!-- data-query=$modal_name data-val='modal_entry' data-none=$modal_name -->
+		<!-- data-include='button_primary' -->
+
+	<!-- モーダル設定 -->
+		<!-- data-query=$modal_action data-val='confirm.php' data-none=$modal_action -->
+		<!-- data-query=$modal_title data-notice='template:resource_blocs_modal_new_title' data-none=$modal_title -->
+		<!-- data-query=$modal_message data-notice='template:resource_blocs_modal_new_message' data-none=$modal_message -->
+
+		<!-- data-bloc='modal_button' -->
+			<!-- data-include='button_back_modal' -->
+			<!-- data-include='button_primary_modal' -->
+		<!-- data-endbloc -->
+
+		<!-- data-include='modal_confirm' -->
+
+<!-- data-endbloc -->
+
+<!-- data-bloc='modal_update' -->
+
+<!-- 更新のモーダル -->
+	<!-- ボタン設定 -->
+		<!-- data-query=$modal_name data-val='modal_update' data-none=$modal_name -->
+		<!-- data-include='button_primary' -->
+
+	<!-- モーダル設定 -->
+		<!-- data-query=$modal_action data-val='confirm.php' data-none=$modal_action -->
+		<!-- data-query=$modal_title data-notice='template:resource_blocs_modal_update_title' data-none=$modal_title -->
+		<!-- data-query=$modal_message data-notice='template:resource_blocs_modal_update_message' data-none=$modal_message -->
+
+		<!-- data-bloc='modal_button' -->
+			<!-- data-include='button_back_modal' -->
+			<!-- data-query=$button_primary_modal_label data-notice='template:resource_blocs_modal_update_button' -->
+			<!-- data-include='button_primary_modal' -->
+		<!-- data-endbloc -->
+
+		<!-- data-include='modal_confirm' -->
+
+<!-- data-endbloc -->
+
+<!-- data-bloc='modal_delete' -->
+
+<!-- 削除のモーダル -->
+	<!-- ボタン設定 -->
+		<!-- data-query=$modal_name data-val='modal_delete' data-none=$modal_name -->
+		<!-- data-include='button_danger' -->
+
+	<!-- モーダル設定 -->
+		<!-- data-query=$modal_action data-val='d_confirm.php' data-none=$modal_action -->
+		<!-- data-query=$modal_title data-notice='template:resource_blocs_modal_delete_title' data-none=$modal_title -->
+		<!-- data-query=$modal_message data-notice='template:resource_blocs_modal_delete_message' data-none=$modal_message -->
+
+		<!-- data-bloc='modal_button' -->
+			<!-- data-include='button_back_modal' -->
+			<!-- data-include='button_danger_modal' -->
+		<!-- data-endbloc -->
+
+		<!-- data-include='modal_confirm' -->
+
+<!-- data-endbloc -->
+
+<!-- data-bloc='modal_toggle' -->
+
+	<!-- data-query=$modal_name data-val='modal_toggle' data-none=$modal_name -->
+	<!-- data-query=$modal_titile_submit data-notice='template:resource_blocs_modal_activate_title' data-none=$modal_titile_submit -->
+	<!-- data-query=$modal_message_submit data-notice='template:resource_blocs_modal_activate_message' data-none=$modal_message_submit -->
+	<!-- data-query=$modal_title_warning data-notice='template:resource_blocs_modal_inactivate_title' data-none=$modal_title_warning -->
+	<!-- data-query=$modal_message_warning data-notice='template:resource_blocs_modal_inactivate_message' data-none=$modal_message_warning -->
+
+	<script type='text/javascript'>
+	$(function(){
+
+		$('button[data-target="#modal_toggle"]').on('click', function(){
+
+			var modal_toggle = $('#modal_toggle');
+			if($(this).hasClass('btn-danger') || $(this).hasClass('btn-warning')){
+				modal_toggle.find('.modal-title').text('<!-- data-val=$modal_titile_submit -->');
+				modal_toggle.find('.modal-message').text('<!-- data-val=$modal_message_submit -->');
+				modal_toggle.find('.btn-success').show();
+				modal_toggle.find('.btn-warning').hide();
+			} else {
+				modal_toggle.find('.modal-title').text('<!-- data-val=$modal_title_warning -->');
+				modal_toggle.find('.modal-message').text('<!-- data-val=$modal_message_warning -->');
+				modal_toggle.find('.btn-success').hide();
+				modal_toggle.find('.btn-warning').show();
+			}
+
+			var tr = $(this).closest('tr');
+			$(this).closest('form').attr('action', './toggle.php?id=' + tr.find('input[name$="[selected_rows][]"]:first').val());
+
+			if(tr.find('.toggle-item').length){
+				modal_toggle.find('.itemtitle').text(tr.find('.toggle-item').text());
+			}
+			modal_toggle.modal('show');
+
+		});
+
+	});
+	</script>
+
+	<!-- data-include='modal_common' -->
+
+<!-- data-endbloc -->
+
+<!-- data-bloc='modal_confirm' -->
+
+	<script type='text/javascript'>
+	$(function(){
+
+	<!-- data-exist=$modal_action -->
+		$('button[data-target="#<!-- data-val=$modal_name -->"]').on('click', function(){
+			$(this).closest('form').attr('action', './<!-- data-val=$modal_action -->');
+		});
+	<!-- data-endif -->
+
+		$('#<!-- data-val=$modal_name -->').find('button').attr('disabled', 'disabled');
+		$('#<!-- data-val=$modal_name -->').on('show.bs.modal shown.bs.modal', function () {
+			if($('.modal-notice-item').length){
+				if($('.modal-notice-item').val()){
+					$('#<!-- data-val=$modal_name -->').find('.itemtitle').text($('.modal-notice-item').val());
+				} else {
+					$('#<!-- data-val=$modal_name -->').find('.itemtitle').text($('.modal-notice-item').text());
+				}
+			}
+			$('#<!-- data-val=$modal_name -->').find('button').removeAttr('disabled');
+		});
+
+	});
+	</script>
+
+	<!-- data-include='modal_common' -->
+
+<!-- data-endbloc -->
+
+<!-- data-bloc='modal_common' -->
+
+	<!-- data-attribute='id' data-val=$modal_name -->
+	<div class='modal fade text-left'>
+		<div class='modal-dialog'>
+			<div class='modal-content'>
+				<div class='modal-header'>
+					<!-- data-include='button_close_modal' -->
+					<h4 class='modal-title' data-val=$modal_title></h4>
+				</div>
+				<div class='modal-body'>
+					<p class='modal-message' data-val=$modal_message></p>
+					<div class='itemtitle'></div>
+					<!-- data-include='modal_body' data-exist -->
+				</div>
+				<div class='modal-footer'>
+					<!-- data-include='modal_button' -->
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- data-query=$modal_name data-val='' -->
+	<!-- data-query=$modal_action data-val='' -->
+	<!-- data-query=$modal_title data-val='' -->
+	<!-- data-query=$modal_message data-val='' -->
+	<!-- data-query=$button_primary_modal_label data-val='' -->
+
+	<!-- data-bloc='modal_body' --><!-- data-endbloc -->
+	<!-- data-bloc='modal_button' --><!-- data-endbloc -->
+
+<!-- data-endbloc -->

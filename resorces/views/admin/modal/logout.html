@@ -1,0 +1,23 @@
+<!-- data-query=$modal_name data-val='modal_logout' -->
+<!-- data-query=$modal_title data-notice='template:resource_blocs_logout_title' -->
+<!-- data-query=$modal_message data-notice='template:resource_blocs_logout_message' -->
+
+<!-- data-bloc='modal_button' -->
+
+<!-- data-include='button_back_modal' -->
+<!-- data-attribute='onclick' data-val="location.href='{$_(HTTP_ADMIN_PATH)}/top_menu/logout.php'" data-convert='raw' -->
+<button type='button' class='btn btn-primary btn-lg'>
+	<span class='fa fa-sign-out'></span> <!-- data-notice='template:resource_blocs_logout_button' -->
+</button>
+
+<!-- data-endbloc -->
+
+<script type='text/javascript'>
+$(function(){
+	$('a[data-target="#<!-- data-val=$modal_name -->"]').on('click', function(){
+		$('#<!-- data-val=$modal_name -->').modal('show');
+	});
+});
+</script>
+
+<!-- data-include='modal_common' -->

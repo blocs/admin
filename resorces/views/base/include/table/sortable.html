@@ -1,0 +1,29 @@
+<script type='text/javascript'>
+$(function(){
+	$('tbody').sortable({
+		placeholder: 'ui-state-highlight',
+		cancel: '.cancel'
+	});
+});
+</script>
+
+<!-- 並び替えのモーダル -->
+	<!-- ボタン設定 -->
+		<!-- data-query=$modal_name data-val='modal_sort' -->
+		<!-- data-query=$button_primary_label data-notice='template:resource_blocs_sortable_button' -->
+		<!-- data-query=$button_primary_icon data-val='fa-sort' -->
+		<!-- data-include='button_primary' -->
+
+	<!-- モーダル設定 -->
+		<!-- data-query=$modal_action data-val='sort.php' -->
+		<!-- data-query=$modal_title data-notice='template:resource_blocs_sortable_title' -->
+		<!-- data-query=$modal_message data-notice='template:resource_blocs_sortable_message' -->
+
+		<!-- data-bloc='modal_button' -->
+			<!-- data-include='button_back_modal' -->
+			<button type='submit' onclick="$('tbody input[type=checkbox]').prop('checked', true);" class='btn btn-primary btn-lg'>
+				<span class='fa fa-sort'></span> <!-- data-notice='template:resource_blocs_sortable_button' -->
+			</button>
+		<!-- data-endbloc -->
+
+		<!-- data-include='modal_confirm' -->

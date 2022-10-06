@@ -1,0 +1,83 @@
+<?php $autocomplete_min_length = (defined('AUTOCOMPLETE_MIN_LENGTH') ? AUTOCOMPLETE_MIN_LENGTH : 0); ?>
+
+<style>
+.ui-autocomplete {
+	z-index: 99999 !important;
+}
+</style>
+
+<script type='text/javascript'>
+
+<!-- data-query=$add_json data-val=$add_json data-convert='addslashes' -->
+var ac_json = $.parseJSON('<!-- data-val=$add_json data-convert='raw' -->');
+
+$(function(){
+	$('.autocomplete').each(function(){
+		var menu_name = $(this).attr('name');
+		if(menu_name.match(/\[[0-9]+\]\[[^\[\]]+\]$/)){
+			menu_name = menu_name.match(/\[[0-9]+\]\[([^\[\]]+)\]$/);
+			menu_name = menu_name[1];
+		}
+		if (typeof ac_json[menu_name] != 'undefined') {
+			$(this).autocomplete({
+				source: ac_json[menu_name],
+				minLength:<!-- data-val=$autocomplete_min_length -->
+			});
+		}
+	});
+});
+
+</script>
+
+<!-- data-bloc='autocomplete_update_json' -->
+if(trigger_val){
+
+	$.getJSON('./<!-- data-val=$autocomplete_target -->.php?<!-- data-val=$autocomplete_trigger -->=' + encodeURIComponent(trigger_val), function(json){
+
+		var menu_name = '<!-- data-val=$autocomplete_target -->';
+		ac_json[menu_name] = json;
+
+		$('input[name=<!-- data-val=$autocomplete_target -->]').autocomplete({
+			source: ac_json[menu_name],
+			minLength:<!-- data-val=$autocomplete_min_length -->
+		});
+
+	});
+
+}
+<!-- data-endbloc -->
+
+<!-- data-bloc='autocomplete_select_text' -->
+<script type='text/javascript'>
+
+$(function() {
+	$('select[name=<!-- data-val=$autocomplete_trigger -->]').change(function( event, ui ){
+		var trigger_val = $('select[name=<!-- data-val=$autocomplete_trigger -->]').val();
+		<!-- data-include='autocomplete_update_json' -->
+	}).change();
+});
+
+</script>
+<!-- data-endbloc -->
+
+<!-- data-bloc='autocomplete_text_text' -->
+<script type='text/javascript'>
+
+$(function() {
+
+	$('input[name=<!-- data-val=$autocomplete_trigger -->]').autocomplete({
+		change: function( event, ui ){
+			var trigger_val = $('input[name=<!-- data-val=$autocomplete_trigger -->]').val();
+			<!-- data-include='autocomplete_update_json' -->
+		},
+		source: ac_json['<!-- data-val=$autocomplete_trigger -->'],
+		minLength:<!-- data-val=$autocomplete_min_length -->
+	});
+
+	var trigger_val = $('input[name=<!-- data-val=$autocomplete_trigger -->]').val();
+	<!-- data-include='autocomplete_update_json' -->
+
+});
+
+</script>
+<!-- data-endbloc -->

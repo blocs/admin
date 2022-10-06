@@ -1,0 +1,30 @@
+{
+    "name": "blocs\/admin",
+    "type": "library",
+    "description": "A basic package for blocs",
+    "keywords": [
+        "PHP",
+        "Package",
+        "Blocs",
+        "Laravel"
+    ],
+    "license": "LGPL",
+    "authors": [
+        {
+            "name": "LINEAR JAPAN Co.,Ltd.",
+            "email": "admin@linear-jp.biz",
+            "role": "Lead Developer"
+        }
+    ],
+    "require": {
+        "laravel\/ui": "@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Linear\\Blocs\\": "lib\/",
+            "Linear\\Blocs\\Model\\": "model\/",
+            "Blocs\\": "src\/",
+            "Blocs\\Controllers\\": "controller\/"
+        }
+    }
+}

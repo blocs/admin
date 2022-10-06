@@ -1,0 +1,29 @@
+<script type='text/javascript'>
+var query_urlencode = true;
+$(function(){
+  $('form').on('submit', function(){
+    if ($(this).find('.formError').length) {
+      return false;
+    }
+    var select_val = [];
+    $(this).find('select').each(function(){
+      select_val.push($(this).val());
+    });
+    var form_clone = $(this).clone();
+    form_clone.find('select').each(function(){
+      $(this).val(select_val.shift());
+    });
+    form_clone.find('input, textarea').each(function(){
+      if ($(this).attr('name') === undefined || ($(this).attr('type') !== undefined && ['radio', 'checkbox'].includes($(this).attr('type')))) {
+        return;
+      }
+      $(this).attr('name', '_encode_' + $(this).attr('name'));
+      $(this).val(window.btoa(encodeURIComponent($(this).val())));
+    });
+    form_clone.css('display', 'none');
+    form_clone.appendTo(document.body);
+    form_clone.submit();
+    return false;
+  });
+});
+</script>

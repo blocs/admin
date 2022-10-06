@@ -1,0 +1,16 @@
+<script type='text/javascript' src='/js/jquery/select2.min.js'></script>
+<link rel='stylesheet' href='/css/select2.min.css' />
+<link rel='stylesheet' href='/css/select2-bootstrap.min.css' />
+
+<script type='text/javascript'>
+
+$(function() {
+	$('.multiselect').each(function(){
+		$(this).select2({
+			theme: 'bootstrap',
+			language: { 'noResults': function(){ return '<!-- data-notice='template:resource_blocs_multiselect_no_candidate' -->'; } }
+		});
+	});
+});
+
+</script>

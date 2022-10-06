@@ -1,0 +1,352 @@
+<!-- data-none=$autoload_noscript -->
+<link rel='stylesheet' href='/css/jquery.jqplot.min.css' />
+
+<script type='text/javascript' src='/js/jquery/jqplot/jquery.jqplot.min.js'></script>
+<!-- data-endnone -->
+
+<!-- data-bloc='jqplot_pie_chart' -->
+<!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
+
+<script type='text/javascript' src='/js/jquery/jqplot/plugins/jqplot.pieRenderer.js'></script>
+<script type='text/javascript'>
+Promise.all([
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.pieRenderer.js')})()
+]).then(values => {
+  <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
+  var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
+
+  var option = {
+    series:[
+      { renderer:$.jqplot.PieRenderer, rendererOptions: {
+        padding: 15,
+        dataLabels: 'percent',
+        showDataLabels: true
+      } }
+    ],
+    legend:{
+      show: true,
+      location: 'e'
+    }
+  };
+
+  var jqplot;
+  function refresh_plot(){
+    if(jqplot){ jqplot.destroy(); }
+    jqplot = $.jqplot('<!-- data-val=$graph_id -->', json_data, option);
+<!-- data-exist=$graph_click_function -->
+    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graph_click_function -->]);
+    jqplot.replot();
+<!-- data-endexist -->
+  }
+
+  refresh_plot();
+  $(window).bind('load', function(e){ refresh_plot(); });
+  $(window).bind('resize', function(e){ refresh_plot(); });
+
+});
+</script>
+<!-- data-endbloc -->
+
+<!-- data-bloc='jqplot_1bar_1line' -->
+<!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
+
+<script type='text/javascript'>
+Promise.all([
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.js')})(),
+  <!-- data-exist=$graph_xaxis_angle -->
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.canvasTextRenderer.js')})(),
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.js')})(),
+  <!-- data-endexist -->
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.barRenderer.js')})(),
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.pointLabels.js')})()
+]).then(values => {
+
+  <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
+  var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
+
+  var option = {
+    series:[
+      { label:'<!-- data-val=$graph_legend_bar_1 -->', color:'#FFC300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
+      { label:'<!-- data-val=$graph_legend_line_1 -->', color:'#21B0FF', yaxis: 'y2axis', pointLabels: { show: true } }
+    ],
+    legend:{
+      show: true,
+      placement: 'insideGrid',
+      location: 'ne'
+    },
+    grid:{
+      gridLineColor: '#BFDBE5',
+      background: '#F2FAFF',
+      borderColor: '#798A9A'
+    },
+    axesDefaults:{
+      tickOptions:{
+        formatString: "%d",
+        textColor: "#0051AD"
+      }
+    },
+    axes:{
+      xaxis: {
+        renderer: $.jqplot.CategoryAxisRenderer
+        <!-- data-exist=$graph_xaxis_angle -->
+        ,
+            tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+        tickOptions:{
+          angle: <!-- data-val=$graph_xaxis_angle -->
+        }
+        <!-- data-endexist -->
+      },
+      yaxis: {
+                ticks: <?php
+  echo(json_encode([0, intval($graph_yaxis_max/5*1), intval($graph_yaxis_max/5*2), intval($graph_yaxis_max/5*3), intval($graph_yaxis_max/5*4), intval($graph_yaxis_max)]));
+?>
+      },
+      y2axis: {
+                ticks: <?php
+  echo(json_encode([0, intval($graph_y2axis_max/5*1), intval($graph_y2axis_max/5*2), intval($graph_y2axis_max/5*3), intval($graph_y2axis_max/5*4), intval($graph_y2axis_max)]));
+?>
+      }
+    }
+  };
+
+  var jqplot;
+  function refresh_plot(){
+    if(jqplot){ jqplot.destroy(); }
+    jqplot = $.jqplot('<!-- data-val=$graph_id -->', json_data, option);
+<!-- data-exist=$graph_click_function -->
+    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graph_click_function -->]);
+    jqplot.replot();
+<!-- data-endexist -->
+  }
+
+  refresh_plot();
+  $(window).bind('load', function(e){ refresh_plot(); });
+  $(window).bind('resize', function(e){ refresh_plot(); });
+
+});
+</script>
+<!-- data-endbloc -->
+
+<!-- data-bloc='jqplot_2bar_1line' -->
+<!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
+<script type='text/javascript'>
+Promise.all([
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.js')})(),
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.canvasTextRenderer.js')})(),
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.js')})(),
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.barRenderer.js')})(),
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.pointLabels.js')})()
+]).then(values => {
+  <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
+  var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
+
+  var option = {
+    series:[
+      { label:'<!-- data-val=$graph_legend_bar_1 -->', color:'#FFC300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
+      { label:'<!-- data-val=$graph_legend_bar_2 -->', color:'#77D300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
+      { label:'<!-- data-val=$graph_legend_line_1 -->', color:'#21B0FF', yaxis: 'y2axis', pointLabels: { show: true } }
+    ],
+    legend:{
+      show: true,
+      placement: 'insideGrid',
+      location: 'ne'
+    },
+    grid:{
+      gridLineColor: '#BFDBE5',
+      background: '#F2FAFF',
+      borderColor: '#798A9A'
+    },
+    axesDefaults:{
+      tickOptions:{
+        formatString: "%d",
+        textColor: "#0051AD"
+      }
+    },
+    axes:{
+      xaxis: {
+        renderer: $.jqplot.CategoryAxisRenderer
+        <!-- data-exist=$graph_xaxis_angle -->
+        ,
+            tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+        tickOptions:{
+          angle: <!-- data-val=$graph_xaxis_angle -->
+        }
+        <!-- data-endexist -->
+      },
+      yaxis: {
+                ticks: <?php
+  echo(json_encode([0, intval($graph_yaxis_max/5*1), intval($graph_yaxis_max/5*2), intval($graph_yaxis_max/5*3), intval($graph_yaxis_max/5*4), intval($graph_yaxis_max)]));
+  ?>
+      },
+      y2axis: {
+                ticks: <?php
+  echo(json_encode([0, intval($graph_y2axis_max/5*1), intval($graph_y2axis_max/5*2), intval($graph_y2axis_max/5*3), intval($graph_y2axis_max/5*4), intval($graph_y2axis_max)]));
+  ?>
+      }
+    }
+  };
+
+  var jqplot;
+  function refresh_plot(){
+    if(jqplot){ jqplot.destroy(); }
+    jqplot = $.jqplot('<!-- data-val=$graph_id -->', json_data, option);
+  <!-- data-exist=$graph_click_function -->
+    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graph_click_function -->]);
+    jqplot.replot();
+  <!-- data-endexist -->
+  }
+
+  refresh_plot();
+  $(window).bind('load', function(e){ refresh_plot(); });
+  $(window).bind('resize', function(e){ refresh_plot(); });
+});
+</script>
+<!-- data-endbloc -->
+
+<!-- data-bloc='jqplot_1bar_2line' -->
+<!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
+
+<script type='text/javascript'>
+Promise.all([
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.js')})(),
+  <!-- data-exist=$graph_xaxis_angle -->
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.canvasTextRenderer.js')})(),
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.js')})(),
+  <!-- data-endexist -->
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.barRenderer.js')})(),
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.pointLabels.js')})()
+]).then(values => {
+  <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
+  var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
+
+  var option = {
+    series:[
+      { label:'<!-- data-val=$graph_legend_bar_1 -->', color:'#FFC300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
+      { label:'<!-- data-val=$graph_legend_line_1 -->', color:'#21B0FF', yaxis: 'y2axis', pointLabels: { show: true } },
+      { label:'<!-- data-val=$graph_legend_line_2 -->', color:'#77D300', yaxis: 'y2axis', pointLabels: { show: true } }
+    ],
+    legend:{
+      show: true,
+      placement: 'insideGrid',
+      location: 'ne'
+    },
+    grid:{
+      gridLineColor: '#BFDBE5',
+      background: '#F2FAFF',
+      borderColor: '#798A9A'
+    },
+    axesDefaults:{
+      tickOptions:{
+        formatString: "%d",
+        textColor: "#0051AD"
+      }
+    },
+    axes:{
+      xaxis: {
+        renderer: $.jqplot.CategoryAxisRenderer
+        <!-- data-exist=$graph_xaxis_angle -->
+        ,
+            tickRenderer: $.jqplot.CanvasAxisTickRenderer,
+        tickOptions:{
+          angle: <!-- data-val=$graph_xaxis_angle -->
+        }
+        <!-- data-endexist -->
+      },
+      yaxis: {
+                ticks: <?php
+  echo(json_encode([0, intval($graph_yaxis_max/5*1), intval($graph_yaxis_max/5*2), intval($graph_yaxis_max/5*3), intval($graph_yaxis_max/5*4), intval($graph_yaxis_max)]));
+?>
+      },
+      y2axis: {
+                ticks: <?php
+  echo(json_encode([0, intval($graph_y2axis_max/5*1), intval($graph_y2axis_max/5*2), intval($graph_y2axis_max/5*3), intval($graph_y2axis_max/5*4), intval($graph_y2axis_max)]));
+?>
+      }
+    }
+  };
+
+  var jqplot;
+  function refresh_plot(){
+    if(jqplot){ jqplot.destroy(); }
+    jqplot = $.jqplot('<!-- data-val=$graph_id -->', json_data, option);
+<!-- data-exist=$graph_click_function -->
+    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graph_click_function -->]);
+    jqplot.replot();
+<!-- data-endexist -->
+  }
+
+  refresh_plot();
+  $(window).bind('load', function(e){ refresh_plot(); });
+  $(window).bind('resize', function(e){ refresh_plot(); });
+
+});
+</script>
+<!-- data-endbloc -->
+
+<!-- data-bloc='jqplot_2bar_2line' -->
+<!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
+<script type='text/javascript'>
+Promise.all([
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.min.js')})(),
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.barRenderer.min.js')})(),
+  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.pointLabels.min.js')})()
+]).then(values => {
+  var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
+
+  var option = {
+    series:[
+      { label:'<!-- data-val=$graph_legend_bar_1 -->', color:'#FFC300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
+      { label:'<!-- data-val=$graph_legend_bar_2 -->', color:'#77D300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
+      { label:'<!-- data-val=$graph_legend_line_1 -->', color:'#21B0FF', yaxis: 'y2axis', pointLabels: { show: true } },
+      { label:'<!-- data-val=$graph_legend_line_2 -->', color:'#F09199', yaxis: 'y2axis', pointLabels: { show: true } }
+    ],
+    legend:{
+      show: true,
+      placement: 'insideGrid',
+      location: 'ne'
+    },
+    grid:{
+      gridLineColor: '#BFDBE5',
+      background: '#F2FAFF',
+      borderColor: '#798A9A'
+    },
+    axesDefaults:{
+      tickOptions:{
+        formatString: "%d",
+        textColor: "#0051AD"
+      }
+    },
+    axes:{
+      xaxis: {
+        renderer: $.jqplot.CategoryAxisRenderer
+      },
+      yaxis: {
+                ticks: <?php
+  echo(json_encode([0, intval($graph_yaxis_max/5*1), intval($graph_yaxis_max/5*2), intval($graph_yaxis_max/5*3), intval($graph_yaxis_max/5*4), intval($graph_yaxis_max)]));
+?>
+      },
+      y2axis: {
+                ticks: <?php
+  echo(json_encode([0, intval($graph_y2axis_max/5*1), intval($graph_y2axis_max/5*2), intval($graph_y2axis_max/5*3), intval($graph_y2axis_max/5*4), intval($graph_y2axis_max)]));
+?>
+      }
+    }
+  };
+
+  var jqplot;
+  function refresh_plot(){
+    if(jqplot){ jqplot.destroy(); }
+    jqplot = $.jqplot('<!-- data-val=$graph_id -->', json_data, option);
+<!-- data-exist=$graph_click_function -->
+    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graph_click_function -->]);
+    jqplot.replot();
+<!-- data-endexist -->
+  }
+
+  refresh_plot();
+  $(window).bind('load', function(e){ refresh_plot(); });
+  $(window).bind('resize', function(e){ refresh_plot(); });
+
+});
+</script>
+<!-- data-endbloc -->

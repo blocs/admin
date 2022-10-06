@@ -1,0 +1,29 @@
+<!-- data-repeat=$files -->
+<!-- data-attribute='data-filename' data-val=$filename -->
+<tr>
+	<!-- data-attribute='width' data-val="{$_(FILE_UPLOAD_THUMBNAIL_WIDTH)}" -->
+	<td data-if="isset($image) && 'true' == $image">
+		<span class='preview'>
+			<!-- data-attribute='href' data-val="./filedownload.php?name={$filename}" -->
+			<a target='_blank'>
+				<!-- data-attribute='src' data-val="./filedownload.php?name={$filename}&thumbnail" -->
+				<img />
+			</a>
+		</span>
+	</td>
+	<!-- data-attribute="colspan" data-val="2" data-unless="isset($image) && 'true' == $image" -->
+	<td>
+		<!-- data-attribute='href' data-val=$filename -->
+		<div class='name'>
+			<!-- data-attribute='href' data-val="./filedownload.php?name={$filename}" -->
+			<a data-val=$name target='_blank'></a>
+		</div>
+		<span class='size' data-val=$size data-convert='filesize'></span>
+	</td>
+	<td width='50'>
+		<a class="btn btn-warning cancel" href="#" role="button">
+			<i class='fa fa-ban'></i>
+		</a>
+	</td>
+</tr>
+<!-- data-endrepeat -->

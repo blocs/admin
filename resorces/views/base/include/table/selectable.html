@@ -1,0 +1,41 @@
+<script type='text/javascript'>
+
+function _select_all(ele) {
+	var icon = $(ele).find('span');
+	var table = $(ele).closest('div').find('table');
+	if(icon.hasClass('fa-check-square')) {
+		icon.addClass('fa-square').removeClass('fa-check-square');
+		table.find('tbody tr').removeClass('danger');
+		table.find('input[type=checkbox]').prop('checked', false);
+	}
+	else {
+		icon.addClass('fa-check-square').removeClass('fa-square');
+		table.find('tbody tr').addClass('danger');
+		table.find('input[type=checkbox]').prop('checked', true);
+	}
+}
+
+$(function(){
+	$('tbody tr').on('click', function(){
+		var check = $(this).find('input[type=checkbox]');
+		if(check.is(':checked')){
+			$(this).removeClass('danger');
+			check.prop('checked', false);
+		}
+		else if(check.length){
+			$(this).addClass('danger');
+			check.prop('checked', true);
+		}
+	});
+	$('tbody tr a, tbody tr button, tbody tr input').on('click', function(ev){
+		ev.stopPropagation();
+	});
+});
+
+</script>
+
+<!-- data-bloc='button_select_all' -->
+<button onclick='_select_all(this);' type='button' class='btn btn-default pull-right'><!-- data-notice='template:resource_blocs_selectable_all' --> 
+	<span class='far fa-square'></span>
+</button>
+<!-- data-endbloc -->

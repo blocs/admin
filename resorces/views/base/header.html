@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang='ja'>
+	<head>
+
+		<meta charset='utf-8'>
+		<meta name='viewport' content='width=device-width, initial-scale=1,user-scalable=no'>
+
+		<title>
+			<!-- data-val=$navi['current']['label'] data-postfix=' | ' -->BLOCS
+		</title>
+
+		<link type='image/x-icon' href='/favicon.ico' rel='shortcut icon'>
+		<link type='image/x-icon' href='/favicon.ico' rel='icon'>
+
+<!-- data-include='include/header/css_script.html' -->
+<!-- data-include='autoinclude' -->
+
+	</head>
+	<body class='response'>
+
+		<div id='sidr_overlay'></div>
+
+		<a id='pagetop'> </a>
+
+<!-- data-include='include/header/top_menu.html' -->
+
+		<div id='all'>
+			<div id='layout' class='container'>
+
+				<div id='maincontents'>
+
+<!-- data-include='include/header/side_menu.html' -->
+
+					<h1 data-exist=$navi['breadcrumb']>
+						<!-- data-attribute='class' data-val=$navi['current']['icon'] data-prefix='fa fa-fw ' -->
+						<i></i> <!-- data-val=$navi['current']['label'] -->
+						<small data-if="$navi['breadcrumb'][0]['level'] && !empty($navi['breadcrumb'][0]['label']) && $navi['breadcrumb'][0]['label'] != $navi['current']['label']"> |
+							<!-- data-val=$navi['breadcrumb'][0]['label'] -->
+						</small>
+					</h1>
+
+					<div id='inmaincontents'>
+
+<!-- data-if="isset($notice_category) && !isset($notice_form)" -->
+	<div class='alert alert-danger alert-dismissable' data-if="$notice_category === 'error'">
+		<!-- data-include='button_close' -->
+		<span data-val=$notice_message></span>
+	</div>
+
+	<div class='alert alert-warning alert-dismissable' data-if="$notice_category === 'warning'">
+		<!-- data-include='button_close' -->
+		<span data-val=$notice_message></span>
+	</div>
+
+	<div class='alert alert-success alert-dismissable' data-if="$notice_category === 'success'">
+		<!-- data-include='button_close' -->
+		<span data-val=$notice_message></span>
+	</div>
+
+	<div class='alert alert-info alert-dismissable' data-if="$notice_category === 'info'">
+		<!-- data-include='button_close' -->
+		<span data-val=$notice_message></span>
+	</div>
+<!-- data-endif -->
+
+<!-- data-bloc='search_form' -->
+<!-- data-query=$search_filter_exists data-val=1 data-if="!empty($search) || !empty($search_filter_exists)" -->
+<!-- data-exist=$search_filter_exists -->
+<script type="text/javascript">
+$(function(){
+	$('form[role=search]').find('button.clear').on('click', function(){
+		$(this).closest('form[role=search]').find('input[type!="hidden"], select').each(function(){
+			$(this).val('');
+		});
+	});
+});
+</script>
+<!-- data-endexist -->
+
+<form action='./' method='post' role='search'>
+	<div class='box'>
+<!-- data-include='search_filter_before' data-exist -->
+		<div class='input-group mt5'>
+			<span class='input-group-btn'>
+				<button class='btn btn-default' type='submit'>
+					<i class='fa fa-search'></i>
+				</button>
+			</span>
+			<!-- data-attribute='placeholder' data-val=$search_placeholder -->
+			<input type='text' name='search' class='form-control' value='' />
+			<span class='input-group-btn'>
+				<button class='btn btn-default clear' type='submit' data-exist=$search_filter_exists>
+					<i class='fa fa-ban'></i>
+				</button>
+			</span>
+		</div>
+<!-- data-include='search_filter_after' data-exist -->
+	</div>
+</form>
+<!-- data-endbloc -->
