@@ -40,7 +40,7 @@
                         </div>
 
                         <div id='loginarea'>
-                            <form method='post' class='form-horizontal' role='form' action="/confirm">
+                            <form method='post' class='form-horizontal' role='form' action="{{ route('login') }}">
                                 @csrf
                                 <div class='form-group'>
                                     <label for='user_id' class='col-sm-4 control-label'><!-- data-lang='template:admin_login_user_id' --></label>
