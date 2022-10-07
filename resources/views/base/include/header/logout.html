@@ -5,11 +5,13 @@
 <!-- data-bloc='modal_button' -->
 
 <!-- data-include='button_back_modal' -->
-<!-- data-attribute='onclick' data-val="location.href='/logout'" data-convert='raw' -->
-<button type='button' class='btn btn-primary btn-lg'>
+<button type='button' class='btn btn-primary btn-lg' onclick="document.getElementById('logout-form').submit();">
 	<span class='fa fa-sign-out'></span> <!-- data-lang='template:resource_blocs_logout_button' -->
 </button>
 
+<form id="logout-form" action="{{ route('logout') }}" method="post">
+	@csrf
+</form>
 <!-- data-endbloc -->
 
 <script type='text/javascript'>
