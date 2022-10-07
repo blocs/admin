@@ -39,6 +39,11 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    protected function loggedOut(Request $request)
+    {
+        return redirect('/login');
+    }
+
     protected function validateLogin(Request $request)
     {
         list($validate, $message) = \Blocs\Validate::get('auth.login');
