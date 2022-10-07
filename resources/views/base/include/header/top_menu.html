@@ -1,44 +1,5 @@
 <!-- data-query=$develop_flg data-val=1 data-unless="isset($navi['not_permit']) && in_array('/admin/top_menu/error.php', $navi['not_permit'])" -->
 
-<script type='text/javascript'>
-$(function(){
-
-	$.ajaxSetup({
-		cache: false
-	});
-
-<!-- data-exist=$develop_flg -->
-	$.getJSON('<!-- data-val="{$_(HTTP_ADMIN_PATH)}" -->/top_menu/error/number.php', function(json){
-		$('#error_number').text(json);
-	});
-<!-- data-endexist -->
-
-<!-- data-if="!empty($develop_flg) && function_exists('xdebug_start_code_coverage') && !defined('LINEAR_TEST_DIR')" -->
-	<!-- data-query=$route_controller data-val="/controller{$_(ROUTE_CONTROLLER)}" data-convert='urlencode' data-unless="defined('ROUTE_CONTROLLER') && ROUTE_CONTROLLER == '/develop/test.php' && ROUTE_METHOD == 'detail' && isset($id)" -->
-	<!-- data-query=$route_controller data-val=$id data-convert='urlencode' data-if="defined('ROUTE_CONTROLLER') && ROUTE_CONTROLLER == '/develop/test.php' && ROUTE_METHOD == 'detail' && isset($id)" -->
-
-<?php
-	$to_test = \Linear\Base\Model\Common::get_relative_path('/develop/test.php', 'index');
-?>
-
-	$.getJSON('<!-- data-val="{$to_test}number.php?id={$route_controller}" -->', function(json){
-		$('#test_number').text(json);
-	});
-<!-- data-endif -->
-
-	$.getJSON('<!-- data-val="{$_(HTTP_ADMIN_PATH)}" -->/top_menu/message/number.php', function(json){
-		$('#message_number').text(json);
-	});
-
-<!-- data-unless="defined('LINEAR_PRODUCTION_FLAG') && LINEAR_PRODUCTION_FLAG" -->
-	$.getJSON('<!-- data-val="{$_(HTTP_ADMIN_PATH)}" -->/top_menu/note/number.php', function(json){
-		$('#note_number').text(json);
-	});
-<!-- data-endif -->
-
-});
-</script>
-
 <!-- data-query=$modal_name data-val='modal_message_send' -->
 <!-- data-include='../show_modal.html' -->
 
@@ -50,7 +11,7 @@ $(function(){
 			<div class='clearfix'>
 				<div id='hlogo'>
 					<h1>
-						<!-- data-attribute='href' data-val="{$_(HTTP_ADMIN_PATH)}/" -->
+						<!-- data-attribute='href' data-val="/" -->
 						<a>BLOCS</a>
 					</h1>
 					<!-- end of id(logo) -->
@@ -63,60 +24,8 @@ $(function(){
 						<li id='huser'>
 							<span data-val=$auth_name></span>
 						</li>
-						<li id='hmenu' data-exist=$develop_flg>
-							<i class='fa fa-lg fa-bullseye text-danger' data-if="defined('LINEAR_TEST_DIR')"></i>
-							<i class='fa fa-lg fa-clock text-danger' data-if="is_file(TEMPLATE_CACHE_DIR.'/_develop_benchmark_start')"></i>
-
-							<!-- data-attribute='href' data-val="{$_(HTTP_ADMIN_PATH)}/top_menu/error/" -->
-							<a>
-								<i class='fa fa-lg fa-exclamation-triangle'></i>
-							</a>
-							<!-- data-attribute='href' data-val="{$_(HTTP_ADMIN_PATH)}/top_menu/error/" -->
-							<a>
-								<span class='badgewrap'>
-									<span class='badge' id='error_number'>-</span>
-								</span>
-							</a>
-						</li>
-						<li data-if="!empty($develop_flg) && function_exists('xdebug_start_code_coverage') && !defined('LINEAR_TEST_DIR')">
-							<!-- data-attribute='href' data-val="{$to_test}" -->
-							<a>
-								<i class='fa fa-lg fa-bug'></i>
-							</a>
-							<!-- data-attribute='href' data-val="{$to_test}detail.php?id={$route_controller}" -->
-							<a>
-								<span class='badgewrap'>
-									<span class='badge' id='test_number'>-</span>
-								</span>
-							</a>
-						</li>
-						<!-- data-attribute='id' data-val='hmenu' data-none=$develop_flg -->
 						<li>
-							<!-- data-attribute='data-url' data-val="{$_(HTTP_ADMIN_PATH)}/top_menu/message/modal_send.php" -->
-							<a data-target='#modal_message_send'>
-								<i class='fa fa-lg fa-comments'></i>
-							</a>
-							<!-- data-attribute='href' data-val="{$_(HTTP_ADMIN_PATH)}/top_menu/message/" -->
-							<a>
-								<span class='badgewrap'>
-									<span class='badge' id='message_number'>-</span>
-								</span>
-							</a>
-						</li>
-						<li data-unless="defined('LINEAR_PRODUCTION_FLAG') && LINEAR_PRODUCTION_FLAG">
-							<!-- data-attribute='href' data-val="{$_(HTTP_ADMIN_PATH)}/top_menu/note/" -->
-							<a>
-								<i class='fa fa-lg fa-sticky-note'></i>
-							</a>
-							<!-- data-attribute='href' data-val="{$_(HTTP_ADMIN_PATH)}/top_menu/note/" -->
-							<a>
-								<span class='badgewrap'>
-									<span class='badge' id='note_number'>-</span>
-								</span>
-							</a>
-						</li>
-						<li>
-							<!-- data-attribute='href' data-val="{$_(HTTP_ADMIN_PATH)}/top_menu/profile/" data-exist=$auth_id -->
+							<!-- data-attribute='href' data-val="/profile" -->
 							<a>
 								<i class='fa fa-lg fa-cog'></i>
 							</a>
@@ -140,7 +49,7 @@ $(function(){
 
 			<!-- data-attribute='style' data-val='background: none' data-none=$navi['breadcrumb'][0]['level'] -->
 			<li>
-				<!-- data-attribute='href' data-val="{$_(HTTP_ADMIN_PATH)}/" -->
+				<!-- data-attribute='href' data-val="/" -->
 				<a href='/'><!-- data-notice='template:resource_blocs_top_menu_top' --></a>
 			</li>
 

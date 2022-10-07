@@ -10,7 +10,7 @@
 <script type='text/javascript' src='/js/jquery/jqplot/plugins/jqplot.pieRenderer.js'></script>
 <script type='text/javascript'>
 Promise.all([
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.pieRenderer.js')})()
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.pieRenderer.js')})()
 ]).then(values => {
   <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
   var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
@@ -52,13 +52,13 @@ Promise.all([
 
 <script type='text/javascript'>
 Promise.all([
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.js')})(),
   <!-- data-exist=$graph_xaxis_angle -->
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.canvasTextRenderer.js')})(),
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.canvasTextRenderer.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.js')})(),
   <!-- data-endexist -->
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.barRenderer.js')})(),
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.pointLabels.js')})()
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.barRenderer.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.pointLabels.js')})()
 ]).then(values => {
 
   <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
@@ -131,11 +131,11 @@ Promise.all([
 <!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
 <script type='text/javascript'>
 Promise.all([
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.js')})(),
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.canvasTextRenderer.js')})(),
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.js')})(),
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.barRenderer.js')})(),
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.pointLabels.js')})()
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.canvasTextRenderer.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.barRenderer.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.pointLabels.js')})()
 ]).then(values => {
   <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
   var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
@@ -208,13 +208,13 @@ Promise.all([
 
 <script type='text/javascript'>
 Promise.all([
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.js')})(),
   <!-- data-exist=$graph_xaxis_angle -->
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.canvasTextRenderer.js')})(),
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.canvasTextRenderer.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.js')})(),
   <!-- data-endexist -->
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.barRenderer.js')})(),
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.pointLabels.js')})()
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.barRenderer.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.pointLabels.js')})()
 ]).then(values => {
   <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
   var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
@@ -287,9 +287,9 @@ Promise.all([
 <!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
 <script type='text/javascript'>
 Promise.all([
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.min.js')})(),
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.barRenderer.min.js')})(),
-  (async () => {await import('<!-- data-val="{$_(HTTP_RESOURCE_PATH)}" -->/js/jquery/jqplot/plugins/jqplot.pointLabels.min.js')})()
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.min.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.barRenderer.min.js')})(),
+  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.pointLabels.min.js')})()
 ]).then(values => {
   var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
 
