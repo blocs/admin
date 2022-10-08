@@ -27,5 +27,10 @@
             "Blocs\\": "src\/",
             "Blocs\\Controllers\\": "controller\/"
         }
+    },
+    "scripts": {
+        "post-package-install": [
+            "php vendor/blocs/admin/bin/deploy.php"
+        ]
     }
 }
