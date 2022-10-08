@@ -17,7 +17,7 @@ if (is_file($file_loc)) {
 
 /* Copy directory */
 
-foreach (['app', 'public', 'resources'] as $target_dir) {
+foreach (['app', 'config', 'public', 'resources'] as $target_dir) {
     $update_json_data = _copy_dir(COMPOSER_DIR.'/vendor/blocs/admin/'.$target_dir, COMPOSER_DIR.'/'.$target_dir, $update_json_data);
     echo <<< END_of_TEXT
 Copy "{$target_dir}"
