@@ -1,3 +1,5 @@
+@php list($navigation, $navigation_active) = \Blocs\Navigation::get() @endphp
+
 <!DOCTYPE html>
 <html lang='ja'>
 	<head>
@@ -6,7 +8,7 @@
 		<meta name='viewport' content='width=device-width, initial-scale=1,user-scalable=no'>
 
 		<title>
-			<!-- data-val=$navi['current']['label'] data-postfix=' | ' -->BLOCS
+			<!-- data-val=$navigation_active['label'] data-postfix=' | ' -->BLOCS
 		</title>
 
 		<link type='image/x-icon' href='/favicon.ico' rel='shortcut icon'>
@@ -31,12 +33,9 @@
 
 <!-- data-include='include/header/side_menu.html' -->
 
-					<h1 data-exist=$navi['breadcrumb']>
-						<!-- data-attribute='class' data-val=$navi['current']['icon'] data-prefix='fa fa-fw ' -->
-						<i></i> <!-- data-val=$navi['current']['label'] -->
-						<small data-if="$navi['breadcrumb'][0]['level'] && !empty($navi['breadcrumb'][0]['label']) && $navi['breadcrumb'][0]['label'] != $navi['current']['label']"> |
-							<!-- data-val=$navi['breadcrumb'][0]['label'] -->
-						</small>
+					<h1 data-exist=$navigation_active>
+						<!-- data-attribute='class' data-val=$navigation_active['icon'] data-prefix='fa fa-fw ' -->
+						<i></i> <!-- data-val=$navigation_active['label'] -->
 					</h1>
 
 					<div id='inmaincontents'>
