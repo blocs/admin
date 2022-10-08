@@ -1,0 +1,29 @@
+<!-- data-query=$autoload_noscript data-val=1 -->
+<!-- data-include='autoinclude' -->
+
+<!-- data-query=$graph_legend_bar_1 data-lang='template:admin_top_user_legend_registered' -->
+<!-- data-query=$graph_legend_bar_2 data-lang='template:admin_top_user_legend_deleted' -->
+<!-- data-query=$graph_legend_line_1 data-lang='template:admin_top_user_legend_accumulated' -->
+
+<!-- data-query=$graph_json data-val=$json -->
+<!-- data-query=$graph_yaxis_max data-val=$yaxis_max -->
+<!-- data-query=$graph_y2axis_max data-val=$y2axis_max -->
+
+<!-- data-include='jqplot_2bar_1line' -->
+
+<div class='panel panel-primary'>
+	<div class='panel-heading'>
+		<h2 class='panel-title'><!-- data-lang='template:admin_top_user_title' --></h2>
+	</div>
+	<div class='panel-body'>
+		<span class='text-primary'>
+			<small><!-- data-lang='template:admin_top_user_number' --></small>
+		</span>
+		<span class='badge' data-val=$current></span>
+		<span class='text-primary'>
+			<small data-val=$update data-convert='date:"Y/m/d H:i:s"'></small>
+		</span>
+		<!-- data-attribute='id' data-val=$graph_id -->
+		<div></div>
+	</div>
+</div>
