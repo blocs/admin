@@ -2,7 +2,7 @@
 
 return [
     [
-        'name' => 'login',
-        'lang' => 'ログイン',
+        'name' => 'home',
+        'lang' => 'ホーム',
     ],
 ];
