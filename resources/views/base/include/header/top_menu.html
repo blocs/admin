@@ -1,5 +1,7 @@
 <!-- data-include='logout.html' -->
 
+@php $breadcrumb = \Blocs\Breadcrumb::get() @endphp
+
 <header id='header' class='navbar clearfix'>
 	<div class='navbar-inner clearfix'>
 		<div id='navwrap' class='container clearfix'>
@@ -41,21 +43,13 @@
 
 	<div id='breadcrumb' class='container clearfix'>
 		<ul class='clearfix'>
+			<!-- data-attribute='style' data-val='background: none' data-none=$url -->
+			<li data-repeat=$breadcrumb>
+                <!-- data-attribute='href' data-val=$url -->
+                <a data-val=$label data-exist=$url></a>
 
-			<!-- data-attribute='style' data-val='background: none' data-none=$navi['breadcrumb'][0]['level'] -->
-			<li>
-				<!-- data-attribute='href' data-val="/" -->
-				<a href='/'><!-- data-notice='template:resource_blocs_top_menu_top' --></a>
+                <!-- data-val=$label data-none=$url -->
 			</li>
-
-			<!-- data-exist=$navi['breadcrumb'][0]['level'] -->
-			<!-- data-attribute='style' data-val='background: none' data-none=$navi['breadcrumb'][$repeat_index+1] -->
-			<li data-repeat=$navi['breadcrumb']>
-				<!-- data-attribute='href' data-val=$url -->
-				<a data-val=$label data-exist=$navi['breadcrumb'][$repeat_index+1]></a><!-- data-none=$navi['breadcrumb'][$repeat_index+1] data-val=$label -->
-			</li>
-			<!-- data-endexist= -->
-
 		</ul>
 		<!-- end of id(breadcrumb) -->
 	</div>
