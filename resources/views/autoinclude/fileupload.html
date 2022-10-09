@@ -21,7 +21,7 @@ function set_uploader(paramname) {
 		bottom: 0
 	});
 	var multiple = $('input[name="'+paramname+'"]').prop('multiple');
-	$('#'+paramnameId+'_uploadFile').append('<div class="fileupload-buttonbar"><span class="btn btn-default fileinput-button"><span class="fa fa-file"></span> <span><!-- data-notice='template:resource_blocs_fileupload_add' --></span><input type="file" /></span></div><table class="table table-striped"><tbody class="files"></tbody></table>');
+	$('#'+paramnameId+'_uploadFile').append('<div class="fileupload-buttonbar"><span class="btn btn-default fileinput-button"><span class="fa fa-file"></span> <span><!-- data-lang='template:resource_blocs_fileupload_add' --></span><input type="file" /></span></div><table class="table table-striped"><tbody class="files"></tbody></table>');
 	if (multiple) {
 		$('#'+paramnameId+'_uploadFile').find('input[type=file]').attr('multiple', 'multiple');
 		$('#'+paramnameId+'_uploadFile').find('.fa').removeClass('fa-file').addClass('fa-files');
@@ -82,7 +82,7 @@ function add_uploaded(data) {
 		}
 	});
 	if (duplicated) {
-		$('.fileupload-buttonbar').validationEngine('showPrompt', '<!-- data-notice='error:fileupload_duplicated' -->', 'validate', 'bottomLeft', true);
+		$('.fileupload-buttonbar').validationEngine('showPrompt', '<!-- data-lang='error:fileupload_duplicated' -->', 'validate', 'bottomLeft', true);
 		return false;
 	};
 

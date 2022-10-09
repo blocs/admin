@@ -1,16 +1,15 @@
-<!-- data-none=$autoload_noscript -->
-<link rel='stylesheet' href='/css/jquery.jqplot.min.css' />
+<!-- data-include='/autoinclude/jquery.html' -->
 
-<script type='text/javascript' src='/js/jquery/jqplot/jquery.jqplot.min.js'></script>
-<!-- data-endnone -->
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.css' />
+<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.js'></script>
 
 <!-- data-bloc='jqplot_pie_chart' -->
 <!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
 
-<script type='text/javascript' src='/js/jquery/jqplot/plugins/jqplot.pieRenderer.js'></script>
+<script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pieRenderer.js'></script>
 <script type='text/javascript'>
 Promise.all([
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.pieRenderer.js')})()
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pieRenderer.js')})()
 ]).then(values => {
   <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
   var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
@@ -52,13 +51,13 @@ Promise.all([
 
 <script type='text/javascript'>
 Promise.all([
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.categoryAxisRenderer.js')})(),
   <!-- data-exist=$graph_xaxis_angle -->
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.canvasTextRenderer.js')})(),
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasTextRenderer.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasAxisTickRenderer.js')})(),
   <!-- data-endexist -->
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.barRenderer.js')})(),
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.pointLabels.js')})()
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.barRenderer.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pointLabels.js')})()
 ]).then(values => {
 
   <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
@@ -131,11 +130,11 @@ Promise.all([
 <!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
 <script type='text/javascript'>
 Promise.all([
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.js')})(),
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.canvasTextRenderer.js')})(),
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.js')})(),
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.barRenderer.js')})(),
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.pointLabels.js')})()
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.categoryAxisRenderer.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasTextRenderer.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasAxisTickRenderer.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.barRenderer.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pointLabels.js')})()
 ]).then(values => {
   <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
   var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
@@ -208,13 +207,13 @@ Promise.all([
 
 <script type='text/javascript'>
 Promise.all([
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.categoryAxisRenderer.js')})(),
   <!-- data-exist=$graph_xaxis_angle -->
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.canvasTextRenderer.js')})(),
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.canvasAxisTickRenderer.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasTextRenderer.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasAxisTickRenderer.js')})(),
   <!-- data-endexist -->
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.barRenderer.js')})(),
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.pointLabels.js')})()
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.barRenderer.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pointLabels.js')})()
 ]).then(values => {
   <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
   var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
@@ -287,9 +286,9 @@ Promise.all([
 <!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
 <script type='text/javascript'>
 Promise.all([
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.categoryAxisRenderer.min.js')})(),
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.barRenderer.min.js')})(),
-  (async () => {await import('/js/jquery/jqplot/plugins/jqplot.pointLabels.min.js')})()
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.categoryAxisRenderer.min.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.barRenderer.min.js')})(),
+  (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pointLabels.min.js')})()
 ]).then(values => {
   var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
 

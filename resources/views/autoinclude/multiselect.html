@@ -1,16 +1,14 @@
-<script type='text/javascript' src='/js/jquery/select2.min.js'></script>
-<link rel='stylesheet' href='/css/select2.min.css' />
-<link rel='stylesheet' href='/css/select2-bootstrap.min.css' />
+<!-- data-include='/autoinclude/jquery.html' -->
+
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
 <script type='text/javascript'>
-
-$(function() {
-	$('.multiselect').each(function(){
-		$(this).select2({
-			theme: 'bootstrap',
-			language: { 'noResults': function(){ return '<!-- data-notice='template:resource_blocs_multiselect_no_candidate' -->'; } }
+	$(function() {
+		$('.multiselect').each(function(){
+			$(this).select2({
+				language: { 'noResults': function(){ return '<!-- data-lang='template:resource_blocs_multiselect_no_candidate' -->'; } }
+			});
 		});
 	});
-});
-
 </script>
