@@ -7,19 +7,22 @@
  * This source code or any portion thereof must not be
  * reproduced or used in any manner whatsoever.
  */
-define('COMPOSER_DIR', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../../')));
 
-$file_loc = COMPOSER_DIR.'/storage/blocs_update.json';
+/* アップデート状況把握のため更新情報を取得 */
+
+define('ROOT_DIR', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../../')));
+
+$file_loc = ROOT_DIR.'/storage/blocs_update.json';
 if (is_file($file_loc)) {
     $update_json_data = json_decode(file_get_contents($file_loc), true);
 } else {
     $update_json_data = [];
 }
 
-/* Copy directory */
+/* ディレクトリを配置 */
 
 foreach (['app', 'config', 'public', 'resources'] as $target_dir) {
-    $update_json_data = _copy_dir(COMPOSER_DIR.'/vendor/blocs/admin/'.$target_dir, COMPOSER_DIR.'/'.$target_dir, $update_json_data);
+    $update_json_data = _copy_dir(ROOT_DIR.'/vendor/blocs/admin/'.$target_dir, ROOT_DIR.'/'.$target_dir, $update_json_data);
     echo <<< END_of_TEXT
 Copy "{$target_dir}"
 
@@ -28,6 +31,19 @@ END_of_TEXT;
 
 ksort($update_json_data);
 file_put_contents($file_loc, json_encode($update_json_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($file_loc, 0666);
+
+/* ルーティング設定 */
+
+$blocs_routes_loc = ROOT_DIR.'/vendor/blocs/admin/routes.php';
+$laravel_routes_loc = ROOT_DIR.'/vendor/blocs/admin/routes.php';
+if (is_file($blocs_routes_loc) && $laravel_routes_loc) {
+    $laravel_routes = file_get_contents($laravel_routes_loc);
+    if (false !== strpos($laravel_routes, 'Auth::routes();')) {
+        // ルーティングを追加
+        $blocs_routes = file_get_contents($blocs_routes_loc);
+        file_put_contents($laravel_routes_loc, "\n".$blocs_routes, FILE_APPEND);
+    }
+}
 
 /* Private function */
 
@@ -59,7 +75,7 @@ function _copy_file($original_file, $target_file, $update_json_data)
     $original_file = str_replace(DIRECTORY_SEPARATOR, '/', realpath($original_file));
     $new_contents = file_get_contents($original_file);
 
-    $file_key = substr($target_file, strlen(COMPOSER_DIR));
+    $file_key = substr($target_file, strlen(ROOT_DIR));
     if (is_file($target_file) && filesize($target_file)) {
         $target_file = str_replace(DIRECTORY_SEPARATOR, '/', realpath($target_file));
         $old_contents = file_get_contents($target_file);
