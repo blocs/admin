@@ -17,16 +17,8 @@
         }
     ],
     "require": {
-        "linear/blocs": "@dev",
+        "blocs/blocs": "@dev",
         "laravel/ui": "@dev"
-    },
-    "autoload": {
-        "psr-4": {
-            "Linear\\Blocs\\": "lib\/",
-            "Linear\\Blocs\\Model\\": "model\/",
-            "Blocs\\": "src\/",
-            "Blocs\\Controllers\\": "controller\/"
-        }
     },
     "bin": [
         "bin/deploy"
