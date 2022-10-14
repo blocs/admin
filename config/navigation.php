@@ -1,14 +1,24 @@
 <?php
 
 return [
-    [
-        'name' => 'home',
-        'lang' => 'ホーム',
-        'icon' => 'fa-dashboard',
+    'admin' => [
+        [
+            'name' => 'home',
+            'lang' => 'ホーム',
+            'icon' => 'fa-dashboard',
+            'sub' => 'admin_top',
+        ],
     ],
-    [
-        'name' => 'user',
-        'lang' => 'ユーザー管理',
-        'icon' => 'fa-users',
+    'admin_top' => [
+        [
+            'name' => 'profile',
+            'lang' => 'プロフィール',
+            'breadcrumb' => true,
+        ],
+        [
+            'name' => 'user',
+            'lang' => 'ユーザー管理',
+            'breadcrumb' => true,
+        ],
     ],
 ];

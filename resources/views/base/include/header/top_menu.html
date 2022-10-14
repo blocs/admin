@@ -1,7 +1,5 @@
 <!-- data-include='logout.html' -->
 
-@php $breadcrumb = \Blocs\Breadcrumb::get() @endphp
-
 <header id='header' class='navbar clearfix'>
 	<div class='navbar-inner clearfix'>
 		<div id='navwrap' class='container clearfix'>
@@ -43,6 +41,10 @@
 
 	<div id='breadcrumb' class='container clearfix'>
 		<ul class='clearfix'>
+			<li data-exist=$breadcrumb>
+                <a href="/">トップ</a>
+			</li>
+
 			<!-- data-attribute='style' data-val='background: none' data-none=$url -->
 			<li data-repeat=$breadcrumb>
                 <!-- data-attribute='href' data-val=$url -->

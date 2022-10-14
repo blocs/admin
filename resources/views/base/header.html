@@ -1,4 +1,4 @@
-@php list($navigation, $navigation_active) = \Blocs\Navigation::get() @endphp
+@php list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get('admin') @endphp
 
 <!DOCTYPE html>
 <html lang='ja'>
@@ -8,7 +8,7 @@
 		<meta name='viewport' content='width=device-width, initial-scale=1,user-scalable=no'>
 
 		<title>
-			<!-- data-val=$navigation_active['label'] data-postfix=' | ' -->BLOCS
+			<!-- data-val=$headline['label'] data-postfix=' | ' -->BLOCS
 		</title>
 
 		<link type='image/x-icon' href='/favicon.ico' rel='shortcut icon'>
@@ -32,9 +32,9 @@
 
 <!-- data-include='include/header/side_menu.html' -->
 
-					<h1 data-exist=$navigation_active>
-						<!-- data-attribute='class' data-val=$navigation_active['icon'] data-prefix='fa fa-fw ' -->
-						<i></i> <!-- data-val=$navigation_active['label'] -->
+					<h1 data-exist=$headline>
+						<!-- data-attribute='class' data-val=$headline['icon'] data-prefix='fa fa-fw ' -->
+						<i></i> <!-- data-val=$headline['label'] -->
 					</h1>
 
 					<div id='inmaincontents'>
