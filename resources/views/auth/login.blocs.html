@@ -28,19 +28,8 @@
                     <div id='loginbox'>
                         <h2>LOGIN</h2>
 
-                        @error('email')
-                        <div class='alert alert-danger alert-dismissable'>
-                            <!-- data-include='button_close' -->
-                            {{ $message }}
-                        </div>
-                        @enderror
-
-                        @error('password')
-                        <div class='alert alert-danger alert-dismissable'>
-                            <!-- data-include='button_close' -->
-                            {{ $message }}
-                        </div>
-                        @enderror
+                        @error('email') <div class='alert alert-danger'>{{ $message }}</div> @enderror
+                        @error('password') <div class='alert alert-danger'>{{ $message }}</div> @enderror
 
                         <div id='loginarea'>
                             <form method='post' class='form-horizontal' action="{{ route('login') }}">

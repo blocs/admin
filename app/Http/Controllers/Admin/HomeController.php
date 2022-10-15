@@ -7,6 +7,8 @@ use App\User;
 
 class HomeController extends Controller
 {
+    private $val = [];
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -14,7 +16,9 @@ class HomeController extends Controller
 
     public function index()
     {
-        return view('admin.home');
+        $this->val = array_merge($this->val, \Blocs\Notice::get());
+
+        return view('admin.home', $this->val);
     }
 
     public function dashboard()

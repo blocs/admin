@@ -3,13 +3,13 @@
 <!-- data-include='search_form' data-exist=$search_placeholder -->
 <!-- data-include='include/table/selectable.html' data-if='!empty($table) && empty($unselectable)' -->
 
-<div class='alert alert-info alert-dismissable' data-none=$table>
+<div class='alert alert-info' data-none=$table>
 	<i class='fa fa-info-circle'></i>
-<!-- data-include='button_close' -->
 	<!-- data-notice='template:resource_blocs_base_list_no_data' -->
 </div>
 
 <form method='post'>
+	@csrf
 	<div class='box'>
 		<div class='box-body no-padding' data-exist=$table>
 			<!-- data-include='button_select_all' data-none=$unselectable -->

@@ -4,21 +4,22 @@ return [
     'admin' => [
         [
             'name' => 'home',
-            'lang' => 'ホーム',
-            'icon' => 'fa-dashboard',
-            'sub' => 'admin_top',
+            'lang' => '管理トップ',
+            'icon' => 'fa-cogs',
+            'sub' => 'admin_menu',
         ],
     ],
-    'admin_top' => [
+    'admin_menu' => [
         [
             'name' => 'profile',
             'lang' => 'プロフィール',
+            'icon' => 'fa-cog',
             'breadcrumb' => true,
         ],
         [
             'name' => 'user',
             'lang' => 'ユーザー管理',
-            'breadcrumb' => true,
+            'icon' => 'fa-users',
         ],
     ],
 ];

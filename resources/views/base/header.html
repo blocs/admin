@@ -39,27 +39,8 @@
 
 					<div id='inmaincontents'>
 
-<!-- data-if="isset($notice_category) && !isset($notice_form)" -->
-	<div class='alert alert-danger alert-dismissable' data-if="$notice_category === 'error'">
-		<!-- data-include='button_close' -->
-		<span data-val=$notice_message></span>
-	</div>
-
-	<div class='alert alert-warning alert-dismissable' data-if="$notice_category === 'warning'">
-		<!-- data-include='button_close' -->
-		<span data-val=$notice_message></span>
-	</div>
-
-	<div class='alert alert-success alert-dismissable' data-if="$notice_category === 'success'">
-		<!-- data-include='button_close' -->
-		<span data-val=$notice_message></span>
-	</div>
-
-	<div class='alert alert-info alert-dismissable' data-if="$notice_category === 'info'">
-		<!-- data-include='button_close' -->
-		<span data-val=$notice_message></span>
-	</div>
-<!-- data-endif -->
+	<!-- data-attribute="class" data-val="alert alert-{$notice_category}" -->
+	<div data-exist=$notice_category><span data-val=$notice_message></span></div>
 
 <!-- data-bloc='search_form' -->
 <!-- data-query=$search_filter_exists data-val=1 data-if="!empty($search) || !empty($search_filter_exists)" -->
@@ -76,6 +57,7 @@ $(function(){
 <!-- data-endexist -->
 
 <form action='./' method='post' role='search'>
+	@csrf
 	<div class='box'>
 <!-- data-include='search_filter_before' data-exist -->
 		<div class='input-group mt5'>
