@@ -9,11 +9,6 @@ class HomeController extends Controller
 {
     private $val = [];
 
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
         $this->val = array_merge($this->val, \Blocs\Notice::get());
@@ -27,6 +22,13 @@ class HomeController extends Controller
         defined('ADMIN_TOP_MESSAGE_NUM') || define('ADMIN_TOP_MESSAGE_NUM', 10);
 
         return view('admin.dashboard.user', $this->chart());
+    }
+
+    public function clear()
+    {
+        \Artisan::call('view:clear');
+
+        return redirect()->route('home');
     }
 
     protected function chart()

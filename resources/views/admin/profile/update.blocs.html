@@ -14,6 +14,8 @@
 			</th>
 			<td>
 				<input type='text' id='email' name='email' class='form-control modal-notice-item' value='' readonly />
+
+				@error('email') <div class='text-danger'>{{ $message }}</div> @enderror
 			</td>
 		</tr>
 		<tr>
@@ -22,6 +24,8 @@
 			</th>
 			<td>
 				<input type='text' id='name' name='name' class='form-control' value='' />
+
+				@error('name') <div class='text-danger'>{{ $message }}</div> @enderror
 			</td>
 		</tr>
 		<tr>
@@ -40,6 +44,8 @@
 			</th>
 			<td>
 				<input type='password' id='password_new' name='password_new' class='form-control' />
+
+				@error('password_new') <div class='text-danger'>{{ $message }}</div> @enderror
 			</td>
 		</tr>
 		<tr>
@@ -58,7 +64,6 @@
 
 <!-- data-include='entry_separator' -->
 
-<!-- data-query=$modal_action data-val='./profile/submit' -->
 <!-- data-include='modal_update' -->
 
 <!-- data-include='entry_footer' -->

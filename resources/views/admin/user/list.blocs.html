@@ -1,0 +1,53 @@
+<!-- data-query=$search_placeholder data-lang='template:admin_user_search' -->
+
+<!-- data-include='/base/list.html' -->
+
+<!-- data-query=$modal_name data-val='modal_toggle' -->
+
+<thead>
+	<tr>
+		<th class='col-xs-2 col-sm-1'></th>
+		<th class='col-xs-4 col-sm-4'><!-- data-lang='template:admin_user_header_id' --></th>
+		<th class='col-xs-6 col-sm-5'><!-- data-lang='template:admin_user_header_name' --></th>
+		<th class='hidden-xs col-sm-2'><!-- data-lang='template:admin_user_header_registration' --></th>
+	</tr>
+</thead>
+<tbody>
+	<tr data-repeat=$table>
+		<td>
+			<!-- data-attribute='value' data-val=$id -->
+			<input type='checkbox' name='selected_rows[]' style='display:none;' />
+			<!-- data-include='button_toggle' -->
+		</td>
+		<td class='ellipsis toggle-item'>
+			<!-- data-attribute='href' data-val="./entry/{$id}" -->
+			<a data-val=$email></a>
+		</td>
+		<td class='ellipsis' data-val=$name></td>
+		<td class='hidden-xs' data-val=$created_at data-convert='date'></td>
+	</tr>
+</tbody>
+
+<!-- data-query=$modal_titile_submit data-lang='template:admin_user_valid_title' -->
+<!-- data-query=$modal_message_submit data-lang='template:admin_user_valid_message' -->
+<!-- data-query=$modal_title_warning data-lang='template:admin_user_invalid_title' -->
+<!-- data-query=$modal_message_warning data-lang='template:admin_user_invalid_message' -->
+
+<!-- data-bloc='modal_button' -->
+
+<!-- data-include='button_back_modal' -->
+<!-- data-query=$button_success_modal_label data-lang='template:admin_user_button_valid' -->
+<!-- data-include='button_success_modal' -->
+<!-- data-query=$button_warning_modal_label data-lang='template:admin_user_button_invalid' -->
+<!-- data-include='button_warning_modal' -->
+
+<!-- data-endbloc -->
+
+<!-- data-include='modal_toggle' data-exist=$table -->
+
+<!-- data-include='list_pager' -->
+
+<!-- data-include='button_new' -->
+<!-- data-include='modal_delete' data-exist=$table -->
+
+<!-- data-include='list_footer' -->

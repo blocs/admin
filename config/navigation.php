@@ -11,13 +11,13 @@ return [
     ],
     'admin_menu' => [
         [
-            'name' => 'profile',
+            'name' => 'profile.entry',
             'lang' => 'プロフィール',
             'icon' => 'fa-cog',
             'breadcrumb' => true,
         ],
         [
-            'name' => 'user',
+            'name' => 'user.list',
             'lang' => 'ユーザー管理',
             'icon' => 'fa-users',
         ],
