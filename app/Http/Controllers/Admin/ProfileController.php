@@ -2,93 +2,25 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
-class ProfileController extends Controller
+class ProfileController extends UserController
 {
-    private $val = [];
-    private $request;
-
     public function __construct()
     {
         define('TEMPLATE_PREFIX', 'admin.profile');
+        define('ROUTE_PREFIX', 'profile');
         define('TABLE_MAIN', '\App\User');
     }
 
-    public function entry()
+    public function entry($id = 0)
     {
-        if (empty(old())) {
-            $this->get_current();
-        }
-
-        $this->val = array_merge($this->val, \Blocs\Notice::get());
-
-        $this->prepare_entry();
-
-        return $this->output_entry();
+        return parent::entry(\Auth::id());
     }
 
-    protected function get_current()
+    public function update($id, Request $request)
     {
-        $table_data = \Auth::user();
-
-        $this->val = array_merge($table_data->toArray(), $this->val);
-    }
-
-    protected function prepare_entry()
-    {
-    }
-
-    protected function output_entry()
-    {
-        return view(TEMPLATE_PREFIX.'.update', $this->val);
-    }
-
-    public function update(Request $request)
-    {
-        $this->request = $request;
-
-        $this->validate_update();
-        $this->prepare_update();
-        $this->register_update();
-
-        return $this->output_update();
-    }
-
-    protected function validate_update()
-    {
-        list($validate, $message) = \Blocs\Validate::get(TEMPLATE_PREFIX.'.update');
-        empty($validate) || $this->request->validate($validate, $message);
-    }
-
-    protected function prepare_update()
-    {
-        // nameの編集
-        strlen($this->request->name) || $this->request->name = $this->request->email;
-    }
-
-    protected function register_update()
-    {
-        $auth_user = \Auth::user();
-        $user = call_user_func(TABLE_MAIN.'::find', $auth_user->id);
-
-        $user->name = $this->request->name;
-
-        if (!empty($this->request->password_new)) {
-            // パスワードを変更する
-            if (empty($this->request->password_old) || !Hash::check($this->request->password_old, $user->password)) {
-                // 旧パスワードが間違っている
-                return redirect()->route('profile.entry')
-                    ->withInput()
-                    ->withErrors(['password_old' => 'パスワードが違います。']);
-            }
-
-            $user->password = Hash::make($this->request->password_new);
-        }
-
-        $user->save();
+        return parent::update(\Auth::id(), $requestw);
     }
 
     protected function output_update()

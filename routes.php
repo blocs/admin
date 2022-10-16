@@ -16,8 +16,8 @@ Route::middleware('auth')
 	->prefix('profile')
 	->name('profile.')
 	->group(function () {
-		Route::get('/entry', [ProfileController::class, 'entry'])->name('entry');
-		Route::post('/update', [ProfileController::class, 'update'])->name('update');
+		Route::get('/entry/{id?}', [ProfileController::class, 'entry'])->name('entry');
+		Route::post('/update/{id}', [ProfileController::class, 'update'])->name('update');
 	}
 );
 
@@ -30,6 +30,6 @@ Route::middleware('auth')
 		Route::post('/list', [UserController::class, 'list'])->name('plist');
 		Route::get('/entry/{id?}', [UserController::class, 'entry'])->name('entry');
 		Route::post('/insert', [UserController::class, 'insert'])->name('insert');
-		Route::post('/update/{id?}', [UserController::class, 'update'])->name('update');
+		Route::post('/update/{id}', [UserController::class, 'update'])->name('update');
 	}
 );
