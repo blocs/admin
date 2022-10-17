@@ -21,7 +21,7 @@ if (is_file($file_loc)) {
 
 /* ディレクトリを配置 */
 
-foreach (['app', 'config', 'public', 'resources'] as $target_dir) {
+foreach (['app', 'config', 'database', 'public', 'resources'] as $target_dir) {
     $update_json_data = _copy_dir(ROOT_DIR.'/vendor/blocs/admin/'.$target_dir, ROOT_DIR.'/'.$target_dir, $update_json_data);
     echo <<< END_of_TEXT
 Copy "{$target_dir}"

@@ -52,26 +52,26 @@ class HomeController extends Controller
 
         $inserts = [];
         $records = User::where(
-            'create_at', '>', $xaxis[count($xaxis) - 1].'-00'
+            'created_at', '>', $xaxis[count($xaxis) - 1].'-00'
         )->where(
-            'create_at', '<', $xaxis[0].'-32'
-        )->get()->toArray();
+            'created_at', '<', $xaxis[0].'-32'
+        )->withTrashed()->get()->toArray();
 
         foreach ($records as $record) {
-            $month = substr($record['create_at'], 0, 7);
+            $month = substr($record['created_at'], 0, 7);
             isset($inserts[$month]) || $inserts[$month] = 0;
             ++$inserts[$month];
         }
 
         $deletes = [];
         $records = User::where(
-            'delete_at', '>', $xaxis[count($xaxis) - 1].'-00'
+            'deleted_at', '>', $xaxis[count($xaxis) - 1].'-00'
         )->where(
-            'delete_at', '<', $xaxis[0].'-32'
-        )->get()->toArray();
+            'deleted_at', '<', $xaxis[0].'-32'
+        )->withTrashed()->get()->toArray();
 
         foreach ($records as $record) {
-            $month = substr($record['delete_at'], 0, 7);
+            $month = substr($record['deleted_at'], 0, 7);
             isset($deletes[$month]) || $deletes[$month] = 0;
             ++$deletes[$month];
         }

@@ -20,7 +20,7 @@ class ProfileController extends UserController
 
     public function update($id, Request $request)
     {
-        return parent::update(\Auth::id(), $requestw);
+        return parent::update(\Auth::id(), $request);
     }
 
     protected function output_update()

@@ -27,9 +27,10 @@ Route::middleware('auth')
 	->name('user.')
 	->group(function () {
 		Route::get('/list', [UserController::class, 'list'])->name('list');
-		Route::post('/list', [UserController::class, 'list'])->name('plist');
+		Route::post('/list', [UserController::class, 'list'])->name('search');
 		Route::get('/entry/{id?}', [UserController::class, 'entry'])->name('entry');
 		Route::post('/insert', [UserController::class, 'insert'])->name('insert');
 		Route::post('/update/{id}', [UserController::class, 'update'])->name('update');
+		Route::post('/delete', [UserController::class, 'delete'])->name('delete');
 	}
 );

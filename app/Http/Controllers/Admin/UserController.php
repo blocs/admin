@@ -21,8 +21,9 @@ class UserController extends \Blocs\Controllers\Maintenance
 
         foreach ($this->search_items as $search_item) {
             $table_main->where(function ($query) use ($search_item) {
-                $query->orWhere('name', 'like', '%'.$search_item.'%')
-                  ->orWhere('email', 'LIKE', '%'.$search_item.'%');
+                $query
+                    ->where('name', 'LIKE', '%'.$search_item.'%')
+                    ->orWhere('email', 'LIKE', '%'.$search_item.'%');
             });
         }
     }
@@ -32,11 +33,13 @@ class UserController extends \Blocs\Controllers\Maintenance
         // nameの編集
         strlen($this->request->name) || $this->request->name = $this->request->email;
 
-        parent::execute_insert([
+        $table_data = [
             'email' => $this->request->email,
             'name' => $this->request->name,
             'password' => Hash::make($this->request->password),
-        ]);
+        ];
+
+        parent::execute_insert($table_data);
     }
 
     protected function validate_update()
@@ -49,12 +52,12 @@ class UserController extends \Blocs\Controllers\Maintenance
 
         // 旧パスワードをチェック
         if (empty($this->request->password_old)) {
-            return $this->back_entry('password_old', '', 'パスワードが違います。');
+            return $this->back_entry('danger', 'パスワードが違います。', 'password_old');
         }
 
         $user = call_user_func(TABLE_MAIN.'::find', $this->val['id']);
         if (!Hash::check($this->request->password_old, $user->password)) {
-            return $this->back_entry('password_old', '', 'パスワードが違います。');
+            return $this->back_entry('danger', 'パスワードが違います。', 'password_old');
         }
     }
 
@@ -63,9 +66,17 @@ class UserController extends \Blocs\Controllers\Maintenance
         // nameの編集
         strlen($this->request->name) || $this->request->name = $this->request->email;
 
-        parent::execute_update([
-            'name' => $this->request->name,
-            'password' => Hash::make($this->request->password_new),
-        ]);
+        if (empty($this->request->password_new)) {
+            $table_data = [
+                'name' => $this->request->name,
+            ];
+        } else {
+            $table_data = [
+                'name' => $this->request->name,
+                'password' => Hash::make($this->request->password_new),
+            ];
+        }
+
+        parent::execute_update($table_data);
     }
 }
