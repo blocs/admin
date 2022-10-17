@@ -89,7 +89,7 @@
 			}
 
 			var tr = $(this).closest('tr');
-			$(this).closest('form').attr('action', './toggle.php?id=' + tr.find('input[name$="[selected_rows][]"]:first').val());
+			$(this).closest('form').attr('action', './toggle/' + tr.find('input[name$="[selected_rows][]"]:first').val());
 
 			if(tr.find('.toggle-item').length){
 				modal_toggle.find('.itemtitle').text(tr.find('.toggle-item').text());

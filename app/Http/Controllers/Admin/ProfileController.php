@@ -11,6 +11,8 @@ class ProfileController extends UserController
         define('TEMPLATE_PREFIX', 'admin.profile');
         define('ROUTE_PREFIX', 'profile');
         define('TABLE_MAIN', '\App\User');
+
+        $this->notice_item = 'email';
     }
 
     public function entry($id = 0)

@@ -32,5 +32,6 @@ Route::middleware('guest')
 		Route::post('/insert', [UserController::class, 'insert'])->name('insert');
 		Route::post('/update/{id}', [UserController::class, 'update'])->name('update');
 		Route::post('/delete', [UserController::class, 'delete'])->name('delete');
+		Route::post('/toggle/{id}', [UserController::class, 'toggle'])->name('toggle');
 	}
 );

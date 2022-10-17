@@ -49,4 +49,12 @@ class LoginController extends Controller
         list($validate, $message) = \Blocs\Validate::get('auth.login');
         empty($validate) || $request->validate($validate, $message);
     }
+
+    protected function credentials(Request $request)
+    {
+        return array_merge(
+            $request->only($this->username(), 'password'),
+            ['disabled_at' => null]
+        );
+    }
 }
