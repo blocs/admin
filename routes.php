@@ -22,7 +22,7 @@ Route::middleware('auth')
 );
 
 use App\Http\Controllers\Admin\UserController;
-Route::middleware('auth')
+Route::middleware('guest')
 	->prefix('user')
 	->name('user.')
 	->group(function () {
