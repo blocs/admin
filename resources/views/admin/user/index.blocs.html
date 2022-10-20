@@ -20,8 +20,7 @@
 			<!-- data-include='button_toggle' -->
 		</td>
 		<td class='ellipsis toggle-item'>
-			<!-- data-attribute='href' data-val="./entry/{$id}" -->
-			<a data-val=$email></a>
+			<a href="{{ route(ROUTE_PREFIX.'.entry', $id) }}" data-val=$email></a>
 		</td>
 		<td class='ellipsis' data-val=$name></td>
 		<td class='hidden-xs' data-val=$created_at data-convert='date'></td>

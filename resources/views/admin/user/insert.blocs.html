@@ -13,7 +13,7 @@
 				<label for='email'><!-- data-lang='template:admin_profile_user_id' --></label>
 			</th>
 			<td>
-				<input type='text' id='email' name='email' class='form-control modal-notice-item required' value='' />
+				<input type='text' id='email' name='email' class='form-control modal-notice-item' value='' required />
 
 				<!-- data-form="email" data-validate="unique:users" data-lang="このユーザーIDはすでに登録されています。" -->
 				@error('email') <div class='text-danger'>{{ $message }}</div> @enderror
@@ -34,7 +34,7 @@
 				<label for='password'><!-- data-lang='template:admin_profile_password' --></label>
 			</th>
 			<td>
-				<input type='password' id='password' name='password' class='form-control required' />
+				<input type='password' id='password' name='password' class='form-control' required />
 
 				@error('password') <div class='text-danger'>{{ $message }}</div> @enderror
 			</td>
@@ -44,7 +44,7 @@
 				<label for='repassword'><!-- data-lang='template:admin_profile_password_check' --></label>
 			</th>
 			<td>
-				<input type='password' id='repassword' name='repassword' class='form-control required' />
+				<input type='password' id='repassword' name='repassword' class='form-control' required />
 
 				<!-- data-form="repassword" data-validate="same:password" data-lang="パスワードが違います。" -->
 				@error('repassword') <div class='text-danger'>{{ $message }}</div> @enderror
@@ -55,7 +55,7 @@
 
 <!-- data-include='entry_separator' -->
 
-<!-- data-query=$button_href data-val='list'  -->
+@php $button_href = route(ROUTE_PREFIX.'.index') @endphp
 <!-- data-include='button_back' -->
 
 <!-- data-include='modal_insert' -->

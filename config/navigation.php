@@ -17,7 +17,7 @@ return [
             'breadcrumb' => true,
         ],
         [
-            'name' => 'user.list',
+            'name' => 'user.index',
             'lang' => 'ユーザー管理',
             'icon' => 'fa-users',
         ],

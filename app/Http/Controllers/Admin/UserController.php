@@ -15,7 +15,7 @@ class UserController extends \Blocs\Controllers\Maintenance
         $this->notice_item = 'email';
     }
 
-    protected function prepare_list_search(&$table_main)
+    protected function prepare_index_search(&$table_main)
     {
         foreach ($this->search_items as $search_item) {
             $table_main->where(function ($query) use ($search_item) {

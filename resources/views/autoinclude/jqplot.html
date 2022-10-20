@@ -96,14 +96,14 @@ Promise.all([
         <!-- data-endexist -->
       },
       yaxis: {
-                ticks: <?php
+                ticks: @php
   echo(json_encode([0, intval($graph_yaxis_max/5*1), intval($graph_yaxis_max/5*2), intval($graph_yaxis_max/5*3), intval($graph_yaxis_max/5*4), intval($graph_yaxis_max)]));
-?>
+@endphp
       },
       y2axis: {
-                ticks: <?php
+                ticks: @php
   echo(json_encode([0, intval($graph_y2axis_max/5*1), intval($graph_y2axis_max/5*2), intval($graph_y2axis_max/5*3), intval($graph_y2axis_max/5*4), intval($graph_y2axis_max)]));
-?>
+@endphp
       }
     }
   };
@@ -173,14 +173,14 @@ Promise.all([
         <!-- data-endexist -->
       },
       yaxis: {
-                ticks: <?php
+                ticks: @php
   echo(json_encode([0, intval($graph_yaxis_max/5*1), intval($graph_yaxis_max/5*2), intval($graph_yaxis_max/5*3), intval($graph_yaxis_max/5*4), intval($graph_yaxis_max)]));
-  ?>
+ @endphp
       },
       y2axis: {
-                ticks: <?php
+                ticks: @php
   echo(json_encode([0, intval($graph_y2axis_max/5*1), intval($graph_y2axis_max/5*2), intval($graph_y2axis_max/5*3), intval($graph_y2axis_max/5*4), intval($graph_y2axis_max)]));
-  ?>
+@endphp
       }
     }
   };
@@ -252,14 +252,14 @@ Promise.all([
         <!-- data-endexist -->
       },
       yaxis: {
-                ticks: <?php
+                ticks: @php
   echo(json_encode([0, intval($graph_yaxis_max/5*1), intval($graph_yaxis_max/5*2), intval($graph_yaxis_max/5*3), intval($graph_yaxis_max/5*4), intval($graph_yaxis_max)]));
-?>
+@endphp
       },
       y2axis: {
-                ticks: <?php
+                ticks: @php
   echo(json_encode([0, intval($graph_y2axis_max/5*1), intval($graph_y2axis_max/5*2), intval($graph_y2axis_max/5*3), intval($graph_y2axis_max/5*4), intval($graph_y2axis_max)]));
-?>
+@endphp
       }
     }
   };
@@ -320,14 +320,14 @@ Promise.all([
         renderer: $.jqplot.CategoryAxisRenderer
       },
       yaxis: {
-                ticks: <?php
+                ticks: @php
   echo(json_encode([0, intval($graph_yaxis_max/5*1), intval($graph_yaxis_max/5*2), intval($graph_yaxis_max/5*3), intval($graph_yaxis_max/5*4), intval($graph_yaxis_max)]));
-?>
+@endphp
       },
       y2axis: {
-                ticks: <?php
+                ticks: @php
   echo(json_encode([0, intval($graph_y2axis_max/5*1), intval($graph_y2axis_max/5*2), intval($graph_y2axis_max/5*3), intval($graph_y2axis_max/5*4), intval($graph_y2axis_max)]));
-?>
+@endphp
       }
     }
   };

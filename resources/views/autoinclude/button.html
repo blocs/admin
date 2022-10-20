@@ -29,7 +29,9 @@
 
 <!-- data-bloc='button_new' -->
 <!-- data-query=$button_new_default_label data-lang='template:resource_blocs_button_new' -->
-<a href='./entry<!-- data-val=$key_item data-prefix='?' -->' class='btn btn-primary btn-lg'>
+@php empty($button_href) && $button_href = route(ROUTE_PREFIX.'.entry') @endphp
+<!-- data-attribute='href' data-val=$button_href -->
+<a class='btn btn-primary btn-lg'>
 	<!-- data-attribute='class' data-val=$button_new_icon data-prefix='fa ' data-exist=$button_new_icon -->
 	<span class='fa fa-plus'></span> <!-- data-val=$button_new_label data-default=$button_new_default_label -->
 </a>
@@ -146,9 +148,7 @@
 <!-- data-bloc='button_copy' -->
 <!-- data-query=$button_copy_default_label data-lang='template:resource_blocs_button_copy' -->
 <input type='hidden' name='copy_id' />
-<!-- data-query=$query_key_item data-val=$key_item data-prefix='&' -->
-<!-- data-query=$query_key_item data-val='' data-none=$query_key_item -->
-<!-- data-attribute='href' data-val="./entry.php?id={$id}&copy_id={$id}{$query_key_item}" -->
+<!-- data-attribute='href' data-val="./entry.php?id={$id}&copy_id={$id}" -->
 <a class='btn btn-warning btn-lg' data-unless="empty($id) || !empty($copy_id)">
 	<!-- data-attribute='class' data-val=$button_copy_icon data-prefix='fa ' data-exist=$button_copy_icon -->
 	<span class='fa fa-copy'></span> <!-- data-val=$button_copy_label data-default=$button_copy_default_label -->

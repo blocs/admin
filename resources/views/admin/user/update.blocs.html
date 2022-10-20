@@ -64,11 +64,11 @@
 
 <!-- data-include='entry_separator' -->
 
-<!-- data-query=$button_href data-val='../list' -->
+@php $button_href = route(ROUTE_PREFIX.'.index') @endphp
 <!-- data-include='button_back' -->
 
 <!-- data-include='modal_update' -->
-<!-- data-query=$modal_action data-val="../delete/{$id}" -->
+@php $modal_action = route(ROUTE_PREFIX.'.delete', $id) @endphp
 <!-- data-include='modal_delete' -->
 
 <!-- data-include='entry_footer' -->

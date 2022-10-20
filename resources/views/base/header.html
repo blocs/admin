@@ -1,4 +1,4 @@
-<?php list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get('admin') ?>
+@php list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get('admin') @endphp
 
 <!DOCTYPE html>
 <html lang='ja'>
@@ -39,7 +39,7 @@
 
 					<div id='inmaincontents'>
 
-	<?php isset($notice_category) && $notice_category === 'error' && $notice_category = 'danger' ?>
+	@php isset($notice_category) && $notice_category === 'error' && $notice_category = 'danger' @endphp
 	<!-- data-attribute="class" data-val="alert alert-{$notice_category}" -->
 	<div data-exist=$notice_category><span data-val=$notice_message></span></div>
 
@@ -57,7 +57,7 @@ $(function(){
 </script>
 <!-- data-endexist -->
 
-<form method='post' role='search'>
+<form method='post' action="{{ route(ROUTE_PREFIX.'.search') }}" role='search'>
 	@csrf
 	<div class='box'>
 <!-- data-include='search_filter_before' data-exist -->

@@ -26,8 +26,8 @@ Route::middleware('guest')
 	->prefix('user')
 	->name('user.')
 	->group(function () {
-		Route::get('/list', [UserController::class, 'list'])->name('list');
-		Route::post('/list', [UserController::class, 'list'])->name('search');
+		Route::get('/', [UserController::class, 'index'])->name('index');
+		Route::post('/', [UserController::class, 'index'])->name('search');
 		Route::get('/entry/{id?}', [UserController::class, 'entry'])->name('entry');
 		Route::post('/insert', [UserController::class, 'insert'])->name('insert');
 		Route::post('/update/{id}', [UserController::class, 'update'])->name('update');

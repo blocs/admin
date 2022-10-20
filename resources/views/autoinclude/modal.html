@@ -6,7 +6,7 @@
 		<!-- data-include='button_primary' -->
 
 	<!-- モーダル設定 -->
-		<!-- data-query=$modal_action data-val='insert' data-none=$modal_action -->
+		@php empty($modal_action) && $modal_action = route(ROUTE_PREFIX.'.insert') @endphp
 		<!-- data-query=$modal_title data-lang='template:resource_blocs_modal_new_title' data-none=$modal_title -->
 		<!-- data-query=$modal_message data-lang='template:resource_blocs_modal_new_message' data-none=$modal_message -->
 
@@ -27,7 +27,7 @@
 		<!-- data-include='button_primary' -->
 
 	<!-- モーダル設定 -->
-		<!-- data-query=$modal_action data-val="../update/{$id}" data-none=$modal_action -->
+		@php empty($modal_action) && $modal_action = route(ROUTE_PREFIX.'.update', $id) @endphp
 		<!-- data-query=$modal_title data-lang='template:resource_blocs_modal_update_title' data-none=$modal_title -->
 		<!-- data-query=$modal_message data-lang='template:resource_blocs_modal_update_message' data-none=$modal_message -->
 
@@ -49,7 +49,7 @@
 		<!-- data-include='button_danger' -->
 
 	<!-- モーダル設定 -->
-		<!-- data-query=$modal_action data-val='delete' data-none=$modal_action -->
+		@php empty($modal_action) && $modal_action = route(ROUTE_PREFIX.'.delete') @endphp
 		<!-- data-query=$modal_title data-lang='template:resource_blocs_modal_delete_title' data-none=$modal_title -->
 		<!-- data-query=$modal_message data-lang='template:resource_blocs_modal_delete_message' data-none=$modal_message -->
 
@@ -70,6 +70,8 @@
 	<!-- data-query=$modal_title_warning data-lang='template:resource_blocs_modal_inactivate_title' data-none=$modal_title_warning -->
 	<!-- data-query=$modal_message_warning data-lang='template:resource_blocs_modal_inactivate_message' data-none=$modal_message_warning -->
 
+	@php empty($modal_action) && $modal_action = route(ROUTE_PREFIX.'.toggle', '') @endphp
+
 	<script type='text/javascript'>
 	$(function(){
 
@@ -89,7 +91,7 @@
 			}
 
 			var tr = $(this).closest('tr');
-			$(this).closest('form').attr('action', './toggle/' + tr.find('input[name$="[selected_rows][]"]:first').val());
+			$(this).closest('form').attr('action', '<!-- data-val=$modal_action -->/' + tr.find('input[name$="[selected_rows][]"]:first').val());
 
 			if(tr.find('.toggle-item').length){
 				modal_toggle.find('.itemtitle').text(tr.find('.toggle-item').text());
@@ -112,7 +114,7 @@
 
 	<!-- data-exist=$modal_action -->
 		$('button[data-target="#<!-- data-val=$modal_name -->"]').on('click', function(){
-			$(this).closest('form').attr('action', './<!-- data-val=$modal_action -->');
+			$(this).closest('form').attr('action', '<!-- data-val=$modal_action -->');
 		});
 	<!-- data-endif -->
 
