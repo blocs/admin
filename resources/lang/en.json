@@ -112,7 +112,7 @@
     "template:linear_config_mysql_database_port": "Port number",
     "template:linear_config_mysql_database_username": "User name",
     "template:linear_config_sqlite_database_path": "Database path",
-    "template:resource_blocs_base_list_no_data": "No data",
+    "template:resource_blocs_base_index_no_data": "No data",
     "template:resource_blocs_button_back": "Back",
     "template:resource_blocs_button_confirm": "Confirm",
     "template:resource_blocs_button_copy": "Copy",

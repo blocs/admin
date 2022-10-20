@@ -111,7 +111,7 @@
     "template:linear_config_mysql_database_port": "ポート番号",
     "template:linear_config_mysql_database_username": "ユーザー名",
     "template:linear_config_sqlite_database_path": "データベースパス",
-    "template:resource_blocs_base_list_no_data": "データがありません。",
+    "template:resource_blocs_base_index_no_data": "データがありません。",
     "template:resource_blocs_button_back": "戻る",
     "template:resource_blocs_button_confirm": "確認",
     "template:resource_blocs_button_copy": "コピー",

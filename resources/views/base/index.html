@@ -1,10 +1,10 @@
-<!-- data-include='header.html' -->
+<!-- data-include='include/header.html' -->
 
 <!-- data-include='search_form' data-exist=$search_placeholder -->
-<!-- data-include='include/table/selectable.html' data-if='!empty($table) && empty($unselectable)' -->
+<!-- data-include='include/selectable.html' data-if='!empty($table) && empty($unselectable)' -->
 
 <div class='alert alert-info' data-none=$table>
-	<!-- data-lang='template:resource_blocs_base_list_no_data' -->
+	<!-- data-lang='template:resource_blocs_base_index_no_data' -->
 </div>
 
 <form method='post'>
@@ -15,7 +15,7 @@
 			<div class='clearfix'></div>
 			<table class='tbl1 mt5 table table-striped table-condensed'>
 
-<!-- data-bloc='list_pager' -->
+<!-- data-bloc='index_pager' -->
 			</table>
 		</div>
 		<!-- /.box-body -->
@@ -32,13 +32,13 @@
 		<div class='box-footer text-center clearfix'>
 <!-- data-endbloc -->
 
-<!-- data-bloc='list_footer' -->
+<!-- data-bloc='index_footer' -->
 		</div>
 		<!-- /.box-footer -->
 	</div>
 	<!-- /.box -->
 </form>
 
-<!-- data-include='footer.html' -->
+<!-- data-include='include/footer.html' -->
 
 <!-- data-endbloc -->

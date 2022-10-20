@@ -1,6 +1,6 @@
 <!-- data-query=$search_placeholder data-lang='template:admin_user_search' -->
 
-<!-- data-include='/base/list.html' -->
+<!-- data-include='/base/index.html' -->
 
 <!-- data-query=$modal_name data-val='modal_toggle' -->
 
@@ -44,10 +44,11 @@
 
 <!-- data-include='modal_toggle' data-exist=$table -->
 
-<!-- data-include='list_pager' -->
+<!-- data-include='index_pager' -->
 
 <!-- data-include='button_new' -->
 
+@php $modal_action = route(ROUTE_PREFIX.'.select') @endphp
 <!-- data-include='modal_delete' data-exist=$table -->
 
-<!-- data-include='list_footer' -->
+<!-- data-include='index_footer' -->
