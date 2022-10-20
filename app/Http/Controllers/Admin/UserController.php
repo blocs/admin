@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Support\Facades\Hash;
 
-class UserController extends \Blocs\Controllers\Maintenance
+class UserController extends \Blocs\Controllers\Base
 {
     public function __construct()
     {
