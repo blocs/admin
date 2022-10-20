@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\HomeController;
 Route::middleware('auth')
 	->group(function () {
 		Route::get('/home', [HomeController::class, 'index'])->name('home');
-		Route::get('/dashboard', [HomeController::class, 'dashboard']);
+		Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 		Route::get('/clear', [HomeController::class, 'clear']);
 	}
 );
