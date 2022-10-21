@@ -8,6 +8,7 @@ use App\User;
 class HomeController extends Controller
 {
     private $val = [];
+    private $admin_top_user_month = 5;
 
     public function index()
     {
@@ -18,9 +19,6 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        defined('ADMIN_TOP_USER_MONTH') || define('ADMIN_TOP_USER_MONTH', 5);
-        defined('ADMIN_TOP_MESSAGE_NUM') || define('ADMIN_TOP_MESSAGE_NUM', 10);
-
         return view('admin.dashboard.user', $this->chart());
     }
 
@@ -38,7 +36,7 @@ class HomeController extends Controller
         $date_atom = date(DATE_ATOM);
         $xaxis = [substr($date_atom, 0, 7)];
         list($year, $month) = explode('-', $xaxis[0], 2);
-        for ($x = 0; $x < ADMIN_TOP_USER_MONTH - 1; ++$x) {
+        for ($x = 0; $x < $thi->admin_top_user_month - 1; ++$x) {
             --$month;
             if (!$month) {
                 $month = 12;

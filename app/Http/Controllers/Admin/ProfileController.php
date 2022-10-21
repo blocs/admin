@@ -8,10 +8,10 @@ class ProfileController extends UserController
 {
     public function __construct()
     {
-        define('TEMPLATE_PREFIX', 'admin.profile');
         define('ROUTE_PREFIX', 'profile');
-        define('TABLE_MAIN', '\App\User');
 
+        $this->template_prefix = 'admin.profile';
+        $this->table_main = '\App\User';
         $this->notice_item = 'email';
     }
 

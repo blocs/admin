@@ -8,10 +8,10 @@ class UserController extends \Blocs\Controllers\Base
 {
     public function __construct()
     {
-        define('TEMPLATE_PREFIX', 'admin.user');
         define('ROUTE_PREFIX', 'user');
-        define('TABLE_MAIN', '\App\User');
 
+        $this->template_prefix = 'admin.user';
+        $this->table_main = '\App\User';
         $this->notice_item = 'email';
     }
 
@@ -55,7 +55,7 @@ class UserController extends \Blocs\Controllers\Base
             return $this->back_entry('', 'パスワードが違います。', 'password_old');
         }
 
-        $user = call_user_func(TABLE_MAIN.'::find', $this->val['id']);
+        $user = call_user_func($this->table_main.'::find', $this->val['id']);
         if (!Hash::check($this->request->password_old, $user->password)) {
             return $this->back_entry('', 'パスワードが違います。', 'password_old');
         }
