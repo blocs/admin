@@ -2,12 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\User;
 
-class HomeController extends Controller
+class HomeController extends \Blocs\Controllers\Base
 {
-    private $val = [];
     private $admin_top_user_month = 5;
 
     public function index()
