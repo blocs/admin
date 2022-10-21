@@ -36,7 +36,7 @@ class HomeController extends Controller
         $date_atom = date(DATE_ATOM);
         $xaxis = [substr($date_atom, 0, 7)];
         list($year, $month) = explode('-', $xaxis[0], 2);
-        for ($x = 0; $x < $thi->admin_top_user_month - 1; ++$x) {
+        for ($x = 0; $x < $this->admin_top_user_month - 1; ++$x) {
             --$month;
             if (!$month) {
                 $month = 12;
