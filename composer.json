@@ -22,5 +22,10 @@
     },
     "bin": [
         "bin/deploy"
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "Blocs\\Admin\\": "src\/",
+        }
+    }
 }
