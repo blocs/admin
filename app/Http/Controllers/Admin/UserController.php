@@ -12,6 +12,7 @@ class UserController extends \Blocs\Controllers\Base
 
         $this->template_prefix = 'admin.user';
         $this->table_main = '\App\User';
+        $this->paginate_num = 20;
         $this->notice_item = 'email';
     }
 

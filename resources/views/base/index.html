@@ -15,14 +15,16 @@
 			<div class='clearfix'></div>
 			<table class='tbl1 mt5 table table-striped table-condensed'>
 
-<!-- data-bloc='index_pager' -->
+<!-- data-bloc='index_paginate' -->
 			</table>
 		</div>
 		<!-- /.box-body -->
 
-<!-- data-include='pager' data-exist=$pager -->
+<!-- data-exist=$paginate -->
+	{{ $paginate->links() }}
+<!-- data-endexist -->
 
-<!-- data-none=$pager -->
+<!-- data-none=$paginate -->
 	</div>
 
 	<div class='box'>
