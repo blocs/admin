@@ -8,7 +8,7 @@ class UserController extends \Blocs\Controllers\Base
 {
     public function __construct()
     {
-        define('ROUTE_PREFIX', 'user');
+        defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'user');
 
         $this->template_prefix = 'admin.user';
         $this->table_main = '\App\User';

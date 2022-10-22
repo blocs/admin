@@ -8,7 +8,7 @@ class ProfileController extends UserController
 {
     public function __construct()
     {
-        define('ROUTE_PREFIX', 'profile');
+        defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'profile');
 
         $this->template_prefix = 'admin.profile';
         $this->table_main = '\App\User';
