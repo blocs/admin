@@ -14,13 +14,14 @@
 				<div id='btnnav_tab'>
 					<a id='btnnav' href='#sidr' class='navbar-toggle'><i class='fa fa-bars fa-fw'></i></a>
 				</div>
+				@auth
 				<div id='headicons'>
 					<ul class='clearfix'>
 						<li id='huser'>
 							<span data-val=$auth_name></span>
 						</li>
 						<li>
-							<!-- data-attribute='href' data-val="/profile/entry/{$auth_id}" data-exist=$auth_id -->
+							<!-- data-attribute='href' data-val="/profile/entry/{$auth_id}" -->
 							<a>
 								<i class='fa fa-lg fa-cog'></i>
 							</a>
@@ -33,6 +34,7 @@
 					</ul>
 					<!-- end of id(headicons) -->
 				</div>
+				@endauth
 			</div>
 			<!-- end of class(container) -->
 		</div>
