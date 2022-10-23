@@ -19,19 +19,6 @@ if (is_file($file_loc)) {
     $update_json_data = [];
 }
 
-/* ディレクトリを配置 */
-
-foreach (['app', 'config', 'database', 'public', 'resources'] as $target_dir) {
-    $update_json_data = _copy_dir(ROOT_DIR.'/vendor/blocs/admin/'.$target_dir, ROOT_DIR.'/'.$target_dir, $update_json_data);
-    echo <<< END_of_TEXT
-Copy "{$target_dir}"
-
-END_of_TEXT;
-}
-
-ksort($update_json_data);
-file_put_contents($file_loc, json_encode($update_json_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($file_loc, 0666);
-
 /* ルーティング設定 */
 
 $blocs_routes_loc = ROOT_DIR.'/vendor/blocs/admin/routes.php';
@@ -44,6 +31,29 @@ if (is_file($blocs_routes_loc) && $laravel_routes_loc) {
         file_put_contents($laravel_routes_loc, "\n".$blocs_routes, FILE_APPEND);
     }
 }
+
+/* モデル設定 */
+
+$laravel_user_loc = ROOT_DIR.'/app/User.php';
+if (is_file($laravel_user_loc)) {
+    $laravel_user = file_get_contents($laravel_user_loc);
+    if (false === strpos($laravel_user, 'SoftDeletes;')) {
+        unlink($laravel_user_loc);
+    }
+}
+
+/* ディレクトリを配置 */
+
+foreach (['app', 'config', 'database', 'public', 'resources'] as $target_dir) {
+    $update_json_data = _copy_dir(ROOT_DIR.'/vendor/blocs/admin/'.$target_dir, ROOT_DIR.'/'.$target_dir, $update_json_data);
+    echo <<< END_of_TEXT
+Copy "{$target_dir}"
+
+END_of_TEXT;
+}
+
+ksort($update_json_data);
+file_put_contents($file_loc, json_encode($update_json_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($file_loc, 0666);
 
 /* Private function */
 
