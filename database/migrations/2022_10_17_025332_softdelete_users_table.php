@@ -15,6 +15,7 @@ class SoftdeleteUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->softDeletes();
+            $table->timestamp('disabled_at', 0)->nullable();
         });
     }
 
@@ -27,6 +28,7 @@ class SoftdeleteUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropSoftDeletes();
+            $table->dropColumn('disabled_at');
         });
     }
 }
