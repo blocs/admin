@@ -26,7 +26,7 @@ Route::middleware('auth')
 	}
 );
 
-Route::middleware('auth')
+Route::middleware('guest')
 	->middleware(UserGroup::class)
 	->prefix('user')
 	->name('user.')
