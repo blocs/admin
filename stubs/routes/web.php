@@ -2,10 +2,10 @@
 
 Auth::routes();
 
-use App\Http\Middleware\UserGroup;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\UserController;
+use App\Http\Middleware\Admin\UserGroup;
+use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::middleware('auth')
 	->middleware(UserGroup::class)
