@@ -37,20 +37,20 @@ class UserController extends \Blocs\Controllers\Base
         return parent::output_entry();
     }
 
-    protected function execute_insert($table_data = [])
+    protected function execute_insert($request_data = [])
     {
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
         $this->val['group'] = empty($this->request->group) ? '' : implode("\t", $this->request->group);
 
-        $table_data = [
+        $request_data = [
             'email' => $this->request->email,
             'name' => $this->val['name'],
             'password' => Hash::make($this->request->password),
             'group' => $this->val['group'],
         ];
 
-        parent::execute_insert($table_data);
+        parent::execute_insert($request_data);
     }
 
     protected function validate_update()
@@ -72,25 +72,25 @@ class UserController extends \Blocs\Controllers\Base
         }
     }
 
-    protected function execute_update($table_data = [])
+    protected function execute_update($request_data = [])
     {
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
         $this->val['group'] = empty($this->request->group) ? '' : implode("\t", $this->request->group);
 
         if (empty($this->request->password_new)) {
-            $table_data = [
+            $request_data = [
                 'name' => $this->val['name'],
                 'group' => $this->val['group'],
             ];
         } else {
-            $table_data = [
+            $request_data = [
                 'name' => $this->val['name'],
                 'password' => Hash::make($this->request->password_new),
                 'group' => $this->val['group'],
             ];
         }
 
-        parent::execute_update($table_data);
+        parent::execute_update($request_data);
     }
 }
