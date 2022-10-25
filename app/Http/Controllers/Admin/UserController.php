@@ -11,7 +11,7 @@ class UserController extends \Blocs\Controllers\Base
         defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'user');
 
         $this->template_prefix = 'admin.user';
-        $this->table_main = '\App\User';
+        $this->table_main = 'App\User';
         $this->paginate_num = 20;
         $this->notice_item = 'email';
     }

@@ -8,9 +8,10 @@
  * reproduced or used in any manner whatsoever.
  */
 
-/* アップデート状況把握のため更新情報を取得 */
-
 define('ROOT_DIR', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../../')));
+define('STUB_DIR', ROOT_DIR.'/vendor/blocs/admin/stubs');
+
+/* アップデート状況把握のため更新情報を取得 */
 
 $file_loc = ROOT_DIR.'/storage/blocs_update.json';
 if (is_file($file_loc)) {
@@ -21,7 +22,7 @@ if (is_file($file_loc)) {
 
 /* ルーティング設定 */
 
-$blocs_routes_loc = ROOT_DIR.'/vendor/blocs/admin/routes.php';
+$blocs_routes_loc = STUB_DIR.'/routes/web.php';
 $laravel_routes_loc = ROOT_DIR.'/routes/web.php';
 if (is_file($blocs_routes_loc) && $laravel_routes_loc) {
     $laravel_routes = file_get_contents($laravel_routes_loc);
@@ -32,7 +33,7 @@ if (is_file($blocs_routes_loc) && $laravel_routes_loc) {
     }
 }
 
-/* モデル設定 */
+/* モデルを置き換え */
 
 $laravel_user_loc = ROOT_DIR.'/app/User.php';
 if (is_file($laravel_user_loc)) {
@@ -45,7 +46,7 @@ if (is_file($laravel_user_loc)) {
 /* ディレクトリを配置 */
 
 foreach (['app', 'config', 'database', 'public', 'resources'] as $target_dir) {
-    $update_json_data = _copy_dir(ROOT_DIR.'/vendor/blocs/admin/'.$target_dir, ROOT_DIR.'/'.$target_dir, $update_json_data);
+    $update_json_data = _copy_dir(STUB_DIR.'/'.$target_dir, ROOT_DIR.'/'.$target_dir, $update_json_data);
     echo <<< END_of_TEXT
 Copy "{$target_dir}"
 

@@ -11,7 +11,7 @@ class ProfileController extends UserController
         defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'profile');
 
         $this->template_prefix = 'admin.profile';
-        $this->table_main = '\App\User';
+        $this->table_main = 'App\User';
         $this->notice_item = 'email';
     }
 

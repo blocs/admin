@@ -25,7 +25,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "Blocs\\Admin\\": "src\/"
+            "Blocs\\": "src\/",
+            "App\\": "app\/"
         }
     }
 }
