@@ -1,6 +1,6 @@
 <?php
 
-namespace Blocs\Admin;
+namespace Blocs;
 
 use Illuminate\Support\Facades\Route;
 
