@@ -21,7 +21,7 @@
         "laravel/ui": "@dev"
     },
     "bin": [
-        "bin/deploy_stub"
+        "bin/deploy-admin"
     ],
     "autoload": {
         "psr-4": {
