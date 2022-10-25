@@ -28,6 +28,21 @@
 				@error('name') <div class='text-danger'>{{ $message }}</div> @enderror
 			</td>
 		</tr>
+		<tr data-exist=$menu_group>
+			<th>
+				<label for='group'><!-- data-lang='label:develop_message_optgroup_group' --></label>
+			</th>
+			<td>
+				<div class='checkbox-inline' data-repeat=$menu_group>
+					<label>
+					<!-- data-attribute="value" data-val=$value -->
+					<input type='checkbox' name='group[]' /> <!-- data-val=$label -->
+					</label>
+				</div>
+
+				@error('group') <div class='text-danger'>{{ $message }}</div> @enderror
+			</td>
+		</tr>
 		<tr>
 			<th>
 				<label for='password_old'><!-- data-lang='template:admin_profile_password_old' --></label>

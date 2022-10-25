@@ -2,8 +2,13 @@
 
 Auth::routes();
 
+use App\Http\Middleware\UserGroup;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\UserController;
+
 Route::middleware('auth')
+	->middleware(UserGroup::class)
 	->group(function () {
 		Route::get('/home', [HomeController::class, 'index'])->name('home');
 		Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
@@ -11,8 +16,8 @@ Route::middleware('auth')
 	}
 );
 
-use App\Http\Controllers\Admin\ProfileController;
 Route::middleware('auth')
+	->middleware(UserGroup::class)
 	->prefix('profile')
 	->name('profile.')
 	->group(function () {
@@ -21,8 +26,8 @@ Route::middleware('auth')
 	}
 );
 
-use App\Http\Controllers\Admin\UserController;
-Route::middleware('guest')
+Route::middleware('auth')
+	->middleware(UserGroup::class)
 	->prefix('user')
 	->name('user.')
 	->group(function () {
