@@ -20,6 +20,13 @@
         "blocs/blocs": "@dev",
         "laravel/ui": "@dev"
     },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Blocs\\AdminServiceProvider"
+            ]
+        }
+    },
     "autoload": {
         "psr-4": {
             "Blocs\\": "src\/",
