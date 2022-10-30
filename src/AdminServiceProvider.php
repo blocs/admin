@@ -2,6 +2,7 @@
 
 namespace Blocs;
 
+use App\Console\Commands\BlocsAdmin;
 use Illuminate\Support\ServiceProvider;
 
 class AdminServiceProvider extends ServiceProvider
@@ -18,7 +19,7 @@ class AdminServiceProvider extends ServiceProvider
     public function registerBlocsAdminCommand()
     {
         $this->app->singleton('command.blocs.admin', function ($app) {
-            return new App\Console\Commands\BlocsAdmin();
+            return new BlocsAdmin();
         });
 
         $this->commands('command.blocs.admin');
