@@ -2,7 +2,9 @@
 
 namespace Blocs;
 
-class AdminServiceProvider
+use Illuminate\Support\ServiceProvider;
+
+class AdminServiceProvider extends ServiceProvider
 {
     public function register()
     {
