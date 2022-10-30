@@ -10,16 +10,21 @@ class HomeController extends Controller
     private $val = [];
     private $admin_top_user_month = 5;
 
+    public function __construct()
+    {
+        $this->template_prefix = 'admin';
+    }
+
     public function index()
     {
         $this->val = array_merge($this->val, \Blocs\Notice::get());
 
-        return view('admin.home', $this->val);
+        return view($this->template_prefix.'.home', $this->val);
     }
 
     public function dashboard()
     {
-        return view('admin.dashboard.user', $this->chart());
+        return view($this->template_prefix.'.dashboard.user', $this->chart());
     }
 
     public function clear()

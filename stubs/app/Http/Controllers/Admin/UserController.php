@@ -14,6 +14,11 @@ class UserController extends \Blocs\Controllers\Base
         $this->table_main = 'App\User';
         $this->paginate_num = 20;
         $this->notice_item = 'email';
+
+        list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get('admin');
+        $this->val['navigation'] = $navigation;
+        $this->val['headline'] = $headline;
+        $this->val['breadcrumb'] = $breadcrumb;
     }
 
     protected function prepare_index_search(&$table_main)

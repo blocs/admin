@@ -20,9 +20,6 @@
         "blocs/blocs": "@dev",
         "laravel/ui": "@dev"
     },
-    "bin": [
-        "bin/deploy-admin"
-    ],
     "autoload": {
         "psr-4": {
             "Blocs\\": "src\/",
