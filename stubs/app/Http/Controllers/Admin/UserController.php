@@ -8,12 +8,13 @@ class UserController extends \Blocs\Controllers\Base
 {
     public function __construct()
     {
+        defined('VIEW_PREFIX') || define('VIEW_PREFIX', 'admin');
         defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'user');
 
-        $this->template_prefix = 'admin.user';
+        $this->view_prefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
         $this->table_main = 'App\User';
-        $this->paginate_num = 20;
         $this->notice_item = 'email';
+        $this->paginate_num = 20;
 
         list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get('admin');
         $this->val['navigation'] = $navigation;

@@ -12,19 +12,22 @@ class HomeController extends Controller
 
     public function __construct()
     {
-        $this->template_prefix = 'admin';
+        defined('VIEW_PREFIX') || define('VIEW_PREFIX', 'admin');
+        defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'home');
+
+        $this->view_prefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
     }
 
     public function index()
     {
         $this->val = array_merge($this->val, \Blocs\Notice::get());
 
-        return view($this->template_prefix.'.home', $this->val);
+        return view($this->view_prefix.'.index', $this->val);
     }
 
     public function dashboard()
     {
-        return view($this->template_prefix.'.dashboard.user', $this->chart());
+        return view($this->view_prefix.'.dashboard.user', $this->chart());
     }
 
     public function clear()

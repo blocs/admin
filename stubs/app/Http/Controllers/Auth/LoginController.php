@@ -38,12 +38,15 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
 
-        $this->template_prefix = 'admin';
+        defined('VIEW_PREFIX') || define('VIEW_PREFIX', 'admin');
+        defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'auth');
+
+        $this->view_prefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
     }
 
     public function showLoginForm()
     {
-        return view($this->template_prefix.'.auth.login');
+        return view($this->view_prefix.'.login');
     }
 
     protected function loggedOut(Request $request)
@@ -53,7 +56,7 @@ class LoginController extends Controller
 
     protected function validateLogin(Request $request)
     {
-        list($validate, $message) = \Blocs\Validate::get($this->template_prefix.'.auth.login');
+        list($validate, $message) = \Blocs\Validate::get($this->view_prefix.'.login');
         empty($validate) || $request->validate($validate, $message);
     }
 

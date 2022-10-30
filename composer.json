@@ -29,8 +29,8 @@
     },
     "autoload": {
         "psr-4": {
-            "Blocs\\": "src\/",
-            "App\\": "app\/"
+            "App\\": "app\/",
+            "Blocs\\": "src\/"
         }
     }
 }
