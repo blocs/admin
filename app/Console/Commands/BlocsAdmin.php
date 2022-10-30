@@ -16,7 +16,7 @@ class BlocsAdmin extends Command
 
     public function handle()
     {
-        define('ROOT_DIR', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../')));
+        define('ROOT_DIR', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../../../../')));
         define('STUB_DIR', ROOT_DIR.'/vendor/blocs/admin/stubs');
 
         /* アップデート状況把握のため更新情報を取得 */
