@@ -37,6 +37,13 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+
+        $this->template_prefix = 'admin';
+    }
+
+    public function showLoginForm()
+    {
+        return view($this->template_prefix.'.auth.login');
     }
 
     protected function loggedOut(Request $request)
@@ -46,7 +53,7 @@ class LoginController extends Controller
 
     protected function validateLogin(Request $request)
     {
-        list($validate, $message) = \Blocs\Validate::get('auth.login');
+        list($validate, $message) = \Blocs\Validate::get($this->template_prefix.'.auth.login');
         empty($validate) || $request->validate($validate, $message);
     }
 
