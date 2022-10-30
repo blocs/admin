@@ -126,7 +126,7 @@ END_of_TEXT;
             file_put_contents($target_file, $new_contents) && chmod($target_file, 0666);
             $update_json_data[$file_key] = md5($new_contents);
 
-            return $update_json_data;    
+            return $update_json_data;
         }
 
         // 違う内容のファイルがある
