@@ -11,14 +11,14 @@ class BlocsAdmin extends Command
 
     public function __construct()
     {
+        define('ROOT_DIR', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../../../../')));
+        define('STUB_DIR', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../'));
+
         parent::__construct();
     }
 
     public function handle()
     {
-        define('ROOT_DIR', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../../../../')));
-        define('STUB_DIR', ROOT_DIR.'/vendor/blocs/admin/stubs');
-
         /* アップデート状況把握のため更新情報を取得 */
 
         $file_loc = ROOT_DIR.'/storage/blocs_update.json';
