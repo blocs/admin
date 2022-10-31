@@ -16,6 +16,11 @@ class HomeController extends Controller
         defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'home');
 
         $this->view_prefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
+
+        list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get(VIEW_PREFIX);
+        $this->val['navigation'] = $navigation;
+        $this->val['headline'] = $headline;
+        $this->val['breadcrumb'] = $breadcrumb;
     }
 
     public function index()

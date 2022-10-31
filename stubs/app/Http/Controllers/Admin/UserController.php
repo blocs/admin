@@ -16,7 +16,7 @@ class UserController extends \Blocs\Controllers\Base
         $this->notice_item = 'email';
         $this->paginate_num = 20;
 
-        list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get('admin');
+        list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get(VIEW_PREFIX);
         $this->val['navigation'] = $navigation;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
