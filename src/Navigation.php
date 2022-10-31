@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Route;
 
 class Navigation
 {
-    private static $group;
-
     public static function get($name = '', $breadcrumbs = [])
     {
         // 設定読み込み
@@ -109,19 +107,19 @@ class Navigation
     {
         isset($current_name) || $current_name = Route::currentRouteName();
 
-        if (!isset(self::$group)) {
-            // 必要な権限を取得
-            $config_group = config('group');
-            self::$group = [];
-            foreach ($config_group as $group_name => $route_names) {
-                foreach ($route_names as $route_name) {
-                    empty(self::$group[$route_name]) && self::$group[$route_name] = [];
-                    self::$group[$route_name][] = $group_name;
+        // 必要な権限を取得
+        $config_group = config('group');
+        $groups = [];
+        foreach ($config_group as $group_name => $route_names) {
+            foreach ($route_names as $route_name) {
+                if (false !== strpos($current_name, $route_name)) {
+                    $groups[] = $group_name;
+                    break;
                 }
             }
         }
 
-        if (empty(self::$group[$current_name])) {
+        if (empty($groups)) {
             return true;
         }
 
@@ -130,7 +128,7 @@ class Navigation
         $my_groups = explode("\t", $_user_data['group']);
 
         foreach ($my_groups as $my_group) {
-            if (in_array($my_group, self::$group[$current_name])) {
+            if (in_array($my_group, $groups)) {
                 return true;
             }
         }
