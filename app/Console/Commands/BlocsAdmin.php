@@ -15,7 +15,7 @@ class BlocsAdmin extends Command
     public function __construct()
     {
         self::$root_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../../../../'));
-        self::$stub_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../'));
+        self::$stub_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../stubs'));
 
         parent::__construct();
     }
