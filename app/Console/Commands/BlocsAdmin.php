@@ -9,10 +9,13 @@ class BlocsAdmin extends Command
     protected $signature = 'blocs:admin';
     protected $description = 'Deploy blocs/admin package';
 
+    private static $root_dir;
+    private static $stub_dir;
+
     public function __construct()
     {
-        define('ROOT_DIR', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../../../../')));
-        define('STUB_DIR', str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../')));
+        self::$root_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../../../../'));
+        self::$stub_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../'));
 
         parent::__construct();
     }
@@ -21,7 +24,7 @@ class BlocsAdmin extends Command
     {
         /* アップデート状況把握のため更新情報を取得 */
 
-        $file_loc = ROOT_DIR.'/storage/blocs_update.json';
+        $file_loc = self::$root_dir.'/storage/blocs_update.json';
         if (is_file($file_loc)) {
             $update_json_data = json_decode(file_get_contents($file_loc), true);
         } else {
@@ -30,8 +33,8 @@ class BlocsAdmin extends Command
 
         /* ルーティング設定 */
 
-        $blocs_routes_loc = STUB_DIR.'/routes/web.php';
-        $laravel_routes_loc = ROOT_DIR.'/routes/web.php';
+        $blocs_routes_loc = self::$stub_dir.'/routes/web.php';
+        $laravel_routes_loc = self::$root_dir.'/routes/web.php';
         if (is_file($blocs_routes_loc) && $laravel_routes_loc) {
             $laravel_routes = file_get_contents($laravel_routes_loc);
             if (false === strpos($laravel_routes, 'Auth::routes();')) {
@@ -43,7 +46,7 @@ class BlocsAdmin extends Command
 
         /* モデルを置き換え */
 
-        $laravel_user_loc = ROOT_DIR.'/app/User.php';
+        $laravel_user_loc = self::$root_dir.'/app/User.php';
         if (is_file($laravel_user_loc)) {
             $laravel_user = file_get_contents($laravel_user_loc);
             if (false === strpos($laravel_user, 'SoftDeletes;')) {
@@ -54,7 +57,7 @@ class BlocsAdmin extends Command
         /* ディレクトリを配置 */
 
         foreach (['app', 'config', 'database', 'public', 'resources'] as $target_dir) {
-            $update_json_data = self::_copy_dir(STUB_DIR.'/'.$target_dir, ROOT_DIR.'/'.$target_dir, $update_json_data);
+            $update_json_data = self::_copy_dir(self::$stub_dir.'/'.$target_dir, self::$root_dir.'/'.$target_dir, $update_json_data);
             echo <<< END_of_TEXT
 Copy "{$target_dir}"
 
@@ -94,7 +97,7 @@ END_of_TEXT;
     {
         $original_file = str_replace(DIRECTORY_SEPARATOR, '/', realpath($original_file));
         $new_contents = file_get_contents($original_file);
-        $file_key = substr($target_file, strlen(ROOT_DIR));
+        $file_key = substr($target_file, strlen(self::$root_dir));
 
         if (!is_file($target_file) || !filesize($target_file)) {
             // コピー先にファイルがない
