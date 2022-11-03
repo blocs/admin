@@ -6,15 +6,10 @@ use Illuminate\Support\Facades\Route;
 
 class Navigation
 {
-    public static function get($name = '', $breadcrumbs = [])
+    public static function get($name, $breadcrumbs = [])
     {
         // 設定読み込み
         $configs = config('navigation');
-
-        if (isset($configs['name'])) {
-            $name = $configs['name'];
-            config(['navigation.name' => null]);
-        }
 
         // 指定されたhedline読み込み
         if (isset($configs['headline'])) {
@@ -81,11 +76,6 @@ class Navigation
         }
 
         return [$navigations, $headline, $breadcrumbs];
-    }
-
-    public static function name($name)
-    {
-        config(['navigation.name' => $name]);
     }
 
     public static function headline($icon, $lang)
