@@ -1,5 +1,5 @@
 {
-    "name": "blocs/admin",
+    "name": "blocs\/admin",
     "type": "library",
     "description": "A basic package for blocs",
     "keywords": [
@@ -17,8 +17,8 @@
         }
     ],
     "require": {
-        "blocs/blocs": "@dev",
-        "laravel/ui": "@dev"
+        "blocs\/blocs": "@dev",
+        "laravel\/ui": "@dev"
     },
     "extra": {
         "laravel": {
