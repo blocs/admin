@@ -14,11 +14,6 @@ class ProfileController extends UserController
         $this->view_prefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
         $this->table_main = 'App\User';
         $this->notice_item = 'email';
-
-        list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get(VIEW_PREFIX);
-        $this->val['navigation'] = $navigation;
-        $this->val['headline'] = $headline;
-        $this->val['breadcrumb'] = $breadcrumb;
     }
 
     public function entry($id = 0)
