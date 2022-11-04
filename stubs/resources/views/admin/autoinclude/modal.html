@@ -2,13 +2,13 @@
 
 <!-- 新規作成のモーダル -->
 	<!-- ボタン設定 -->
-		<!-- data-query=$modal_name data-val='modal_insert' data-none=$modal_name -->
+		<!-- data-assign=$modal_name data-val='modal_insert' data-none=$modal_name -->
 		<!-- data-include='button_primary' -->
 
 	<!-- モーダル設定 -->
 		@php empty($modal_action) && $modal_action = route(ROUTE_PREFIX.'.insert') @endphp
-		<!-- data-query=$modal_title data-lang='template:resource_blocs_modal_new_title' data-none=$modal_title -->
-		<!-- data-query=$modal_message data-lang='template:resource_blocs_modal_new_message' data-none=$modal_message -->
+		<!-- data-assign=$modal_title data-lang='template:resource_blocs_modal_new_title' data-none=$modal_title -->
+		<!-- data-assign=$modal_message data-lang='template:resource_blocs_modal_new_message' data-none=$modal_message -->
 
 		<!-- data-bloc='modal_button' -->
 			<!-- data-include='button_back_modal' -->
@@ -23,17 +23,17 @@
 
 <!-- 更新のモーダル -->
 	<!-- ボタン設定 -->
-		<!-- data-query=$modal_name data-val='modal_update' data-none=$modal_name -->
+		<!-- data-assign=$modal_name data-val='modal_update' data-none=$modal_name -->
 		<!-- data-include='button_primary' -->
 
 	<!-- モーダル設定 -->
 		@php empty($modal_action) && $modal_action = route(ROUTE_PREFIX.'.update', $id) @endphp
-		<!-- data-query=$modal_title data-lang='template:resource_blocs_modal_update_title' data-none=$modal_title -->
-		<!-- data-query=$modal_message data-lang='template:resource_blocs_modal_update_message' data-none=$modal_message -->
+		<!-- data-assign=$modal_title data-lang='template:resource_blocs_modal_update_title' data-none=$modal_title -->
+		<!-- data-assign=$modal_message data-lang='template:resource_blocs_modal_update_message' data-none=$modal_message -->
 
 		<!-- data-bloc='modal_button' -->
 			<!-- data-include='button_back_modal' -->
-			<!-- data-query=$button_primary_modal_label data-lang='template:resource_blocs_modal_update_button' -->
+			<!-- data-assign=$button_primary_modal_label data-lang='template:resource_blocs_modal_update_button' -->
 			<!-- data-include='button_primary_modal' -->
 		<!-- data-endbloc -->
 
@@ -45,13 +45,13 @@
 
 <!-- 削除のモーダル -->
 	<!-- ボタン設定 -->
-		<!-- data-query=$modal_name data-val='modal_delete' data-none=$modal_name -->
+		<!-- data-assign=$modal_name data-val='modal_delete' data-none=$modal_name -->
 		<!-- data-include='button_danger' -->
 
 	<!-- モーダル設定 -->
 		@php empty($modal_action) && $modal_action = route(ROUTE_PREFIX.'.delete') @endphp
-		<!-- data-query=$modal_title data-lang='template:resource_blocs_modal_delete_title' data-none=$modal_title -->
-		<!-- data-query=$modal_message data-lang='template:resource_blocs_modal_delete_message' data-none=$modal_message -->
+		<!-- data-assign=$modal_title data-lang='template:resource_blocs_modal_delete_title' data-none=$modal_title -->
+		<!-- data-assign=$modal_message data-lang='template:resource_blocs_modal_delete_message' data-none=$modal_message -->
 
 		<!-- data-bloc='modal_button' -->
 			<!-- data-include='button_back_modal' -->
@@ -64,11 +64,11 @@
 
 <!-- data-bloc='modal_toggle' -->
 
-	<!-- data-query=$modal_name data-val='modal_toggle' data-none=$modal_name -->
-	<!-- data-query=$modal_titile_submit data-lang='template:resource_blocs_modal_activate_title' data-none=$modal_titile_submit -->
-	<!-- data-query=$modal_message_submit data-lang='template:resource_blocs_modal_activate_message' data-none=$modal_message_submit -->
-	<!-- data-query=$modal_title_warning data-lang='template:resource_blocs_modal_inactivate_title' data-none=$modal_title_warning -->
-	<!-- data-query=$modal_message_warning data-lang='template:resource_blocs_modal_inactivate_message' data-none=$modal_message_warning -->
+	<!-- data-assign=$modal_name data-val='modal_toggle' data-none=$modal_name -->
+	<!-- data-assign=$modal_titile_submit data-lang='template:resource_blocs_modal_activate_title' data-none=$modal_titile_submit -->
+	<!-- data-assign=$modal_message_submit data-lang='template:resource_blocs_modal_activate_message' data-none=$modal_message_submit -->
+	<!-- data-assign=$modal_title_warning data-lang='template:resource_blocs_modal_inactivate_title' data-none=$modal_title_warning -->
+	<!-- data-assign=$modal_message_warning data-lang='template:resource_blocs_modal_inactivate_message' data-none=$modal_message_warning -->
 
 	@php empty($modal_action) && $modal_action = route(ROUTE_PREFIX.'.toggle', '') @endphp
 
@@ -159,11 +159,11 @@
 		</div>
 	</div>
 
-	<!-- data-query=$modal_name data-val='' -->
-	<!-- data-query=$modal_action data-val='' -->
-	<!-- data-query=$modal_title data-val='' -->
-	<!-- data-query=$modal_message data-val='' -->
-	<!-- data-query=$button_primary_modal_label data-val='' -->
+	<!-- data-assign=$modal_name data-val='' -->
+	<!-- data-assign=$modal_action data-val='' -->
+	<!-- data-assign=$modal_title data-val='' -->
+	<!-- data-assign=$modal_message data-val='' -->
+	<!-- data-assign=$button_primary_modal_label data-val='' -->
 
 	<!-- data-bloc='modal_body' --><!-- data-endbloc -->
 	<!-- data-bloc='modal_button' --><!-- data-endbloc -->

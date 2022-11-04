@@ -4,14 +4,14 @@
 <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.js'></script>
 
 <!-- data-bloc='jqplot_pie_chart' -->
-<!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
+<!-- data-assign=$graph_id data-val='graph_' data-convert='uniqid' -->
 
 <script type='text/javascript' src='https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pieRenderer.js'></script>
 <script type='text/javascript'>
 Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pieRenderer.js')})()
 ]).then(values => {
-  <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
+  <!-- data-assign=$graph_json data-val=$graph_json data-convert='addslashes' -->
   var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
 
   var option = {
@@ -47,7 +47,7 @@ Promise.all([
 <!-- data-endbloc -->
 
 <!-- data-bloc='jqplot_1bar_1line' -->
-<!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
+<!-- data-assign=$graph_id data-val='graph_' data-convert='uniqid' -->
 
 <script type='text/javascript'>
 Promise.all([
@@ -60,7 +60,7 @@ Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pointLabels.js')})()
 ]).then(values => {
 
-  <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
+  <!-- data-assign=$graph_json data-val=$graph_json data-convert='addslashes' -->
   var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
 
   var option = {
@@ -127,7 +127,7 @@ Promise.all([
 <!-- data-endbloc -->
 
 <!-- data-bloc='jqplot_2bar_1line' -->
-<!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
+<!-- data-assign=$graph_id data-val='graph_' data-convert='uniqid' -->
 <script type='text/javascript'>
 Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.categoryAxisRenderer.js')})(),
@@ -136,7 +136,7 @@ Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.barRenderer.js')})(),
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pointLabels.js')})()
 ]).then(values => {
-  <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
+  <!-- data-assign=$graph_json data-val=$graph_json data-convert='addslashes' -->
   var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
 
   var option = {
@@ -203,7 +203,7 @@ Promise.all([
 <!-- data-endbloc -->
 
 <!-- data-bloc='jqplot_1bar_2line' -->
-<!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
+<!-- data-assign=$graph_id data-val='graph_' data-convert='uniqid' -->
 
 <script type='text/javascript'>
 Promise.all([
@@ -215,7 +215,7 @@ Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.barRenderer.js')})(),
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pointLabels.js')})()
 ]).then(values => {
-  <!-- data-query=$graph_json data-val=$graph_json data-convert='addslashes' -->
+  <!-- data-assign=$graph_json data-val=$graph_json data-convert='addslashes' -->
   var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
 
   var option = {
@@ -283,7 +283,7 @@ Promise.all([
 <!-- data-endbloc -->
 
 <!-- data-bloc='jqplot_2bar_2line' -->
-<!-- data-query=$graph_id data-val='graph_' data-convert='uniqid' -->
+<!-- data-assign=$graph_id data-val='graph_' data-convert='uniqid' -->
 <script type='text/javascript'>
 Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.categoryAxisRenderer.min.js')})(),

@@ -11,7 +11,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_back' -->
-<!-- data-query=$button_back_default_label data-lang='template:resource_blocs_button_back' -->
+<!-- data-assign=$button_back_default_label data-lang='template:resource_blocs_button_back' -->
 <!-- data-attribute='href' data-val=$button_href data-exist=$button_href -->
 <a href='./' class='btn btn-default btn-lg'>
 	<!-- data-attribute='class' data-val=$button_back_icon data-prefix='fa ' data-exist=$button_back_icon -->
@@ -20,7 +20,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_back_modal' -->
-<!-- data-query=$button_back_default_label data-lang='template:resource_blocs_button_back' -->
+<!-- data-assign=$button_back_default_label data-lang='template:resource_blocs_button_back' -->
 <button type='button' class='btn btn-default btn-lg' data-dismiss='modal'>
 	<!-- data-attribute='class' data-val=$button_back_icon data-prefix='fa ' data-exist=$button_back_icon -->
 	<span class='fa fa-arrow-left'></span> <!-- data-val=$button_back_modal_label data-default=$button_back_default_label -->
@@ -28,7 +28,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_new' -->
-<!-- data-query=$button_new_default_label data-lang='template:resource_blocs_button_new' -->
+<!-- data-assign=$button_new_default_label data-lang='template:resource_blocs_button_new' -->
 @php empty($button_href) && $button_href = route(ROUTE_PREFIX.'.entry') @endphp
 <!-- data-attribute='href' data-val=$button_href -->
 <a class='btn btn-primary btn-lg'>
@@ -38,7 +38,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_primary' -->
-<!-- data-query=$button_primary_default_label data-lang='template:resource_blocs_button_confirm' -->
+<!-- data-assign=$button_primary_default_label data-lang='template:resource_blocs_button_confirm' -->
 <!-- data-attribute='data-target' data-val=$modal_name data-prefix='#' data-exist=$modal_name -->
 <!-- data-attribute='data-toggle' data-val='modal' data-exist=$modal_name -->
 <button type='button' class='btn btn-primary btn-lg'>
@@ -48,7 +48,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_primary_modal' -->
-<!-- data-query=$button_primary_modal_default_label data-lang='template:resource_blocs_button_submit' -->
+<!-- data-assign=$button_primary_modal_default_label data-lang='template:resource_blocs_button_submit' -->
 <button type='submit' class='btn btn-primary btn-lg'>
 	<!-- data-attribute='class' data-val=$button_primary_icon data-prefix='fa ' data-exist=$button_primary_icon -->
 	<span class='fa fa-arrow-right'></span> <!-- data-val=$button_primary_modal_label data-default=$button_primary_modal_default_label -->
@@ -56,7 +56,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_info' -->
-<!-- data-query=$button_info_default_label data-lang='template:resource_blocs_button_confirm' -->
+<!-- data-assign=$button_info_default_label data-lang='template:resource_blocs_button_confirm' -->
 <!-- data-attribute='data-target' data-val=$modal_name data-prefix='#' data-exist=$modal_name -->
 <!-- data-attribute='data-toggle' data-val='modal' data-exist=$modal_name -->
 <button type='button' class='btn btn-info btn-lg'>
@@ -66,7 +66,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_info_modal' -->
-<!-- data-query=$button_info_modal_default_label data-lang='template:resource_blocs_button_submit' -->
+<!-- data-assign=$button_info_modal_default_label data-lang='template:resource_blocs_button_submit' -->
 <button type='submit' class='btn btn-info btn-lg'>
 	<!-- data-attribute='class' data-val=$button_info_icon data-prefix='fa ' data-exist=$button_info_icon -->
 	<span class='fa fa-info-circle'></span> <!-- data-val=$button_info_modal_label data-default=$button_info_modal_default_label -->
@@ -74,7 +74,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_success' -->
-<!-- data-query=$button_success_default_label data-lang='template:resource_blocs_button_confirm' -->
+<!-- data-assign=$button_success_default_label data-lang='template:resource_blocs_button_confirm' -->
 <!-- data-attribute='data-target' data-val=$modal_name data-prefix='#' data-exist=$modal_name -->
 <!-- data-attribute='data-toggle' data-val='modal' data-exist=$modal_name -->
 <button type='button' class='btn btn-success btn-lg'>
@@ -84,7 +84,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_success_modal' -->
-<!-- data-query=$button_success_modal_default_label data-lang='template:resource_blocs_button_submit' -->
+<!-- data-assign=$button_success_modal_default_label data-lang='template:resource_blocs_button_submit' -->
 <button type='submit' class='btn btn-success btn-lg'>
 	<!-- data-attribute='class' data-val=$button_success_icon data-prefix='fa ' data-exist=$button_success_icon -->
 	<span class='fa fa-check'></span> <!-- data-val=$button_success_modal_label data-default=$button_success_modal_default_label -->
@@ -92,7 +92,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_danger' -->
-<!-- data-query=$button_danger_default_label data-lang='template:resource_blocs_button_delete' -->
+<!-- data-assign=$button_danger_default_label data-lang='template:resource_blocs_button_delete' -->
 <!-- data-attribute='data-target' data-val=$modal_name data-prefix='#' -->
 <!-- data-attribute='data-toggle' data-val='modal' data-exist=$modal_name -->
 <button type='button' class='btn btn-danger btn-lg'>
@@ -102,7 +102,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_danger_modal' -->
-<!-- data-query=$button_danger_default_label data-lang='template:resource_blocs_button_delete' -->
+<!-- data-assign=$button_danger_default_label data-lang='template:resource_blocs_button_delete' -->
 <button type='submit' class='btn btn-danger btn-lg'>
 	<!-- data-attribute='class' data-val=$button_danger_icon data-prefix='fa ' data-exist=$button_danger_icon -->
 	<span class='fa fa-trash'></span> <!-- data-val=$button_danger_modal_label data-default=$button_danger_default_label -->
@@ -110,7 +110,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_warning' -->
-<!-- data-query=$button_warning_default_label data-lang='template:resource_blocs_button_warning' -->
+<!-- data-assign=$button_warning_default_label data-lang='template:resource_blocs_button_warning' -->
 <!-- data-attribute='data-target' data-val=$modal_name data-prefix='#' -->
 <!-- data-attribute='data-toggle' data-val='modal' data-exist=$modal_name -->
 <button type='button' class='btn btn-warning btn-lg'>
@@ -120,7 +120,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_warning_modal' -->
-<!-- data-query=$button_warning_modal_default_label data-lang='template:resource_blocs_button_execute' -->
+<!-- data-assign=$button_warning_modal_default_label data-lang='template:resource_blocs_button_execute' -->
 <button type='submit' class='btn btn-warning btn-lg'>
 	<!-- data-attribute='class' data-val=$button_warning_icon data-prefix='fa ' data-exist=$button_warning_icon -->
 	<span class='fa fa-exclamation-triangle'></span> <!-- data-val=$button_warning_modal_label data-default=$button_warning_modal_default_label -->
@@ -146,7 +146,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_copy' -->
-<!-- data-query=$button_copy_default_label data-lang='template:resource_blocs_button_copy' -->
+<!-- data-assign=$button_copy_default_label data-lang='template:resource_blocs_button_copy' -->
 <input type='hidden' name='copy_id' />
 <!-- data-attribute='href' data-val="./entry.php?id={$id}&copy_id={$id}" -->
 <a class='btn btn-warning btn-lg' data-unless="empty($id) || !empty($copy_id)">
