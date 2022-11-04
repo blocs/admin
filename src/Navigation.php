@@ -34,7 +34,7 @@ class Navigation
         $navigations = [];
         foreach ($configs as $config) {
             isset($config['url']) || $config['url'] = route($config['name']);
-            isset($config['label']) || $config['label'] = \Lang::get($config['lang']);
+            isset($config['label']) || $config['label'] = \Blocs\Notice::get_message_string($config['lang']);
 
             if (isset($config['sub'])) {
                 list($config['sub'], $sub_headline, $breadcrumbs) = self::get($config['sub'], $breadcrumbs);
@@ -82,14 +82,14 @@ class Navigation
     {
         config(['navigation.headline' => [
             'icon' => $icon,
-            'label' => \Lang::get($lang),
+            'label' => \Blocs\Notice::get_message_string($lang),
         ]]);
     }
 
     public static function breadcrumb($lang)
     {
         config(['navigation.breadcrumb' => [
-            'label' => \Lang::get($lang),
+            'label' => \Blocs\Notice::get_message_string($lang),
         ]]);
     }
 
