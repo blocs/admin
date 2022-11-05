@@ -12,7 +12,7 @@ class ProfileController extends UserController
         defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'profile');
 
         $this->view_prefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
-        $this->table_main = 'App\User';
+        $this->table_main = 'App\Models\Admin\User';
         $this->notice_item = 'email';
     }
 

@@ -12,7 +12,7 @@ class UserController extends \Blocs\Controllers\Base
         defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'user');
 
         $this->view_prefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
-        $this->table_main = 'App\User';
+        $this->table_main = 'App\Models\Admin\User';
         $this->notice_item = 'email';
         $this->paginate_num = 20;
     }

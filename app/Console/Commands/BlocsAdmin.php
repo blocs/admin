@@ -35,16 +35,6 @@ class BlocsAdmin extends Command
             }
         }
 
-        /* モデルを置き換え */
-
-        $laravel_user_loc = self::$root_dir.'/app/User.php';
-        if (is_file($laravel_user_loc)) {
-            $laravel_user = file_get_contents($laravel_user_loc);
-            if (false === strpos($laravel_user, 'SoftDeletes;')) {
-                unlink($laravel_user_loc);
-            }
-        }
-
         /* 言語ファイルをマージ */
 
         self::_merge_lang(self::$stub_dir.'/../lang');
