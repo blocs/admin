@@ -170,7 +170,7 @@ END_of_TEXT;
             }
 
             $target_file = $laravel_lang_dir.'/'.$file;
-            if (is_file($target_file)) {
+            if (!is_file($target_file)) {
                 // ファイルがないのでコピー
                 copy($blocs_lang_dir.'/'.$file, $target_file) && chmod($target_file, 0666);
                 continue;
@@ -178,7 +178,7 @@ END_of_TEXT;
 
             // ファイルをマージ
             $lang_json_data = json_decode(file_get_contents($target_file), true);
-            $lang_json_data = array_merge($lang_json_data, json_decode(file_get_contents($blocs_lang_dir.'/'.$blocs_lang_file), true));
+            $lang_json_data = array_merge($lang_json_data, json_decode(file_get_contents($blocs_lang_dir.'/'.$file), true));
             ksort($lang_json_data);
 
             file_put_contents($target_file, json_encode($lang_json_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($target_file, 0666);
