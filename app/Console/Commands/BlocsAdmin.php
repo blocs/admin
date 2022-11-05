@@ -157,11 +157,12 @@ END_of_TEXT;
 
     private static function _merge_lang($blocs_lang_dir)
     {
-        $laravel_lang_dir = self::$root_dir.'/resources/lang';
-
-        if (!is_dir($blocs_lang_dir) || !is_dir($laravel_lang_dir)) {
+        if (!is_dir($blocs_lang_dir)) {
             return;
         }
+
+        $laravel_lang_dir = self::$root_dir.'/resources/lang';
+        is_dir($laravel_lang_dir) || mkdir($laravel_lang_dir, 0777, true) && chmod($laravel_lang_dir, 0777);
 
         $blocs_lang_files = scandir($blocs_lang_dir);
         foreach ($blocs_lang_files as $file) {
