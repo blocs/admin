@@ -39,7 +39,7 @@ class AdminServiceProvider extends ServiceProvider
     public function registerBlocsCommand()
     {
         $this->app->singleton('command.blocs.admin', function ($app) {
-            return new BlocsAdmin('blocs:admin', 'Deploy blocs/admin package');
+            return new BlocsAdmin('blocs:admin', 'Deploy blocs/admin package', __FILE__);
         });
 
         $this->commands('command.blocs.admin');

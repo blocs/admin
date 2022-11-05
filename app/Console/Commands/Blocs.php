@@ -12,13 +12,13 @@ class Blocs extends Command
     protected static $root_dir;
     protected static $stub_dir;
 
-    public function __construct($signature, $description)
+    public function __construct($signature, $description, $file_loc)
     {
         $this->signature = $signature;
         $this->description = $description;
 
-        self::$root_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../../../../'));
-        self::$stub_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../stubs'));
+        self::$root_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($file_loc).'/../../../../'));
+        self::$stub_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($file_loc).'/../stubs'));
 
         parent::__construct();
     }
