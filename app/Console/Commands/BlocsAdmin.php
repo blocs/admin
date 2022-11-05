@@ -47,9 +47,7 @@ class BlocsAdmin extends Command
 
         /* 言語ファイルをマージ */
 
-        $blocs_lang_dir = self::$stub_dir.'/../lang';
-        $laravel_lang_dir = self::$root_dir.'/resources/lang';
-        self::_merge_lang($blocs_lang_dir, $laravel_lang_dir);
+        self::_merge_lang(self::$stub_dir.'/../lang');
 
         /* アップデート状況把握のため更新情報を取得 */
 
@@ -157,28 +155,32 @@ END_of_TEXT;
         return $update_json_data;
     }
 
-    private static function _merge_lang($blocs_lang_dir, $laravel_lang_dir)
+    private static function _merge_lang($blocs_lang_dir)
     {
+        $laravel_lang_dir = self::$root_dir.'/resources/lang';
+
         if (!is_dir($blocs_lang_dir) || !is_dir($laravel_lang_dir)) {
             return;
         }
 
         $blocs_lang_files = scandir($blocs_lang_dir);
-        foreach ($blocs_lang_files as $blocs_lang_file) {
+        foreach ($blocs_lang_files as $file) {
             if ('.' == substr($file, 0, 1) && '.gitkeep' != $file && '.htaccess' != $file) {
                 continue;
             }
 
-            $target_file = $laravel_lang_dir.'/'.$blocs_lang_file;
+            $target_file = $laravel_lang_dir.'/'.$file;
             if (is_file($target_file)) {
                 // ファイルがないのでコピー
-                copy($blocs_lang_dir.'/'.$blocs_lang_file, $target_file) && chmod($target_file, 0666);
+                copy($blocs_lang_dir.'/'.$file, $target_file) && chmod($target_file, 0666);
                 continue;
             }
 
             // ファイルをマージ
             $lang_json_data = json_decode(file_get_contents($target_file), true);
             $lang_json_data = array_merge($lang_json_data, json_decode(file_get_contents($blocs_lang_dir.'/'.$blocs_lang_file), true));
+            ksort($lang_json_data);
+
             file_put_contents($target_file, json_encode($lang_json_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($target_file, 0666);
         }
     }
