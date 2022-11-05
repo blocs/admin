@@ -4,16 +4,19 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-class BlocsAdmin extends Command
+class Blocs extends Command
 {
-    protected $signature = 'blocs:admin';
-    protected $description = 'Deploy blocs/admin package';
+    protected $signature;
+    protected $description;
 
-    private static $root_dir;
-    private static $stub_dir;
+    protected static $root_dir;
+    protected static $stub_dir;
 
-    public function __construct()
+    public function __construct($signature, $description)
     {
+        $this->signature = $signature;
+        $this->description = $description;
+
         self::$root_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../../../../'));
         self::$stub_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../stubs'));
 
@@ -22,19 +25,6 @@ class BlocsAdmin extends Command
 
     public function handle()
     {
-        /* ルーティング設定 */
-
-        $blocs_routes_loc = self::$stub_dir.'/../routes/web.php';
-        $laravel_routes_loc = self::$root_dir.'/routes/web.php';
-        if (is_file($blocs_routes_loc) && is_file($laravel_routes_loc)) {
-            $laravel_routes = file_get_contents($laravel_routes_loc);
-            if (false === strpos($laravel_routes, 'Auth::routes();')) {
-                // ルーティングを追加
-                $blocs_routes = file_get_contents($blocs_routes_loc);
-                file_put_contents($laravel_routes_loc, "\n".$blocs_routes, FILE_APPEND);
-            }
-        }
-
         /* 言語ファイルをマージ */
 
         self::_merge_lang(self::$stub_dir.'/../lang');
