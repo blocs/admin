@@ -9,16 +9,16 @@ class Blocs extends Command
     protected $signature;
     protected $description;
 
-    protected static $root_dir;
-    protected static $stub_dir;
+    protected $root_dir;
+    protected $stub_dir;
 
     public function __construct($signature, $description, $file_loc)
     {
         $this->signature = $signature;
         $this->description = $description;
 
-        self::$root_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($file_loc).'/../../../../'));
-        self::$stub_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($file_loc).'/../stubs'));
+        $this->root_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($file_loc).'/../../../../'));
+        $this->stub_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($file_loc).'/../stubs'));
 
         parent::__construct();
     }
@@ -27,11 +27,11 @@ class Blocs extends Command
     {
         /* 言語ファイルをマージ */
 
-        self::_merge_lang(self::$stub_dir.'/../lang');
+        $this->_merge_lang($this->stub_dir.'/../lang');
 
         /* アップデート状況把握のため更新情報を取得 */
 
-        $file_loc = self::$root_dir.'/storage/blocs_update.json';
+        $file_loc = $this->root_dir.'/storage/blocs_update.json';
         if (is_file($file_loc)) {
             $update_json_data = json_decode(file_get_contents($file_loc), true);
         } else {
@@ -40,18 +40,18 @@ class Blocs extends Command
 
         /* ディレクトリを配置 */
 
-        $files = scandir(self::$stub_dir);
+        $files = scandir($this->stub_dir);
         foreach ($files as $file) {
             if ('.' == substr($file, 0, 1) && '.gitkeep' != $file && '.htaccess' != $file) {
                 continue;
             }
 
-            if (!is_dir(self::$stub_dir.'/'.$file)) {
+            if (!is_dir($this->stub_dir.'/'.$file)) {
                 continue;
             }
 
             $target_dir = $file;
-            $update_json_data = self::_copy_dir(self::$stub_dir.'/'.$target_dir, self::$root_dir.'/'.$target_dir, $update_json_data);
+            $update_json_data = $this->_copy_dir($this->stub_dir.'/'.$target_dir, $this->root_dir.'/'.$target_dir, $update_json_data);
             echo <<< END_of_TEXT
 Deploy "{$target_dir}"
 
@@ -64,7 +64,7 @@ END_of_TEXT;
 
     /* Private function */
 
-    private static function _copy_dir($dir_name, $new_dir, $update_json_data)
+    private function _copy_dir($dir_name, $new_dir, $update_json_data)
     {
         is_dir($new_dir) || mkdir($new_dir, 0777, true) && chmod($new_dir, 0777);
 
@@ -78,20 +78,20 @@ END_of_TEXT;
             }
 
             if (is_dir($dir_name.'/'.$file)) {
-                $update_json_data = self::_copy_dir($dir_name.'/'.$file, $new_dir.'/'.$file, $update_json_data);
+                $update_json_data = $this->_copy_dir($dir_name.'/'.$file, $new_dir.'/'.$file, $update_json_data);
             } else {
-                $update_json_data = self::_copy_file($dir_name.'/'.$file, $new_dir.'/'.$file, $update_json_data);
+                $update_json_data = $this->_copy_file($dir_name.'/'.$file, $new_dir.'/'.$file, $update_json_data);
             }
         }
 
         return $update_json_data;
     }
 
-    private static function _copy_file($original_file, $target_file, $update_json_data)
+    private function _copy_file($original_file, $target_file, $update_json_data)
     {
         $original_file = str_replace(DIRECTORY_SEPARATOR, '/', realpath($original_file));
         $new_contents = file_get_contents($original_file);
-        $file_key = substr($target_file, strlen(self::$root_dir));
+        $file_key = substr($target_file, strlen($this->root_dir));
 
         if (!is_file($target_file) || !filesize($target_file)) {
             // コピー先にファイルがない
@@ -135,13 +135,13 @@ END_of_TEXT;
         return $update_json_data;
     }
 
-    private static function _merge_lang($blocs_lang_dir)
+    private function _merge_lang($blocs_lang_dir)
     {
         if (!is_dir($blocs_lang_dir)) {
             return;
         }
 
-        $laravel_lang_dir = self::$root_dir.'/resources/lang';
+        $laravel_lang_dir = $this->root_dir.'/resources/lang';
         is_dir($laravel_lang_dir) || mkdir($laravel_lang_dir, 0777, true) && chmod($laravel_lang_dir, 0777);
 
         $blocs_lang_files = scandir($blocs_lang_dir);
