@@ -10,8 +10,8 @@ class BlocsAdmin extends \App\Console\Commands\Blocs
     {
         /* ルーティング設定 */
 
-        $blocs_routes_loc = self::$stub_dir.'/../routes/web.php';
-        $laravel_routes_loc = self::$root_dir.'/routes/web.php';
+        $blocs_routes_loc = $this->stub_dir.'/../routes/web.php';
+        $laravel_routes_loc = $this->root_dir.'/routes/web.php';
         if (is_file($blocs_routes_loc) && is_file($laravel_routes_loc)) {
             $laravel_routes = file_get_contents($laravel_routes_loc);
             if (false === strpos($laravel_routes, 'Auth::routes();')) {
