@@ -1,4 +1,6 @@
 {
+    "auth.failed": "Failed to login",
+    "auth.throttle": "Your account has been locked",
     "error:collision_happened": "Data has been edited by other user.\nPlease re-execute.",
     "error:data_not_found": "Data is not exist.",
     "error:data_not_selected": "Data is not selected.",
@@ -41,9 +43,7 @@
     "template:admin_group_user": "User",
     "template:admin_login_button": "Login",
     "template:admin_login_fail": "Failed to login",
-    "auth.failed": "Failed to login",
     "template:admin_login_lock": "Your account has been locked",
-    "auth.throttle": "Your account has been locked",
     "template:admin_login_password": "Password",
     "template:admin_login_save_info": "Save login information",
     "template:admin_login_user_id": "User ID",

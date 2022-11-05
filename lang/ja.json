@@ -1,4 +1,6 @@
 {
+    "auth.failed": "ログインに失敗しました。",
+    "auth.throttle": "アカウントがロックアウトされました。",
     "error:collision_happened": "他のユーザーがデータを編集しました。\n再実行してください。",
     "error:data_not_found": "データがありません。",
     "error:data_not_selected": "データが選択されていません。",
@@ -41,9 +43,7 @@
     "template:admin_group_user": "ユーザー",
     "template:admin_login_button": "ログイン",
     "template:admin_login_fail": "ログインに失敗しました。",
-    "auth.failed": "ログインに失敗しました。",
     "template:admin_login_lock": "アカウントがロックアウトされました。",
-    "auth.throttle": "アカウントがロックアウトされました。",
     "template:admin_login_password": "パスワード",
     "template:admin_login_save_info": "ログイン情報を保存",
     "template:admin_login_user_id": "ユーザーID",
