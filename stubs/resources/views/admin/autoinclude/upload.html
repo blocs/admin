@@ -8,11 +8,11 @@
 <script type="text/javascript">
 function set_uploader(paramname) {
 	var paramnameId = paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
-	if ($('#'+paramnameId+'_uploadFile').length) {
+	if ($('#'+paramnameId+'_upload').length) {
 		return;
 	}
 	else {
-		$('input[name="'+paramname+'"]').wrap('<div id="'+paramnameId+'_uploadFile" class="fileupload-container"></div>');
+		$('input[name="'+paramname+'"]').wrap('<div id="'+paramnameId+'_upload" class="upload-container"></div>');
 	}
 	$('input[name="'+paramname+'"]').prop('type', 'text').css({
 		opacity: 0,
@@ -20,42 +20,54 @@ function set_uploader(paramname) {
 		bottom: 0
 	});
 	var multiple = $('input[name="'+paramname+'"]').prop('multiple');
-	$('#'+paramnameId+'_uploadFile').append('<div class="fileupload-buttonbar"><span class="btn btn-default fileinput-button"><span class="fa fa-file"></span> <span><!-- data-lang='template:resource_blocs_fileupload_add' --></span><input type="file" /></span></div><table class="table table-striped"><tbody class="files"></tbody></table>');
+	$('#'+paramnameId+'_upload').append('<div class="upload-buttonbar"><span class="btn btn-default fileinput-button"><span class="fa fa-file"></span> <span><!-- data-lang='template:resource_blocs_fileupload_add' --></span><input type="file" /></span></div><div id="'+paramnameId+'_upload_error" class="text-danger"></div><table class="table table-striped"><tbody class="files"></tbody></table>');
 	if (multiple) {
-		$('#'+paramnameId+'_uploadFile').find('input[type=file]').attr('multiple', 'multiple');
-		$('#'+paramnameId+'_uploadFile').find('.fa').removeClass('fa-file').addClass('fa-files');
+		$('#'+paramnameId+'_upload').find('input[type=file]').attr('multiple', 'multiple');
 	}
 	uploaded = parse_uploaded(paramname);
 	if (uploaded.length) {
 		var query;
-		if (typeof query_urlencode != 'undefined') {
-			query = {
-				_encode_files: window.btoa(encodeURIComponent($('input[name="'+paramname+'"]').val())),
-				paramname: paramname
-			};
-		} else {
-			query = {
-				files: $('input[name="'+paramname+'"]').val(),
-				paramname: paramname
-			};
-		}
-		$.getJSON('./fileupload.php', query, function(data){
+		query = {
+			uploaded_files: $('input[name="'+paramname+'"]').val(),
+			name: paramname
+		};
+		$.getJSON('{{ route(ROUTE_PREFIX.'.upload_list') }}', query, function(data){
 			var paramnameId = data.paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
-			$('#'+paramnameId+'_uploadFile .files').append(data.html);
+			$('#'+paramnameId+'_upload .files').append(data.html);
 		});
 		if (!multiple) {
-			$('#'+paramnameId+'_uploadFile .fileinput-button').hide();
+			$('#'+paramnameId+'_upload .fileinput-button').hide();
 		}
 	}
-	$('#'+paramnameId+'_uploadFile').fileupload({
-		url: './fileupload.php',
-		paramName : 'fileupload',
-		formData: {name: paramname},
+	$('#'+paramnameId+'_upload').fileupload({
+		url: '{{ route(ROUTE_PREFIX.'.upload') }}',
+		paramName : 'upload',
+		formData: {
+			name: paramname,
+			_token: $('input[name="_token"]').val(),
+		},
 		sequentialUploads: true,
 		autoUpload: true,
 		files: uploaded
 	}).bind('fileuploaddone', function (e, data) {
 		add_uploaded(JSON.parse(data.result));
+	}).bind('fileuploadfail', function (e, data) {
+		var response;
+		if (typeof data.jqXHR.responseText != 'undefined') {
+			response = JSON.parse(data.jqXHR.responseText);
+		}
+		if (typeof response.errors != 'undefined') {
+			$('#'+paramnameId+'_upload_error').text(response.errors.upload[0]);
+			return;
+		}
+		if (typeof data.errorThrown == 'undefined') {
+			return;
+		}
+		if (data.errorThrown == 'Content Too Large') {
+			$('#'+paramnameId+'_upload_error').text('<!-- data-lang='error:fileupload_over_maxsize' -->');
+			return;
+		}
+		$('#'+paramnameId+'_upload_error').text(data.errorThrown);
 	});
 }
 function add_uploaded(data) {
@@ -63,13 +75,14 @@ function add_uploaded(data) {
 	var paramnameId = paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
 
 	if (data.error) {
-		$('.fileupload-buttonbar').validationEngine('showPrompt', data.error, 'validate', 'bottomLeft', true);
+		$('#'+paramnameId+'_upload_error').text(data.error);
 		return false;
+	} else {
+		$('#'+paramnameId+'_upload_error').text('');
 	}
-	$('.fileupload-buttonbar').validationEngine('hide');
 
 	if (!$('input[name="'+paramname+'"]').prop('multiple')) {
-		$('#'+paramnameId+'_uploadFile .fileinput-button').hide();
+		$('#'+paramnameId+'_upload .fileinput-button').hide();
 	}
 
 	var uploaded = parse_uploaded(paramname);
@@ -81,16 +94,16 @@ function add_uploaded(data) {
 		}
 	});
 	if (duplicated) {
-		$('.fileupload-buttonbar').validationEngine('showPrompt', '<!-- data-lang='error:fileupload_duplicated' -->', 'validate', 'bottomLeft', true);
+		$('#'+paramnameId+'_upload_error').text('<!-- data-lang='error:fileupload_duplicated' -->');
 		return false;
 	};
 
-	$('#'+paramnameId+'_uploadFile .files').append(data.html);
+	$('#'+paramnameId+'_upload .files').append(data.html);
 	uploaded.push({
-		name: data.name,
 		filename: data.filename,
+		name: data.name,
 		size: data.size,
-		image: data.image
+		thumbnail: data.thumbnail
 	});
 	var json = JSON.stringify(uploaded);
 	if ('[]' == json) {
@@ -102,8 +115,8 @@ function add_uploaded(data) {
 function cancel_uploaded(ele) {
 	var tr = $(ele).closest('tr');
 	var filename = $(tr).data('filename');
-	var container = $(ele).closest('.fileupload-container');
-	var input = $(container).find('input.fileupload');
+	var container = $(ele).closest('.upload-container');
+	var input = $(container).find('input.upload');
 
 	tr.remove();
 	if (!input.prop('multiple')) {
@@ -134,7 +147,7 @@ function parse_uploaded(name) {
 	return uploaded;
 }
 $(function(){
-	$('input.fileupload').each(function(){
+	$('input.upload').each(function(){
 		set_uploader($(this).attr('name'));
 	});
 	$('form').on('click', '.files .cancel', function(){

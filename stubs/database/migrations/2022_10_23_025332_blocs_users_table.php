@@ -17,6 +17,8 @@ class BlocsUsersTable extends Migration
             $table->string('group')->nullable();
             $table->softDeletes();
             $table->timestamp('disabled_at', 0)->nullable();
+            $table->string('file')->nullable();
+            $table->string('filename')->nullable();
         });
     }
 
@@ -31,6 +33,8 @@ class BlocsUsersTable extends Migration
             $table->dropColumn('group');
             $table->dropSoftDeletes();
             $table->dropColumn('disabled_at');
+            $table->dropColumn('file');
+            $table->dropColumn('filename');
         });
     }
 }

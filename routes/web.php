@@ -20,6 +20,9 @@ Route::middleware(['auth', UserGroup::class])
 	->group(function () {
 		Route::get('/entry/{id?}', [ProfileController::class, 'entry'])->name('entry');
 		Route::post('/update/{id}', [ProfileController::class, 'update'])->name('update');
+		Route::get('/upload', [ProfileController::class, 'upload'])->name('upload_list');
+		Route::post('/upload', [ProfileController::class, 'upload'])->name('upload');
+		Route::get('/download/{filename}/{size?}', [ProfileController::class, 'download'])->name('download');
 	}
 );
 

@@ -79,17 +79,18 @@ class UserController extends \Blocs\Controllers\Base
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
         $this->val['group'] = empty($this->request->group) ? '' : implode("\t", $this->request->group);
 
-        if (empty($this->request->password_new)) {
-            $request_data = [
-                'name' => $this->val['name'],
-                'group' => $this->val['group'],
-            ];
-        } else {
-            $request_data = [
-                'name' => $this->val['name'],
-                'password' => Hash::make($this->request->password_new),
-                'group' => $this->val['group'],
-            ];
+        $request_data = [
+            'name' => $this->val['name'],
+            'group' => $this->val['group'],
+        ];
+        empty($this->request->password_new) || $request_data['password'] = Hash::make($this->request->password_new);
+
+        if (!empty($this->request->file)) {
+            // 画像ファイルの登録
+            $request_data['file'] = $this->request->file;
+
+            $files = json_decode($request_data['file'], true);
+            $request_data['filename'] = $files[0]['filename'];
         }
 
         parent::execute_update($request_data);
