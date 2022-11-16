@@ -1,7 +1,7 @@
 {
     "name": "blocs\/admin",
     "type": "library",
-    "description": "A basic package for blocs",
+    "description": "The basic package for BLOCS",
     "keywords": [
         "PHP",
         "Package",
