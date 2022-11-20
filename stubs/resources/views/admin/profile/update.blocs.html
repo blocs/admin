@@ -27,7 +27,7 @@
 
 				@error('name') <div class='text-danger'>{{ $message }}</div> @enderror
 
-				<input type='text' id='file' name='file' class='form-control upload' />
+				<input type='text' id='file' name='file' class='form-control upload' accept='.jpg,.jpeg,.gif,.png' />
 				<!-- data-form="file" data-validate="mimes:jpg,jpeg,gif,png" data-lang="画像ファイルを選んでください。" -->
 				<!-- data-form="file" data-validate="max:120" data-lang="アップロードファイルが大きすぎます。" -->
 			</td>

@@ -6,7 +6,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/10.32.0/js/jquery.fileupload.min.js" integrity="sha512-P7EUiLYW7QUrhYrLgaJ++ok2j2I7Pu0UgGnrpLowujPZicu7mIR0V/Trq+7kl/0nEkp6yNGh8eFJY1JUv3dkPA==" crossorigin="anonymous"></script>
 
 <script type="text/javascript">
-function set_uploader(paramname) {
+function set_uploader(paramname, accept) {
 	var paramnameId = paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
 	if ($('#'+paramnameId+'_upload').length) {
 		return;
@@ -23,6 +23,9 @@ function set_uploader(paramname) {
 	$('#'+paramnameId+'_upload').append('<div class="upload-buttonbar"><span class="btn btn-default fileinput-button"><span class="fa fa-file"></span> <span><!-- data-lang='template:resource_blocs_fileupload_add' --></span><input type="file" /></span></div><div id="'+paramnameId+'_upload_error" class="text-danger"></div><table class="table table-striped"><tbody class="files"></tbody></table>');
 	if (multiple) {
 		$('#'+paramnameId+'_upload').find('input[type=file]').attr('multiple', 'multiple');
+	}
+	if (typeof accept != 'undefined') {
+		$('#'+paramnameId+'_upload').find('input[type=file]').attr('accept', accept);
 	}
 	uploaded = parse_uploaded(paramname);
 	if (uploaded.length) {
@@ -148,7 +151,7 @@ function parse_uploaded(name) {
 }
 $(function(){
 	$('input.upload').each(function(){
-		set_uploader($(this).attr('name'));
+		set_uploader($(this).attr('name'), $(this).attr('accept'));
 	});
 	$('form').on('click', '.files .cancel', function(){
 		cancel_uploaded(this);
