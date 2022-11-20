@@ -41,12 +41,12 @@ class LoginController extends Controller
         defined('VIEW_PREFIX') || define('VIEW_PREFIX', 'admin');
         defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'auth');
 
-        $this->view_prefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
+        $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
     }
 
     public function showLoginForm()
     {
-        return view($this->view_prefix.'.login');
+        return view($this->viewPrefix.'.login');
     }
 
     protected function loggedOut(Request $request)
@@ -56,7 +56,7 @@ class LoginController extends Controller
 
     protected function validateLogin(Request $request)
     {
-        list($validate, $message) = \Blocs\Validate::get($this->view_prefix.'.login');
+        list($validate, $message) = \Blocs\Validate::get($this->viewPrefix.'.login');
         empty($validate) || $request->validate($validate, $message);
     }
 

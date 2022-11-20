@@ -11,34 +11,34 @@ class UserController extends \Blocs\Controllers\Base
         defined('VIEW_PREFIX') || define('VIEW_PREFIX', 'admin');
         defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'user');
 
-        $this->view_prefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
-        $this->table_main = 'App\Models\Admin\User';
-        $this->notice_item = 'email';
-        $this->paginate_num = 20;
+        $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
+        $this->mainTable = 'App\Models\Admin\User';
+        $this->noticeItem = 'email';
+        $this->paginateNum = 20;
     }
 
-    protected function prepare_index_search(&$table_main)
+    protected function prepareIndexSearch(&$mainTable)
     {
         foreach ($this->search_items as $search_item) {
-            $table_main->where(function ($query) use ($search_item) {
+            $mainTable->where(function ($query) use ($search_item) {
                 $query
                     ->where('name', 'LIKE', '%'.$search_item.'%')
                     ->orWhere('email', 'LIKE', '%'.$search_item.'%');
             });
         }
 
-        $table_main->orderBy('email', 'asc');
+        $mainTable->orderBy('email', 'asc');
     }
 
-    protected function output_entry()
+    protected function outputEntry()
     {
         $groups = config('group');
         empty($groups) || \Blocs\Option::add('group', array_keys($groups));
 
-        return parent::output_entry();
+        return parent::outputEntry();
     }
 
-    protected function execute_insert($request_data = [])
+    protected function executeInsert($request_data = [])
     {
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
@@ -51,12 +51,12 @@ class UserController extends \Blocs\Controllers\Base
             'group' => $this->val['group'],
         ];
 
-        parent::execute_insert($request_data);
+        parent::executeInsert($request_data);
     }
 
-    protected function validate_update()
+    protected function validateUpdate()
     {
-        parent::validate_update();
+        parent::validateUpdate();
 
         if (empty($this->request->password_new)) {
             return;
@@ -64,16 +64,16 @@ class UserController extends \Blocs\Controllers\Base
 
         // 旧パスワードをチェック
         if (empty($this->request->password_old)) {
-            return $this->back_entry('', 'パスワードが違います。', 'password_old');
+            return $this->backEntry('', 'パスワードが違います。', 'password_old');
         }
 
-        $user = call_user_func($this->table_main.'::find', $this->val['id']);
+        $user = call_user_func($this->mainTable.'::find', $this->val['id']);
         if (!Hash::check($this->request->password_old, $user->password)) {
-            return $this->back_entry('', 'パスワードが違います。', 'password_old');
+            return $this->backEntry('', 'パスワードが違います。', 'password_old');
         }
     }
 
-    protected function execute_update($request_data = [])
+    protected function executeUpdate($request_data = [])
     {
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
@@ -93,6 +93,6 @@ class UserController extends \Blocs\Controllers\Base
             $request_data['filename'] = $files[0]['filename'];
         }
 
-        parent::execute_update($request_data);
+        parent::executeUpdate($request_data);
     }
 }

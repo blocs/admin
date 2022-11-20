@@ -11,9 +11,9 @@ class ProfileController extends UserController
         defined('VIEW_PREFIX') || define('VIEW_PREFIX', 'admin');
         defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'profile');
 
-        $this->view_prefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
-        $this->table_main = 'App\Models\Admin\User';
-        $this->notice_item = 'email';
+        $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
+        $this->mainTable = 'App\Models\Admin\User';
+        $this->noticeItem = 'email';
     }
 
     public function entry($id = 0)
@@ -26,7 +26,7 @@ class ProfileController extends UserController
         return parent::update(\Auth::id(), $request);
     }
 
-    protected function output_update()
+    protected function outputUpdate()
     {
         \Blocs\Notice::set('success', 'admin_profile_updated');
 

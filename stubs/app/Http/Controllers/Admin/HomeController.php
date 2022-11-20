@@ -15,7 +15,7 @@ class HomeController extends Controller
         defined('VIEW_PREFIX') || define('VIEW_PREFIX', 'admin');
         defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'home');
 
-        $this->view_prefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
+        $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
     }
 
     public function index()
@@ -28,7 +28,7 @@ class HomeController extends Controller
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
 
-        return view($this->view_prefix.'.index', $this->val);
+        return view($this->viewPrefix.'.index', $this->val);
     }
 
     public function clear()
