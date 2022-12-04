@@ -2,8 +2,6 @@
 
 namespace Blocs;
 
-use Illuminate\Support\Facades\Route;
-
 class Navigation
 {
     public static function get($name, $breadcrumbs = [])
@@ -27,7 +25,7 @@ class Navigation
         $configs = $configs[$name];
 
         // ルート名を取得
-        $current_name = Route::currentRouteName();
+        $current_name = \Route::currentRouteName();
         empty($current_name) || list($current_name) = explode('.', $current_name, 2);
 
         // ナビゲーション、パンクズリスト
@@ -95,7 +93,7 @@ class Navigation
 
     public static function check_group($current_name = null)
     {
-        isset($current_name) || $current_name = Route::currentRouteName();
+        isset($current_name) || $current_name = \Route::currentRouteName();
 
         // 必要な権限を取得
         $config_group = config('group');
