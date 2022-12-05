@@ -4,7 +4,7 @@
 	<td data-exist=$thumbnail>
 		<span class='preview'>
 			<a href="{{ route(ROUTE_PREFIX.'.download', ['filename' => $filename]) }}" target='_blank'>
-				<img src="{{ route(ROUTE_PREFIX.'.download', ['filename' => $filename, 'size' => 'thumbnail']) }}" />
+				<img src="{{ route(ROUTE_PREFIX.'.download_size', ['filename' => $filename, 'size' => 'thumbnail']) }}" />
 			</a>
 		</span>
 	</td>

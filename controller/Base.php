@@ -556,12 +556,13 @@ class Base extends Controller
         $filename = md5($fileupload->get()).'.'.$extension;
         $fileupload->storeAs('upload', $filename);
 
+        $exist_thumbnail = $this->createThumbnail('upload/'.$filename, 'thumbnail') ? 1 : 0;
         $file = [
             'paramname' => $paramname,
             'filename' => $filename,
             'name' => $fileupload->getClientOriginalName(),
             'size' => $fileupload->getSize(),
-            'thumbnail' => $this->createThumbnail('upload/'.$filename, 'thumbnail'),
+            'thumbnail' => $exist_thumbnail,
         ];
         $file['html'] = view(VIEW_PREFIX.'.autoinclude.upload_list', ['files' => [$file]])->render();
 
@@ -576,8 +577,14 @@ class Base extends Controller
 
     /* download */
 
-    public function download($filename, $size = null)
+    public function download(...$argv)
     {
+        if (count($argv) > 1) {
+            list($size, $filename) = $argv;
+        } else {
+            list($filename) = $argv;
+        }
+
         $storage = \Storage::disk();
         $filename = 'upload/'.$filename;
         $mime_type = $storage->mimeType($filename);
@@ -692,6 +699,6 @@ class Base extends Controller
         list($width, $height, $crop) = $this->getSize($size);
         $thumbnail = \Blocs\Thumbnail::create($path, $width, $height, $crop);
 
-        return false === $thumbnail ? '' : $thumbnail;
+        return $thumbnail;
     }
 }
