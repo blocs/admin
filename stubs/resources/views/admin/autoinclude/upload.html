@@ -29,12 +29,16 @@ function set_uploader(paramname, accept) {
 	}
 	uploaded = parse_uploaded(paramname);
 	if (uploaded.length) {
-		var query;
-		query = {
-			uploaded_files: $('input[name="'+paramname+'"]').val(),
-			name: paramname
-		};
-		$.getJSON('{{ route(ROUTE_PREFIX.'.upload_list') }}', query, function(data){
+		$.ajax({
+			type: 'POST',
+			url: '{{ route(ROUTE_PREFIX.'.upload') }}',
+			data: {
+				name: paramname,
+				_token: $('input[name="_token"]').val(),
+				uploaded_files: $('input[name="'+paramname+'"]').val()
+			},
+			dataType: 'json'
+		}).done(function(data) {
 			var paramnameId = data.paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
 			$('#'+paramnameId+'_upload .files').append(data.html);
 		});
