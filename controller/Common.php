@@ -32,4 +32,9 @@ trait Common
             $this->val[$key_item] = session($session_key);
         }
     }
+
+    protected function add_option($form_name, $options)
+    {
+        \Blocs\Option::add($form_name, $options);
+    }
 }
