@@ -4,7 +4,7 @@ namespace Blocs\Controllers;
 
 trait Common
 {
-    public function keep_search_item($key_item)
+    protected function keep_item($key_item)
     {
         if (isset($this->val[$key_item])) {
             return;
