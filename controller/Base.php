@@ -19,6 +19,8 @@ class Base extends Controller
     private $selected_ids = [];
     private $deleted_num = 0;
 
+    use Common;
+
     /* index */
 
     public function index(Request $request)
@@ -28,9 +30,9 @@ class Base extends Controller
 
         $this->prepareIndex();
 
-        if (session()->has($this->viewPrefix.'confirm')) {
+        if (session()->has($this->viewPrefix.'.confirm')) {
             // 確認画面からの遷移（selected_rows）
-            $this->val = self::mergeTable($this->val, session($this->viewPrefix.'confirm'));
+            $this->val = self::mergeTable($this->val, session($this->viewPrefix.'.confirm'));
         }
 
         return $this->outputIndex();
@@ -38,6 +40,8 @@ class Base extends Controller
 
     protected function prepareIndex()
     {
+        $this->keep_search_item('search');
+
         $this->search_items = [];
         if (!empty($this->request->search)) {
             mb_regex_encoding('utf-8');
@@ -97,9 +101,9 @@ class Base extends Controller
 
         $this->prepareEntry();
 
-        if (session()->has($this->viewPrefix.'confirm')) {
+        if (session()->has($this->viewPrefix.'.confirm')) {
             // 確認画面からの遷移
-            $this->val = array_merge($this->val, session($this->viewPrefix.'confirm'));
+            $this->val = array_merge($this->val, session($this->viewPrefix.'.confirm'));
         }
 
         return $this->outputEntry();
@@ -140,7 +144,7 @@ class Base extends Controller
             return $redirect;
         }
 
-        session()->flash($this->viewPrefix.'confirm', $this->request->all());
+        session()->flash($this->viewPrefix.'.confirm', $this->request->all());
 
         $this->prepareConfirmInsert();
 
@@ -169,9 +173,9 @@ class Base extends Controller
     {
         $this->request = $request;
 
-        if (session()->has($this->viewPrefix.'confirm')) {
+        if (session()->has($this->viewPrefix.'.confirm')) {
             // 確認画面からの遷移
-            $this->request->merge(session($this->viewPrefix.'confirm'));
+            $this->request->merge(session($this->viewPrefix.'.confirm'));
         } else {
             if ($redirect = $this->validateInsert()) {
                 return $redirect;
@@ -216,7 +220,7 @@ class Base extends Controller
             return $redirect;
         }
 
-        session()->flash($this->viewPrefix.'confirm', $this->request->all());
+        session()->flash($this->viewPrefix.'.confirm', $this->request->all());
 
         $this->prepareConfirmUpdate();
 
@@ -249,9 +253,9 @@ class Base extends Controller
         $this->val['id'] = $id;
         $this->request = $request;
 
-        if (session()->has($this->viewPrefix.'confirm')) {
+        if (session()->has($this->viewPrefix.'.confirm')) {
             // 確認画面からの遷移
-            $this->request->merge(session($this->viewPrefix.'confirm'));
+            $this->request->merge(session($this->viewPrefix.'.confirm'));
         } else {
             if ($redirect = $this->validateUpdate()) {
                 return $redirect;
@@ -315,7 +319,7 @@ class Base extends Controller
             return $redirect;
         }
 
-        session()->flash($this->viewPrefix.'confirm', $this->request->all());
+        session()->flash($this->viewPrefix.'.confirm', $this->request->all());
 
         $this->prepareConfirmDelete();
 
@@ -346,9 +350,9 @@ class Base extends Controller
         $this->val['id'] = $id;
         $this->request = $request;
 
-        if (session()->has($this->viewPrefix.'confirm')) {
+        if (session()->has($this->viewPrefix.'.confirm')) {
             // 確認画面からの遷移
-            $this->request->merge(session($this->viewPrefix.'confirm'));
+            $this->request->merge(session($this->viewPrefix.'.confirm'));
         } else {
             if ($redirect = $this->validateDelete()) {
                 return $redirect;
@@ -385,7 +389,7 @@ class Base extends Controller
             return $redirect;
         }
 
-        session()->flash($this->viewPrefix.'confirm', $this->request->all());
+        session()->flash($this->viewPrefix.'.confirm', $this->request->all());
 
         $this->prepareConfirmSelect();
 
@@ -422,9 +426,9 @@ class Base extends Controller
     {
         $this->request = $request;
 
-        if (session()->has($this->viewPrefix.'confirm')) {
+        if (session()->has($this->viewPrefix.'.confirm')) {
             // 確認画面からの遷移
-            $this->request->merge(session($this->viewPrefix.'confirm'));
+            $this->request->merge(session($this->viewPrefix.'.confirm'));
 
             foreach ($this->request->table as $table) {
                 empty($table['selected_rows']) || $this->selected_ids[] = $table['selected_rows'];
