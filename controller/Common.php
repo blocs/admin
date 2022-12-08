@@ -38,7 +38,7 @@ trait Common
         }
     }
 
-    public function add_item(&$val_table, $item_name, $table_name, $key, $value)
+    protected function add_item(&$val_table, $item_name, $table_name, $key, $value)
     {
         $keys = [];
         foreach ($val_table as $num => $buff) {
