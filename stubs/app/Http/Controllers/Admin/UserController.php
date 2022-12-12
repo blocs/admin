@@ -19,11 +19,11 @@ class UserController extends \Blocs\Controllers\Base
 
     protected function prepareIndexSearch(&$mainTable)
     {
-        foreach ($this->search_items as $search_item) {
-            $mainTable->where(function ($query) use ($search_item) {
+        foreach ($this->searchItems as $searchItem) {
+            $mainTable->where(function ($query) use ($searchItem) {
                 $query
-                    ->where('name', 'LIKE', '%'.$search_item.'%')
-                    ->orWhere('email', 'LIKE', '%'.$search_item.'%');
+                    ->where('name', 'LIKE', '%'.$searchItem.'%')
+                    ->orWhere('email', 'LIKE', '%'.$searchItem.'%');
             });
         }
 
@@ -38,20 +38,20 @@ class UserController extends \Blocs\Controllers\Base
         return parent::outputEntry();
     }
 
-    protected function executeInsert($request_data = [])
+    protected function executeInsert($requestData = [])
     {
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
         $this->val['group'] = empty($this->request->group) ? '' : implode("\t", $this->request->group);
 
-        $request_data = [
+        $requestData = [
             'email' => $this->request->email,
             'name' => $this->val['name'],
             'password' => Hash::make($this->request->password),
             'group' => $this->val['group'],
         ];
 
-        parent::executeInsert($request_data);
+        parent::executeInsert($requestData);
     }
 
     protected function validateUpdate()
@@ -73,26 +73,26 @@ class UserController extends \Blocs\Controllers\Base
         }
     }
 
-    protected function executeUpdate($request_data = [])
+    protected function executeUpdate($requestData = [])
     {
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
         $this->val['group'] = empty($this->request->group) ? '' : implode("\t", $this->request->group);
 
-        $request_data = [
+        $requestData = [
             'name' => $this->val['name'],
             'group' => $this->val['group'],
         ];
-        empty($this->request->password_new) || $request_data['password'] = Hash::make($this->request->password_new);
+        empty($this->request->password_new) || $requestData['password'] = Hash::make($this->request->password_new);
 
         if (!empty($this->request->file)) {
             // 画像ファイルの登録
-            $request_data['file'] = $this->request->file;
+            $requestData['file'] = $this->request->file;
 
-            $files = json_decode($request_data['file'], true);
-            $request_data['filename'] = $files[0]['filename'];
+            $files = json_decode($requestData['file'], true);
+            $requestData['filename'] = $files[0]['filename'];
         }
 
-        parent::executeUpdate($request_data);
+        parent::executeUpdate($requestData);
     }
 }

@@ -37,13 +37,13 @@
 
 					<div id='inmaincontents'>
 
-	@php isset($notice_category) && $notice_category === 'error' && $notice_category = 'danger' @endphp
-	<!-- data-attribute="class" data-val="alert alert-{$notice_category}" -->
-	<div data-exist=$notice_category><span data-val=$notice_message></span></div>
+	@php isset($noticeCategory) && $noticeCategory === 'error' && $noticeCategory = 'danger' @endphp
+	<!-- data-attribute="class" data-val="alert alert-{$noticeCategory}" -->
+	<div data-exist=$noticeCategory><span data-val=$noticeMessage></span></div>
 
 <!-- data-bloc='search_form' -->
-<!-- data-assign=$search_filter_exists data-val=1 data-if="!empty($search) || !empty($search_filter_exists)" -->
-<!-- data-exist=$search_filter_exists -->
+<!-- data-assign=$searchFilterExists data-val=1 data-if="!empty($search) || !empty($searchFilterExists)" -->
+<!-- data-exist=$searchFilterExists -->
 <script type="text/javascript">
 $(function(){
 	$('form[role=search]').find('button.clear').on('click', function(){
@@ -65,10 +65,10 @@ $(function(){
 					<i class='fa fa-search'></i>
 				</button>
 			</span>
-			<!-- data-attribute='placeholder' data-val=$search_placeholder -->
+			<!-- data-attribute='placeholder' data-val=$searchPlaceholder -->
 			<input type='text' name='search' class='form-control' value='' />
 			<span class='input-group-btn'>
-				<button class='btn btn-default clear' type='submit' data-exist=$search_filter_exists>
+				<button class='btn btn-default clear' type='submit' data-exist=$searchFilterExists>
 					<i class='fa fa-ban'></i>
 				</button>
 			</span>

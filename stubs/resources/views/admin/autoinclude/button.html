@@ -11,135 +11,135 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_back' -->
-<!-- data-assign=$button_back_label data-lang='template:resource_blocs_button_back' data-none=$button_back_label -->
-<!-- data-attribute='href' data-val=$button_href data-exist=$button_href -->
+<!-- data-assign=$buttonBackLabel data-lang='template:resource_blocs_button_back' data-none=$buttonBackLabel -->
+<!-- data-attribute='href' data-val=$buttonHref data-exist=$buttonHref -->
 <a href='./' class='btn btn-default btn-lg'>
-	<!-- data-attribute='class' data-val=$button_back_icon data-prefix='fa ' data-exist=$button_back_icon -->
-	<span class='fa fa-arrow-left'></span> <!-- data-val=$button_back_label -->
+	<!-- data-attribute='class' data-val=$buttonBackIcon data-prefix='fa ' data-exist=$buttonBackIcon -->
+	<span class='fa fa-arrow-left'></span> <!-- data-val=$buttonBackLabel -->
 </a>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_back_modal' -->
-<!-- data-assign=$button_back_modal_label data-lang='template:resource_blocs_button_back' data-none=$button_back_modal_label -->
+<!-- data-assign=$buttonBackModalLabel data-lang='template:resource_blocs_button_back' data-none=$buttonBackModalLabel -->
 <button type='button' class='btn btn-default btn-lg' data-dismiss='modal'>
-	<!-- data-attribute='class' data-val=$button_back_icon data-prefix='fa ' data-exist=$button_back_icon -->
-	<span class='fa fa-arrow-left'></span> <!-- data-val=$button_back_modal_label -->
+	<!-- data-attribute='class' data-val=$buttonBackIcon data-prefix='fa ' data-exist=$buttonBackIcon -->
+	<span class='fa fa-arrow-left'></span> <!-- data-val=$buttonBackModalLabel -->
 </button>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_new' -->
-<!-- data-assign=$button_new_label data-lang='template:resource_blocs_button_new' data-none=$button_new_label -->
-@php empty($button_href) && $button_href = route(ROUTE_PREFIX.'.entry') @endphp
-<!-- data-attribute='href' data-val=$button_href -->
+<!-- data-assign=$buttonNewLabel data-lang='template:resource_blocs_button_new' data-none=$buttonNewLabel -->
+@php empty($buttonHref) && $buttonHref = route(ROUTE_PREFIX.'.entry') @endphp
+<!-- data-attribute='href' data-val=$buttonHref -->
 <a class='btn btn-primary btn-lg'>
-	<!-- data-attribute='class' data-val=$button_new_icon data-prefix='fa ' data-exist=$button_new_icon -->
-	<span class='fa fa-plus'></span> <!-- data-val=$button_new_label -->
+	<!-- data-attribute='class' data-val=$buttonNewIcon data-prefix='fa ' data-exist=$buttonNewIcon -->
+	<span class='fa fa-plus'></span> <!-- data-val=$buttonNewLabel -->
 </a>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_primary' -->
-<!-- data-assign=$button_primary_label data-lang='template:resource_blocs_button_confirm' data-none=$button_primary_label -->
-<!-- data-attribute='data-target' data-val=$modal_name data-prefix='#' data-exist=$modal_name -->
-<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modal_name -->
+<!-- data-assign=$buttonPrimaryLabel data-lang='template:resource_blocs_button_confirm' data-none=$buttonPrimaryLabel -->
+<!-- data-attribute='data-target' data-val=$modalName data-prefix='#' data-exist=$modalName -->
+<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modalName -->
 <button type='button' class='btn btn-primary btn-lg'>
-	<!-- data-attribute='class' data-val=$button_primary_icon data-prefix='fa ' data-exist=$button_primary_icon -->
-	<span class='fa fa-arrow-right'></span> <!-- data-val=$button_primary_label -->
+	<!-- data-attribute='class' data-val=$buttonPrimaryIcon data-prefix='fa ' data-exist=$buttonPrimaryIcon -->
+	<span class='fa fa-arrow-right'></span> <!-- data-val=$buttonPrimaryLabel -->
 </button>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_primary_modal' -->
-<!-- data-assign=$button_primary_modal_label data-lang='template:resource_blocs_button_submit' data-none=$button_primary_modal_label -->
+<!-- data-assign=$buttonPrimaryModalLabel data-lang='template:resource_blocs_button_submit' data-none=$buttonPrimaryModalLabel -->
 <button type='submit' class='btn btn-primary btn-lg'>
-	<!-- data-attribute='class' data-val=$button_primary_icon data-prefix='fa ' data-exist=$button_primary_icon -->
-	<span class='fa fa-arrow-right'></span> <!-- data-val=$button_primary_modal_label -->
+	<!-- data-attribute='class' data-val=$buttonPrimaryIcon data-prefix='fa ' data-exist=$buttonPrimaryIcon -->
+	<span class='fa fa-arrow-right'></span> <!-- data-val=$buttonPrimaryModalLabel -->
 </button>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_info' -->
-<!-- data-assign=$button_info_label data-lang='template:resource_blocs_button_confirm' data-none=$button_info_label -->
-<!-- data-attribute='data-target' data-val=$modal_name data-prefix='#' data-exist=$modal_name -->
-<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modal_name -->
+<!-- data-assign=$buttonInfoLabel data-lang='template:resource_blocs_button_confirm' data-none=$buttonInfoLabel -->
+<!-- data-attribute='data-target' data-val=$modalName data-prefix='#' data-exist=$modalName -->
+<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modalName -->
 <button type='button' class='btn btn-info btn-lg'>
-	<!-- data-attribute='class' data-val=$button_info_icon data-prefix='fa ' data-exist=$button_info_icon -->
-	<span class='fa fa-info-circle'></span> <!-- data-val=$button_info_label -->
+	<!-- data-attribute='class' data-val=$buttonInfoIcon data-prefix='fa ' data-exist=$buttonInfoIcon -->
+	<span class='fa fa-info-circle'></span> <!-- data-val=$buttonInfoLabel -->
 </button>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_info_modal' -->
-<!-- data-assign=$button_info_modal_label data-lang='template:resource_blocs_button_submit' data-none=$button_info_modal_label -->
+<!-- data-assign=$buttonInfoModalLabel data-lang='template:resource_blocs_button_submit' data-none=$buttonInfoModalLabel -->
 <button type='submit' class='btn btn-info btn-lg'>
-	<!-- data-attribute='class' data-val=$button_info_icon data-prefix='fa ' data-exist=$button_info_icon -->
-	<span class='fa fa-info-circle'></span> <!-- data-val=$button_info_modal_label -->
+	<!-- data-attribute='class' data-val=$buttonInfoIcon data-prefix='fa ' data-exist=$buttonInfoIcon -->
+	<span class='fa fa-info-circle'></span> <!-- data-val=$buttonInfoModalLabel -->
 </button>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_success' -->
-<!-- data-assign=$button_success_label data-lang='template:resource_blocs_button_confirm' data-none=$button_success_label -->
-<!-- data-attribute='data-target' data-val=$modal_name data-prefix='#' data-exist=$modal_name -->
-<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modal_name -->
+<!-- data-assign=$buttonSuccessLabel data-lang='template:resource_blocs_button_confirm' data-none=$buttonSuccessLabel -->
+<!-- data-attribute='data-target' data-val=$modalName data-prefix='#' data-exist=$modalName -->
+<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modalName -->
 <button type='button' class='btn btn-success btn-lg'>
-	<!-- data-attribute='class' data-val=$button_success_icon data-prefix='fa ' data-exist=$button_success_icon -->
-	<span class='fa fa-check'></span> <!-- data-val=$button_success_label -->
+	<!-- data-attribute='class' data-val=$buttonSuccessIcon data-prefix='fa ' data-exist=$buttonSuccessIcon -->
+	<span class='fa fa-check'></span> <!-- data-val=$buttonSuccessLabel -->
 </button>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_success_modal' -->
-<!-- data-assign=$button_success_modal_label data-lang='template:resource_blocs_button_submit' data-none=$button_success_modal_label -->
+<!-- data-assign=$buttonSuccessModalLabel data-lang='template:resource_blocs_button_submit' data-none=$buttonSuccessModalLabel -->
 <button type='submit' class='btn btn-success btn-lg'>
-	<!-- data-attribute='class' data-val=$button_success_icon data-prefix='fa ' data-exist=$button_success_icon -->
-	<span class='fa fa-check'></span> <!-- data-val=$button_success_modal_label -->
+	<!-- data-attribute='class' data-val=$buttonSuccessIcon data-prefix='fa ' data-exist=$buttonSuccessIcon -->
+	<span class='fa fa-check'></span> <!-- data-val=$buttonSuccessModalLabel -->
 </button>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_danger' -->
-<!-- data-assign=$button_danger_label data-lang='template:resource_blocs_button_delete' data-none=$button_danger_label -->
-<!-- data-attribute='data-target' data-val=$modal_name data-prefix='#' -->
-<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modal_name -->
+<!-- data-assign=$buttonDangerLabel data-lang='template:resource_blocs_button_delete' data-none=$buttonDangerLabel -->
+<!-- data-attribute='data-target' data-val=$modalName data-prefix='#' -->
+<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modalName -->
 <button type='button' class='btn btn-danger btn-lg'>
-	<!-- data-attribute='class' data-val=$button_danger_icon data-prefix='fa ' data-exist=$button_danger_icon -->
-	<span class='fa fa-trash'></span> <!-- data-val=$button_danger_label -->
+	<!-- data-attribute='class' data-val=$buttonDangerIcon data-prefix='fa ' data-exist=$buttonDangerIcon -->
+	<span class='fa fa-trash'></span> <!-- data-val=$buttonDangerLabel -->
 </button>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_danger_modal' -->
-<!-- data-assign=$button_danger_modal_label data-lang='template:resource_blocs_button_delete' data-none=$button_danger_modal_label -->
+<!-- data-assign=$buttonDangerModalLabel data-lang='template:resource_blocs_button_delete' data-none=$buttonDangerModalLabel -->
 <button type='submit' class='btn btn-danger btn-lg'>
-	<!-- data-attribute='class' data-val=$button_danger_icon data-prefix='fa ' data-exist=$button_danger_icon -->
-	<span class='fa fa-trash'></span> <!-- data-val=$button_danger_modal_label -->
+	<!-- data-attribute='class' data-val=$buttonDangerIcon data-prefix='fa ' data-exist=$buttonDangerIcon -->
+	<span class='fa fa-trash'></span> <!-- data-val=$buttonDangerModalLabel -->
 </button>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_warning' -->
-<!-- data-assign=$button_warning_label data-lang='template:resource_blocs_button_warning' data-none=$button_warning_label -->
-<!-- data-attribute='data-target' data-val=$modal_name data-prefix='#' -->
-<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modal_name -->
+<!-- data-assign=$buttonWarningLabel data-lang='template:resource_blocs_button_warning' data-none=$buttonWarningLabel -->
+<!-- data-attribute='data-target' data-val=$modalName data-prefix='#' -->
+<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modalName -->
 <button type='button' class='btn btn-warning btn-lg'>
-	<!-- data-attribute='class' data-val=$button_warning_icon data-prefix='fa ' data-exist=$button_warning_icon -->
-	<span class='fa fa-exclamation-triangle'></span> <!-- data-val=$button_warning_label -->
+	<!-- data-attribute='class' data-val=$buttonWarningIcon data-prefix='fa ' data-exist=$buttonWarningIcon -->
+	<span class='fa fa-exclamation-triangle'></span> <!-- data-val=$buttonWarningLabel -->
 </button>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_warning_modal' -->
-<!-- data-assign=$button_warning_modal_label data-lang='template:resource_blocs_button_execute' data-none=$button_warning_modal_label -->
+<!-- data-assign=$buttonWarningModalLabel data-lang='template:resource_blocs_button_execute' data-none=$buttonWarningModalLabel -->
 <button type='submit' class='btn btn-warning btn-lg'>
-	<!-- data-attribute='class' data-val=$button_warning_icon data-prefix='fa ' data-exist=$button_warning_icon -->
-	<span class='fa fa-exclamation-triangle'></span> <!-- data-val=$button_warning_modal_label -->
+	<!-- data-attribute='class' data-val=$buttonWarningIcon data-prefix='fa ' data-exist=$buttonWarningIcon -->
+	<span class='fa fa-exclamation-triangle'></span> <!-- data-val=$buttonWarningModalLabel -->
 </button>
 <!-- data-endbloc -->
 
 <!-- data-bloc='button_toggle' -->
 
-<!-- data-attribute='data-target' data-val=$modal_name data-prefix='#' -->
-<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modal_name -->
+<!-- data-attribute='data-target' data-val=$modalName data-prefix='#' -->
+<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modalName -->
 <button type='button' class='btn btn-success btn-sm' data-none=$disabled_at>
-	<!-- data-attribute='class' data-val=$button_active_icon data-prefix='fa ' data-exist=$button_active_icon -->
+	<!-- data-attribute='class' data-val=$buttonActiveIcon data-prefix='fa ' data-exist=$buttonActiveIcon -->
 	<span class='fa fa-check'></span>
 </button>
 
-<!-- data-attribute='data-target' data-val=$modal_name data-prefix='#' -->
-<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modal_name -->
+<!-- data-attribute='data-target' data-val=$modalName data-prefix='#' -->
+<!-- data-attribute='data-toggle' data-val='modal' data-exist=$modalName -->
 <button type='button' class='btn btn-warning btn-sm' data-exist=$disabled_at>
-	<!-- data-attribute='class' data-val=$button_inactive_icon data-prefix='fa ' data-exist=$button_inactive_icon -->
+	<!-- data-attribute='class' data-val=$buttonInactiveIcon data-prefix='fa ' data-exist=$buttonInactiveIcon -->
 	<span class='fa fa-exclamation-triangle'></span>
 </button>
 

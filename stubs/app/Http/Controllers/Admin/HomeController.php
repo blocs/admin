@@ -8,7 +8,7 @@ use App\Models\Admin\User;
 class HomeController extends Controller
 {
     private $val = [];
-    private $admin_top_user_month = 5;
+    private $adminTopUserMonth = 5;
 
     public function __construct()
     {
@@ -42,10 +42,10 @@ class HomeController extends Controller
     {
         $param = [];
 
-        $date_atom = date(DATE_ATOM);
-        $xaxis = [substr($date_atom, 0, 7)];
+        $dateAtom = date(DATE_ATOM);
+        $xaxis = [substr($dateAtom, 0, 7)];
         list($year, $month) = explode('-', $xaxis[0], 2);
-        for ($x = 0; $x < $this->admin_top_user_month - 1; ++$x) {
+        for ($x = 0; $x < $this->adminTopUserMonth - 1; ++$x) {
             --$month;
             if (!$month) {
                 $month = 12;
@@ -83,45 +83,45 @@ class HomeController extends Controller
             ++$deletes[$month];
         }
 
-        $each_1 = [];
-        $each_2 = [];
+        $each1 = [];
+        $each2 = [];
         $accumulate = [];
-        $yaxis_max = 0;
-        $y2axis_max = 0;
+        $yaxisMax = 0;
+        $y2axisMax = 0;
 
         foreach ($xaxis as $xlabel) {
             array_unshift($accumulate, [$xlabel, $current]);
-            $y2axis_max < $current && $y2axis_max = $current;
+            $y2axisMax < $current && $y2axisMax = $current;
 
             $each = isset($inserts[$xlabel]) ? $inserts[$xlabel] : 0;
-            array_unshift($each_1, [$xlabel, $each]);
+            array_unshift($each1, [$xlabel, $each]);
             $current -= $each;
-            $yaxis_max < $each && $yaxis_max = $each;
+            $yaxisMax < $each && $yaxisMax = $each;
 
             $each = isset($deletes[$xlabel]) ? $deletes[$xlabel] : 0;
-            array_unshift($each_2, [$xlabel, $each]);
+            array_unshift($each2, [$xlabel, $each]);
             $current += $each;
-            $yaxis_max < $each && $yaxis_max = $each;
+            $yaxisMax < $each && $yaxisMax = $each;
         }
 
-        $param['json'] = json_encode([$each_1, $each_2, $accumulate]);
+        $param['json'] = json_encode([$each1, $each2, $accumulate]);
         $param['update'] = date(DATE_ATOM);
 
-        $yaxis_max = self::get_yaxis_max($yaxis_max);
-        $y2axis_max = self::get_yaxis_max($y2axis_max);
+        $yaxisMax = self::get_yaxis_max($yaxisMax);
+        $y2axisMax = self::get_yaxis_max($y2axisMax);
 
-        $param['yaxis_max'] = $yaxis_max;
-        $param['y2axis_max'] = $y2axis_max;
+        $param['yaxisMax'] = $yaxisMax;
+        $param['y2axisMax'] = $y2axisMax;
 
         return $param;
     }
 
-    public static function get_yaxis_max($yaxis_max)
+    public static function get_yaxis_max($yaxisMax)
     {
-        $scale = pow(10, strlen(floor($yaxis_max * 1.3)) - 1);
-        $yaxis_max = intval(ceil($yaxis_max * 1.3 / $scale) * $scale);
-        ($yaxis_max < 10) && $yaxis_max = 10;
+        $scale = pow(10, strlen(floor($yaxisMax * 1.3)) - 1);
+        $yaxisMax = intval(ceil($yaxisMax * 1.3 / $scale) * $scale);
+        ($yaxisMax < 10) && $yaxisMax = 10;
 
-        return $yaxis_max;
+        return $yaxisMax;
     }
 }

@@ -13,20 +13,20 @@ class Notice
 {
     public static function get()
     {
-        if (empty(session('notice_category'))) {
+        if (empty(session('noticeCategory'))) {
             return [];
         }
 
         return [
-            'notice_category' => session('notice_category'),
-            'notice_message' => session('notice_message'),
+            'noticeCategory' => session('noticeCategory'),
+            'noticeMessage' => session('noticeMessage'),
         ];
     }
 
-    public static function set($category, $code, ...$msg_args)
+    public static function set($category, $code, ...$msgArgs)
     {
-        \Session::flash('notice_category', $category);
-        \Session::flash('notice_message', \Blocs\Lang::get(implode(':', func_get_args())));
+        \Session::flash('noticeCategory', $category);
+        \Session::flash('noticeMessage', \Blocs\Lang::get(implode(':', func_get_args())));
     }
 }
 

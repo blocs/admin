@@ -17,62 +17,62 @@ namespace Blocs;
  */
 class Excel
 {
-    private $excel_name;
-    private $excel_template;
+    private $excelName;
+    private $excelTemplate;
 
     private $worksheet = [];
-    private $worksheet_xml = [];
-    private $add_shared = false;
+    private $worksheetXml = [];
+    private $addShared = false;
 
     /**
      * コンストラクタ
      *
      * テンプレートとなるエクセルファイルの取り込み。
      *
-     * @param string $excel_name テンプレートファイル名
+     * @param string $excelName テンプレートファイル名
      */
-    public function __construct($excel_name)
+    public function __construct($excelName)
     {
         defined('TEMPLATE_CACHE_DIR') || define('TEMPLATE_CACHE_DIR', config('view.compiled'));
 
-        $this->excel_name = $excel_name;
-        $this->excel_template = new \ZipArchive();
-        $this->excel_template->open($excel_name);
+        $this->excelName = $excelName;
+        $this->excelTemplate = new \ZipArchive();
+        $this->excelTemplate->open($excelName);
     }
 
     /**
      * テンプレートとなるエクセルファイルの値を編集.
      *
-     * @param string $sheet_no     シートの番号、左から1,2とカウント
-     * @param string $sheet_column 編集するカラムの列番号、もしくは列名
-     * @param string $sheet_row    編集するカラムの行番号、もしくは行名
+     * @param string $sheetNo     シートの番号、左から1,2とカウント
+     * @param string $sheetColumn 編集するカラムの列番号、もしくは列名
+     * @param string $sheetRow    編集するカラムの行番号、もしくは行名
      */
-    public function get($sheet_no, $sheet_column, $sheet_row)
+    public function get($sheetNo, $sheetColumn, $sheetRow)
     {
-        $sheet_name = 'xl/worksheets/sheet'.$sheet_no.'.xml';
+        $sheetName = 'xl/worksheets/sheet'.$sheetNo.'.xml';
 
-        if (isset($this->worksheet_xml[$sheet_name])) {
+        if (isset($this->worksheetXml[$sheetName])) {
             // キャッシュを読み込み
-            $worksheet_xml = $this->worksheet_xml[$sheet_name];
+            $worksheetXml = $this->worksheetXml[$sheetName];
         } else {
-            $worksheet_string = $this->_get_worksheet($sheet_name);
+            $worksheetString = $this->_get_worksheet($sheetName);
 
             // シートがない時
-            if (empty($worksheet_string)) {
+            if (empty($worksheetString)) {
                 return false;
             }
 
-            $worksheet_xml = new \SimpleXMLElement($worksheet_string);
+            $worksheetXml = new \SimpleXMLElement($worksheetString);
 
             // キャッシュを作成
-            $this->worksheet_xml[$sheet_name] = $worksheet_xml;
+            $this->worksheetXml[$sheetName] = $worksheetXml;
         }
 
         // 列番号、行番号を列名、行名に変換
-        list($column_name, $row_name) = $this->_get_name($sheet_column, $sheet_row);
+        list($columnName, $rowName) = $this->_get_name($sheetColumn, $sheetRow);
 
         // 指定されたセルの値を取得
-        $value = $this->_get_value_sheet($worksheet_xml, $column_name, $row_name);
+        $value = $this->_get_value_sheet($worksheetXml, $columnName, $rowName);
 
         return $value;
     }
@@ -80,39 +80,39 @@ class Excel
     /**
      * テンプレートとなるエクセルファイルの値を編集.
      *
-     * @param string $sheet_no     シートの番号、左から1,2とカウント
-     * @param string $sheet_column 編集するカラムの列番号、もしくは列名
-     * @param string $sheet_row    編集するカラムの行番号、もしくは行名
-     * @param string $value        値
+     * @param string $sheetNo     シートの番号、左から1,2とカウント
+     * @param string $sheetColumn 編集するカラムの列番号、もしくは列名
+     * @param string $sheetRow    編集するカラムの行番号、もしくは行名
+     * @param string $value       値
      */
-    public function set($sheet_no, $sheet_column, $sheet_row, $value)
+    public function set($sheetNo, $sheetColumn, $sheetRow, $value)
     {
-        $sheet_name = 'xl/worksheets/sheet'.$sheet_no.'.xml';
+        $sheetName = 'xl/worksheets/sheet'.$sheetNo.'.xml';
 
-        if (isset($this->worksheet_xml[$sheet_name])) {
+        if (isset($this->worksheetXml[$sheetName])) {
             // キャッシュを読み込み
-            $worksheet_xml = $this->worksheet_xml[$sheet_name];
+            $worksheetXml = $this->worksheetXml[$sheetName];
         } else {
-            $worksheet_string = $this->_get_worksheet($sheet_name);
+            $worksheetString = $this->_get_worksheet($sheetName);
 
             // シートがない時
-            if (empty($worksheet_string)) {
+            if (empty($worksheetString)) {
                 return $this;
             }
 
-            $worksheet_xml = new \SimpleXMLElement($worksheet_string);
+            $worksheetXml = new \SimpleXMLElement($worksheetString);
         }
 
         // 列番号、行番号を列名、行名に変換
-        list($column_name, $row_name) = $this->_get_name($sheet_column, $sheet_row);
+        list($columnName, $rowName) = $this->_get_name($sheetColumn, $sheetRow);
 
         // 指定されたセルに値をセット
-        $worksheet_xml = $this->_set_value_sheet($worksheet_xml, $column_name, $row_name, $value);
+        $worksheetXml = $this->_set_value_sheet($worksheetXml, $columnName, $rowName, $value);
 
-        $this->worksheet[$sheet_name] = $worksheet_xml->asXML();
+        $this->worksheet[$sheetName] = $worksheetXml->asXML();
 
         // キャッシュを更新
-        $this->worksheet_xml[$sheet_name] = $worksheet_xml;
+        $this->worksheetXml[$sheetName] = $worksheetXml;
 
         return $this;
     }
@@ -122,57 +122,57 @@ class Excel
      */
     public function generate()
     {
-        $excel_template = $this->excel_template;
+        $excelTemplate = $this->excelTemplate;
         $worksheet = $this->worksheet;
 
-        $temp_name = tempnam(TEMPLATE_CACHE_DIR, 'excel');
-        $generate_name = $temp_name.'.zip';
-        $excel_generate = new \ZipArchive();
-        $excel_generate->open($generate_name, \ZipArchive::CREATE);
+        $tempName = tempnam(TEMPLATE_CACHE_DIR, 'excel');
+        $generateName = $tempName.'.zip';
+        $excelGenerate = new \ZipArchive();
+        $excelGenerate->open($generateName, \ZipArchive::CREATE);
 
-        for ($i = 0; $i < $excel_template->numFiles; ++$i) {
-            $sheet_name = $excel_template->getNameIndex($i);
-            $worksheet_string = $excel_template->getFromIndex($i);
+        for ($i = 0; $i < $excelTemplate->numFiles; ++$i) {
+            $sheetName = $excelTemplate->getNameIndex($i);
+            $worksheetString = $excelTemplate->getFromIndex($i);
 
-            if ('xl/workbook.xml' == $sheet_name) {
-                $worksheet_xml = new \SimpleXMLElement($worksheet_string);
+            if ('xl/workbook.xml' == $sheetName) {
+                $worksheetXml = new \SimpleXMLElement($worksheetString);
 
-                if (isset($worksheet_xml->calcPr['forceFullCalc'])) {
+                if (isset($worksheetXml->calcPr['forceFullCalc'])) {
                     // テンプレートそのままのシート
-                    $excel_generate->addFromString($sheet_name, $worksheet_string);
+                    $excelGenerate->addFromString($sheetName, $worksheetString);
                 } else {
                     // 強制的に計算させる
-                    $worksheet_xml->calcPr->addAttribute('forceFullCalc', 1);
+                    $worksheetXml->calcPr->addAttribute('forceFullCalc', 1);
 
-                    $excel_generate->addFromString($sheet_name, $worksheet_xml->asXML());
+                    $excelGenerate->addFromString($sheetName, $worksheetXml->asXML());
                 }
 
                 continue;
             }
 
-            if (isset($worksheet[$sheet_name])) {
+            if (isset($worksheet[$sheetName])) {
                 // 値を差し替えたシート
-                $excel_generate->addFromString($sheet_name, $worksheet[$sheet_name]);
+                $excelGenerate->addFromString($sheetName, $worksheet[$sheetName]);
                 continue;
             }
 
             // テンプレートそのままのシート
-            $excel_generate->addFromString($sheet_name, $worksheet_string);
+            $excelGenerate->addFromString($sheetName, $worksheetString);
         }
 
-        if ($this->add_shared) {
+        if ($this->addShared) {
             // 共通文字列のシートを追加
-            $excel_generate->addFromString('xl/sharedStrings.xml', $worksheet['xl/sharedStrings.xml']);
+            $excelGenerate->addFromString('xl/sharedStrings.xml', $worksheet['xl/sharedStrings.xml']);
         }
 
-        $excel_template->close();
-        $excel_generate->close();
+        $excelTemplate->close();
+        $excelGenerate->close();
 
-        $excel_generated = file_get_contents($generate_name);
-        is_file($generate_name) && unlink($generate_name);
-        is_file($temp_name) && unlink($temp_name);
+        $excelGenerated = file_get_contents($generateName);
+        is_file($generateName) && unlink($generateName);
+        is_file($tempName) && unlink($tempName);
 
-        return $excel_generated;
+        return $excelGenerated;
     }
 
     /**
@@ -180,7 +180,7 @@ class Excel
      */
     public function download($filename = null)
     {
-        isset($filename) || $filename = basename($this->excel_name);
+        isset($filename) || $filename = basename($this->excelName);
         $filename = rawurlencode($filename);
 
         return response($this->generate())
@@ -199,44 +199,44 @@ class Excel
 
     /* Private function */
 
-    private function _get_name($sheet_column, $sheet_row)
+    private function _get_name($sheetColumn, $sheetRow)
     {
-        if (is_integer($sheet_column)) {
-            $column_name = $this->_get_column_name($sheet_column);
-            $row_name = intval($sheet_row) + 1;
+        if (is_integer($sheetColumn)) {
+            $columnName = $this->_get_column_name($sheetColumn);
+            $rowName = intval($sheetRow) + 1;
         } else {
-            $column_name = $sheet_column;
-            $row_name = $sheet_row;
+            $columnName = $sheetColumn;
+            $rowName = $sheetRow;
         }
 
-        return [$column_name, $row_name];
+        return [$columnName, $rowName];
     }
 
-    private function _get_worksheet($sheet_name)
+    private function _get_worksheet($sheetName)
     {
-        if (isset($this->worksheet[$sheet_name])) {
-            return $this->worksheet[$sheet_name];
+        if (isset($this->worksheet[$sheetName])) {
+            return $this->worksheet[$sheetName];
         }
 
-        if (empty($this->excel_template->numFiles)) {
+        if (empty($this->excelTemplate->numFiles)) {
             return false;
         }
 
-        return $this->excel_template->getFromName($sheet_name);
+        return $this->excelTemplate->getFromName($sheetName);
     }
 
-    private function _get_value_sheet($worksheet_xml, $column_name, $row_name)
+    private function _get_value_sheet($worksheetXml, $columnName, $rowName)
     {
-        $cell_name = $column_name.$row_name;
+        $cellName = $columnName.$rowName;
 
-        $rows = $worksheet_xml->sheetData->row;
+        $rows = $worksheetXml->sheetData->row;
         foreach ($rows as $row) {
-            if ($row['r'] != $row_name) {
+            if ($row['r'] != $rowName) {
                 continue;
             }
 
             foreach ($row->c as $cell) {
-                if ($cell['r'] == $cell_name) {
+                if ($cell['r'] == $cellName) {
                     if ('s' == $cell['t']) {
                         //文字列の時
                         return strval($this->_get_value(intval($cell->v)));
@@ -250,105 +250,105 @@ class Excel
         return false;
     }
 
-    private function _set_value_sheet($worksheet_xml, $column_name, $row_name, $value)
+    private function _set_value_sheet($worksheetXml, $columnName, $rowName, $value)
     {
-        $cell_name = $column_name.$row_name;
+        $cellName = $columnName.$rowName;
 
-        $rows = $worksheet_xml->sheetData->row;
+        $rows = $worksheetXml->sheetData->row;
         foreach ($rows as $row) {
-            if ($row['r'] != $row_name) {
+            if ($row['r'] != $rowName) {
                 continue;
             }
 
             foreach ($row->c as $cell) {
-                if ($cell['r'] == $cell_name) {
+                if ($cell['r'] == $cellName) {
                     // 値の置き換え
                     $this->_set_value($cell, $value);
 
-                    return $worksheet_xml;
+                    return $worksheetXml;
                 }
             }
 
             // セルを追加して値をセット
             $cell = $row->addChild('c');
-            $cell['r'] = $cell_name;
+            $cell['r'] = $cellName;
             $this->_set_value($cell, $value);
 
             // 列の順序をソート
-            $sort_cells = [];
-            $sort_cell_names = [];
+            $sortCells = [];
+            $sortCellNames = [];
             foreach ($row->c as $cell) {
                 // ソートのために左詰に変換
-                $sort_cell_name = sprintf('% 20s', strval($cell['r']));
-                $sort_cell_names[] = $sort_cell_name;
-                $sort_cells[$sort_cell_name] = clone $cell;
+                $sortCellName = sprintf('% 20s', strval($cell['r']));
+                $sortCellNames[] = $sortCellName;
+                $sortCells[$sortCellName] = clone $cell;
             }
-            sort($sort_cell_names);
+            sort($sortCellNames);
 
             unset($row->c);
-            foreach ($sort_cell_names as $sort_cell_name) {
-                $this->_append_child($row, $sort_cells[$sort_cell_name]);
+            foreach ($sortCellNames as $sortCellName) {
+                $this->_append_child($row, $sortCells[$sortCellName]);
             }
 
-            return $worksheet_xml;
+            return $worksheetXml;
         }
 
         // 列を追加して値をセット
-        $row = $worksheet_xml->sheetData->addChild('row');
-        $row['r'] = $row_name;
+        $row = $worksheetXml->sheetData->addChild('row');
+        $row['r'] = $rowName;
 
         $cell = $row->addChild('c');
-        $cell['r'] = $cell_name;
+        $cell['r'] = $cellName;
         $this->_set_value($cell, $value);
 
         // 行の順序をソート
-        $sort_rows = [];
-        $sort_row_names = [];
+        $sortRows = [];
+        $sortRowNames = [];
         foreach ($rows as $row) {
-            $row_name = intval($row['r']);
-            $sort_row_names[] = $row_name;
-            $sort_rows[$row_name] = clone $row;
+            $rowName = intval($row['r']);
+            $sortRowNames[] = $rowName;
+            $sortRows[$rowName] = clone $row;
         }
-        sort($sort_row_names);
+        sort($sortRowNames);
 
-        unset($worksheet_xml->sheetData->row);
-        foreach ($sort_row_names as $row_name) {
-            $this->_append_child($worksheet_xml->sheetData, $sort_rows[$row_name]);
+        unset($worksheetXml->sheetData->row);
+        foreach ($sortRowNames as $rowName) {
+            $this->_append_child($worksheetXml->sheetData, $sortRows[$rowName]);
         }
 
-        return $worksheet_xml;
+        return $worksheetXml;
     }
 
-    private function _get_value($string_index)
+    private function _get_value($stringIndex)
     {
         // 文字列の共通ファイルに追加
-        $shared_name = 'xl/sharedStrings.xml';
-        $shared_string = $this->_get_worksheet($shared_name);
+        $sharedName = 'xl/sharedStrings.xml';
+        $sharedString = $this->_get_worksheet($sharedName);
 
         // 共通ファイルがない時は作成
-        if (empty($shared_string)) {
+        if (empty($sharedString)) {
             return false;
         }
 
-        $shared_xml = new \SimpleXMLElement($shared_string);
+        $sharedXml = new \SimpleXMLElement($sharedString);
 
         // 共通ファイルで文字列を検索すること
-        $share_i = 0;
-        foreach ($shared_xml->si as $shared_si) {
-            if ($share_i == $string_index) {
+        $shareNo = 0;
+        foreach ($sharedXml->si as $sharedSi) {
+            if ($shareNo == $stringIndex) {
                 $string = '';
 
                 // 装飾されている文字列を取得
-                foreach ($shared_si->r as $shared_si_r) {
-                    isset($shared_si_r->t) && $string .= strval($shared_si_r->t);
+                foreach ($sharedSi->r as $sharedSiR) {
+                    isset($sharedSiR->t) && $string .= strval($sharedSiR->t);
                 }
 
                 // 装飾されていない文字列を取得
-                isset($shared_si->t) && $string .= strval($shared_si->t);
+                isset($sharedSi->t) && $string .= strval($sharedSi->t);
 
                 return $string;
             }
-            ++$share_i;
+            ++$shareNo;
         }
 
         return false;
@@ -365,71 +365,71 @@ class Excel
         }
 
         // 文字列の共通ファイルに追加
-        $shared_name = 'xl/sharedStrings.xml';
-        $shared_string = $this->_get_worksheet($shared_name);
+        $sharedName = 'xl/sharedStrings.xml';
+        $sharedString = $this->_get_worksheet($sharedName);
 
         // 共通ファイルがない時は作成
-        empty($shared_string) && $shared_string = $this->_add_shared();
+        empty($sharedString) && $sharedString = $this->_add_shared();
 
-        $shared_xml = new \SimpleXMLElement($shared_string);
+        $sharedXml = new \SimpleXMLElement($sharedString);
 
         // SimpleXMLElementの変換もれに対応
         $value = str_replace('&', '&amp;', $value);
 
         // 共通ファイルで文字列を検索すること
-        $share_i = 0;
-        foreach ($shared_xml->si as $shared_si) {
-            if (strval($shared_si->t) == $value) {
-                $string_index = $share_i;
+        $shareNo = 0;
+        foreach ($sharedXml->si as $sharedSi) {
+            if (strval($sharedSi->t) == $value) {
+                $stringIndex = $shareNo;
                 break;
             }
-            ++$share_i;
+            ++$shareNo;
         }
 
-        if (empty($string_index)) {
+        if (empty($stringIndex)) {
             // 文字列を共通ファイルに追加
-            $shared_xml['count'] = intval($shared_xml['count']) + 1;
-            $shared_xml['uniqueCount'] = intval($shared_xml['uniqueCount']) + 1;
+            $sharedXml['count'] = intval($sharedXml['count']) + 1;
+            $sharedXml['uniqueCount'] = intval($sharedXml['uniqueCount']) + 1;
 
-            $add_string = $shared_xml->addChild('si');
-            $add_string->addChild('t', $value);
-            $string_index = $shared_xml->si->count() - 1;
+            $addString = $sharedXml->addChild('si');
+            $addString->addChild('t', $value);
+            $stringIndex = $sharedXml->si->count() - 1;
 
-            $this->worksheet[$shared_name] = $shared_xml->asXML();
+            $this->worksheet[$sharedName] = $sharedXml->asXML();
         }
 
         // 文字列を指定
-        $cell->v = $string_index;
+        $cell->v = $stringIndex;
         $cell['t'] = 's';
     }
 
-    private function _get_column_name($column_index)
+    private function _get_column_name($columnIndex)
     {
-        $column_name = '';
-        $currentColIndex = $column_index;
+        $columnName = '';
+        $currentColIndex = $columnIndex;
         while (true) {
             $alphabetIndex = $currentColIndex % 26;
             $alphabet = chr(ord('A') + $alphabetIndex);
-            $column_name = $alphabet.$column_name;
+            $columnName = $alphabet.$columnName;
             if ($currentColIndex < 26) {
                 break;
             }
             $currentColIndex = intval(floor(($currentColIndex - 26) / 26));
         }
 
-        return $column_name;
+        return $columnName;
     }
 
-    private function _get_column_index($column_name)
+    private function _get_column_index($columnName)
     {
-        $digit_column = strlen($column_name) - 1;
-        $column_index = 0;
-        for ($i = 0; $i <= $digit_column; ++$i) {
-            $column_index += (ord($column_name[$digit_column - $i]) - 64) * (26 ** $i);
+        $digitColumn = strlen($columnName) - 1;
+        $columnIndex = 0;
+        for ($i = 0; $i <= $digitColumn; ++$i) {
+            $columnIndex += (ord($columnName[$digitColumn - $i]) - 64) * (26 ** $i);
         }
-        --$column_index;
+        --$columnIndex;
 
-        return $column_index;
+        return $columnIndex;
     }
 
     private function _append_child(\SimpleXMLElement $target, \SimpleXMLElement $addElement)
@@ -450,28 +450,28 @@ class Excel
 
     private function _add_shared()
     {
-        $this->add_shared = true;
+        $this->addShared = true;
 
-        $content_string = $this->_get_worksheet('[Content_Types].xml');
-        $content_string = substr($content_string, 0, -8);
-        $content_string .= <<< END_of_HTML
+        $contentString = $this->_get_worksheet('[Content_Types].xml');
+        $contentString = substr($contentString, 0, -8);
+        $contentString .= <<< END_of_HTML
 <Override PartName="/xl/sharedStrings.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sharedStrings+xml"/></Types>
 END_of_HTML;
-        $this->worksheet['[Content_Types].xml'] = $content_string;
+        $this->worksheet['[Content_Types].xml'] = $contentString;
 
-        $rels_string = $this->_get_worksheet('xl/_rels/workbook.xml.rels');
-        $rels_string = substr($rels_string, 0, -16);
-        $rels_string .= <<< END_of_HTML
+        $relsString = $this->_get_worksheet('xl/_rels/workbook.xml.rels');
+        $relsString = substr($relsString, 0, -16);
+        $relsString .= <<< END_of_HTML
 <Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/sharedStrings" Target="sharedStrings.xml"/></Relationships>
 END_of_HTML;
-        $this->worksheet['xl/_rels/workbook.xml.rels'] = $rels_string;
+        $this->worksheet['xl/_rels/workbook.xml.rels'] = $relsString;
 
-        $shared_string = <<< END_of_HTML
+        $sharedString = <<< END_of_HTML
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="0" uniqueCount="0"></sst>
 END_of_HTML;
 
-        return $shared_string;
+        return $sharedString;
     }
 }
 

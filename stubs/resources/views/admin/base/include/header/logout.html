@@ -1,6 +1,6 @@
-<!-- data-assign=$modal_name data-val='modal_logout' -->
-<!-- data-assign=$modal_title data-lang='template:resource_blocs_logout_title' -->
-<!-- data-assign=$modal_message data-lang='template:resource_blocs_logout_message' -->
+<!-- data-assign=$modalName data-val='modal_logout' -->
+<!-- data-assign=$modalTitle data-lang='template:resource_blocs_logout_title' -->
+<!-- data-assign=$modalMessage data-lang='template:resource_blocs_logout_message' -->
 
 <!-- data-bloc='modal_button' -->
 
@@ -16,8 +16,8 @@
 
 <script type="text/javascript">
 $(function(){
-	$('a[data-target="#<!-- data-val=$modal_name -->"]').on('click', function(){
-		$('#<!-- data-val=$modal_name -->').modal('show');
+	$('a[data-target="#<!-- data-val=$modalName -->"]').on('click', function(){
+		$('#<!-- data-val=$modalName -->').modal('show');
 	});
 });
 </script>

@@ -16,8 +16,8 @@ class Base extends Controller
     protected $paginateNum;
     protected $noticeItem;
 
-    private $selected_ids = [];
-    private $deleted_num = 0;
+    private $selectedIds = [];
+    private $deletedNum = 0;
 
     use Common;
 
@@ -31,7 +31,7 @@ class Base extends Controller
         $this->prepareIndex();
 
         if (session()->has($this->viewPrefix.'.confirm')) {
-            // 確認画面からの遷移（selected_rows）
+            // 確認画面からの遷移（selectedRows）
             $this->val = self::mergeTable($this->val, session($this->viewPrefix.'.confirm'));
         }
 
@@ -42,13 +42,13 @@ class Base extends Controller
     {
         $this->keep_item('search');
 
-        $this->search_items = [];
+        $this->searchItems = [];
         if (!empty($this->request->search)) {
             mb_regex_encoding('utf-8');
-            $this->search_items = mb_split("[\s,　]+", $this->request->search);
+            $this->searchItems = mb_split("[\s,　]+", $this->request->search);
 
-            foreach ($this->search_items as $search_num => $search_item) {
-                $this->search_items[$search_num] = addcslashes($search_item, '%_\\');
+            foreach ($this->searchItems as $searchNum => $searchItem) {
+                $this->searchItems[$searchNum] = addcslashes($searchItem, '%_\\');
             }
 
             $this->val['search'] = $this->request->search;
@@ -111,10 +111,10 @@ class Base extends Controller
 
     protected function getCurrent()
     {
-        $table_data = call_user_func($this->mainTable.'::find', $this->val['id']);
-        $table_data = $table_data->toArray();
+        $tableData = call_user_func($this->mainTable.'::find', $this->val['id']);
+        $tableData = $tableData->toArray();
 
-        $this->val = array_merge($table_data, $this->val);
+        $this->val = array_merge($tableData, $this->val);
     }
 
     protected function prepareEntry()
@@ -192,13 +192,13 @@ class Base extends Controller
     {
     }
 
-    protected function executeInsert($request_data = [])
+    protected function executeInsert($requestData = [])
     {
-        if (empty($request_data)) {
+        if (empty($requestData)) {
             return;
         }
 
-        call_user_func($this->mainTable.'::create', $request_data);
+        call_user_func($this->mainTable.'::create', $requestData);
     }
 
     protected function outputInsert()
@@ -278,10 +278,10 @@ class Base extends Controller
             return;
         }
 
-        $table_data = call_user_func($this->mainTable.'::find', $this->val['id']);
-        $table_data = $table_data->toArray();
+        $tableData = call_user_func($this->mainTable.'::find', $this->val['id']);
+        $tableData = $tableData->toArray();
 
-        if ($this->request->updated_at !== $table_data['updated_at']) {
+        if ($this->request->updated_at !== $tableData['updated_at']) {
             return $this->backEntry('error', 'collision_happened');
         }
     }
@@ -290,14 +290,14 @@ class Base extends Controller
     {
     }
 
-    protected function executeUpdate($request_data = [])
+    protected function executeUpdate($requestData = [])
     {
-        if (empty($request_data)) {
+        if (empty($requestData)) {
             return;
         }
 
-        $table_data = call_user_func($this->mainTable.'::find', $this->val['id']);
-        $table_data->fill($request_data)->save();
+        $tableData = call_user_func($this->mainTable.'::find', $this->val['id']);
+        $tableData->fill($requestData)->save();
     }
 
     protected function outputUpdate()
@@ -371,12 +371,12 @@ class Base extends Controller
 
     protected function executeDelete()
     {
-        $this->deleted_num = call_user_func($this->mainTable.'::destroy', $this->val['id']);
+        $this->deletedNum = call_user_func($this->mainTable.'::destroy', $this->val['id']);
     }
 
     protected function outputDelete()
     {
-        return $this->backIndex('success', 'data_deleted', $this->deleted_num);
+        return $this->backIndex('success', 'data_deleted', $this->deletedNum);
     }
 
     /* select */
@@ -403,10 +403,10 @@ class Base extends Controller
         }
 
         foreach ($this->request->table as $table) {
-            empty($table['selected_rows']) || $this->selected_ids[] = $table['selected_rows'];
+            empty($table['selectedRows']) || $this->selectedIds[] = $table['selectedRows'];
         }
 
-        if (empty($this->selected_ids)) {
+        if (empty($this->selectedIds)) {
             return $this->backIndex('error', 'data_not_selected');
         }
     }
@@ -431,7 +431,7 @@ class Base extends Controller
             $this->request->merge(session($this->viewPrefix.'.confirm'));
 
             foreach ($this->request->table as $table) {
-                empty($table['selected_rows']) || $this->selected_ids[] = $table['selected_rows'];
+                empty($table['selectedRows']) || $this->selectedIds[] = $table['selectedRows'];
             }
         } else {
             if ($redirect = $this->validateSelect()) {
@@ -451,16 +451,16 @@ class Base extends Controller
 
     protected function executeSelect()
     {
-        if (empty($this->selected_ids)) {
+        if (empty($this->selectedIds)) {
             return;
         }
 
-        $this->deleted_num = call_user_func($this->mainTable.'::destroy', $this->selected_ids);
+        $this->deletedNum = call_user_func($this->mainTable.'::destroy', $this->selectedIds);
     }
 
     protected function outputSelect()
     {
-        return $this->backIndex('success', 'data_deleted', $this->deleted_num);
+        return $this->backIndex('success', 'data_deleted', $this->deletedNum);
     }
 
     /* toggle */
@@ -472,18 +472,18 @@ class Base extends Controller
         }
         $this->val['id'] = $id;
 
-        $table_data = call_user_func($this->mainTable.'::find', $this->val['id']);
+        $tableData = call_user_func($this->mainTable.'::find', $this->val['id']);
 
-        if (empty($table_data->disabled_at)) {
-            $table_data->disabled_at = Carbon::now();
+        if (empty($tableData->disabled_at)) {
+            $tableData->disabled_at = Carbon::now();
         } else {
-            $table_data->disabled_at = null;
+            $tableData->disabled_at = null;
         }
 
-        $table_data->save();
+        $tableData->save();
 
-        $this->val['disabled_at'] = $table_data->disabled_at;
-        $this->val[$this->noticeItem] = $table_data->{$this->noticeItem};
+        $this->val['disabled_at'] = $tableData->disabled_at;
+        $this->val[$this->noticeItem] = $tableData->{$this->noticeItem};
 
         return $this->outputToggle();
     }
@@ -506,16 +506,16 @@ class Base extends Controller
         }
         $this->val['id'] = $id;
 
-        $table_data = call_user_func($this->mainTable.'::find', $this->val['id']);
-        $table_data = $table_data->toArray();
+        $tableData = call_user_func($this->mainTable.'::find', $this->val['id']);
+        $tableData = $tableData->toArray();
 
-        foreach (['id', 'created_at', 'updated_at', 'deleted_at', 'disabled_at'] as $unset_item) {
-            unset($table_data[$unset_item]);
+        foreach (['id', 'created_at', 'updated_at', 'deleted_at', 'disabled_at'] as $unsetItem) {
+            unset($tableData[$unsetItem]);
         }
 
-        call_user_func($this->mainTable.'::create', $table_data);
+        call_user_func($this->mainTable.'::create', $tableData);
 
-        $this->val[$this->noticeItem] = $table_data[$this->noticeItem];
+        $this->val[$this->noticeItem] = $tableData[$this->noticeItem];
 
         return $this->outputCopy();
     }
@@ -532,11 +532,11 @@ class Base extends Controller
         $this->request = $request;
         $paramname = $this->request->name;
 
-        if (isset($this->request->uploaded_files)) {
-            $uploaded_files = $this->request->uploaded_files;
-            is_array($uploaded_files) || $uploaded_files = json_decode($uploaded_files, true);
+        if (isset($this->request->uploadedFiles)) {
+            $uploadedFiles = $this->request->uploadedFiles;
+            is_array($uploadedFiles) || $uploadedFiles = json_decode($uploadedFiles, true);
 
-            $html = view(VIEW_PREFIX.'.autoinclude.upload_list', ['files' => $uploaded_files])->render();
+            $html = view(VIEW_PREFIX.'.autoinclude.upload_list', ['files' => $uploadedFiles])->render();
 
             return json_encode([
                 'paramname' => $paramname,
@@ -545,7 +545,7 @@ class Base extends Controller
         }
 
         $fileupload = $this->request->file('upload');
-        $mime_type = $fileupload->getMimeType();
+        $mimeType = $fileupload->getMimeType();
 
         $extension = $fileupload->extension();
         if (!$extension) {
@@ -560,13 +560,13 @@ class Base extends Controller
         $filename = md5($fileupload->get()).'.'.$extension;
         $fileupload->storeAs('upload', $filename);
 
-        $exist_thumbnail = $this->createThumbnail('upload/'.$filename, 'thumbnail') ? 1 : 0;
+        $existThumbnail = $this->createThumbnail('upload/'.$filename, 'thumbnail') ? 1 : 0;
         $file = [
             'paramname' => $paramname,
             'filename' => $filename,
             'name' => $fileupload->getClientOriginalName(),
             'size' => $fileupload->getSize(),
-            'thumbnail' => $exist_thumbnail,
+            'thumbnail' => $existThumbnail,
         ];
         $file['html'] = view(VIEW_PREFIX.'.autoinclude.upload_list', ['files' => [$file]])->render();
 
@@ -591,17 +591,17 @@ class Base extends Controller
 
         $storage = \Storage::disk();
         $filename = 'upload/'.$filename;
-        $mime_type = $storage->mimeType($filename);
+        $mimeType = $storage->mimeType($filename);
 
         if (isset($size)) {
             $thumbnail = $this->createThumbnail($filename, $size);
             if ($thumbnail) {
-                return response(\File::get($thumbnail))->header('Content-type', $mime_type);
+                return response(\File::get($thumbnail))->header('Content-type', $mimeType);
             }
         } else {
             $thumbnail = $this->createThumbnail($filename, 'thumbnail');
             if ($thumbnail) {
-                return response($storage->get($filename))->header('Content-type', $mime_type);
+                return response($storage->get($filename))->header('Content-type', $mimeType);
             }
         }
 
@@ -611,7 +611,7 @@ class Base extends Controller
     protected function getSize($size)
     {
         // 画像のサイズを指定できるように
-        $download_size = [
+        $downloadSize = [
             'thumbnail' => [80, 10000, false],
             's' => [380, 10000, false],
             's@2x' => [760, 10000, false],
@@ -621,31 +621,31 @@ class Base extends Controller
             'l@2x' => [2400, 10000, false],
         ];
 
-        return $download_size[$size];
+        return $downloadSize[$size];
     }
 
     /* common */
 
-    protected function backIndex($category, $code, ...$msg_args)
+    protected function backIndex($category, $code, ...$msgArgs)
     {
         $category && call_user_func_array('\Blocs\Notice::set', func_get_args());
 
         return redirect()->route(ROUTE_PREFIX.'.index');
     }
 
-    protected function backEntry($category, $code, $notice_form = '', ...$msg_args)
+    protected function backEntry($category, $code, $noticeForm = '', ...$msgArgs)
     {
         if ($category) {
-            $msg_args = array_merge([$category, $code], $msg_args);
-            call_user_func_array('\Blocs\Notice::set', $msg_args);
+            $msgArgs = array_merge([$category, $code], $msgArgs);
+            call_user_func_array('\Blocs\Notice::set', $msgArgs);
         } else {
-            $msg_args = array_merge([$code], $msg_args);
+            $msgArgs = array_merge([$code], $msgArgs);
         }
 
-        if ($notice_form) {
+        if ($noticeForm) {
             return redirect()->route(ROUTE_PREFIX.'.entry', $this->val)
                 ->withInput()
-                ->withErrors([$notice_form => \Blocs\Lang::get(implode(':', $msg_args))]);
+                ->withErrors([$noticeForm => \Blocs\Lang::get(implode(':', $msgArgs))]);
         }
 
         return redirect()->route(ROUTE_PREFIX.'.entry', $this->val)
@@ -670,11 +670,11 @@ class Base extends Controller
         return $table;
     }
 
-    protected function setupNavigation($navigation_name = null)
+    protected function setupNavigation($navigationName = null)
     {
-        isset($navigation_name) || $navigation_name = VIEW_PREFIX;
+        isset($navigationName) || $navigationName = VIEW_PREFIX;
 
-        list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get($navigation_name);
+        list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get($navigationName);
         $this->val['navigation'] = $navigation;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
@@ -688,10 +688,10 @@ class Base extends Controller
             return;
         }
 
-        $table_data = call_user_func($this->mainTable.'::find', $id);
+        $tableData = call_user_func($this->mainTable.'::find', $id);
 
         // データが見つからない
-        if (empty($table_data)) {
+        if (empty($tableData)) {
             return $this->backIndex('error', 'data_not_found');
         }
     }

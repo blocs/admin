@@ -11,17 +11,17 @@ namespace Blocs;
 
 class Thumbnail
 {
-    public static function create($tmpLoc, $p_width, $p_height, $crop = false)
+    public static function create($tmpLoc, $pWidth, $pHeight, $crop = false)
     {
         defined('TEMPLATE_CACHE_DIR') || define('TEMPLATE_CACHE_DIR', config('view.compiled'));
 
         // サムネイルファイル名を取得
-        $thumb_crop = $crop ? '_c' : '';
-        $thumb_name = $p_width.'x'.$p_height.$thumb_crop.'-'.basename($tmpLoc);
-        $thumbLoc = TEMPLATE_CACHE_DIR.'/'.$thumb_name;
+        $thumbCrop = $crop ? '_c' : '';
+        $thumbName = $pWidth.'x'.$pHeight.$thumbCrop.'-'.basename($tmpLoc);
+        $thumbLoc = TEMPLATE_CACHE_DIR.'/'.$thumbName;
 
         // サムネイルファイルの拡張子を取得
-        $thumb_ext = \File::extension($tmpLoc);
+        $thumbExt = \File::extension($tmpLoc);
 
         if (is_file($thumbLoc)) {
             // すでにサムネイルファイルが存在している時
@@ -33,8 +33,8 @@ class Thumbnail
             return false;
         }
 
-        list($width, $height, $o_width, $o_height) = self::_get_thumbnail_size($tmpLoc, $p_width, $p_height, $crop);
-        if ($width === $o_width && $height === $o_height) {
+        list($width, $height, $oWidth, $oHeight) = self::_get_thumbnail_size($tmpLoc, $pWidth, $pHeight, $crop);
+        if ($width === $oWidth && $height === $oHeight) {
             copy($tmpLoc, $thumbLoc) && chmod($thumbLoc, 0666);
 
             return $thumbLoc;
@@ -44,13 +44,13 @@ class Thumbnail
             return false;
         }
 
-        $o_image = self::_image_create($tmpLoc, $thumb_ext);
-        if (!$o_image) {
+        $oImage = self::_image_create($tmpLoc, $thumbExt);
+        if (!$oImage) {
             return false;
         }
 
         if ($crop) {
-            $image = imagecreatetruecolor($p_width, $p_height);
+            $image = imagecreatetruecolor($pWidth, $pHeight);
 
             // アルファブレンディングを無効
             imagealphablending($image, false);
@@ -58,7 +58,7 @@ class Thumbnail
             // アルファフラグを設定
             imagesavealpha($image, true);
 
-            imagecopyresampled($image, $o_image, 0, 0, intval(($width - $p_width) / 2), intval(($height - $p_height) / 2), $width, $height, $o_width, $o_height);
+            imagecopyresampled($image, $oImage, 0, 0, intval(($width - $pWidth) / 2), intval(($height - $pHeight) / 2), $width, $height, $oWidth, $oHeight);
         } else {
             $image = imagecreatetruecolor($width, $height);
 
@@ -68,43 +68,43 @@ class Thumbnail
             // アルファフラグを設定
             imagesavealpha($image, true);
 
-            imagecopyresampled($image, $o_image, 0, 0, 0, 0, $width, $height, $o_width, $o_height);
+            imagecopyresampled($image, $oImage, 0, 0, 0, 0, $width, $height, $oWidth, $oHeight);
         }
 
-        self::_image_output($image, $thumbLoc, $thumb_ext);
+        self::_image_output($image, $thumbLoc, $thumbExt);
 
         return $thumbLoc;
     }
 
     /* Private function */
 
-    private static function _get_thumbnail_size($tmpLoc, $p_width, $p_height, $crop)
+    private static function _get_thumbnail_size($tmpLoc, $pWidth, $pHeight, $crop)
     {
-        list($width, $height) = list($o_width, $o_height) = getimagesize($tmpLoc);
+        list($width, $height) = list($oWidth, $oHeight) = getimagesize($tmpLoc);
 
         if ($crop) {
             // 指定サイズを覆う大きさ
-            if (isset($p_width)) {
-                $height = $height * $p_width / $width;
-                $width = $p_width;
+            if (isset($pWidth)) {
+                $height = $height * $pWidth / $width;
+                $width = $pWidth;
             }
-            if (isset($p_height) && $height < $p_height) {
-                $width = $width * $p_height / $height;
-                $height = $p_height;
+            if (isset($pHeight) && $height < $pHeight) {
+                $width = $width * $pHeight / $height;
+                $height = $pHeight;
             }
         } else {
             // 指定サイズに収まる大きさ
-            if (isset($p_width) && $p_width < $width) {
-                $height = $height * $p_width / $width;
-                $width = $p_width;
+            if (isset($pWidth) && $pWidth < $width) {
+                $height = $height * $pWidth / $width;
+                $width = $pWidth;
             }
-            if (isset($p_height) && $p_height < $height) {
-                $width = $width * $p_height / $height;
-                $height = $p_height;
+            if (isset($pHeight) && $pHeight < $height) {
+                $width = $width * $pHeight / $height;
+                $height = $pHeight;
             }
         }
 
-        return [intval($width), intval($height), $o_width, $o_height];
+        return [intval($width), intval($height), $oWidth, $oHeight];
     }
 
     private static function _image_create($tmpLoc, $ext)
@@ -129,9 +129,9 @@ class Thumbnail
         }
     }
 
-    private static function _image_output($image, $thumbLoc, $thumb_ext)
+    private static function _image_output($image, $thumbLoc, $thumbExt)
     {
-        switch ($thumb_ext) {
+        switch ($thumbExt) {
             case 'gif':
                 imagegif($image, $thumbLoc);
 

@@ -25,8 +25,8 @@ class Navigation
         $configs = $configs[$name];
 
         // ルート名を取得
-        $current_name = \Route::currentRouteName();
-        empty($current_name) || list($current_name) = explode('.', $current_name, 2);
+        $currentName = \Route::currentRouteName();
+        empty($currentName) || list($currentName) = explode('.', $currentName, 2);
 
         // ナビゲーション、パンクズリスト
         $navigations = [];
@@ -35,20 +35,20 @@ class Navigation
             isset($config['label']) || $config['label'] = \Blocs\Lang::get($config['lang']);
 
             if (isset($config['sub'])) {
-                list($config['sub'], $sub_headline, $breadcrumbs) = self::get($config['sub'], $breadcrumbs);
+                list($config['sub'], $subHeadline, $breadcrumbs) = self::get($config['sub'], $breadcrumbs);
 
                 if (!empty($breadcrumbs)) {
                     // サブメニューでマッチ
                     $config['active'] = true;
-                    false === $headline && $headline = $sub_headline;
+                    false === $headline && $headline = $subHeadline;
 
                     // パンクズリストに階層を追加
                     array_unshift($breadcrumbs, $config);
                 }
             }
 
-            list($config_name) = explode('.', $config['name'], 2);
-            if ($config_name === $current_name) {
+            list($configName) = explode('.', $config['name'], 2);
+            if ($configName === $currentName) {
                 $config['active'] = true;
                 false === $headline && $headline = $config;
 
@@ -91,17 +91,17 @@ class Navigation
         ]]);
     }
 
-    public static function check_group($current_name = null)
+    public static function check_group($currentName = null)
     {
-        isset($current_name) || $current_name = \Route::currentRouteName();
+        isset($currentName) || $currentName = \Route::currentRouteName();
 
         // 必要な権限を取得
-        $config_group = config('group');
+        $configGroup = config('group');
         $groups = [];
-        foreach ($config_group as $group_name => $route_names) {
-            foreach ($route_names as $route_name) {
-                if (false !== strpos($current_name, $route_name)) {
-                    $groups[] = $group_name;
+        foreach ($configGroup as $groupName => $routeNames) {
+            foreach ($routeNames as $routeName) {
+                if (false !== strpos($currentName, $routeName)) {
+                    $groups[] = $groupName;
                     break;
                 }
             }
@@ -112,11 +112,11 @@ class Navigation
         }
 
         // 自分の権限を取得
-        $_user_data = \Auth::user();
-        $my_groups = explode("\t", $_user_data['group']);
+        $_userData = \Auth::user();
+        $myGroups = explode("\t", $_userData['group']);
 
-        foreach ($my_groups as $my_group) {
-            if (in_array($my_group, $groups)) {
+        foreach ($myGroups as $myGroup) {
+            if (in_array($myGroup, $groups)) {
                 return true;
             }
         }

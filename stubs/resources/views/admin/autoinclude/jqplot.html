@@ -4,14 +4,14 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.js" integrity="sha512-FQKKXM+/7s6LVHU07eH2zShZHunHqkBCIcDqodXfdV/NNXW165npscG8qOHdxVsOM4mJx38Ep1oMBcNXGB3BCw==" crossorigin="anonymous"></script>
 
 <!-- data-bloc='jqplot_pie_chart' -->
-<!-- data-assign=$graph_id data-val='graph_' data-convert='uniqid' -->
+<!-- data-assign=$graphId data-val='graph_' data-convert='uniqid' -->
 
 <script type="text/javascript">
 Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pieRenderer.js')})()
 ]).then(values => {
-  <!-- data-assign=$graph_json data-val=$graph_json data-convert='addslashes' -->
-  var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
+  <!-- data-assign=$graphJson data-val=$graphJson data-convert='addslashes' -->
+  var json_data = $.parseJSON('<!-- data-val=$graphJson data-convert='raw' -->');
 
   var option = {
     series:[
@@ -30,9 +30,9 @@ Promise.all([
   var jqplot;
   function refresh_plot(){
     if(jqplot){ jqplot.destroy(); }
-    jqplot = $.jqplot('<!-- data-val=$graph_id -->', json_data, option);
-<!-- data-exist=$graph_click_function -->
-    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graph_click_function -->]);
+    jqplot = $.jqplot('<!-- data-val=$graphId -->', json_data, option);
+<!-- data-exist=$graphClickFunction -->
+    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graphClickFunction -->]);
     jqplot.replot();
 <!-- data-endexist -->
   }
@@ -46,12 +46,12 @@ Promise.all([
 <!-- data-endbloc -->
 
 <!-- data-bloc='jqplot_1bar_1line' -->
-<!-- data-assign=$graph_id data-val='graph_' data-convert='uniqid' -->
+<!-- data-assign=$graphId data-val='graph_' data-convert='uniqid' -->
 
 <script type="text/javascript">
 Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.categoryAxisRenderer.js')})(),
-  <!-- data-exist=$graph_xaxis_angle -->
+  <!-- data-exist=$graphXaxisAngle -->
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasTextRenderer.js')})(),
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasAxisTickRenderer.js')})(),
   <!-- data-endexist -->
@@ -59,13 +59,13 @@ Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pointLabels.js')})()
 ]).then(values => {
 
-  <!-- data-assign=$graph_json data-val=$graph_json data-convert='addslashes' -->
-  var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
+  <!-- data-assign=$graphJson data-val=$graphJson data-convert='addslashes' -->
+  var json_data = $.parseJSON('<!-- data-val=$graphJson data-convert='raw' -->');
 
   var option = {
     series:[
-      { label:'<!-- data-val=$graph_legend_bar_1 -->', color:'#FFC300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
-      { label:'<!-- data-val=$graph_legend_line_1 -->', color:'#21B0FF', yaxis: 'y2axis', pointLabels: { show: true } }
+      { label:'<!-- data-val=$graphLegendBar1 -->', color:'#FFC300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
+      { label:'<!-- data-val=$graphLegendLine1 -->', color:'#21B0FF', yaxis: 'y2axis', pointLabels: { show: true } }
     ],
     legend:{
       show: true,
@@ -86,22 +86,22 @@ Promise.all([
     axes:{
       xaxis: {
         renderer: $.jqplot.CategoryAxisRenderer
-        <!-- data-exist=$graph_xaxis_angle -->
+        <!-- data-exist=$graphXaxisAngle -->
         ,
             tickRenderer: $.jqplot.CanvasAxisTickRenderer,
         tickOptions:{
-          angle: <!-- data-val=$graph_xaxis_angle -->
+          angle: <!-- data-val=$graphXaxisAngle -->
         }
         <!-- data-endexist -->
       },
       yaxis: {
                 ticks: @php
-  echo(json_encode([0, intval($graph_yaxis_max/5*1), intval($graph_yaxis_max/5*2), intval($graph_yaxis_max/5*3), intval($graph_yaxis_max/5*4), intval($graph_yaxis_max)]));
+  echo(json_encode([0, intval($graphYaxisMax/5*1), intval($graphYaxisMax/5*2), intval($graphYaxisMax/5*3), intval($graphYaxisMax/5*4), intval($graphYaxisMax)]));
 @endphp
       },
       y2axis: {
                 ticks: @php
-  echo(json_encode([0, intval($graph_y2axis_max/5*1), intval($graph_y2axis_max/5*2), intval($graph_y2axis_max/5*3), intval($graph_y2axis_max/5*4), intval($graph_y2axis_max)]));
+  echo(json_encode([0, intval($graphY2axisMax/5*1), intval($graphY2axisMax/5*2), intval($graphY2axisMax/5*3), intval($graphY2axisMax/5*4), intval($graphY2axisMax)]));
 @endphp
       }
     }
@@ -110,9 +110,9 @@ Promise.all([
   var jqplot;
   function refresh_plot(){
     if(jqplot){ jqplot.destroy(); }
-    jqplot = $.jqplot('<!-- data-val=$graph_id -->', json_data, option);
-<!-- data-exist=$graph_click_function -->
-    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graph_click_function -->]);
+    jqplot = $.jqplot('<!-- data-val=$graphId -->', json_data, option);
+<!-- data-exist=$graphClickFunction -->
+    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graphClickFunction -->]);
     jqplot.replot();
 <!-- data-endexist -->
   }
@@ -126,7 +126,7 @@ Promise.all([
 <!-- data-endbloc -->
 
 <!-- data-bloc='jqplot_2bar_1line' -->
-<!-- data-assign=$graph_id data-val='graph_' data-convert='uniqid' -->
+<!-- data-assign=$graphId data-val='graph_' data-convert='uniqid' -->
 <script type="text/javascript">
 Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.categoryAxisRenderer.js')})(),
@@ -135,14 +135,14 @@ Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.barRenderer.js')})(),
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pointLabels.js')})()
 ]).then(values => {
-  <!-- data-assign=$graph_json data-val=$graph_json data-convert='addslashes' -->
-  var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
+  <!-- data-assign=$graphJson data-val=$graphJson data-convert='addslashes' -->
+  var json_data = $.parseJSON('<!-- data-val=$graphJson data-convert='raw' -->');
 
   var option = {
     series:[
-      { label:'<!-- data-val=$graph_legend_bar_1 -->', color:'#FFC300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
-      { label:'<!-- data-val=$graph_legend_bar_2 -->', color:'#77D300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
-      { label:'<!-- data-val=$graph_legend_line_1 -->', color:'#21B0FF', yaxis: 'y2axis', pointLabels: { show: true } }
+      { label:'<!-- data-val=$graphLegendBar1 -->', color:'#FFC300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
+      { label:'<!-- data-val=$graphLegendBar2 -->', color:'#77D300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
+      { label:'<!-- data-val=$graphLegendLine1 -->', color:'#21B0FF', yaxis: 'y2axis', pointLabels: { show: true } }
     ],
     legend:{
       show: true,
@@ -163,22 +163,22 @@ Promise.all([
     axes:{
       xaxis: {
         renderer: $.jqplot.CategoryAxisRenderer
-        <!-- data-exist=$graph_xaxis_angle -->
+        <!-- data-exist=$graphXaxisAngle -->
         ,
             tickRenderer: $.jqplot.CanvasAxisTickRenderer,
         tickOptions:{
-          angle: <!-- data-val=$graph_xaxis_angle -->
+          angle: <!-- data-val=$graphXaxisAngle -->
         }
         <!-- data-endexist -->
       },
       yaxis: {
                 ticks: @php
-  echo(json_encode([0, intval($graph_yaxis_max/5*1), intval($graph_yaxis_max/5*2), intval($graph_yaxis_max/5*3), intval($graph_yaxis_max/5*4), intval($graph_yaxis_max)]));
+  echo(json_encode([0, intval($graphYaxisMax/5*1), intval($graphYaxisMax/5*2), intval($graphYaxisMax/5*3), intval($graphYaxisMax/5*4), intval($graphYaxisMax)]));
  @endphp
       },
       y2axis: {
                 ticks: @php
-  echo(json_encode([0, intval($graph_y2axis_max/5*1), intval($graph_y2axis_max/5*2), intval($graph_y2axis_max/5*3), intval($graph_y2axis_max/5*4), intval($graph_y2axis_max)]));
+  echo(json_encode([0, intval($graphY2axisMax/5*1), intval($graphY2axisMax/5*2), intval($graphY2axisMax/5*3), intval($graphY2axisMax/5*4), intval($graphY2axisMax)]));
 @endphp
       }
     }
@@ -187,9 +187,9 @@ Promise.all([
   var jqplot;
   function refresh_plot(){
     if(jqplot){ jqplot.destroy(); }
-    jqplot = $.jqplot('<!-- data-val=$graph_id -->', json_data, option);
-  <!-- data-exist=$graph_click_function -->
-    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graph_click_function -->]);
+    jqplot = $.jqplot('<!-- data-val=$graphId -->', json_data, option);
+  <!-- data-exist=$graphClickFunction -->
+    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graphClickFunction -->]);
     jqplot.replot();
   <!-- data-endexist -->
   }
@@ -202,26 +202,26 @@ Promise.all([
 <!-- data-endbloc -->
 
 <!-- data-bloc='jqplot_1bar_2line' -->
-<!-- data-assign=$graph_id data-val='graph_' data-convert='uniqid' -->
+<!-- data-assign=$graphId data-val='graph_' data-convert='uniqid' -->
 
 <script type="text/javascript">
 Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.categoryAxisRenderer.js')})(),
-  <!-- data-exist=$graph_xaxis_angle -->
+  <!-- data-exist=$graphXaxisAngle -->
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasTextRenderer.js')})(),
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.canvasAxisTickRenderer.js')})(),
   <!-- data-endexist -->
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.barRenderer.js')})(),
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pointLabels.js')})()
 ]).then(values => {
-  <!-- data-assign=$graph_json data-val=$graph_json data-convert='addslashes' -->
-  var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
+  <!-- data-assign=$graphJson data-val=$graphJson data-convert='addslashes' -->
+  var json_data = $.parseJSON('<!-- data-val=$graphJson data-convert='raw' -->');
 
   var option = {
     series:[
-      { label:'<!-- data-val=$graph_legend_bar_1 -->', color:'#FFC300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
-      { label:'<!-- data-val=$graph_legend_line_1 -->', color:'#21B0FF', yaxis: 'y2axis', pointLabels: { show: true } },
-      { label:'<!-- data-val=$graph_legend_line_2 -->', color:'#77D300', yaxis: 'y2axis', pointLabels: { show: true } }
+      { label:'<!-- data-val=$graphLegendBar1 -->', color:'#FFC300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
+      { label:'<!-- data-val=$graphLegendLine1 -->', color:'#21B0FF', yaxis: 'y2axis', pointLabels: { show: true } },
+      { label:'<!-- data-val=$graphLegendLine2 -->', color:'#77D300', yaxis: 'y2axis', pointLabels: { show: true } }
     ],
     legend:{
       show: true,
@@ -242,22 +242,22 @@ Promise.all([
     axes:{
       xaxis: {
         renderer: $.jqplot.CategoryAxisRenderer
-        <!-- data-exist=$graph_xaxis_angle -->
+        <!-- data-exist=$graphXaxisAngle -->
         ,
             tickRenderer: $.jqplot.CanvasAxisTickRenderer,
         tickOptions:{
-          angle: <!-- data-val=$graph_xaxis_angle -->
+          angle: <!-- data-val=$graphXaxisAngle -->
         }
         <!-- data-endexist -->
       },
       yaxis: {
                 ticks: @php
-  echo(json_encode([0, intval($graph_yaxis_max/5*1), intval($graph_yaxis_max/5*2), intval($graph_yaxis_max/5*3), intval($graph_yaxis_max/5*4), intval($graph_yaxis_max)]));
+  echo(json_encode([0, intval($graphYaxisMax/5*1), intval($graphYaxisMax/5*2), intval($graphYaxisMax/5*3), intval($graphYaxisMax/5*4), intval($graphYaxisMax)]));
 @endphp
       },
       y2axis: {
                 ticks: @php
-  echo(json_encode([0, intval($graph_y2axis_max/5*1), intval($graph_y2axis_max/5*2), intval($graph_y2axis_max/5*3), intval($graph_y2axis_max/5*4), intval($graph_y2axis_max)]));
+  echo(json_encode([0, intval($graphY2axisMax/5*1), intval($graphY2axisMax/5*2), intval($graphY2axisMax/5*3), intval($graphY2axisMax/5*4), intval($graphY2axisMax)]));
 @endphp
       }
     }
@@ -266,9 +266,9 @@ Promise.all([
   var jqplot;
   function refresh_plot(){
     if(jqplot){ jqplot.destroy(); }
-    jqplot = $.jqplot('<!-- data-val=$graph_id -->', json_data, option);
-<!-- data-exist=$graph_click_function -->
-    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graph_click_function -->]);
+    jqplot = $.jqplot('<!-- data-val=$graphId -->', json_data, option);
+<!-- data-exist=$graphClickFunction -->
+    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graphClickFunction -->]);
     jqplot.replot();
 <!-- data-endexist -->
   }
@@ -282,21 +282,21 @@ Promise.all([
 <!-- data-endbloc -->
 
 <!-- data-bloc='jqplot_2bar_2line' -->
-<!-- data-assign=$graph_id data-val='graph_' data-convert='uniqid' -->
+<!-- data-assign=$graphId data-val='graph_' data-convert='uniqid' -->
 <script type="text/javascript">
 Promise.all([
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.categoryAxisRenderer.min.js')})(),
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.barRenderer.min.js')})(),
   (async () => {await import('https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.pointLabels.min.js')})()
 ]).then(values => {
-  var json_data = $.parseJSON('<!-- data-val=$graph_json data-convert='raw' -->');
+  var json_data = $.parseJSON('<!-- data-val=$graphJson data-convert='raw' -->');
 
   var option = {
     series:[
-      { label:'<!-- data-val=$graph_legend_bar_1 -->', color:'#FFC300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
-      { label:'<!-- data-val=$graph_legend_bar_2 -->', color:'#77D300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
-      { label:'<!-- data-val=$graph_legend_line_1 -->', color:'#21B0FF', yaxis: 'y2axis', pointLabels: { show: true } },
-      { label:'<!-- data-val=$graph_legend_line_2 -->', color:'#F09199', yaxis: 'y2axis', pointLabels: { show: true } }
+      { label:'<!-- data-val=$graphLegendBar1 -->', color:'#FFC300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
+      { label:'<!-- data-val=$graphLegendBar2 -->', color:'#77D300', renderer:$.jqplot.BarRenderer, rendererOptions: { barWidth: 20 } },
+      { label:'<!-- data-val=$graphLegendLine1 -->', color:'#21B0FF', yaxis: 'y2axis', pointLabels: { show: true } },
+      { label:'<!-- data-val=$graphLegendLine2 -->', color:'#F09199', yaxis: 'y2axis', pointLabels: { show: true } }
     ],
     legend:{
       show: true,
@@ -320,12 +320,12 @@ Promise.all([
       },
       yaxis: {
                 ticks: @php
-  echo(json_encode([0, intval($graph_yaxis_max/5*1), intval($graph_yaxis_max/5*2), intval($graph_yaxis_max/5*3), intval($graph_yaxis_max/5*4), intval($graph_yaxis_max)]));
+  echo(json_encode([0, intval($graphYaxisMax/5*1), intval($graphYaxisMax/5*2), intval($graphYaxisMax/5*3), intval($graphYaxisMax/5*4), intval($graphYaxisMax)]));
 @endphp
       },
       y2axis: {
                 ticks: @php
-  echo(json_encode([0, intval($graph_y2axis_max/5*1), intval($graph_y2axis_max/5*2), intval($graph_y2axis_max/5*3), intval($graph_y2axis_max/5*4), intval($graph_y2axis_max)]));
+  echo(json_encode([0, intval($graphY2axisMax/5*1), intval($graphY2axisMax/5*2), intval($graphY2axisMax/5*3), intval($graphY2axisMax/5*4), intval($graphY2axisMax)]));
 @endphp
       }
     }
@@ -334,9 +334,9 @@ Promise.all([
   var jqplot;
   function refresh_plot(){
     if(jqplot){ jqplot.destroy(); }
-    jqplot = $.jqplot('<!-- data-val=$graph_id -->', json_data, option);
-<!-- data-exist=$graph_click_function -->
-    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graph_click_function -->]);
+    jqplot = $.jqplot('<!-- data-val=$graphId -->', json_data, option);
+<!-- data-exist=$graphClickFunction -->
+    jqplot.eventListenerHooks.hooks.push(['jqplotClick', <!-- data-val=$graphClickFunction -->]);
     jqplot.replot();
 <!-- data-endexist -->
   }

@@ -9,16 +9,16 @@ class Blocs extends Command
     protected $signature;
     protected $description;
 
-    protected $root_dir;
-    protected $stub_dir;
+    protected $rootDir;
+    protected $stubDir;
 
-    public function __construct($signature, $description, $file_loc)
+    public function __construct($signature, $description, $fileLoc)
     {
         $this->signature = $signature;
         $this->description = $description;
 
-        $this->root_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($file_loc).'/../../../../'));
-        $this->stub_dir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($file_loc).'/../stubs'));
+        $this->rootDir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($fileLoc).'/../../../../'));
+        $this->stubDir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($fileLoc).'/../stubs'));
 
         parent::__construct();
     }
@@ -27,49 +27,49 @@ class Blocs extends Command
     {
         /* 言語ファイルをマージ */
 
-        $this->_merge_lang($this->stub_dir.'/../lang');
+        $this->_merge_lang($this->stubDir.'/../lang');
 
         /* アップデート状況把握のため更新情報を取得 */
 
-        $file_loc = $this->root_dir.'/storage/blocs_update.json';
-        if (is_file($file_loc)) {
-            $update_json_data = json_decode(file_get_contents($file_loc), true);
+        $fileLoc = $this->rootDir.'/storage/blocs_update.json';
+        if (is_file($fileLoc)) {
+            $updateJsonData = json_decode(file_get_contents($fileLoc), true);
         } else {
-            $update_json_data = [];
+            $updateJsonData = [];
         }
 
         /* ディレクトリを配置 */
 
-        $files = scandir($this->stub_dir);
+        $files = scandir($this->stubDir);
         foreach ($files as $file) {
             if ('.' == substr($file, 0, 1) && '.gitkeep' != $file && '.htaccess' != $file) {
                 continue;
             }
 
-            if (!is_dir($this->stub_dir.'/'.$file)) {
+            if (!is_dir($this->stubDir.'/'.$file)) {
                 continue;
             }
 
-            $target_dir = $file;
-            $update_json_data = $this->_copy_dir($this->stub_dir.'/'.$target_dir, $this->root_dir.'/'.$target_dir, $update_json_data);
+            $targetDir = $file;
+            $updateJsonData = $this->_copy_dir($this->stubDir.'/'.$targetDir, $this->rootDir.'/'.$targetDir, $updateJsonData);
             echo <<< END_of_TEXT
-Deploy "{$target_dir}"
+Deploy "{$targetDir}"
 
 END_of_TEXT;
         }
 
-        ksort($update_json_data);
-        file_put_contents($file_loc, json_encode($update_json_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($file_loc, 0666);
+        ksort($updateJsonData);
+        file_put_contents($fileLoc, json_encode($updateJsonData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($fileLoc, 0666);
     }
 
     /* Private function */
 
-    private function _copy_dir($dir_name, $new_dir, $update_json_data)
+    private function _copy_dir($dirName, $newDir, $updateJsonData)
     {
-        is_dir($new_dir) || mkdir($new_dir, 0777, true) && chmod($new_dir, 0777);
+        is_dir($newDir) || mkdir($newDir, 0777, true) && chmod($newDir, 0777);
 
-        if (!(is_dir($dir_name) && $files = scandir($dir_name))) {
-            return $update_json_data;
+        if (!(is_dir($dirName) && $files = scandir($dirName))) {
+            return $updateJsonData;
         }
 
         foreach ($files as $file) {
@@ -77,92 +77,92 @@ END_of_TEXT;
                 continue;
             }
 
-            if (is_dir($dir_name.'/'.$file)) {
-                $update_json_data = $this->_copy_dir($dir_name.'/'.$file, $new_dir.'/'.$file, $update_json_data);
+            if (is_dir($dirName.'/'.$file)) {
+                $updateJsonData = $this->_copy_dir($dirName.'/'.$file, $newDir.'/'.$file, $updateJsonData);
             } else {
-                $update_json_data = $this->_copy_file($dir_name.'/'.$file, $new_dir.'/'.$file, $update_json_data);
+                $updateJsonData = $this->_copy_file($dirName.'/'.$file, $newDir.'/'.$file, $updateJsonData);
             }
         }
 
-        return $update_json_data;
+        return $updateJsonData;
     }
 
-    private function _copy_file($original_file, $target_file, $update_json_data)
+    private function _copy_file($originalFile, $targetFile, $updateJsonData)
     {
-        $original_file = str_replace(DIRECTORY_SEPARATOR, '/', realpath($original_file));
-        $new_contents = file_get_contents($original_file);
-        $file_key = substr($target_file, strlen($this->root_dir));
+        $originalFile = str_replace(DIRECTORY_SEPARATOR, '/', realpath($originalFile));
+        $newContents = file_get_contents($originalFile);
+        $fileKey = substr($targetFile, strlen($this->rootDir));
 
-        if (!is_file($target_file) || !filesize($target_file)) {
+        if (!is_file($targetFile) || !filesize($targetFile)) {
             // コピー先にファイルがない
-            if (!empty($update_json_data[$file_key])) {
+            if (!empty($updateJsonData[$fileKey])) {
                 // ファイルを意図的に消した時はコピーしない
-                return $update_json_data;
+                return $updateJsonData;
             }
 
-            file_put_contents($target_file, $new_contents) && chmod($target_file, 0666);
-            $target_file = str_replace(DIRECTORY_SEPARATOR, '/', realpath($target_file));
-            $update_json_data[$file_key] = md5($new_contents);
+            file_put_contents($targetFile, $newContents) && chmod($targetFile, 0666);
+            $targetFile = str_replace(DIRECTORY_SEPARATOR, '/', realpath($targetFile));
+            $updateJsonData[$fileKey] = md5($newContents);
 
-            return $update_json_data;
+            return $updateJsonData;
         }
 
         // コピー先にファイルがある
-        $target_file = str_replace(DIRECTORY_SEPARATOR, '/', realpath($target_file));
-        $old_contents = file_get_contents($target_file);
+        $targetFile = str_replace(DIRECTORY_SEPARATOR, '/', realpath($targetFile));
+        $oldContents = file_get_contents($targetFile);
 
-        if ($new_contents === $old_contents) {
+        if ($newContents === $oldContents) {
             // ファイルが更新されていない
-            $update_json_data[$file_key] = md5($new_contents);
+            $updateJsonData[$fileKey] = md5($newContents);
 
-            return $update_json_data;
+            return $updateJsonData;
         }
 
-        if (isset($update_json_data[$file_key]) && $update_json_data[$file_key] === md5($old_contents)) {
+        if (isset($updateJsonData[$fileKey]) && $updateJsonData[$fileKey] === md5($oldContents)) {
             // ファイルが更新された
-            file_put_contents($target_file, $new_contents) && chmod($target_file, 0666);
-            $update_json_data[$file_key] = md5($new_contents);
+            file_put_contents($targetFile, $newContents) && chmod($targetFile, 0666);
+            $updateJsonData[$fileKey] = md5($newContents);
 
-            return $update_json_data;
+            return $updateJsonData;
         }
 
         // 違う内容のファイルがある
         echo <<< END_of_TEXT
-\e[7;31m"{$target_file}" already exists.\e[m
+\e[7;31m"{$targetFile}" already exists.\e[m
 
 END_of_TEXT;
 
-        return $update_json_data;
+        return $updateJsonData;
     }
 
-    private function _merge_lang($blocs_lang_dir)
+    private function _merge_lang($blocsLangDir)
     {
-        if (!is_dir($blocs_lang_dir)) {
+        if (!is_dir($blocsLangDir)) {
             return;
         }
 
-        $laravel_lang_dir = $this->root_dir.'/resources/lang';
-        is_dir($laravel_lang_dir) || mkdir($laravel_lang_dir, 0777, true) && chmod($laravel_lang_dir, 0777);
+        $laravelLangDir = $this->rootDir.'/resources/lang';
+        is_dir($laravelLangDir) || mkdir($laravelLangDir, 0777, true) && chmod($laravelLangDir, 0777);
 
-        $blocs_lang_files = scandir($blocs_lang_dir);
-        foreach ($blocs_lang_files as $file) {
+        $blocsLangFiles = scandir($blocsLangDir);
+        foreach ($blocsLangFiles as $file) {
             if ('.' == substr($file, 0, 1) && '.gitkeep' != $file && '.htaccess' != $file) {
                 continue;
             }
 
-            $target_file = $laravel_lang_dir.'/'.$file;
-            if (!is_file($target_file)) {
+            $targetFile = $laravelLangDir.'/'.$file;
+            if (!is_file($targetFile)) {
                 // ファイルがないのでコピー
-                copy($blocs_lang_dir.'/'.$file, $target_file) && chmod($target_file, 0666);
+                copy($blocsLangDir.'/'.$file, $targetFile) && chmod($targetFile, 0666);
                 continue;
             }
 
             // ファイルをマージ
-            $lang_json_data = json_decode(file_get_contents($target_file), true);
-            $lang_json_data = array_merge($lang_json_data, json_decode(file_get_contents($blocs_lang_dir.'/'.$file), true));
-            ksort($lang_json_data);
+            $langJsonData = json_decode(file_get_contents($targetFile), true);
+            $langJsonData = array_merge($langJsonData, json_decode(file_get_contents($blocsLangDir.'/'.$file), true));
+            ksort($langJsonData);
 
-            file_put_contents($target_file, json_encode($lang_json_data, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($target_file, 0666);
+            file_put_contents($targetFile, json_encode($langJsonData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($targetFile, 0666);
         }
     }
 }

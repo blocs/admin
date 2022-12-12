@@ -4,66 +4,66 @@ namespace Blocs\Controllers;
 
 trait Common
 {
-    protected function add_option($form_name, $options)
+    protected function add_option($formName, $options)
     {
-        \Blocs\Option::add($form_name, $options);
+        \Blocs\Option::add($formName, $options);
     }
 
-    protected function keep_item($key_item)
+    protected function keep_item($keyItem)
     {
-        if (isset($this->val[$key_item])) {
+        if (isset($this->val[$keyItem])) {
             return;
         }
 
-        $session_key = $this->viewPrefix.'.search.'.$key_item;
+        $sessionKey = $this->viewPrefix.'.search.'.$keyItem;
 
         if (isset($this->request)) {
-            $request_items = array_keys($this->request->all());
-            if (in_array($key_item, $request_items)) {
-                if (isset($this->request->$key_item) && strlen($this->request->$key_item)) {
+            $requestItems = array_keys($this->request->all());
+            if (in_array($keyItem, $requestItems)) {
+                if (isset($this->request->$keyItem) && strlen($this->request->$keyItem)) {
                     // sessionに保存
-                    session([$session_key => $this->request->$key_item]);
+                    session([$sessionKey => $this->request->$keyItem]);
                 } else {
                     // sessionを削除
-                    session()->forget($session_key);
+                    session()->forget($sessionKey);
                 }
 
                 return;
             }
         }
 
-        if (session()->has($session_key)) {
+        if (session()->has($sessionKey)) {
             // sessionがあれば読み込む
-            $this->val[$key_item] = session($session_key);
+            $this->val[$keyItem] = session($sessionKey);
         }
     }
 
-    protected function add_item(&$val_table, $item_name, $table_name, $key, $value)
+    protected function add_item(&$valTable, $itemName, $tableName, $key, $value)
     {
         $keys = [];
-        foreach ($val_table as $num => $buff) {
-            empty($buff[$item_name]) || $keys[] = $buff[$item_name];
+        foreach ($valTable as $num => $buff) {
+            empty($buff[$itemName]) || $keys[] = $buff[$itemName];
         }
         $keys = array_merge(array_unique($keys));
 
         // テーブルより追加データを取得
-        if (class_exists($table_name)) {
+        if (class_exists($tableName)) {
             // Eloquent
-            $table = call_user_func($table_name.'::select', $key, $value);
-            $table_datas = $table->whereIn($key, $keys)->get();
+            $table = call_user_func($tableName.'::select', $key, $value);
+            $tableDatas = $table->whereIn($key, $keys)->get();
         } else {
             // クエリビルダ
-            $table_datas = \DB::table($table_name)->select($key, $value)->whereIn($key, $keys)->get();
+            $tableDatas = \DB::table($tableName)->select($key, $value)->whereIn($key, $keys)->get();
         }
 
-        $replace_item = [];
-        foreach ($table_datas as $table_data) {
-            $replace_item[$table_data->$key] = $table_data->$value;
+        $replaceItem = [];
+        foreach ($tableDatas as $tableData) {
+            $replaceItem[$tableData->$key] = $tableData->$value;
         }
 
         // 元データに追加
-        foreach ($val_table as $num => $buff) {
-            $val_table[$num][$value] = empty($replace_item[$buff[$item_name]]) ? '' : $replace_item[$buff[$item_name]];
+        foreach ($valTable as $num => $buff) {
+            $valTable[$num][$value] = empty($replaceItem[$buff[$itemName]]) ? '' : $replaceItem[$buff[$itemName]];
         }
     }
 }
