@@ -27,7 +27,7 @@ class Blocs extends Command
     {
         /* 言語ファイルをマージ */
 
-        $this->_merge_lang($this->stubDir.'/../lang');
+        $this->mergeLang($this->stubDir.'/../lang');
 
         /* アップデート状況把握のため更新情報を取得 */
 
@@ -51,7 +51,7 @@ class Blocs extends Command
             }
 
             $targetDir = $file;
-            $updateJsonData = $this->_copy_dir($this->stubDir.'/'.$targetDir, $this->rootDir.'/'.$targetDir, $updateJsonData);
+            $updateJsonData = $this->copyDir($this->stubDir.'/'.$targetDir, $this->rootDir.'/'.$targetDir, $updateJsonData);
             echo <<< END_of_TEXT
 Deploy "{$targetDir}"
 
@@ -64,7 +64,7 @@ END_of_TEXT;
 
     /* Private function */
 
-    private function _copy_dir($dirName, $newDir, $updateJsonData)
+    private function copyDir($dirName, $newDir, $updateJsonData)
     {
         is_dir($newDir) || mkdir($newDir, 0777, true) && chmod($newDir, 0777);
 
@@ -78,16 +78,16 @@ END_of_TEXT;
             }
 
             if (is_dir($dirName.'/'.$file)) {
-                $updateJsonData = $this->_copy_dir($dirName.'/'.$file, $newDir.'/'.$file, $updateJsonData);
+                $updateJsonData = $this->copyDir($dirName.'/'.$file, $newDir.'/'.$file, $updateJsonData);
             } else {
-                $updateJsonData = $this->_copy_file($dirName.'/'.$file, $newDir.'/'.$file, $updateJsonData);
+                $updateJsonData = $this->copyFile($dirName.'/'.$file, $newDir.'/'.$file, $updateJsonData);
             }
         }
 
         return $updateJsonData;
     }
 
-    private function _copy_file($originalFile, $targetFile, $updateJsonData)
+    private function copyFile($originalFile, $targetFile, $updateJsonData)
     {
         $originalFile = str_replace(DIRECTORY_SEPARATOR, '/', realpath($originalFile));
         $newContents = file_get_contents($originalFile);
@@ -135,7 +135,7 @@ END_of_TEXT;
         return $updateJsonData;
     }
 
-    private function _merge_lang($blocsLangDir)
+    private function mergeLang($blocsLangDir)
     {
         if (!is_dir($blocsLangDir)) {
             return;

@@ -66,7 +66,7 @@ class Navigation
             }
 
             // 権限があるかチェック
-            if (!self::check_group($config['name'])) {
+            if (!self::checkGroup($config['name'])) {
                 continue;
             }
 
@@ -91,7 +91,7 @@ class Navigation
         ]]);
     }
 
-    public static function check_group($currentName = null)
+    public static function checkGroup($currentName = null)
     {
         isset($currentName) || $currentName = \Route::currentRouteName();
 

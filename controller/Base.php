@@ -40,7 +40,7 @@ class Base extends Controller
 
     protected function prepareIndex()
     {
-        $this->keep_item('search');
+        $this->keepItem('search');
 
         $this->searchItems = [];
         if (!empty($this->request->search)) {

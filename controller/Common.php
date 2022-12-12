@@ -4,12 +4,12 @@ namespace Blocs\Controllers;
 
 trait Common
 {
-    protected function add_option($formName, $options)
+    protected function addOption($formName, $options)
     {
         \Blocs\Option::add($formName, $options);
     }
 
-    protected function keep_item($keyItem)
+    protected function keepItem($keyItem)
     {
         if (isset($this->val[$keyItem])) {
             return;
@@ -38,7 +38,7 @@ trait Common
         }
     }
 
-    protected function add_item(&$valTable, $itemName, $tableName, $key, $value)
+    protected function addItem(&$valTable, $itemName, $tableName, $key, $value)
     {
         $keys = [];
         foreach ($valTable as $num => $buff) {

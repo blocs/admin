@@ -1,6 +1,6 @@
 <script type="text/javascript">
 
-function _select_all(ele) {
+function selectAll(ele) {
 	var icon = $(ele).find('span');
 	var table = $(ele).closest('div').find('table');
 	if(icon.hasClass('fa-check-square')) {
@@ -35,7 +35,7 @@ $(function(){
 </script>
 
 <!-- data-bloc='button_select_all' -->
-<button onclick='_select_all(this);' type='button' class='btn btn-default pull-right'><!-- data-lang='template:resource_blocs_selectable_all' --> 
+<button onclick='selectAll(this);' type='button' class='btn btn-default pull-right'><!-- data-lang='template:resource_blocs_selectable_all' --> 
 	<span class='far fa-square'></span>
 </button>
 <!-- data-endbloc -->

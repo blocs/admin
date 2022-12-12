@@ -107,8 +107,8 @@ class HomeController extends Controller
         $param['json'] = json_encode([$each1, $each2, $accumulate]);
         $param['update'] = date(DATE_ATOM);
 
-        $yaxisMax = self::get_yaxis_max($yaxisMax);
-        $y2axisMax = self::get_yaxis_max($y2axisMax);
+        $yaxisMax = self::getYaxisMax($yaxisMax);
+        $y2axisMax = self::getYaxisMax($y2axisMax);
 
         $param['yaxisMax'] = $yaxisMax;
         $param['y2axisMax'] = $y2axisMax;
@@ -116,7 +116,7 @@ class HomeController extends Controller
         return $param;
     }
 
-    public static function get_yaxis_max($yaxisMax)
+    public static function getYaxisMax($yaxisMax)
     {
         $scale = pow(10, strlen(floor($yaxisMax * 1.3)) - 1);
         $yaxisMax = intval(ceil($yaxisMax * 1.3 / $scale) * $scale);

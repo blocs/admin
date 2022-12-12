@@ -33,7 +33,7 @@ class Thumbnail
             return false;
         }
 
-        list($width, $height, $oWidth, $oHeight) = self::_get_thumbnail_size($tmpLoc, $pWidth, $pHeight, $crop);
+        list($width, $height, $oWidth, $oHeight) = self::getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop);
         if ($width === $oWidth && $height === $oHeight) {
             copy($tmpLoc, $thumbLoc) && chmod($thumbLoc, 0666);
 
@@ -44,7 +44,7 @@ class Thumbnail
             return false;
         }
 
-        $oImage = self::_image_create($tmpLoc, $thumbExt);
+        $oImage = self::imageCreate($tmpLoc, $thumbExt);
         if (!$oImage) {
             return false;
         }
@@ -71,14 +71,14 @@ class Thumbnail
             imagecopyresampled($image, $oImage, 0, 0, 0, 0, $width, $height, $oWidth, $oHeight);
         }
 
-        self::_image_output($image, $thumbLoc, $thumbExt);
+        self::imageOutput($image, $thumbLoc, $thumbExt);
 
         return $thumbLoc;
     }
 
     /* Private function */
 
-    private static function _get_thumbnail_size($tmpLoc, $pWidth, $pHeight, $crop)
+    private static function getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop)
     {
         list($width, $height) = list($oWidth, $oHeight) = getimagesize($tmpLoc);
 
@@ -107,7 +107,7 @@ class Thumbnail
         return [intval($width), intval($height), $oWidth, $oHeight];
     }
 
-    private static function _image_create($tmpLoc, $ext)
+    private static function imageCreate($tmpLoc, $ext)
     {
         switch ($ext) {
             case 'gif':
@@ -129,7 +129,7 @@ class Thumbnail
         }
     }
 
-    private static function _image_output($image, $thumbLoc, $thumbExt)
+    private static function imageOutput($image, $thumbLoc, $thumbExt)
     {
         switch ($thumbExt) {
             case 'gif':

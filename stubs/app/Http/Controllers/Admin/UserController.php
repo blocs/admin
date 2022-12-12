@@ -33,7 +33,7 @@ class UserController extends \Blocs\Controllers\Base
     protected function outputEntry()
     {
         $groups = config('group');
-        empty($groups) || $this->add_option('group', array_keys($groups));
+        empty($groups) || $this->addOption('group', array_keys($groups));
 
         return parent::outputEntry();
     }
