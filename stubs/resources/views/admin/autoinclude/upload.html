@@ -35,7 +35,7 @@ function set_uploader(paramname, accept) {
 			data: {
 				name: paramname,
 				_token: $('input[name="_token"]').val(),
-				uploaded_files: $('input[name="'+paramname+'"]').val()
+				uploadedFiles: $('input[name="'+paramname+'"]').val()
 			},
 			dataType: 'json'
 		}).done(function(data) {
