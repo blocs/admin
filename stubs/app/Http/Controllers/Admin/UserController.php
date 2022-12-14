@@ -10,11 +10,13 @@ class UserController extends \Blocs\Controllers\Base
     {
         defined('VIEW_PREFIX') || define('VIEW_PREFIX', 'admin');
         defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'user');
-
         $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
+
         $this->mainTable = 'App\Models\Admin\User';
-        $this->noticeItem = 'email';
+        defined('LOOP_ITEM') || define('LOOP_ITEM', 'users');
         $this->paginateNum = 20;
+
+        $this->noticeItem = 'email';
     }
 
     protected function prepareIndexSearch(&$mainTable)

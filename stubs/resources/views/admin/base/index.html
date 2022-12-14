@@ -1,16 +1,16 @@
 <!-- data-include='include/header.html' -->
 
 <!-- data-include='search_form' data-exist=$searchPlaceholder -->
-<!-- data-include='include/selectable.html' data-if='!empty($table) && empty($unselectable)' -->
+<!-- data-include='include/selectable.html' data-if='$loopIs && empty($unselectable)' -->
 
-<div class='alert alert-info' data-none=$table>
+<div class='alert alert-info' data-none=$loopIs>
 	<!-- data-lang='template:resource_blocs_base_index_no_data' -->
 </div>
 
 <form method='post'>
 	@csrf
 	<div class='box'>
-		<div class='box-body no-padding' data-exist=$table>
+		<div class='box-body no-padding' data-exist=$loopIs>
 			<!-- data-include='button_select_all' data-none=$unselectable -->
 			<div class='clearfix'></div>
 			<table class='tbl1 mt5 table table-striped table-condensed'>

@@ -61,11 +61,14 @@ class Base extends Controller
 
         if (empty($this->paginateNum)) {
             // ページネーションなし
-            $this->val['table'] = $mainTable->get()->toArray();
+            $this->val[LOOP_ITEM] = $mainTable->get();
         } else {
             // ページネーションあり
             $this->prepareIndexPaginate($mainTable);
         }
+
+        // データの有無
+        $this->val['loopIs'] = !$this->val[LOOP_ITEM]->isEmpty();
     }
 
     protected function prepareIndexSearch(&$mainTable)
@@ -75,8 +78,7 @@ class Base extends Controller
     protected function prepareIndexPaginate(&$mainTable)
     {
         $this->val['paginate'] = $mainTable->paginate($this->paginateNum);
-        $paginate = $this->val['paginate']->toArray();
-        $this->val['table'] = $paginate['data'];
+        $this->val[LOOP_ITEM] = $this->val['paginate'];
     }
 
     protected function outputIndex()

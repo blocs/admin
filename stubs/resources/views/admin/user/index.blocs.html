@@ -14,17 +14,17 @@
 </thead>
 <tbody>
 	<!-- data-attribute="class" data-val="danger" data-exist=$selectedRows -->
-	<tr data-repeat=$table>
+	<tr data-loop=$users>
 		<td>
-			<!-- data-attribute='value' data-val=$id -->
+			<!-- data-attribute='value' data-val=$user->id -->
 			<input type='checkbox' name='selectedRows[]' style='display:none;' />
 			<!-- data-include='button_toggle' -->
 		</td>
 		<td class='ellipsis toggle-item'>
-			<a href="{{ route(ROUTE_PREFIX.'.entry', ['id' => $id]) }}" data-val=$email></a>
+			<a href="{{ route(ROUTE_PREFIX.'.entry', ['id' => $user->id]) }}" data-val=$user->email></a>
 		</td>
-		<td class='ellipsis' data-val=$name></td>
-		<td class='hidden-xs' data-val=$created_at data-convert='date'></td>
+		<td class='ellipsis' data-val=$user->name></td>
+		<td class='hidden-xs' data-val=$user->created_at data-convert='date'></td>
 	</tr>
 </tbody>
 
@@ -43,13 +43,13 @@
 
 <!-- data-endbloc -->
 
-<!-- data-include='modal_toggle' data-exist=$table -->
+<!-- data-include='modal_toggle' data-exist=$loopIs -->
 
 <!-- data-include='index_paginate' -->
 
 <!-- data-include='button_new' -->
 
 @php $modalAction = route(ROUTE_PREFIX.'.select') @endphp
-<!-- data-include='modal_delete' data-exist=$table -->
+<!-- data-include='modal_delete' data-exist=$loopIs -->
 
 <!-- data-include='index_footer' -->
