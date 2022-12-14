@@ -400,11 +400,11 @@ class Base extends Controller
 
     protected function validateSelect()
     {
-        if (empty($this->request->table)) {
+        if (empty($this->request->{LOOP_ITEM})) {
             return $this->backIndex('error', 'data_not_selected');
         }
 
-        foreach ($this->request->table as $table) {
+        foreach ($this->request->{LOOP_ITEM} as $table) {
             empty($table['selectedRows']) || $this->selectedIds[] = $table['selectedRows'];
         }
 
@@ -432,7 +432,7 @@ class Base extends Controller
             // 確認画面からの遷移
             $this->request->merge(session($this->viewPrefix.'.confirm'));
 
-            foreach ($this->request->table as $table) {
+            foreach ($this->request->{LOOP_ITEM} as $table) {
                 empty($table['selectedRows']) || $this->selectedIds[] = $table['selectedRows'];
             }
         } else {
