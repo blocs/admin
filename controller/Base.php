@@ -146,7 +146,7 @@ class Base extends Controller
             return $redirect;
         }
 
-        session()->flash($this->viewPrefix.'.confirm', $this->request->all());
+        session()->flash($this->viewPrefix.'.confirm', $this->request->validated());
 
         $this->prepareConfirmInsert();
 
@@ -161,7 +161,7 @@ class Base extends Controller
 
     protected function prepareConfirmInsert()
     {
-        $this->val = array_merge($this->request->all(), $this->val);
+        $this->val = array_merge($this->request->validated(), $this->val);
     }
 
     protected function outputConfirmInsert()
@@ -222,7 +222,7 @@ class Base extends Controller
             return $redirect;
         }
 
-        session()->flash($this->viewPrefix.'.confirm', $this->request->all());
+        session()->flash($this->viewPrefix.'.confirm', $this->request->validated());
 
         $this->prepareConfirmUpdate();
 
@@ -237,7 +237,7 @@ class Base extends Controller
 
     protected function prepareConfirmUpdate()
     {
-        $this->val = array_merge($this->request->all(), $this->val);
+        $this->val = array_merge($this->request->validated(), $this->val);
     }
 
     protected function outputConfirmUpdate()
