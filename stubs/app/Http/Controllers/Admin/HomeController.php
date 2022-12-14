@@ -57,30 +57,30 @@ class HomeController extends Controller
         $current = User::count();
         $param['current'] = $current;
 
-        $inserts = [];
-        $records = User::where(
+        $insertList = [];
+        $recordList = User::where(
             'created_at', '>', $xaxis[count($xaxis) - 1].'-00'
         )->where(
             'created_at', '<', $xaxis[0].'-32'
         )->withTrashed()->get()->toArray();
 
-        foreach ($records as $record) {
+        foreach ($recordList as $record) {
             $month = substr($record['created_at'], 0, 7);
-            isset($inserts[$month]) || $inserts[$month] = 0;
-            ++$inserts[$month];
+            isset($insertList[$month]) || $insertList[$month] = 0;
+            ++$insertList[$month];
         }
 
-        $deletes = [];
-        $records = User::where(
+        $deleteList = [];
+        $recordList = User::where(
             'deleted_at', '>', $xaxis[count($xaxis) - 1].'-00'
         )->where(
             'deleted_at', '<', $xaxis[0].'-32'
         )->withTrashed()->get()->toArray();
 
-        foreach ($records as $record) {
+        foreach ($recordList as $record) {
             $month = substr($record['deleted_at'], 0, 7);
-            isset($deletes[$month]) || $deletes[$month] = 0;
-            ++$deletes[$month];
+            isset($deleteList[$month]) || $deleteList[$month] = 0;
+            ++$deleteList[$month];
         }
 
         $each1 = [];
@@ -93,12 +93,12 @@ class HomeController extends Controller
             array_unshift($accumulate, [$xlabel, $current]);
             $y2axisMax < $current && $y2axisMax = $current;
 
-            $each = isset($inserts[$xlabel]) ? $inserts[$xlabel] : 0;
+            $each = isset($insertList[$xlabel]) ? $insertList[$xlabel] : 0;
             array_unshift($each1, [$xlabel, $each]);
             $current -= $each;
             $yaxisMax < $each && $yaxisMax = $each;
 
-            $each = isset($deletes[$xlabel]) ? $deletes[$xlabel] : 0;
+            $each = isset($deleteList[$xlabel]) ? $deleteList[$xlabel] : 0;
             array_unshift($each2, [$xlabel, $each]);
             $current += $each;
             $yaxisMax < $each && $yaxisMax = $each;

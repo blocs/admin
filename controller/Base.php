@@ -16,7 +16,7 @@ class Base extends Controller
     protected $paginateNum;
     protected $noticeItem;
 
-    private $selectedIds = [];
+    private $selectedIdList = [];
     private $deletedNum = 0;
 
     use Common;
@@ -405,10 +405,10 @@ class Base extends Controller
         }
 
         foreach ($this->request->{LOOP_ITEM} as $table) {
-            empty($table['selectedRows']) || $this->selectedIds[] = $table['selectedRows'];
+            empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'];
         }
 
-        if (empty($this->selectedIds)) {
+        if (empty($this->selectedIdList)) {
             return $this->backIndex('error', 'data_not_selected');
         }
     }
@@ -433,7 +433,7 @@ class Base extends Controller
             $this->request->merge(session($this->viewPrefix.'.confirm'));
 
             foreach ($this->request->{LOOP_ITEM} as $table) {
-                empty($table['selectedRows']) || $this->selectedIds[] = $table['selectedRows'];
+                empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'];
             }
         } else {
             if ($redirect = $this->validateSelect()) {
@@ -453,11 +453,11 @@ class Base extends Controller
 
     protected function executeSelect()
     {
-        if (empty($this->selectedIds)) {
+        if (empty($this->selectedIdList)) {
             return;
         }
 
-        $this->deletedNum = call_user_func($this->mainTable.'::destroy', $this->selectedIds);
+        $this->deletedNum = call_user_func($this->mainTable.'::destroy', $this->selectedIdList);
     }
 
     protected function outputSelect()
@@ -534,11 +534,11 @@ class Base extends Controller
         $this->request = $request;
         $paramname = $this->request->name;
 
-        if (isset($this->request->uploadedFiles)) {
-            $uploadedFiles = $this->request->uploadedFiles;
-            is_array($uploadedFiles) || $uploadedFiles = json_decode($uploadedFiles, true);
+        if (isset($this->request->uploadedFile)) {
+            $uploadedFile = $this->request->uploadedFile;
+            is_array($uploadedFile) || $uploadedFile = json_decode($uploadedFile, true);
 
-            $html = view(VIEW_PREFIX.'.autoinclude.upload_list', ['files' => $uploadedFiles])->render();
+            $html = view(VIEW_PREFIX.'.autoinclude.upload_list', ['fileList' => $uploadedFile])->render();
 
             return json_encode([
                 'paramname' => $paramname,
@@ -570,7 +570,7 @@ class Base extends Controller
             'size' => $fileupload->getSize(),
             'thumbnail' => $existThumbnail,
         ];
-        $file['html'] = view(VIEW_PREFIX.'.autoinclude.upload_list', ['files' => [$file]])->render();
+        $file['html'] = view(VIEW_PREFIX.'.autoinclude.upload_list', ['fileList' => [$file]])->render();
 
         return json_encode($file);
     }
@@ -628,26 +628,26 @@ class Base extends Controller
 
     /* common */
 
-    protected function backIndex($category, $code, ...$msgArgs)
+    protected function backIndex($category, $code)
     {
         $category && call_user_func_array('\Blocs\Notice::set', func_get_args());
 
         return redirect()->route(ROUTE_PREFIX.'.index');
     }
 
-    protected function backEntry($category, $code, $noticeForm = '', ...$msgArgs)
+    protected function backEntry($category, $code, $noticeForm = '', ...$msgArgList)
     {
         if ($category) {
-            $msgArgs = array_merge([$category, $code], $msgArgs);
-            call_user_func_array('\Blocs\Notice::set', $msgArgs);
+            $msgArgList = array_merge([$category, $code], $msgArgList);
+            call_user_func_array('\Blocs\Notice::set', $msgArgList);
         } else {
-            $msgArgs = array_merge([$code], $msgArgs);
+            $msgArgList = array_merge([$code], $msgArgList);
         }
 
         if ($noticeForm) {
             return redirect()->route(ROUTE_PREFIX.'.entry', $this->val)
                 ->withInput()
-                ->withErrors([$noticeForm => \Blocs\Lang::get(implode(':', $msgArgs))]);
+                ->withErrors([$noticeForm => \Blocs\Lang::get(implode(':', $msgArgList))]);
         }
 
         return redirect()->route(ROUTE_PREFIX.'.entry', $this->val)

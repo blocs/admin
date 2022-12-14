@@ -23,7 +23,7 @@ class Notice
         ];
     }
 
-    public static function set($category, $code, ...$msgArgs)
+    public static function set($category, $code)
     {
         \Session::flash('noticeCategory', $category);
         \Session::flash('noticeMessage', \Blocs\Lang::get(implode(':', func_get_args())));

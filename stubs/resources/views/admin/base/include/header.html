@@ -42,8 +42,8 @@
 	<div data-exist=$noticeCategory><span data-val=$noticeMessage></span></div>
 
 <!-- data-bloc='search_form' -->
-<!-- data-assign=$searchFilterExists data-val=1 data-if="!empty($search) || !empty($searchFilterExists)" -->
-<!-- data-exist=$searchFilterExists -->
+<!-- data-assign=$searchFilterExist data-val=1 data-if="!empty($search) || !empty($searchFilterExist)" -->
+<!-- data-exist=$searchFilterExist -->
 <script type="text/javascript">
 $(function(){
 	$('form[role=search]').find('button.clear').on('click', function(){
@@ -68,7 +68,7 @@ $(function(){
 			<!-- data-attribute='placeholder' data-val=$searchPlaceholder -->
 			<input type='text' name='search' class='form-control' value='' />
 			<span class='input-group-btn'>
-				<button class='btn btn-default clear' type='submit' data-exist=$searchFilterExists>
+				<button class='btn btn-default clear' type='submit' data-exist=$searchFilterExist>
 					<i class='fa fa-ban'></i>
 				</button>
 			</span>

@@ -34,8 +34,8 @@ class UserController extends \Blocs\Controllers\Base
 
     protected function outputEntry()
     {
-        $groups = config('group');
-        empty($groups) || $this->addOption('group', array_keys($groups));
+        $groupList = config('group');
+        empty($groupList) || $this->addOption('group', array_keys($groupList));
 
         return parent::outputEntry();
     }
@@ -91,8 +91,8 @@ class UserController extends \Blocs\Controllers\Base
             // 画像ファイルの登録
             $requestData['file'] = $this->request->file;
 
-            $files = json_decode($requestData['file'], true);
-            $requestData['filename'] = $files[0]['filename'];
+            $fileList = json_decode($requestData['file'], true);
+            $requestData['filename'] = $fileList[0]['filename'];
         }
 
         parent::executeUpdate($requestData);

@@ -40,8 +40,8 @@ class Blocs extends Command
 
         /* ディレクトリを配置 */
 
-        $files = scandir($this->stubDir);
-        foreach ($files as $file) {
+        $fileList = scandir($this->stubDir);
+        foreach ($fileList as $file) {
             if ('.' == substr($file, 0, 1) && '.gitkeep' != $file && '.htaccess' != $file) {
                 continue;
             }
@@ -68,11 +68,11 @@ END_of_TEXT;
     {
         is_dir($newDir) || mkdir($newDir, 0777, true) && chmod($newDir, 0777);
 
-        if (!(is_dir($dirName) && $files = scandir($dirName))) {
+        if (!(is_dir($dirName) && $fileList = scandir($dirName))) {
             return $updateJsonData;
         }
 
-        foreach ($files as $file) {
+        foreach ($fileList as $file) {
             if ('.' == substr($file, 0, 1) && '.gitkeep' != $file && '.htaccess' != $file) {
                 continue;
             }
@@ -90,7 +90,7 @@ END_of_TEXT;
     private function copyFile($originalFile, $targetFile, $updateJsonData)
     {
         $originalFile = str_replace(DIRECTORY_SEPARATOR, '/', realpath($originalFile));
-        $newContents = file_get_contents($originalFile);
+        $newContent = file_get_contents($originalFile);
         $fileKey = substr($targetFile, strlen($this->rootDir));
 
         if (!is_file($targetFile) || !filesize($targetFile)) {
@@ -100,28 +100,28 @@ END_of_TEXT;
                 return $updateJsonData;
             }
 
-            file_put_contents($targetFile, $newContents) && chmod($targetFile, 0666);
+            file_put_contents($targetFile, $newContent) && chmod($targetFile, 0666);
             $targetFile = str_replace(DIRECTORY_SEPARATOR, '/', realpath($targetFile));
-            $updateJsonData[$fileKey] = md5($newContents);
+            $updateJsonData[$fileKey] = md5($newContent);
 
             return $updateJsonData;
         }
 
         // コピー先にファイルがある
         $targetFile = str_replace(DIRECTORY_SEPARATOR, '/', realpath($targetFile));
-        $oldContents = file_get_contents($targetFile);
+        $oldContent = file_get_contents($targetFile);
 
-        if ($newContents === $oldContents) {
+        if ($newContent === $oldContent) {
             // ファイルが更新されていない
-            $updateJsonData[$fileKey] = md5($newContents);
+            $updateJsonData[$fileKey] = md5($newContent);
 
             return $updateJsonData;
         }
 
-        if (isset($updateJsonData[$fileKey]) && $updateJsonData[$fileKey] === md5($oldContents)) {
+        if (isset($updateJsonData[$fileKey]) && $updateJsonData[$fileKey] === md5($oldContent)) {
             // ファイルが更新された
-            file_put_contents($targetFile, $newContents) && chmod($targetFile, 0666);
-            $updateJsonData[$fileKey] = md5($newContents);
+            file_put_contents($targetFile, $newContent) && chmod($targetFile, 0666);
+            $updateJsonData[$fileKey] = md5($newContent);
 
             return $updateJsonData;
         }
@@ -144,8 +144,8 @@ END_of_TEXT;
         $laravelLangDir = $this->rootDir.'/resources/lang';
         is_dir($laravelLangDir) || mkdir($laravelLangDir, 0777, true) && chmod($laravelLangDir, 0777);
 
-        $blocsLangFiles = scandir($blocsLangDir);
-        foreach ($blocsLangFiles as $file) {
+        $blocsLangFileList = scandir($blocsLangDir);
+        foreach ($blocsLangFileList as $file) {
             if ('.' == substr($file, 0, 1) && '.gitkeep' != $file && '.htaccess' != $file) {
                 continue;
             }

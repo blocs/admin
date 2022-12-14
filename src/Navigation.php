@@ -4,46 +4,46 @@ namespace Blocs;
 
 class Navigation
 {
-    public static function get($name, $breadcrumbs = [])
+    public static function get($name, $breadcrumbList = [])
     {
         // 設定読み込み
-        $configs = config('navigation');
+        $configList = config('navigation');
 
         // 指定されたhedline読み込み
-        if (isset($configs['headline'])) {
-            $headline = $configs['headline'];
+        if (isset($configList['headline'])) {
+            $headline = $configList['headline'];
             config(['navigation.headline' => null]);
         } else {
             $headline = false;
         }
 
-        $breadcrumb = isset($configs['breadcrumb']) ? $configs['breadcrumb'] : false;
+        $breadcrumb = isset($configList['breadcrumb']) ? $configList['breadcrumb'] : false;
 
-        if (!isset($configs[$name])) {
+        if (!isset($configList[$name])) {
             return [[], [], []];
         }
-        $configs = $configs[$name];
+        $configList = $configList[$name];
 
         // ルート名を取得
         $currentName = \Route::currentRouteName();
         empty($currentName) || list($currentName) = explode('.', $currentName, 2);
 
         // ナビゲーション、パンクズリスト
-        $navigations = [];
-        foreach ($configs as $config) {
+        $navigationList = [];
+        foreach ($configList as $config) {
             isset($config['url']) || $config['url'] = route($config['name']);
             isset($config['label']) || $config['label'] = \Blocs\Lang::get($config['lang']);
 
             if (isset($config['sub'])) {
-                list($config['sub'], $subHeadline, $breadcrumbs) = self::get($config['sub'], $breadcrumbs);
+                list($config['sub'], $subHeadline, $breadcrumbList) = self::get($config['sub'], $breadcrumbList);
 
-                if (!empty($breadcrumbs)) {
+                if (!empty($breadcrumbList)) {
                     // サブメニューでマッチ
                     $config['active'] = true;
                     false === $headline && $headline = $subHeadline;
 
                     // パンクズリストに階層を追加
-                    array_unshift($breadcrumbs, $config);
+                    array_unshift($breadcrumbList, $config);
                 }
             }
 
@@ -53,10 +53,10 @@ class Navigation
                 false === $headline && $headline = $config;
 
                 if ($breadcrumb) {
-                    $breadcrumbs = [$config, $breadcrumb];
+                    $breadcrumbList = [$config, $breadcrumb];
                 } else {
-                    $breadcrumbs = [$config];
-                    unset($breadcrumbs[0]['url']);
+                    $breadcrumbList = [$config];
+                    unset($breadcrumbList[0]['url']);
                 }
             }
 
@@ -70,10 +70,10 @@ class Navigation
                 continue;
             }
 
-            $navigations[] = $config;
+            $navigationList[] = $config;
         }
 
-        return [$navigations, $headline, $breadcrumbs];
+        return [$navigationList, $headline, $breadcrumbList];
     }
 
     public static function headline($icon, $lang)
@@ -97,26 +97,26 @@ class Navigation
 
         // 必要な権限を取得
         $configGroup = config('group');
-        $groups = [];
-        foreach ($configGroup as $groupName => $routeNames) {
-            foreach ($routeNames as $routeName) {
+        $groupList = [];
+        foreach ($configGroup as $groupName => $routeNameList) {
+            foreach ($routeNameList as $routeName) {
                 if (false !== strpos($currentName, $routeName)) {
-                    $groups[] = $groupName;
+                    $groupList[] = $groupName;
                     break;
                 }
             }
         }
 
-        if (empty($groups)) {
+        if (empty($groupList)) {
             return true;
         }
 
         // 自分の権限を取得
         $_userData = \Auth::user();
-        $myGroups = explode("\t", $_userData['group']);
+        $myGroupList = explode("\t", $_userData['group']);
 
-        foreach ($myGroups as $myGroup) {
-            if (in_array($myGroup, $groups)) {
+        foreach ($myGroupList as $myGroup) {
+            if (in_array($myGroup, $groupList)) {
                 return true;
             }
         }

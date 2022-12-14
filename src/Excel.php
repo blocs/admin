@@ -275,19 +275,19 @@ class Excel
             $this->setValue($cell, $value);
 
             // 列の順序をソート
-            $sortCells = [];
-            $sortCellNames = [];
+            $sortCellList = [];
+            $sortCellNameList = [];
             foreach ($row->c as $cell) {
                 // ソートのために左詰に変換
                 $sortCellName = sprintf('% 20s', strval($cell['r']));
-                $sortCellNames[] = $sortCellName;
-                $sortCells[$sortCellName] = clone $cell;
+                $sortCellNameList[] = $sortCellName;
+                $sortCellList[$sortCellName] = clone $cell;
             }
-            sort($sortCellNames);
+            sort($sortCellNameList);
 
             unset($row->c);
-            foreach ($sortCellNames as $sortCellName) {
-                $this->appendChild($row, $sortCells[$sortCellName]);
+            foreach ($sortCellNameList as $sortCellName) {
+                $this->appendChild($row, $sortCellList[$sortCellName]);
             }
 
             return $worksheetXml;
@@ -302,18 +302,18 @@ class Excel
         $this->setValue($cell, $value);
 
         // 行の順序をソート
-        $sortRows = [];
-        $sortRowNames = [];
+        $sortRowList = [];
+        $sortRowNameList = [];
         foreach ($rows as $row) {
             $rowName = intval($row['r']);
-            $sortRowNames[] = $rowName;
-            $sortRows[$rowName] = clone $row;
+            $sortRowNameList[] = $rowName;
+            $sortRowList[$rowName] = clone $row;
         }
-        sort($sortRowNames);
+        sort($sortRowNameList);
 
         unset($worksheetXml->sheetData->row);
-        foreach ($sortRowNames as $rowName) {
-            $this->appendChild($worksheetXml->sheetData, $sortRows[$rowName]);
+        foreach ($sortRowNameList as $rowName) {
+            $this->appendChild($worksheetXml->sheetData, $sortRowList[$rowName]);
         }
 
         return $worksheetXml;

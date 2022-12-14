@@ -4,9 +4,9 @@ namespace Blocs\Controllers;
 
 trait Common
 {
-    protected function addOption($formName, $options)
+    protected function addOption($formName, $optionList)
     {
-        \Blocs\Option::add($formName, $options);
+        \Blocs\Option::add($formName, $optionList);
     }
 
     protected function keepItem($keyItem)
@@ -18,8 +18,8 @@ trait Common
         $sessionKey = $this->viewPrefix.'.search.'.$keyItem;
 
         if (isset($this->request)) {
-            $requestItems = array_keys($this->request->all());
-            if (in_array($keyItem, $requestItems)) {
+            $requestItemList = array_keys($this->request->all());
+            if (in_array($keyItem, $requestItemList)) {
                 if (isset($this->request->$keyItem) && strlen($this->request->$keyItem)) {
                     // sessionに保存
                     session([$sessionKey => $this->request->$keyItem]);
@@ -40,24 +40,24 @@ trait Common
 
     protected function addItem(&$valTable, $itemName, $tableName, $key, $value)
     {
-        $keys = [];
+        $keyList = [];
         foreach ($valTable as $num => $buff) {
-            empty($buff[$itemName]) || $keys[] = $buff[$itemName];
+            empty($buff[$itemName]) || $keyList[] = $buff[$itemName];
         }
-        $keys = array_merge(array_unique($keys));
+        $keyList = array_merge(array_unique($keyList));
 
         // テーブルより追加データを取得
         if (class_exists($tableName)) {
             // Eloquent
             $table = call_user_func($tableName.'::select', $key, $value);
-            $tableDatas = $table->whereIn($key, $keys)->get();
+            $tableDataList = $table->whereIn($key, $keyList)->get();
         } else {
             // クエリビルダ
-            $tableDatas = \DB::table($tableName)->select($key, $value)->whereIn($key, $keys)->get();
+            $tableDataList = \DB::table($tableName)->select($key, $value)->whereIn($key, $keyList)->get();
         }
 
         $replaceItem = [];
-        foreach ($tableDatas as $tableData) {
+        foreach ($tableDataList as $tableData) {
             $replaceItem[$tableData->$key] = $tableData->$value;
         }
 
