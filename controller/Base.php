@@ -405,7 +405,7 @@ class Base extends Controller
         }
 
         foreach ($this->request->{LOOP_ITEM} as $table) {
-            empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'];
+            empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'][0];
         }
 
         if (empty($this->selectedIdList)) {
@@ -433,7 +433,7 @@ class Base extends Controller
             $this->request->merge(session($this->viewPrefix.'.confirm'));
 
             foreach ($this->request->{LOOP_ITEM} as $table) {
-                empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'];
+                empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'][0];
             }
         } else {
             if ($redirect = $this->validateSelect()) {
