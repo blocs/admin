@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Copyright (C) 2010 LINEAR JAPAN Co., Ltd. All Rights Reserved.
- *
- * This source code or any portion thereof must not be
- * reproduced or used in any manner whatsoever.
- */
-
 namespace Blocs;
 
 /**
@@ -33,8 +26,6 @@ class Excel
      */
     public function __construct($excelName)
     {
-        defined('TEMPLATE_CACHE_DIR') || define('TEMPLATE_CACHE_DIR', config('view.compiled'));
-
         $this->excelName = $excelName;
         $this->excelTemplate = new \ZipArchive();
         $this->excelTemplate->open($excelName);

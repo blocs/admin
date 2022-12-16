@@ -1,20 +1,11 @@
 <?php
 
-/**
- * Copyright (C) 2010 LINEAR JAPAN Co., Ltd. All Rights Reserved.
- *
- * This source code or any portion thereof must not be
- * reproduced or used in any manner whatsoever.
- */
-
 namespace Blocs;
 
 class Thumbnail
 {
     public static function create($tmpLoc, $pWidth, $pHeight, $crop = false)
     {
-        defined('TEMPLATE_CACHE_DIR') || define('TEMPLATE_CACHE_DIR', config('view.compiled'));
-
         // サムネイルファイル名を取得
         $thumbCrop = $crop ? '_c' : '';
         $thumbName = $pWidth.'x'.$pHeight.$thumbCrop.'-'.basename($tmpLoc);

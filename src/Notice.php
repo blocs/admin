@@ -1,12 +1,5 @@
 <?php
 
-/**
- * Copyright (C) 2010 LINEAR JAPAN Co., Ltd. All Rights Reserved.
- *
- * This source code or any portion thereof must not be
- * reproduced or used in any manner whatsoever.
- */
-
 namespace Blocs;
 
 class Notice
