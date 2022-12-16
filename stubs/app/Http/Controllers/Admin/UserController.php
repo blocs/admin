@@ -86,7 +86,11 @@ class UserController extends \Blocs\Controllers\Base
         ];
         empty($this->request->password_new) || $requestData['password'] = Hash::make($this->request->password_new);
 
-        if (!empty($this->request->file)) {
+        if (empty($this->request->file)) {
+            // 画像ファイルの削除
+            $requestData['file'] = null;
+            $requestData['filename'] = null;
+        } else {
             // 画像ファイルの登録
             $requestData['file'] = $this->request->file;
 
