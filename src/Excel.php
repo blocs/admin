@@ -116,7 +116,7 @@ class Excel
         $excelTemplate = $this->excelTemplate;
         $worksheet = $this->worksheet;
 
-        $tempName = tempnam(TEMPLATE_CACHE_DIR, 'excel');
+        $tempName = tempnam(BLOCS_CACHE_DIR, 'excel');
         $generateName = $tempName.'.zip';
         $excelGenerate = new \ZipArchive();
         $excelGenerate->open($generateName, \ZipArchive::CREATE);

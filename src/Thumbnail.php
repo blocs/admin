@@ -9,7 +9,7 @@ class Thumbnail
         // サムネイルファイル名を取得
         $thumbCrop = $crop ? '_c' : '';
         $thumbName = $pWidth.'x'.$pHeight.$thumbCrop.'-'.basename($tmpLoc);
-        $thumbLoc = TEMPLATE_CACHE_DIR.'/'.$thumbName;
+        $thumbLoc = BLOCS_CACHE_DIR.'/'.$thumbName;
 
         // サムネイルファイルの拡張子を取得
         $thumbExt = \File::extension($tmpLoc);
