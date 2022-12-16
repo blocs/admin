@@ -65,7 +65,7 @@
 <!-- data-bloc='modal_toggle' -->
 
 	<!-- data-assign=$modalName data-val='modal_toggle' data-none=$modalName -->
-	<!-- data-assign=$modalTitileSubmit data-lang='template:resource_blocs_modal_activate_title' data-none=$modalTitileSubmit -->
+	<!-- data-assign=$modalTitleSubmit data-lang='template:resource_blocs_modal_activate_title' data-none=$modalTitleSubmit -->
 	<!-- data-assign=$modalMessageSubmit data-lang='template:resource_blocs_modal_activate_message' data-none=$modalMessageSubmit -->
 	<!-- data-assign=$modalTitleWarning data-lang='template:resource_blocs_modal_inactivate_title' data-none=$modalTitleWarning -->
 	<!-- data-assign=$modalMessageWarning data-lang='template:resource_blocs_modal_inactivate_message' data-none=$modalMessageWarning -->
@@ -79,7 +79,7 @@
 
 			var modal_toggle = $('#modal_toggle');
 			if($(this).hasClass('btn-danger') || $(this).hasClass('btn-warning')){
-				modal_toggle.find('.modal-title').text('<!-- data-val=$modalTitileSubmit -->');
+				modal_toggle.find('.modal-title').text('<!-- data-val=$modalTitleSubmit -->');
 				modal_toggle.find('.modal-message').text('<!-- data-val=$modalMessageSubmit -->');
 				modal_toggle.find('.btn-success').show();
 				modal_toggle.find('.btn-warning').hide();

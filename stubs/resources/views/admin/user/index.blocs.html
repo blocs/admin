@@ -28,22 +28,26 @@
 	</tr>
 </tbody>
 
-<!-- data-assign=$modalTitileSubmit data-lang='template:admin_user_valid_title' -->
-<!-- data-assign=$modalMessageSubmit data-lang='template:admin_user_valid_message' -->
-<!-- data-assign=$modalTitleWarning data-lang='template:admin_user_invalid_title' -->
-<!-- data-assign=$modalMessageWarning data-lang='template:admin_user_invalid_message' -->
-
 <!-- data-bloc='modal_button' -->
-
 <!-- data-include='button_back_modal' -->
-<!-- data-assign=$buttonSuccessModalLabel data-lang='template:admin_user_button_valid' -->
-<!-- data-include='button_success_modal' -->
-<!-- data-assign=$buttonWarningModalLabel data-lang='template:admin_user_button_invalid' -->
-<!-- data-include='button_warning_modal' -->
-
+<!--
+	data-include='button_success_modal'
+	$buttonSuccessModalLabel=\Blocs\Lang::get('template:admin_user_button_valid')
+-->
+<!--
+	data-include='button_warning_modal'
+	$buttonWarningModalLabel=\Blocs\Lang::get('template:admin_user_button_invalid')
+-->
 <!-- data-endbloc -->
 
-<!-- data-include='modal_toggle' data-exist=$loopIs -->
+<!--
+	data-include='modal_toggle'
+	$modalTitleSubmit=\Blocs\Lang::get('template:admin_user_valid_title')
+	$modalMessageSubmit=\Blocs\Lang::get('template:admin_user_valid_message')
+	$modalTitleWarning=\Blocs\Lang::get('template:admin_user_invalid_title')
+	$modalMessageWarning=\Blocs\Lang::get('template:admin_user_invalid_message')
+	data-exist=$loopIs
+-->
 
 <!-- data-include='index_paginate' -->
 
