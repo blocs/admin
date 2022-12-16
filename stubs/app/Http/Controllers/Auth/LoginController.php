@@ -38,8 +38,8 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
 
-        defined('VIEW_PREFIX') || define('VIEW_PREFIX', 'admin');
-        defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'auth');
+        define('VIEW_PREFIX', 'admin');
+        define('ROUTE_PREFIX', 'auth');
 
         $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
     }

@@ -12,8 +12,8 @@ class HomeController extends Controller
 
     public function __construct()
     {
-        defined('VIEW_PREFIX') || define('VIEW_PREFIX', 'admin');
-        defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'home');
+        define('VIEW_PREFIX', 'admin');
+        define('ROUTE_PREFIX', 'home');
 
         $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
     }

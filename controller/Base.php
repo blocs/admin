@@ -13,6 +13,7 @@ class Base extends Controller
 
     protected $viewPrefix;
     protected $mainTable;
+    protected $loopItem;
     protected $paginateNum;
     protected $noticeItem;
 
@@ -61,14 +62,14 @@ class Base extends Controller
 
         if (empty($this->paginateNum)) {
             // ページネーションなし
-            $this->val[LOOP_ITEM] = $mainTable->get();
+            $this->val[$this->loopItem] = $mainTable->get();
         } else {
             // ページネーションあり
             $this->prepareIndexPaginate($mainTable);
         }
 
         // データの有無
-        $this->val['loopIs'] = !$this->val[LOOP_ITEM]->isEmpty();
+        $this->val['loopIs'] = !$this->val[$this->loopItem]->isEmpty();
     }
 
     protected function prepareIndexSearch(&$mainTable)
@@ -78,7 +79,7 @@ class Base extends Controller
     protected function prepareIndexPaginate(&$mainTable)
     {
         $this->val['paginate'] = $mainTable->paginate($this->paginateNum);
-        $this->val[LOOP_ITEM] = $this->val['paginate'];
+        $this->val[$this->loopItem] = $this->val['paginate'];
     }
 
     protected function outputIndex()
@@ -400,11 +401,11 @@ class Base extends Controller
 
     protected function validateSelect()
     {
-        if (empty($this->request->{LOOP_ITEM})) {
+        if (empty($this->request->{$this->loopItem})) {
             return $this->backIndex('error', 'data_not_selected');
         }
 
-        foreach ($this->request->{LOOP_ITEM} as $table) {
+        foreach ($this->request->{$this->loopItem} as $table) {
             empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'][0];
         }
 
@@ -432,7 +433,7 @@ class Base extends Controller
             // 確認画面からの遷移
             $this->request->merge(session($this->viewPrefix.'.confirm'));
 
-            foreach ($this->request->{LOOP_ITEM} as $table) {
+            foreach ($this->request->{$this->loopItem} as $table) {
                 empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'][0];
             }
         } else {

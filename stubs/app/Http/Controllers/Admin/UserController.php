@@ -8,14 +8,13 @@ class UserController extends \Blocs\Controllers\Base
 {
     public function __construct()
     {
-        defined('VIEW_PREFIX') || define('VIEW_PREFIX', 'admin');
-        defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', 'user');
+        define('VIEW_PREFIX', 'admin');
+        define('ROUTE_PREFIX', 'user');
+
         $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
-
         $this->mainTable = 'App\Models\Admin\User';
-        defined('LOOP_ITEM') || define('LOOP_ITEM', 'users');
+        $this->loopItem = 'users';
         $this->paginateNum = 20;
-
         $this->noticeItem = 'email';
     }
 
