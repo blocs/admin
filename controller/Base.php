@@ -185,8 +185,7 @@ class Base extends Controller
             }
         }
 
-        $this->prepareInsert();
-        $this->executeInsert();
+        $this->executeInsert($this->prepareInsert());
 
         return $this->outputInsert();
     }
@@ -269,8 +268,7 @@ class Base extends Controller
             return $redirect;
         }
 
-        $this->prepareUpdate();
-        $this->executeUpdate();
+        $this->executeUpdate($this->prepareUpdate());
 
         return $this->outputUpdate();
     }

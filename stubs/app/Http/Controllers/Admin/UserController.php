@@ -39,20 +39,18 @@ class UserController extends \Blocs\Controllers\Base
         return parent::outputEntry();
     }
 
-    protected function executeInsert($requestData = [])
+    protected function prepareInsert()
     {
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
         $this->val['group'] = empty($this->request->group) ? '' : implode("\t", $this->request->group);
 
-        $requestData = [
+        return [
             'email' => $this->request->email,
             'name' => $this->val['name'],
             'password' => Hash::make($this->request->password),
             'group' => $this->val['group'],
         ];
-
-        parent::executeInsert($requestData);
     }
 
     protected function validateUpdate()
@@ -74,7 +72,7 @@ class UserController extends \Blocs\Controllers\Base
         }
     }
 
-    protected function executeUpdate($requestData = [])
+    protected function prepareUpdate()
     {
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
@@ -86,18 +84,6 @@ class UserController extends \Blocs\Controllers\Base
         ];
         empty($this->request->password_new) || $requestData['password'] = Hash::make($this->request->password_new);
 
-        if (empty($this->request->file)) {
-            // 画像ファイルの削除
-            $requestData['file'] = null;
-            $requestData['filename'] = null;
-        } else {
-            // 画像ファイルの登録
-            $requestData['file'] = $this->request->file;
-
-            $fileList = json_decode($requestData['file'], true);
-            $requestData['filename'] = $fileList[0]['filename'];
-        }
-
-        parent::executeUpdate($requestData);
+        return $requestData;
     }
 }
