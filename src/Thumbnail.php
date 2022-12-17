@@ -147,10 +147,6 @@ class Thumbnail
                 imagexbm($image, $thumbLoc);
 
                 return;
-            case 'xpm':
-                imagexpm($image, $thumbLoc);
-
-                return;
         }
     }
 }
