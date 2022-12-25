@@ -681,8 +681,6 @@ class Base extends Controller
         $this->val['breadcrumb'] = $breadcrumb;
     }
 
-    /* Private function */
-
     private function checkId($id)
     {
         if (!$id) {

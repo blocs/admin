@@ -62,8 +62,6 @@ END_of_TEXT;
         file_put_contents($fileLoc, json_encode($updateJsonData, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($fileLoc, 0666);
     }
 
-    /* Private function */
-
     private function copyDir($dirName, $newDir, $updateJsonData)
     {
         is_dir($newDir) || mkdir($newDir, 0777, true) && chmod($newDir, 0777);

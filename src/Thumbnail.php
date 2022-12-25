@@ -67,8 +67,6 @@ class Thumbnail
         return $thumbLoc;
     }
 
-    /* Private function */
-
     private static function getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop)
     {
         list($width, $height) = list($oWidth, $oHeight) = getimagesize($tmpLoc);
