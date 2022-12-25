@@ -8,7 +8,6 @@ class UserController extends \Blocs\Controllers\Base
 {
     public function __construct()
     {
-        define('VIEW_PREFIX', 'admin');
         define('ROUTE_PREFIX', 'user');
 
         $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;

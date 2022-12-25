@@ -12,7 +12,6 @@ class HomeController extends Controller
 
     public function __construct()
     {
-        define('VIEW_PREFIX', 'admin');
         define('ROUTE_PREFIX', 'home');
 
         $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
@@ -23,7 +22,7 @@ class HomeController extends Controller
         $this->val = array_merge($this->val, \Blocs\Notice::get());
         $this->val = array_merge($this->val, $this->chart());
 
-        list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get(VIEW_PREFIX);
+        list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get('admin');
         $this->val['navigation'] = $navigation;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;

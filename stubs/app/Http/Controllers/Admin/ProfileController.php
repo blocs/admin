@@ -8,7 +8,6 @@ class ProfileController extends UserController
 {
     public function __construct()
     {
-        define('VIEW_PREFIX', 'admin');
         define('ROUTE_PREFIX', 'profile');
 
         $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;

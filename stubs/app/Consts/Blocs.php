@@ -18,5 +18,8 @@ class Blocs
 
         // includeの上限設定
         define('BLOCS_INCLUDE_MAX', 20);
+
+        // 管理画面のビュー
+        define('VIEW_PREFIX', 'admin');
     }
 }
