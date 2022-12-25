@@ -88,29 +88,38 @@ class HomeController extends Controller
         $yaxisMax = 0;
         $y2axisMax = 0;
 
+        $bar1 = [];
+        $bar2 = [];
+        $line1 = [];
+
         foreach ($xaxis as $xlabel) {
             array_unshift($accumulate, [$xlabel, $current]);
+            $line1[] = $current;
             $y2axisMax < $current && $y2axisMax = $current;
 
             $each = isset($insertList[$xlabel]) ? $insertList[$xlabel] : 0;
             array_unshift($each1, [$xlabel, $each]);
+            $bar1[] = $each;
             $current -= $each;
             $yaxisMax < $each && $yaxisMax = $each;
 
             $each = isset($deleteList[$xlabel]) ? $deleteList[$xlabel] : 0;
             array_unshift($each2, [$xlabel, $each]);
+            $bar2[] = $each;
             $current += $each;
             $yaxisMax < $each && $yaxisMax = $each;
         }
 
-        $param['json'] = json_encode([$each1, $each2, $accumulate]);
+        $param['graphLabels'] = json_encode(array_reverse($xaxis));
+        $param['graphDataBar1'] = json_encode(array_reverse($bar1));
+        $param['graphDataBar2'] = json_encode(array_reverse($bar2));
+        $param['graphDataLine1'] = json_encode(array_reverse($line1));
+
+        $param['graphJson'] = json_encode([$each1, $each2, $accumulate]);
         $param['update'] = date(DATE_ATOM);
 
-        $yaxisMax = self::getYaxisMax($yaxisMax);
-        $y2axisMax = self::getYaxisMax($y2axisMax);
-
-        $param['yaxisMax'] = $yaxisMax;
-        $param['y2axisMax'] = $y2axisMax;
+        $param['graphYaxisMax'] = self::getYaxisMax($yaxisMax);
+        $param['graphY2axisMax'] = self::getYaxisMax($y2axisMax);
 
         return $param;
     }
