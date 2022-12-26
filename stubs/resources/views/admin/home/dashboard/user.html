@@ -2,7 +2,8 @@
 <!-- data-assign=$graphLegendBar2 data-lang='template:admin_top_user_legend_deleted' -->
 <!-- data-assign=$graphLegendLine1 data-lang='template:admin_top_user_legend_accumulated' -->
 
-<!-- data-include='jqplot_2bar_1line' -->
+<!-- data-assign=$chartjsColor data-val="Blues3" -->
+<!-- data-include="chartjs_2bar_1line" -->
 
 <div class='panel panel-primary'>
 	<div class='panel-heading'>
@@ -16,7 +17,9 @@
 		<span class='text-primary'>
 			<small data-val=$update data-convert='date:"Y/m/d H:i:s"'></small>
 		</span>
-		<!-- data-attribute='id' data-val=$graphId -->
-		<div></div>
+		<div style="background-color:#F2FAFF;">
+			<!-- data-attribute='id' data-val=$graphId -->
+			<canvas style="min-height: 250px; height: 250px; max-height: 300px; max-width: 100%;"></canvas>
+		</div>
 	</div>
 </div>

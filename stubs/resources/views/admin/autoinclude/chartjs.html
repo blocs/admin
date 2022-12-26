@@ -1,0 +1,67 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!-- data-include="chartjs_color.html" -->
+<!-- data-assign=$chartjsColor data-val="Tableau10" data-none=$chartjsColor -->
+
+<!-- data-bloc="chartjs_2bar_1line" -->
+<!-- data-assign=$graphId data-val='graph_' data-convert='uniqid' -->
+
+<script>
+    $(function () {
+
+        var {{ $graphId }}Data = {
+            labels: <!-- data-val=$graphLabels data-convert='raw' -->,
+            datasets: [
+            {
+                type: "line",
+                label: "{{ $graphLegendLine1 }}",
+                backgroundColor: {{ $chartjsColor }}[2],
+                borderColor: {{ $chartjsColor }}[2],
+                data: <!-- data-val=$graphDataLine1 data-convert='raw' -->,
+                yAxisID: "y2"
+            },
+            {
+                type: "bar",
+                label: "{{ $graphLegendBar1 }}",
+                backgroundColor: {{ $chartjsColor }}[0],
+                borderColor: {{ $chartjsColor }}[0],
+                data: <!-- data-val=$graphDataBar1 data-convert='raw' -->,
+                yAxisID: "y1"
+            },
+            {
+                type: "bar",
+                label: "{{ $graphLegendBar2 }}",
+                backgroundColor: {{ $chartjsColor }}[1],
+                borderColor: {{ $chartjsColor }}[1],
+                data: <!-- data-val=$graphDataBar2 data-convert='raw' -->,
+                yAxisID: "y1"
+            }
+            ]
+        }
+
+        var {{ $graphId }}Canvas = $("#{{ $graphId }}").get(0).getContext("2d")
+
+        new Chart({{ $graphId }}Canvas, {
+            data: {{ $graphId }}Data,
+            options: {
+                scales: {
+                    y1: {
+                        position: "left",
+                        max: {{ $graphYaxisMax }},
+                        min: 0
+                    },
+                    y2: {
+                        position: "right",
+                        max: {{ $graphY2axisMax }},
+                        min: 0,
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+          })
+    })
+</script>
+
+<!-- data-endbloc -->
