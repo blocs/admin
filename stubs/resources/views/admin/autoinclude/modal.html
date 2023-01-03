@@ -6,7 +6,7 @@
 		<!-- data-include='button_primary' -->
 
 	<!-- モーダル設定 -->
-		@php empty($modalAction) && $modalAction = route(ROUTE_PREFIX.'.insert') @endphp
+		<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.insert') data-none=$modalAction -->
 		<!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_new_title' data-none=$modalTitle -->
 		<!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_new_message' data-none=$modalMessage -->
 
@@ -27,7 +27,7 @@
 		<!-- data-include='button_primary' -->
 
 	<!-- モーダル設定 -->
-		@php empty($modalAction) && $modalAction = route(ROUTE_PREFIX.'.update', $id) @endphp
+		<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.update', $id) data-none=$modalAction -->
 		<!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_update_title' data-none=$modalTitle -->
 		<!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_update_message' data-none=$modalMessage -->
 
@@ -49,7 +49,7 @@
 		<!-- data-include='button_danger' -->
 
 	<!-- モーダル設定 -->
-		@php empty($modalAction) && $modalAction = route(ROUTE_PREFIX.'.delete') @endphp
+		<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.delete') data-none=$modalAction -->
 		<!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_delete_title' data-none=$modalTitle -->
 		<!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_delete_message' data-none=$modalMessage -->
 
@@ -70,7 +70,7 @@
 	<!-- data-assign=$modalTitleWarning data-lang='template:resource_blocs_modal_inactivate_title' data-none=$modalTitleWarning -->
 	<!-- data-assign=$modalMessageWarning data-lang='template:resource_blocs_modal_inactivate_message' data-none=$modalMessageWarning -->
 
-	@php empty($modalAction) && $modalAction = route(ROUTE_PREFIX.'.toggle', '') @endphp
+	<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.toggle', '') data-none=$modalAction -->
 
 	<script type="text/javascript">
 	$(function(){

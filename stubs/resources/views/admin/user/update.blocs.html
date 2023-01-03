@@ -81,12 +81,16 @@
 
 <!-- data-include='entry_separator' -->
 
-@php $buttonHref = route(ROUTE_PREFIX.'.index') @endphp
-<!-- data-include='button_back' -->
+<!--
+	data-include='button_back'
+	$buttonHref=route(ROUTE_PREFIX.'.index')
+-->
 
 <!-- data-include='modal_update' -->
 
-@php $modalAction = route(ROUTE_PREFIX.'.delete', $id) @endphp
-<!-- data-include='modal_delete' -->
+<!--
+	data-include='modal_delete'
+	$modalAction=route(ROUTE_PREFIX.'.delete', $id)
+-->
 
 <!-- data-include='entry_footer' -->
