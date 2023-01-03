@@ -18,7 +18,10 @@
 		<td>
 			<!-- data-attribute='value' data-val=$user->id -->
 			<input type='checkbox' name='selectedRows[]' style='display:none;' />
-			<!-- data-include='button_toggle' -->
+			<!--
+				data-include='button_toggle'
+				$disabled_at=$user->disabled_at
+			-->
 		</td>
 		<td class='ellipsis toggle-item'>
 			<a href="{{ route(ROUTE_PREFIX.'.entry', ['id' => $user->id]) }}" data-val=$user->email></a>

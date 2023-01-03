@@ -19,6 +19,7 @@ class Base extends Controller
 
     private $selectedIdList = [];
     private $deletedNum = 0;
+    private $tableData;
 
     use Common;
 
@@ -114,8 +115,7 @@ class Base extends Controller
 
     protected function getCurrent()
     {
-        $tableData = call_user_func($this->mainTable.'::find', $this->val['id']);
-        $tableData = $tableData->toArray();
+        $tableData = $this->tableData->toArray();
 
         $this->val = array_merge($tableData, $this->val);
     }
@@ -279,8 +279,7 @@ class Base extends Controller
             return;
         }
 
-        $tableData = call_user_func($this->mainTable.'::find', $this->val['id']);
-        $tableData = $tableData->toArray();
+        $tableData = $this->tableData->toArray();
 
         if ($this->request->updated_at !== $tableData['updated_at']) {
             return $this->backEntry('error', 'collision_happened');
@@ -297,8 +296,7 @@ class Base extends Controller
             return;
         }
 
-        $tableData = call_user_func($this->mainTable.'::find', $this->val['id']);
-        $tableData->fill($requestData)->save();
+        $this->tableData->fill($requestData)->save();
     }
 
     protected function outputUpdate()
@@ -473,29 +471,24 @@ class Base extends Controller
         }
         $this->val['id'] = $id;
 
-        $tableData = call_user_func($this->mainTable.'::find', $this->val['id']);
-
-        if (empty($tableData->disabled_at)) {
-            $tableData->disabled_at = Carbon::now();
+        if (empty($this->tableData->disabled_at)) {
+            $this->tableData->disabled_at = Carbon::now();
         } else {
-            $tableData->disabled_at = null;
+            $this->tableData->disabled_at = null;
         }
 
-        $tableData->save();
-
-        $this->val['disabled_at'] = $tableData->disabled_at;
-        $this->val[$this->noticeItem] = $tableData->{$this->noticeItem};
+        $this->tableData->save();
 
         return $this->outputToggle();
     }
 
     protected function outputToggle()
     {
-        if (empty($this->val['disabled_at'])) {
-            return $this->backIndex('success', 'data_valid', $this->val[$this->noticeItem]);
+        if (empty($this->tableData->disabled_at)) {
+            return $this->backIndex('success', 'data_valid', $this->tableData->{$this->noticeItem});
         }
 
-        return $this->backIndex('success', 'data_invalid', $this->val[$this->noticeItem]);
+        return $this->backIndex('success', 'data_invalid', $this->tableData->{$this->noticeItem});
     }
 
     /* copy */
@@ -507,8 +500,7 @@ class Base extends Controller
         }
         $this->val['id'] = $id;
 
-        $tableData = call_user_func($this->mainTable.'::find', $this->val['id']);
-        $tableData = $tableData->toArray();
+        $tableData = $this->tableData->toArray();
 
         foreach (['id', 'created_at', 'updated_at', 'deleted_at', 'disabled_at'] as $unsetItem) {
             unset($tableData[$unsetItem]);
@@ -516,14 +508,12 @@ class Base extends Controller
 
         call_user_func($this->mainTable.'::create', $tableData);
 
-        $this->val[$this->noticeItem] = $tableData[$this->noticeItem];
-
         return $this->outputCopy();
     }
 
     protected function outputCopy()
     {
-        return $this->backIndex('success', 'data_registered', $this->val[$this->noticeItem]);
+        return $this->backIndex('success', 'data_registered', $this->tableData[$this->noticeItem]);
     }
 
     /* upload */
@@ -689,12 +679,7 @@ class Base extends Controller
             return;
         }
 
-        $tableData = call_user_func($this->mainTable.'::find', $id);
-
-        // データが見つからない
-        if (empty($tableData)) {
-            return $this->backIndex('error', 'data_not_found');
-        }
+        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
     }
 
     private function createThumbnail($filename, $size)
