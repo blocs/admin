@@ -17,8 +17,8 @@
         }
     ],
     "require": {
-        "blocs\/blocs": "@dev",
-        "laravel\/ui": "@dev"
+        "blocs\/blocs": "*",
+        "laravel\/ui": "*"
     },
     "extra": {
         "laravel": {
