@@ -1,5 +1,7 @@
 <!-- data-include="../base/entry.html" -->
 
+<input type='hidden' name='updated_at' />
+
 <table class='tbl1 table table-condensed'>
 	<thead>
 		<tr>
@@ -13,9 +15,8 @@
 				<label for='email'><!-- data-lang='template:admin_profile_user_id' --></label>
 			</th>
 			<td>
-				<input type='text' id='email' name='email' class='form-control modal-notice-item' value='' required />
+				<input type='text' id='email' name='email' class='form-control modal-notice-item' value='' readonly />
 
-				<!-- data-form="email" data-validate="unique:users" data-lang="このユーザーIDはすでに登録されています。" -->
 				@error('email') <div class='text-danger'>{{ $message }}</div> @enderror
 			</td>
 		</tr>
@@ -46,23 +47,33 @@
 		</tr>
 		<tr>
 			<th>
-				<label for='password'><!-- data-lang='template:admin_profile_password' --></label>
+				<label for='password_old'><!-- data-lang='template:admin_profile_password_old' --></label>
 			</th>
 			<td>
-				<input type='password' id='password' name='password' class='form-control' required />
+				<input type='password' id='password_old' name='password_old' class='form-control' />
 
-				@error('password') <div class='text-danger'>{{ $message }}</div> @enderror
+				@error('password_old') <div class='text-danger'>{{ $message }}</div> @enderror
 			</td>
 		</tr>
 		<tr>
 			<th>
-				<label for='repassword'><!-- data-lang='template:admin_profile_password_check' --></label>
+				<label for='password_new'><!-- data-lang='template:admin_profile_new_password' --></label>
 			</th>
 			<td>
-				<input type='password' id='repassword' name='repassword' class='form-control' required />
+				<input type='password' id='password_new' name='password_new' class='form-control' />
 
-				<!-- data-form="repassword" data-validate="same:password" data-lang="パスワードが違います。" -->
-				@error('repassword') <div class='text-danger'>{{ $message }}</div> @enderror
+				@error('password_new') <div class='text-danger'>{{ $message }}</div> @enderror
+			</td>
+		</tr>
+		<tr>
+			<th>
+				<label for='repassword_new'><!-- data-lang='template:admin_profile_new_password_check' --></label>
+			</th>
+			<td>
+				<input type='password' id='repassword_new' name='repassword_new' class='form-control' />
+
+				<!-- data-form="repassword_new" data-validate="same:password_new" data-lang="パスワードが違います。" -->
+				@error('repassword_new') <div class='text-danger'>{{ $message }}</div> @enderror
 			</td>
 		</tr>
 	</tbody>
@@ -75,6 +86,11 @@
 	$buttonHref=route(ROUTE_PREFIX.'.index')
 -->
 
-<!-- data-include='modal_insert' -->
+<!-- data-include='modal_update' -->
+
+<!--
+	data-include='modal_destroy'
+	$modalAction=route(ROUTE_PREFIX.'.destroy', $id)
+-->
 
 <!-- data-include='entry_footer' -->

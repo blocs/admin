@@ -24,10 +24,10 @@
 			-->
 		</td>
 		<td class='ellipsis toggle-item'>
-			<a href="{{ route(ROUTE_PREFIX.'.entry', ['id' => $user->id]) }}" data-val=$user->email></a>
+			<a href="{{ route(ROUTE_PREFIX.'.edit', ['id' => $user->id]) }}" data-val=$user->email></a>
 		</td>
 		<td class='ellipsis' data-val=$user->name></td>
-		<td class='hidden-xs' data-val=$user->created_at data-convert='date'></td>
+		<td class='hidden-xs' data-val=$user->created_at->toDateString() data-convert='date'></td>
 	</tr>
 </tbody>
 
@@ -57,7 +57,7 @@
 <!-- data-include='button_new' -->
 
 <!--
-	data-include='modal_delete'
+	data-include='modal_destroy'
 	$modalAction = route(ROUTE_PREFIX.'.select')
 	data-exist=$loopIs
 -->

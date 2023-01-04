@@ -31,7 +31,13 @@ class Navigation
         // ナビゲーション、パンクズリスト
         $navigationList = [];
         foreach ($configList as $config) {
-            isset($config['url']) || $config['url'] = route($config['name']);
+            if (!isset($config['url'])) {
+                if (empty($config['argv'])) {
+                    $config['url'] = route($config['name']);
+                } else {
+                    $config['url'] = route($config['name'], $config['argv']);
+                }
+            }
             isset($config['label']) || $config['label'] = \Blocs\Lang::get($config['lang']);
 
             if (isset($config['sub'])) {

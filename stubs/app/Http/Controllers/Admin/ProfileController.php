@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Illuminate\Http\Request;
-
 class ProfileController extends UserController
 {
     public function __construct()
@@ -15,14 +13,9 @@ class ProfileController extends UserController
         $this->noticeItem = 'email';
     }
 
-    public function entry($id = 0)
+    public function edit($id)
     {
-        return parent::entry(\Auth::id());
-    }
-
-    public function update($id, Request $request)
-    {
-        return parent::update(\Auth::id(), $request);
+        return parent::edit(\Auth::id());
     }
 
     protected function outputUpdate()

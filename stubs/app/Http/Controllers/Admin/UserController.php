@@ -30,15 +30,16 @@ class UserController extends \Blocs\Controllers\Base
         $mainTable->orderBy('email', 'asc');
     }
 
-    protected function outputEntry()
+    protected function outputCreate()
     {
+        // グループをメニューにセット
         $groupList = config('group');
         empty($groupList) || $this->addOption('group', array_keys($groupList));
 
-        return parent::outputEntry();
+        return parent::outputCreate();
     }
 
-    protected function prepareInsert()
+    protected function prepareStore()
     {
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
@@ -52,6 +53,15 @@ class UserController extends \Blocs\Controllers\Base
         ];
     }
 
+    protected function outputEdit()
+    {
+        // グループをメニューにセット
+        $groupList = config('group');
+        empty($groupList) || $this->addOption('group', array_keys($groupList));
+
+        return parent::outputEdit();
+    }
+
     protected function validateUpdate()
     {
         parent::validateUpdate();
@@ -62,12 +72,12 @@ class UserController extends \Blocs\Controllers\Base
 
         // 旧パスワードをチェック
         if (empty($this->request->password_old)) {
-            return $this->backEntry('', 'パスワードが違います。', 'password_old');
+            return $this->backEdit('', 'パスワードが違います。', 'password_old');
         }
 
         $user = call_user_func($this->mainTable.'::find', $this->val['id']);
         if (!Hash::check($this->request->password_old, $user->password)) {
-            return $this->backEntry('', 'パスワードが違います。', 'password_old');
+            return $this->backEdit('', 'パスワードが違います。', 'password_old');
         }
     }
 

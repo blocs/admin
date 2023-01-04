@@ -90,27 +90,123 @@ class Base extends Controller
         return view($this->viewPrefix.'.index', $this->val);
     }
 
-    /* entry */
+    /* create */
 
-    public function entry($id = 0)
+    public function create()
     {
-        if ($redirect = $this->checkId($id)) {
-            return $redirect;
-        }
-        $this->val['id'] = $id;
-
-        empty(old()) && !empty($this->val['id']) && $this->getCurrent();
-
         $this->val = array_merge($this->val, \Blocs\Notice::get());
 
-        $this->prepareEntry();
+        $this->prepareCreate();
 
         if (session()->has($this->viewPrefix.'.confirm')) {
             // 確認画面からの遷移
             $this->val = array_merge($this->val, session($this->viewPrefix.'.confirm'));
         }
 
-        return $this->outputEntry();
+        return $this->outputCreate();
+    }
+
+    protected function prepareCreate()
+    {
+    }
+
+    protected function outputCreate()
+    {
+        $this->setupNavigation();
+
+        return view($this->viewPrefix.'.create', $this->val);
+    }
+
+    /* store */
+
+    public function confirmStore(Request $request)
+    {
+        $this->request = $request;
+
+        if ($redirect = $this->validateStore()) {
+            return $redirect;
+        }
+
+        session()->flash($this->viewPrefix.'.confirm', $this->request->all());
+
+        $this->prepareConfirmStore();
+
+        return $this->outputConfirmStore();
+    }
+
+    protected function validateStore()
+    {
+        list($validate, $message) = \Blocs\Validate::get($this->viewPrefix.'.create', $this->request);
+        empty($validate) || $this->request->validate($validate, $message);
+    }
+
+    protected function prepareConfirmStore()
+    {
+        $this->val = array_merge($this->request->all(), $this->val);
+    }
+
+    protected function outputConfirmStore()
+    {
+        $this->setupNavigation();
+
+        return view($this->viewPrefix.'.confirmStore', $this->val);
+    }
+
+    public function store(Request $request)
+    {
+        $this->request = $request;
+
+        if (session()->has($this->viewPrefix.'.confirm')) {
+            // 確認画面からの遷移
+            $this->request->merge(session($this->viewPrefix.'.confirm'));
+        } else {
+            if ($redirect = $this->validateStore()) {
+                return $redirect;
+            }
+        }
+
+        $this->executeStore($this->prepareStore());
+
+        return $this->outputStore();
+    }
+
+    protected function prepareStore()
+    {
+    }
+
+    protected function executeStore($requestData = [])
+    {
+        if (empty($requestData)) {
+            return;
+        }
+
+        call_user_func($this->mainTable.'::create', $requestData);
+    }
+
+    protected function outputStore()
+    {
+        return $this->backIndex('success', 'data_registered', $this->request->{$this->noticeItem});
+    }
+
+    /* edit */
+
+    public function edit($id)
+    {
+        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
+        $this->val['id'] = $id;
+
+        empty(old()) && !empty($this->val['id']) && $this->getCurrent();
+
+        $this->val = array_merge($this->val, \Blocs\Notice::get());
+
+        $this->prepareEdit();
+
+        if (session()->has($this->viewPrefix.'.confirm')) {
+            // 確認画面からの遷移
+            $this->val = array_merge($this->val, session($this->viewPrefix.'.confirm'));
+        }
+
+        return $this->outputEdit();
     }
 
     protected function getCurrent()
@@ -120,101 +216,22 @@ class Base extends Controller
         $this->val = array_merge($tableData, $this->val);
     }
 
-    protected function prepareEntry()
+    protected function prepareEdit()
     {
     }
 
-    protected function outputEntry()
+    protected function outputEdit()
     {
         $this->setupNavigation();
 
-        if ($this->val['id']) {
-            // 編集
-            return view($this->viewPrefix.'.update', $this->val);
-        }
-
-        // 新規登録
-        return view($this->viewPrefix.'.insert', $this->val);
-    }
-
-    /* insert */
-
-    public function confirmInsert(Request $request)
-    {
-        $this->request = $request;
-
-        if ($redirect = $this->validateInsert()) {
-            return $redirect;
-        }
-
-        session()->flash($this->viewPrefix.'.confirm', $this->request->all());
-
-        $this->prepareConfirmInsert();
-
-        return $this->outputConfirmInsert();
-    }
-
-    protected function validateInsert()
-    {
-        list($validate, $message) = \Blocs\Validate::get($this->viewPrefix.'.insert', $this->request);
-        empty($validate) || $this->request->validate($validate, $message);
-    }
-
-    protected function prepareConfirmInsert()
-    {
-        $this->val = array_merge($this->request->all(), $this->val);
-    }
-
-    protected function outputConfirmInsert()
-    {
-        $this->setupNavigation();
-
-        return view($this->viewPrefix.'.confirmInsert', $this->val);
-    }
-
-    public function insert(Request $request)
-    {
-        $this->request = $request;
-
-        if (session()->has($this->viewPrefix.'.confirm')) {
-            // 確認画面からの遷移
-            $this->request->merge(session($this->viewPrefix.'.confirm'));
-        } else {
-            if ($redirect = $this->validateInsert()) {
-                return $redirect;
-            }
-        }
-
-        $this->executeInsert($this->prepareInsert());
-
-        return $this->outputInsert();
-    }
-
-    protected function prepareInsert()
-    {
-    }
-
-    protected function executeInsert($requestData = [])
-    {
-        if (empty($requestData)) {
-            return;
-        }
-
-        call_user_func($this->mainTable.'::create', $requestData);
-    }
-
-    protected function outputInsert()
-    {
-        return $this->backIndex('success', 'data_registered', $this->request->{$this->noticeItem});
+        return view($this->viewPrefix.'.edit', $this->val);
     }
 
     /* update */
 
     public function confirmUpdate($id, Request $request)
     {
-        if ($redirect = $this->checkId($id)) {
-            return $redirect;
-        }
+        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
         $this->val['id'] = $id;
         $this->request = $request;
 
@@ -231,7 +248,7 @@ class Base extends Controller
 
     protected function validateUpdate()
     {
-        list($validate, $message) = \Blocs\Validate::get($this->viewPrefix.'.update', $this->request);
+        list($validate, $message) = \Blocs\Validate::get($this->viewPrefix.'.edit', $this->request);
         empty($validate) || $this->request->validate($validate, $message);
     }
 
@@ -249,9 +266,7 @@ class Base extends Controller
 
     public function update($id, Request $request)
     {
-        if ($redirect = $this->checkId($id)) {
-            return $redirect;
-        }
+        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
         $this->val['id'] = $id;
         $this->request = $request;
 
@@ -282,7 +297,7 @@ class Base extends Controller
         $tableData = $this->tableData->toArray();
 
         if ($this->request->updated_at !== $tableData['updated_at']) {
-            return $this->backEntry('error', 'collision_happened');
+            return $this->backEdit('error', 'collision_happened');
         }
     }
 
@@ -304,48 +319,44 @@ class Base extends Controller
         return $this->backIndex('success', 'data_updated', $this->request->{$this->noticeItem});
     }
 
-    /* delete */
+    /* destroy */
 
-    public function confirmDelete($id, Request $request)
+    public function confirmDestroy($id, Request $request)
     {
-        if ($redirect = $this->checkId($id)) {
-            return $redirect;
-        }
+        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
         $this->val['id'] = $id;
         $this->request = $request;
 
-        if ($redirect = $this->validateDelete()) {
+        if ($redirect = $this->validateDestroy()) {
             return $redirect;
         }
 
         session()->flash($this->viewPrefix.'.confirm', $this->request->all());
 
-        $this->prepareConfirmDelete();
+        $this->prepareConfirmDestroy();
 
-        return $this->outputConfirmDelete();
+        return $this->outputConfirmDestroy();
     }
 
-    protected function validateDelete()
+    protected function validateDestroy()
     {
     }
 
-    protected function prepareConfirmDelete()
+    protected function prepareConfirmDestroy()
     {
         $this->val = array_merge($this->request->all(), $this->val);
     }
 
-    protected function outputConfirmDelete()
+    protected function outputConfirmDestroy()
     {
         $this->setupNavigation();
 
-        return view($this->viewPrefix.'.confirmDelete', $this->val);
+        return view($this->viewPrefix.'.confirmDestroy', $this->val);
     }
 
-    public function delete($id, Request $request)
+    public function destroy($id, Request $request)
     {
-        if ($redirect = $this->checkId($id)) {
-            return $redirect;
-        }
+        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
         $this->val['id'] = $id;
         $this->request = $request;
 
@@ -353,27 +364,27 @@ class Base extends Controller
             // 確認画面からの遷移
             $this->request->merge(session($this->viewPrefix.'.confirm'));
         } else {
-            if ($redirect = $this->validateDelete()) {
+            if ($redirect = $this->validateDestroy()) {
                 return $redirect;
             }
         }
 
-        $this->prepareDelete();
-        $this->executeDelete();
+        $this->prepareDestroy();
+        $this->executeDestroy();
 
-        return $this->outputDelete();
+        return $this->outputDestroy();
     }
 
-    protected function prepareDelete()
+    protected function prepareDestroy()
     {
     }
 
-    protected function executeDelete()
+    protected function executeDestroy()
     {
         $this->deletedNum = call_user_func($this->mainTable.'::destroy', $this->val['id']);
     }
 
-    protected function outputDelete()
+    protected function outputDestroy()
     {
         return $this->backIndex('success', 'data_deleted', $this->deletedNum);
     }
@@ -466,9 +477,7 @@ class Base extends Controller
 
     public function toggle($id)
     {
-        if ($redirect = $this->checkId($id)) {
-            return $redirect;
-        }
+        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
         $this->val['id'] = $id;
 
         if (empty($this->tableData->disabled_at)) {
@@ -495,9 +504,7 @@ class Base extends Controller
 
     public function copy($id)
     {
-        if ($redirect = $this->checkId($id)) {
-            return $redirect;
-        }
+        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
         $this->val['id'] = $id;
 
         $tableData = $this->tableData->toArray();
@@ -624,7 +631,7 @@ class Base extends Controller
         return redirect()->route(ROUTE_PREFIX.'.index');
     }
 
-    protected function backEntry($category, $code, $noticeForm = '', ...$msgArgList)
+    protected function backEdit($category, $code, $noticeForm = '', ...$msgArgList)
     {
         if ($category) {
             $msgArgList = array_merge([$category, $code], $msgArgList);
@@ -634,12 +641,12 @@ class Base extends Controller
         }
 
         if ($noticeForm) {
-            return redirect()->route(ROUTE_PREFIX.'.entry', $this->val)
+            return redirect()->route(ROUTE_PREFIX.'.edit', $this->val)
                 ->withInput()
                 ->withErrors([$noticeForm => \Blocs\Lang::get(implode(':', $msgArgList))]);
         }
 
-        return redirect()->route(ROUTE_PREFIX.'.entry', $this->val)
+        return redirect()->route(ROUTE_PREFIX.'.edit', $this->val)
             ->withInput();
     }
 
@@ -669,17 +676,6 @@ class Base extends Controller
         $this->val['navigation'] = $navigation;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
-    }
-
-    /* Private function */
-
-    private function checkId($id)
-    {
-        if (!$id) {
-            return;
-        }
-
-        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
     }
 
     private function createThumbnail($filename, $size)

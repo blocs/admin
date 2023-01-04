@@ -1,12 +1,12 @@
-<!-- data-bloc='modal_insert' -->
+<!-- data-bloc='modal_store' -->
 
 <!-- 新規作成のモーダル -->
 	<!-- ボタン設定 -->
-		<!-- data-assign=$modalName data-val='modal_insert' data-none=$modalName -->
+		<!-- data-assign=$modalName data-val='modal_store' data-none=$modalName -->
 		<!-- data-include='button_primary' -->
 
 	<!-- モーダル設定 -->
-		<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.insert') data-none=$modalAction -->
+		<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.store') data-none=$modalAction -->
 		<!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_new_title' data-none=$modalTitle -->
 		<!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_new_message' data-none=$modalMessage -->
 
@@ -41,15 +41,15 @@
 
 <!-- data-endbloc -->
 
-<!-- data-bloc='modal_delete' -->
+<!-- data-bloc='modal_destroy' -->
 
 <!-- 削除のモーダル -->
 	<!-- ボタン設定 -->
-		<!-- data-assign=$modalName data-val='modal_delete' data-none=$modalName -->
+		<!-- data-assign=$modalName data-val='modal_destroy' data-none=$modalName -->
 		<!-- data-include='button_danger' -->
 
 	<!-- モーダル設定 -->
-		<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.delete') data-none=$modalAction -->
+		<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.destroy') data-none=$modalAction -->
 		<!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_delete_title' data-none=$modalTitle -->
 		<!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_delete_message' data-none=$modalMessage -->
 
@@ -70,7 +70,7 @@
 	<!-- data-assign=$modalTitleWarning data-lang='template:resource_blocs_modal_inactivate_title' data-none=$modalTitleWarning -->
 	<!-- data-assign=$modalMessageWarning data-lang='template:resource_blocs_modal_inactivate_message' data-none=$modalMessageWarning -->
 
-	<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.toggle', '') data-none=$modalAction -->
+	<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.index') data-none=$modalAction -->
 
 	<script type="text/javascript">
 	$(function(){
@@ -91,7 +91,7 @@
 			}
 
 			var tr = $(this).closest('tr');
-			$(this).closest('form').attr('action', '<!-- data-val=$modalAction -->/' + tr.find('input[name$="[selectedRows][]"]:first').val());
+			$(this).closest('form').attr('action', '<!-- data-val=$modalAction -->/' + tr.find('input[name$="[selectedRows][]"]:first').val() + '/toggle');
 
 			if(tr.find('.toggle-item').length){
 				modal_toggle.find('.itemtitle').text(tr.find('.toggle-item').text());

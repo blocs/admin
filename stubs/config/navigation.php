@@ -11,7 +11,8 @@ return [
     ],
     'admin_menu' => [
         [
-            'name' => 'profile.entry',
+            'name' => 'profile.edit',
+            'argv' => ['id' => 0],
             'lang' => 'プロフィール',
             'icon' => 'fa-cog',
             'breadcrumb' => true,
