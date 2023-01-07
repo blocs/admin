@@ -579,14 +579,8 @@ class Base extends Controller
 
     /* download */
 
-    public function download(...$argv)
+    public function download($filename, $size = null)
     {
-        if (count($argv) > 1) {
-            list($size, $filename) = $argv;
-        } else {
-            list($filename) = $argv;
-        }
-
         $storage = \Storage::disk();
         $filename = 'upload/'.$filename;
         $mimeType = $storage->mimeType($filename);
