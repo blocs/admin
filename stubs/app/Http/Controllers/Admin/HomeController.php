@@ -19,7 +19,6 @@ class HomeController extends Controller
 
     public function index()
     {
-        $this->val = array_merge($this->val, \Blocs\Notice::get());
         $this->val = array_merge($this->val, $this->chart());
 
         list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get('admin');

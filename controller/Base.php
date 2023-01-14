@@ -28,7 +28,6 @@ class Base extends Controller
     public function index(Request $request)
     {
         $this->request = $request;
-        $this->val = array_merge($this->val, \Blocs\Notice::get());
 
         $this->prepareIndex();
 
@@ -94,8 +93,6 @@ class Base extends Controller
 
     public function create()
     {
-        $this->val = array_merge($this->val, \Blocs\Notice::get());
-
         $this->prepareCreate();
 
         if (session()->has($this->viewPrefix.'.confirm')) {
@@ -196,8 +193,6 @@ class Base extends Controller
         $this->val['id'] = $id;
 
         empty(old()) && !empty($this->val['id']) && $this->getCurrent();
-
-        $this->val = array_merge($this->val, \Blocs\Notice::get());
 
         $this->prepareEdit();
 
@@ -620,28 +615,37 @@ class Base extends Controller
 
     protected function backIndex($category, $code)
     {
-        $category && call_user_func_array('\Blocs\Notice::set', func_get_args());
+        $resirectIndex = redirect()->route(ROUTE_PREFIX.'.index');
 
-        return redirect()->route(ROUTE_PREFIX.'.index');
+        $category && $resirectIndex = $resirectIndex->with([
+            'category' => $category,
+            'message' => \Blocs\Lang::get(implode(':', func_get_args())),
+        ]);
+
+        return $resirectIndex;
     }
 
     protected function backEdit($category, $code, $noticeForm = '', ...$msgArgList)
     {
+        $resirectEdit = redirect()->route(ROUTE_PREFIX.'.edit', $this->val)->withInput();
+
         if ($category) {
             $msgArgList = array_merge([$category, $code], $msgArgList);
-            call_user_func_array('\Blocs\Notice::set', $msgArgList);
+            $resirectEdit = $resirectEdit->with([
+                'category' => $category,
+                'message' => \Blocs\Lang::get(implode(':', $msgArgList)),
+            ]);
         } else {
             $msgArgList = array_merge([$code], $msgArgList);
         }
 
         if ($noticeForm) {
-            return redirect()->route(ROUTE_PREFIX.'.edit', $this->val)
-                ->withInput()
-                ->withErrors([$noticeForm => \Blocs\Lang::get(implode(':', $msgArgList))]);
+            $resirectEdit = $resirectEdit->withErrors([
+                $noticeForm => \Blocs\Lang::get(implode(':', $msgArgList)),
+            ]);
         }
 
-        return redirect()->route(ROUTE_PREFIX.'.edit', $this->val)
-            ->withInput();
+        return $resirectEdit;
     }
 
     // テーブルのデータと入力値をマージ

@@ -20,9 +20,10 @@ class ProfileController extends UserController
 
     protected function outputUpdate()
     {
-        \Blocs\Notice::set('success', 'admin_profile_updated');
-
-        return redirect()->route('home');
+        return redirect()->route('home')->with([
+            'category' => 'success',
+            'message' => \Blocs\Lang::get('success:admin_profile_updated'),
+        ]);
     }
 
     protected function prepareUpdate()

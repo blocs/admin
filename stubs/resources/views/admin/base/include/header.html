@@ -37,9 +37,12 @@
 
 					<div id='inmaincontents'>
 
+<!-- data-if="Session::has('message')" -->
+	<!-- $noticeCategory=Session::get('category') -->
 	<!-- data-assign=$noticeCategory data-val='danger' data-if="isset($noticeCategory) && $noticeCategory === 'error'" -->
 	<!-- data-attribute="class" data-val="alert alert-{$noticeCategory}" -->
-	<div data-exist=$noticeCategory><span data-val=$noticeMessage></span></div>
+	<div data-val=Session::get('message')></div>
+<!-- data-endexist -->
 
 <!-- data-bloc='search_form' -->
 <!-- data-assign=$searchFilterExist data-val=1 data-if="!empty($search) || !empty($searchFilterExist)" -->
