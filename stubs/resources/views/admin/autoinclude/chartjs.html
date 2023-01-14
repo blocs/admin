@@ -1,23 +1,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js" integrity="sha512-ElRFoEQdI5Ht6kZvyzXhYG9NqjtkmlkfYk0wr6wHxU9JEHakS7UJZNeml5ALk+8IKlU6jDgMabC3vkumRokgJA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
-<!-- data-include="chartjs_color.html" -->
+<script>
+    Blues3 = ['#deebf7', '#9ecae1', '#3182bd'],
+    Tableau10 = ['#4E79A7', '#F28E2B', '#E15759', '#76B7B2', '#59A14F', '#EDC948', '#B07AA1', '#FF9DA7', '#9C755F', '#BAB0AC'];
+</script>
+
 <!-- data-assign=$chartjsColor data-val="Tableau10" data-none=$chartjsColor -->
 
-<!-- data-bloc="chartjs_2bar_1line" -->
-<!-- data-assign=$graphId data-val='graph_' data-convert='uniqid' -->
-
-<script>
+<script data-bloc="chartjs_2bar_1line">
+    <!-- data-assign=$graphId data-val='graph_' data-convert='uniqid' -->
     $(function () {
-
         var {{ $graphId }}Data = {
-            labels: <!-- data-val=$graphLabels data-convert='raw' -->,
+            labels: <!-- data-val=$graphLabels data-convert="raw" -->,
             datasets: [
             {
                 type: "line",
                 label: "{{ $graphLegendLine1 }}",
                 backgroundColor: {{ $chartjsColor }}[2],
                 borderColor: {{ $chartjsColor }}[2],
-                data: <!-- data-val=$graphDataLine1 data-convert='raw' -->,
+                data: {{ $graphDataLine1 }},
                 yAxisID: "y2"
             },
             {
@@ -25,7 +26,7 @@
                 label: "{{ $graphLegendBar1 }}",
                 backgroundColor: {{ $chartjsColor }}[0],
                 borderColor: {{ $chartjsColor }}[0],
-                data: <!-- data-val=$graphDataBar1 data-convert='raw' -->,
+                data: {{ $graphDataBar1 }},
                 yAxisID: "y1"
             },
             {
@@ -33,7 +34,7 @@
                 label: "{{ $graphLegendBar2 }}",
                 backgroundColor: {{ $chartjsColor }}[1],
                 borderColor: {{ $chartjsColor }}[1],
-                data: <!-- data-val=$graphDataBar2 data-convert='raw' -->,
+                data: {{ $graphDataBar2 }},
                 yAxisID: "y1"
             }
             ]
@@ -60,8 +61,6 @@
                     }
                 }
             }
-          })
+        })
     })
 </script>
-
-<!-- data-endbloc -->

@@ -120,7 +120,6 @@
     "template:resource_blocs_button_new": "新規作成",
     "template:resource_blocs_button_submit": "新規登録",
     "template:resource_blocs_button_warning": "注意",
-    "template:resource_blocs_datepicker": "$.datepicker.regional['ja'] = {\n\tcloseText: '閉じる',\n\tprevText: '<前',\n\tnextText: '次>',\n\tcurrentText: '今日',\n\tmonthNames: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],\n\tmonthNamesShort: ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'],\n\tdayNames: ['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'],\n\tdayNamesShort: ['日','月','火','水','木','金','土'],\n\tdayNamesMin: ['日','月','火','水','木','金','土'],\n\tweekHeader: '週',\n\tdateFormat: 'yy-mm-dd',\n\tshowMonthAfterYear: true,\n\tyearSuffix: '年'\n};\n$.datepicker.setDefaults($.datepicker.regional['ja']);",
     "template:resource_blocs_fileupload_add": "ファイルを追加",
     "template:resource_blocs_footer_company": "会社概要",
     "template:resource_blocs_logout_button": "ログアウト",

@@ -49,7 +49,7 @@
 		<!-- data-include='button_danger' -->
 
 	<!-- モーダル設定 -->
-		<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.destroy') data-none=$modalAction -->
+		<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.destroy', $id) data-none=$modalAction -->
 		<!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_delete_title' data-none=$modalTitle -->
 		<!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_delete_message' data-none=$modalMessage -->
 
@@ -74,9 +74,7 @@
 
 	<script type="text/javascript">
 	$(function(){
-
 		$('button[data-target="#modal_toggle"]').on('click', function(){
-
 			var modal_toggle = $('#modal_toggle');
 			if($(this).hasClass('btn-danger') || $(this).hasClass('btn-warning')){
 				modal_toggle.find('.modal-title').text('<!-- data-val=$modalTitleSubmit -->');
@@ -97,9 +95,7 @@
 				modal_toggle.find('.itemtitle').text(tr.find('.toggle-item').text());
 			}
 			modal_toggle.modal('show');
-
 		});
-
 	});
 	</script>
 
@@ -111,13 +107,6 @@
 
 	<script type="text/javascript">
 	$(function(){
-
-	<!-- data-exist=$modalAction -->
-		$('button[data-target="#<!-- data-val=$modalName -->"]').on('click', function(){
-			$(this).closest('form').attr('action', '<!-- data-val=$modalAction -->');
-		});
-	<!-- data-endif -->
-
 		$('#<!-- data-val=$modalName -->').find('button').attr('disabled', 'disabled');
 		$('#<!-- data-val=$modalName -->').on('show.bs.modal shown.bs.modal', function () {
 			if($('.modal-notice-item').length){
@@ -129,7 +118,6 @@
 			}
 			$('#<!-- data-val=$modalName -->').find('button').removeAttr('disabled');
 		});
-
 	});
 	</script>
 
@@ -159,7 +147,7 @@
 		</div>
 	</div>
 
-	<!-- $modalName='' $modalAction='' $modalTitle='' $modalMessage='' $buttonPrimaryModalLabel='' -->
+	<!-- $modalName="" $modalAction="" $modalTitle="" $modalMessage="" $buttonPrimaryModalLabel="" -->
 
 	<!-- data-bloc='modal_body' --><!-- data-endbloc -->
 	<!-- data-bloc='modal_button' --><!-- data-endbloc -->

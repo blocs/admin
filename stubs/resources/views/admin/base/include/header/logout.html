@@ -5,14 +5,13 @@
 -->
 
 <!-- data-bloc='modal_button' -->
-
-<!-- data-include='button_back_modal' -->
-<button type='button' class='btn btn-primary btn-lg' onclick="document.getElementById('logout-form').submit();">
-	<span class='fa fa-sign-out'></span> <!-- data-lang='template:resource_blocs_logout_button' -->
-</button>
-
-<form id="logout-form" action="{{ route('logout') }}" method="post">
+<form method="post" action="{{ route('logout') }}">
 	@csrf
+	<!-- data-include='button_back_modal' -->
+
+	<button type="submit" class="btn btn-primary btn-lg">
+		<span class='fa fa-sign-out'></span> <!-- data-lang='template:resource_blocs_logout_button' -->
+	</button>
 </form>
 <!-- data-endbloc -->
 

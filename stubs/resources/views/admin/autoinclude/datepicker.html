@@ -7,11 +7,11 @@
 </style>
 
 <script type="text/javascript">
+<!-- data-include="datepicker-ja.js" -->
+
 $(function(){
-<!-- data-lang='template:resource_blocs_datepicker' data-convert='raw' -->
-	$.datepicker.setDefaults({
-		duration: 0
+	$('.datepicker').datepicker({
+		dateFormat: 'yy-mm-dd'
 	});
-	$('.datepicker').datepicker();
 });
 </script>

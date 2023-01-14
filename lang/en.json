@@ -121,7 +121,6 @@
     "template:resource_blocs_button_new": "New",
     "template:resource_blocs_button_submit": "Submit",
     "template:resource_blocs_button_warning": "Warning",
-    "template:resource_blocs_datepicker": "$.datepicker.regional['en'] = {\n\tdateFormat: 'yy-mm-dd',\n\tshowMonthAfterYear: true\n};\n$.datepicker.setDefaults($.datepicker.regional['en']);",
     "template:resource_blocs_fileupload_add": "Add file",
     "template:resource_blocs_footer_company": "Company",
     "template:resource_blocs_logout_button": "Logout",
