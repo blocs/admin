@@ -150,5 +150,3 @@ class Thumbnail
         }
     }
 }
-
-/* End of file */

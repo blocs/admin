@@ -465,5 +465,3 @@ END_of_HTML;
         return $sharedString;
     }
 }
-
-/* End of file */
