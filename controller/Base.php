@@ -133,8 +133,8 @@ class Base extends Controller
 
     protected function validateStore()
     {
-        list($validate, $message) = \Blocs\Validate::get($this->viewPrefix.'.create', $this->request);
-        empty($validate) || $this->request->validate($validate, $message);
+        list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.create', $this->request);
+        empty($rules) || $this->request->validate($rules, $messages);
     }
 
     protected function prepareConfirmStore()
@@ -243,8 +243,8 @@ class Base extends Controller
 
     protected function validateUpdate()
     {
-        list($validate, $message) = \Blocs\Validate::get($this->viewPrefix.'.edit', $this->request);
-        empty($validate) || $this->request->validate($validate, $message);
+        list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.edit', $this->request);
+        empty($rules) || $this->request->validate($rules, $messages);
     }
 
     protected function prepareConfirmUpdate()
@@ -568,8 +568,8 @@ class Base extends Controller
 
     protected function validateUpload($paramname)
     {
-        list($validate, $message) = \Blocs\Validate::upload($this->viewPrefix, $paramname);
-        empty($validate) || $this->request->validate($validate, $message);
+        list($rules, $messages) = \Blocs\Validate::upload($this->viewPrefix, $paramname);
+        empty($rules) || $this->request->validate($rules, $messages);
     }
 
     /* download */
