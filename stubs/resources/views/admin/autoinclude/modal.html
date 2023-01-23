@@ -70,8 +70,6 @@
 	<!-- data-assign=$modalTitleWarning data-lang='template:resource_blocs_modal_inactivate_title' data-none=$modalTitleWarning -->
 	<!-- data-assign=$modalMessageWarning data-lang='template:resource_blocs_modal_inactivate_message' data-none=$modalMessageWarning -->
 
-	<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.index') data-none=$modalAction -->
-
 	<script type="text/javascript">
 	$(function(){
 		$('button[data-target="#modal_toggle"]').on('click', function(){
@@ -89,7 +87,7 @@
 			}
 
 			var tr = $(this).closest('tr');
-			$(this).closest('form').attr('action', '<!-- data-val=$modalAction -->/' + tr.find('input[name$="[selectedRows][]"]:first').val() + '/toggle');
+			$(this).closest('form').attr('action', '<!-- data-val=route(ROUTE_PREFIX.'.index') -->/' + tr.find('input[name$="[selectedRows][]"]:first').val() + '/toggle');
 
 			if(tr.find('.toggle-item').length){
 				modal_toggle.find('.itemtitle').text(tr.find('.toggle-item').text());
