@@ -4,7 +4,7 @@ namespace Blocs;
 
 use Illuminate\Support\ServiceProvider;
 
-class BlocsAdmin extends \App\Console\Commands\Blocs
+class BlocsAdmin extends \App\Admin\Commands\Blocs
 {
     public function handle()
     {
