@@ -1,10 +1,10 @@
 <?php
 
+use App\Admin\Controllers\Auth\LoginController;
 use App\Admin\Controllers\HomeController;
 use App\Admin\Controllers\ProfileController;
 use App\Admin\Controllers\UserController;
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Middleware\Admin\UserGroup;
+use App\Admin\Middleware\Admin\UserGroup;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web'])
