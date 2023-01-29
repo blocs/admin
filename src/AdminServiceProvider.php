@@ -12,19 +12,6 @@ class BlocsAdmin extends \App\Console\Commands\Blocs
 
         parent::handle();
 
-        /* ルーティング設定 */
-
-        $blocsRoutesLoc = $this->stubDir.'/../routes/web.php';
-        $laravelRoutesLoc = $this->rootDir.'/routes/web.php';
-        if (is_file($blocsRoutesLoc) && is_file($laravelRoutesLoc)) {
-            $laravelRoutes = file_get_contents($laravelRoutesLoc);
-            if (false === strpos($laravelRoutes, 'Auth::routes();')) {
-                // ルーティングを追加
-                $blocsRoutes = file_get_contents($blocsRoutesLoc);
-                file_put_contents($laravelRoutesLoc, "\n".$blocsRoutes, FILE_APPEND);
-            }
-        }
-
         /* 初期ユーザー登録 */
 
         \Artisan::call('migrate');

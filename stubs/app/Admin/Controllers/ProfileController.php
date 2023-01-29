@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Admin\Controllers;
 
 class ProfileController extends UserController
 {
