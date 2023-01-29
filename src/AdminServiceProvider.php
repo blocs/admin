@@ -8,6 +8,10 @@ class BlocsAdmin extends \App\Console\Commands\Blocs
 {
     public function handle()
     {
+        /* 共通処理 */
+
+        parent::handle();
+
         /* ルーティング設定 */
 
         $blocsRoutesLoc = $this->stubDir.'/../routes/web.php';
@@ -21,11 +25,10 @@ class BlocsAdmin extends \App\Console\Commands\Blocs
             }
         }
 
-        // 初期ユーザーを登録
+        /* 初期ユーザー登録 */
+
         \Artisan::call('migrate');
         \Artisan::call('db:seed --class AdminSeeder');
-
-        parent::handle();
     }
 }
 
