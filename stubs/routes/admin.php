@@ -1,23 +1,29 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
-Auth::routes();
-
-use App\Http\Middleware\Admin\UserGroup;
-
 use App\Admin\Controllers\HomeController;
+use App\Admin\Controllers\ProfileController;
 
-Route::middleware(['auth', UserGroup::class])
+Route::middleware(['web'])
+    ->group(function () {
+        Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [LoginController::class, 'login']);
+        Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+    }
+);
+
+use App\Admin\Controllers\UserController;
+use App\Http\Controllers\Auth\LoginController;
+
+Route::middleware(['web', 'auth', UserGroup::class])
     ->group(function () {
         Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::get('/clear', [HomeController::class, 'clear']);
     }
 );
 
-use App\Admin\Controllers\ProfileController;
+use App\Http\Middleware\Admin\UserGroup;
 
-Route::middleware(['auth', UserGroup::class])
+Route::middleware(['web', 'auth', UserGroup::class])
     ->prefix('profile')
     ->name('profile.')
     ->group(function () {
@@ -29,9 +35,9 @@ Route::middleware(['auth', UserGroup::class])
     }
 );
 
-use App\Admin\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', UserGroup::class])
+Route::middleware(['web', 'auth', UserGroup::class])
     ->prefix('user')
     ->name('user.')
     ->group(function () {

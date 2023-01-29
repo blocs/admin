@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-
 use App\Models\Admin\User;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 
 class AdminSeeder extends Seeder

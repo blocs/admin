@@ -33,6 +33,8 @@ class AdminServiceProvider extends ServiceProvider
 
         // 言語設定を書き換え
         defined('BLOCS_LOCALE') && config(['app.locale' => BLOCS_LOCALE]);
+
+        $this->loadRoutesFrom(base_path('routes/admin.php'));
     }
 
     public function registerBlocsCommand()
