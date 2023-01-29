@@ -2,6 +2,10 @@
 
 use App\Admin\Controllers\HomeController;
 use App\Admin\Controllers\ProfileController;
+use App\Admin\Controllers\UserController;
+use App\Http\Controllers\Auth\LoginController;
+use App\Http\Middleware\Admin\UserGroup;
+use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web'])
     ->group(function () {
@@ -11,17 +15,12 @@ Route::middleware(['web'])
     }
 );
 
-use App\Admin\Controllers\UserController;
-use App\Http\Controllers\Auth\LoginController;
-
 Route::middleware(['web', 'auth', UserGroup::class])
     ->group(function () {
         Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::get('/clear', [HomeController::class, 'clear']);
     }
 );
-
-use App\Http\Middleware\Admin\UserGroup;
 
 Route::middleware(['web', 'auth', UserGroup::class])
     ->prefix('profile')
@@ -34,8 +33,6 @@ Route::middleware(['web', 'auth', UserGroup::class])
         Route::get('/{filename}/{size}/download', [ProfileController::class, 'download'])->name('thumbnail');
     }
 );
-
-use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web', 'auth', UserGroup::class])
     ->prefix('user')
