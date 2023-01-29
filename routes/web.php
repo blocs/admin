@@ -26,7 +26,7 @@ Route::middleware(['auth', UserGroup::class])
 	}
 );
 
-Route::middleware(['guest', UserGroup::class])
+Route::middleware(['auth', UserGroup::class])
 	->prefix('user')
 	->name('user.')
 	->group(function () {

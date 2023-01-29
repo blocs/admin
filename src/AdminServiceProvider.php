@@ -21,6 +21,10 @@ class BlocsAdmin extends \App\Console\Commands\Blocs
             }
         }
 
+        // 初期ユーザーを登録
+        \Artisan::call('migrate');
+        \Artisan::call('db:seed --class AdminSeeder');
+
         parent::handle();
     }
 }
