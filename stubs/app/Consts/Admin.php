@@ -7,7 +7,7 @@ class Admin
     public static function define()
     {
         // 言語設定
-        define('BLOCS_LOCALE', 'en');
+        define('BLOCS_LOCALE', 'ja');
 
         // テンプレートのキャッシュを保存するディレクトリ
         define('BLOCS_CACHE_DIR', config('view.compiled'));
