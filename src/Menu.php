@@ -72,7 +72,7 @@ class Menu
             }
 
             // 権限があるかチェック
-            if (!self::checkGroup($config['name'])) {
+            if (!self::checkRole($config['name'])) {
                 continue;
             }
 
@@ -97,32 +97,32 @@ class Menu
         ]]);
     }
 
-    public static function checkGroup($currentName = null)
+    public static function checkRole($currentName = null)
     {
         isset($currentName) || $currentName = \Route::currentRouteName();
 
         // 必要な権限を取得
-        $configGroup = config('group');
-        $groupList = [];
-        foreach ($configGroup as $groupName => $routeNameList) {
+        $configRole = config('role');
+        $roleList = [];
+        foreach ($configRole as $roleName => $routeNameList) {
             foreach ($routeNameList as $routeName) {
                 if (false !== strpos($currentName, $routeName)) {
-                    $groupList[] = $groupName;
+                    $roleList[] = $roleName;
                     break;
                 }
             }
         }
 
-        if (empty($groupList)) {
+        if (empty($roleList)) {
             return true;
         }
 
         // 自分の権限を取得
         $_userData = \Auth::user();
-        $myGroupList = explode("\t", $_userData['group']);
+        $myRoleList = explode("\t", $_userData['role']);
 
-        foreach ($myGroupList as $myGroup) {
-            if (in_array($myGroup, $groupList)) {
+        foreach ($myRoleList as $myRole) {
+            if (in_array($myRole, $roleList)) {
                 return true;
             }
         }

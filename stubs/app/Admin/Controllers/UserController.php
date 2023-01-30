@@ -32,9 +32,9 @@ class UserController extends \Blocs\Controllers\Base
 
     protected function outputCreate()
     {
-        // グループをメニューにセット
-        $groupList = config('group');
-        empty($groupList) || $this->addOption('group', array_keys($groupList));
+        // 役割をメニューにセット
+        $roleList = config('role');
+        empty($roleList) || $this->addOption('role', array_keys($roleList));
 
         return parent::outputCreate();
     }
@@ -43,21 +43,21 @@ class UserController extends \Blocs\Controllers\Base
     {
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
-        $this->val['group'] = empty($this->request->group) ? '' : implode("\t", $this->request->group);
+        $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);
 
         return [
             'email' => $this->request->email,
             'name' => $this->val['name'],
             'password' => Hash::make($this->request->password),
-            'group' => $this->val['group'],
+            'role' => $this->val['role'],
         ];
     }
 
     protected function outputEdit()
     {
-        // グループをメニューにセット
-        $groupList = config('group');
-        empty($groupList) || $this->addOption('group', array_keys($groupList));
+        // 役割をメニューにセット
+        $roleList = config('role');
+        empty($roleList) || $this->addOption('role', array_keys($roleList));
 
         return parent::outputEdit();
     }
@@ -85,11 +85,11 @@ class UserController extends \Blocs\Controllers\Base
     {
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
-        $this->val['group'] = empty($this->request->group) ? '' : implode("\t", $this->request->group);
+        $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);
 
         $requestData = [
             'name' => $this->val['name'],
-            'group' => $this->val['group'],
+            'role' => $this->val['role'],
         ];
         empty($this->request->password_new) || $requestData['password'] = Hash::make($this->request->password_new);
 

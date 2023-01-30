@@ -13,7 +13,7 @@
     "error:fileupload_over_maxsize": "アップロードファイルが大きすぎます。",
     "error:unexpected_error_happened": "エラーが発生しました。\n再実行してください。",
     "info:develop_test_executed": "{1}ステップのテストを実行しました。",
-    "label:develop_message_optgroup_group": "グループ",
+    "label:develop_message_optgroup_group": "役割",
     "label:develop_message_optgroup_user": "ユーザー",
     "success:admin_profile_updated": "プロフィールを更新しました。",
     "success:data_deleted": "{1} 件のデータを削除しました。",

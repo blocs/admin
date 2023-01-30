@@ -30,19 +30,19 @@
 				@error('name') <div class='text-danger'>{{ $message }}</div> @enderror
 			</td>
 		</tr>
-		<tr data-exist=$menu_group>
+		<tr data-exist=$menu_role>
 			<th>
-				<label for='group'><!-- data-lang='label:develop_message_optgroup_group' --></label>
+				<label for='role'><!-- data-lang='label:develop_message_optgroup_group' --></label>
 			</th>
 			<td>
-				<div class='checkbox-inline' data-repeat=$menu_group>
+				<div class='checkbox-inline' data-repeat=$menu_role>
 					<label>
 					<!-- data-attribute="value" data-val=$value -->
-					<input type='checkbox' name='group[]' /> <!-- data-val=$label -->
+					<input type='checkbox' name='role[]' /> <!-- data-val=$label -->
 					</label>
 				</div>
 
-				@error('group') <div class='text-danger'>{{ $message }}</div> @enderror
+				@error('role') <div class='text-danger'>{{ $message }}</div> @enderror
 			</td>
 		</tr>
 		<tr>

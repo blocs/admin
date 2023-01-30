@@ -4,11 +4,11 @@ namespace App\Admin\Middleware;
 
 use Closure;
 
-class UserGroup
+class UserRole
 {
     public function handle($request, Closure $next)
     {
-        \Blocs\Menu::checkGroup() || abort(403);
+        \Blocs\Menu::checkRole() || abort(403);
 
         return $next($request);
     }

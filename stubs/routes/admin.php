@@ -4,7 +4,7 @@ use App\Admin\Controllers\HomeController;
 use App\Admin\Controllers\LoginController;
 use App\Admin\Controllers\ProfileController;
 use App\Admin\Controllers\UserController;
-use App\Admin\Middleware\UserGroup;
+use App\Admin\Middleware\UserRole;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web'])
@@ -15,14 +15,14 @@ Route::middleware(['web'])
     }
 );
 
-Route::middleware(['web', 'auth', UserGroup::class])
+Route::middleware(['web', 'auth', UserRole::class])
     ->group(function () {
         Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::get('/clear', [HomeController::class, 'clear']);
     }
 );
 
-Route::middleware(['web', 'auth', UserGroup::class])
+Route::middleware(['web', 'auth', UserRole::class])
     ->prefix('profile')
     ->name('profile.')
     ->group(function () {
@@ -34,7 +34,7 @@ Route::middleware(['web', 'auth', UserGroup::class])
     }
 );
 
-Route::middleware(['web', 'auth', UserGroup::class])
+Route::middleware(['web', 'auth', UserRole::class])
     ->prefix('user')
     ->name('user.')
     ->group(function () {

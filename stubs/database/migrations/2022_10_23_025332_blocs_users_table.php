@@ -14,7 +14,7 @@ class BlocsUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('group')->nullable();
+            $table->string('role')->nullable();
             $table->softDeletes();
             $table->timestamp('disabled_at', 0)->nullable();
             $table->string('file')->nullable();
@@ -30,7 +30,7 @@ class BlocsUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('group');
+            $table->dropColumn('role');
             $table->dropSoftDeletes();
             $table->dropColumn('disabled_at');
             $table->dropColumn('file');
