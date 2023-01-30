@@ -30,12 +30,12 @@
 				@error('name') <div class='text-danger'>{{ $message }}</div> @enderror
 			</td>
 		</tr>
-		<tr data-exist=$menu_role>
+		<tr data-exist=$option_role>
 			<th>
 				<label for='role'><!-- data-lang='label:develop_message_optgroup_group' --></label>
 			</th>
 			<td>
-				<div class='checkbox-inline' data-repeat=$menu_role>
+				<div class='checkbox-inline' data-repeat=$option_role>
 					<label>
 					<!-- data-attribute="value" data-val=$value -->
 					<input type='checkbox' name='role[]' /> <!-- data-val=$label -->
