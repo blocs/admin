@@ -36,6 +36,13 @@ class AdminServiceProvider extends ServiceProvider
 
         // ルーティング追加
         is_file(base_path('routes/admin.php')) && $this->loadRoutesFrom(base_path('routes/admin.php'));
+
+        // configをpublish
+        foreach (['menu.php', 'role.php'] as $configFile) {
+            $this->publishes([
+                __DIR__.'/../config/'.$configFile => config_path($configFile),
+            ]);
+        }
     }
 
     public function registerBlocsCommand()
