@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Admin\Commands;
+namespace Blocs\Commands;
 
 use Illuminate\Console\Command;
 
-class Blocs extends Command
+class Admin extends Command
 {
     protected $signature;
     protected $description;
