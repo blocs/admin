@@ -576,6 +576,10 @@ class Base extends Controller
 
     public function download($filename, $size = null)
     {
+        if ($redirect = $this->checkDownload()) {
+            return $redirect;
+        }
+
         $storage = \Storage::disk();
         $filename = 'upload/'.$filename;
         $mimeType = $storage->mimeType($filename);
@@ -593,6 +597,11 @@ class Base extends Controller
         }
 
         return $storage->download($filename);
+    }
+
+    protected function checkDownload()
+    {
+        // return \App::abort(404);
     }
 
     protected function getSize($size)
