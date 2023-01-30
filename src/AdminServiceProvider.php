@@ -43,9 +43,19 @@ class AdminServiceProvider extends ServiceProvider
         $publishList[__DIR__.'/../app'] = app_path();
 
         // configをpublish
-        foreach (['menu.php', 'role.php'] as $configFile) {
-            $publishList[__DIR__.'/../config/'.$configFile] = config_path($configFile);
-        }
+        $publishList[__DIR__.'/../config'] = config_path();
+
+        // databaseをpublish
+        $publishList[__DIR__.'/../database'] = database_path();
+
+        // publicをpublish
+        $publishList[__DIR__.'/../public'] = public_path();
+
+        // resourceをpublish
+        $publishList[__DIR__.'/../resources'] = resource_path();
+
+        // routesをpublish
+        $publishList[__DIR__.'/../routes'] = base_path('/routes');
 
         empty($publishList) || $this->publishes($publishList);
     }
