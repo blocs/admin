@@ -8,7 +8,7 @@ class UserGroup
 {
     public function handle($request, Closure $next)
     {
-        \Blocs\Navigation::checkGroup() || abort(403);
+        \Blocs\Menu::checkGroup() || abort(403);
 
         return $next($request);
     }

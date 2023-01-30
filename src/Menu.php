@@ -2,17 +2,17 @@
 
 namespace Blocs;
 
-class Navigation
+class Menu
 {
     public static function get($name, $breadcrumbList = [])
     {
         // 設定読み込み
-        $configList = config('navigation');
+        $configList = config('menu');
 
         // 指定されたhedline読み込み
         if (isset($configList['headline'])) {
             $headline = $configList['headline'];
-            config(['navigation.headline' => null]);
+            config(['menu.headline' => null]);
         } else {
             $headline = false;
         }
@@ -28,8 +28,8 @@ class Navigation
         $currentName = \Route::currentRouteName();
         empty($currentName) || list($currentName) = explode('.', $currentName, 2);
 
-        // ナビゲーション、パンクズリスト
-        $navigationList = [];
+        // メニュー、パンクズリスト
+        $menuList = [];
         foreach ($configList as $config) {
             if (!isset($config['url'])) {
                 if (empty($config['argv'])) {
@@ -66,7 +66,7 @@ class Navigation
                 }
             }
 
-            // パンクズリストはナビゲーションには表示しない
+            // パンクズリストはメニューには表示しない
             if (!empty($config['breadcrumb'])) {
                 continue;
             }
@@ -76,15 +76,15 @@ class Navigation
                 continue;
             }
 
-            $navigationList[] = $config;
+            $menuList[] = $config;
         }
 
-        return [$navigationList, $headline, $breadcrumbList];
+        return [$menuList, $headline, $breadcrumbList];
     }
 
     public static function headline($icon, $lang)
     {
-        config(['navigation.headline' => [
+        config(['menu.headline' => [
             'icon' => $icon,
             'label' => \Blocs\Lang::get($lang),
         ]]);
@@ -92,7 +92,7 @@ class Navigation
 
     public static function breadcrumb($lang)
     {
-        config(['navigation.breadcrumb' => [
+        config(['menu.breadcrumb' => [
             'label' => \Blocs\Lang::get($lang),
         ]]);
     }

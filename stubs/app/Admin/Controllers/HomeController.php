@@ -21,8 +21,8 @@ class HomeController extends Controller
     {
         $this->val = array_merge($this->val, $this->chart());
 
-        list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get('admin');
-        $this->val['navigation'] = $navigation;
+        list($menu, $headline, $breadcrumb) = \Blocs\Menu::get('admin');
+        $this->val['menu'] = $menu;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
 

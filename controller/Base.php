@@ -84,7 +84,7 @@ class Base extends Controller
 
     protected function outputIndex()
     {
-        $this->setupNavigation();
+        $this->setupMenu();
 
         return view($this->viewPrefix.'.index', $this->val);
     }
@@ -109,7 +109,7 @@ class Base extends Controller
 
     protected function outputCreate()
     {
-        $this->setupNavigation();
+        $this->setupMenu();
 
         return view($this->viewPrefix.'.create', $this->val);
     }
@@ -144,7 +144,7 @@ class Base extends Controller
 
     protected function outputConfirmStore()
     {
-        $this->setupNavigation();
+        $this->setupMenu();
 
         return view($this->viewPrefix.'.confirmStore', $this->val);
     }
@@ -217,7 +217,7 @@ class Base extends Controller
 
     protected function outputEdit()
     {
-        $this->setupNavigation();
+        $this->setupMenu();
 
         return view($this->viewPrefix.'.edit', $this->val);
     }
@@ -254,7 +254,7 @@ class Base extends Controller
 
     protected function outputConfirmUpdate()
     {
-        $this->setupNavigation();
+        $this->setupMenu();
 
         return view($this->viewPrefix.'.confirmUpdate', $this->val);
     }
@@ -344,7 +344,7 @@ class Base extends Controller
 
     protected function outputConfirmDestroy()
     {
-        $this->setupNavigation();
+        $this->setupMenu();
 
         return view($this->viewPrefix.'.confirmDestroy', $this->val);
     }
@@ -422,7 +422,7 @@ class Base extends Controller
 
     protected function outputConfirmSelect()
     {
-        $this->setupNavigation();
+        $this->setupMenu();
 
         return view($this->viewPrefix.'.confirmSelect', $this->val);
     }
@@ -666,12 +666,12 @@ class Base extends Controller
         return $table;
     }
 
-    protected function setupNavigation($navigationName = null)
+    protected function setupMenu($menuName = null)
     {
-        isset($navigationName) || $navigationName = VIEW_PREFIX;
+        isset($menuName) || $menuName = VIEW_PREFIX;
 
-        list($navigation, $headline, $breadcrumb) = \Blocs\Navigation::get($navigationName);
-        $this->val['navigation'] = $navigation;
+        list($menu, $headline, $breadcrumb) = \Blocs\Menu::get($menuName);
+        $this->val['menu'] = $menu;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
     }
