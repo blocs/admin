@@ -28,7 +28,6 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "app\/",
             "Blocs\\": "src\/",
             "Blocs\\Controllers\\": "controller\/"
         }
