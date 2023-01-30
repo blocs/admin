@@ -57,7 +57,7 @@ class AdminServiceProvider extends ServiceProvider
         // routesをpublish
         $publishList[__DIR__.'/../routes'] = base_path('/routes');
 
-        empty($publishList) || $this->publishes($publishList);
+        $this->publishes($publishList);
     }
 
     public function registerBlocsCommand()
