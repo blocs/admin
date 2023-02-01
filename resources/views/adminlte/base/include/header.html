@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>AdminLTE 3<!-- data-val=$headline['label'] data-prefix=' | ' --></title>
+
+<!-- data-include="header/css.html" -->
+<!-- data-include="header/script.html" -->
+<!-- data-include="autoinclude" -->
+
+</head>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+
+<!-- data-include="header/navibar.html" -->
+<!-- data-include="header/sidebar.html" -->
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+<!-- data-if="Session::has('message')" -->
+        <!-- $noticeCategory=Session::get('category') -->
+        <!-- data-assign=$noticeCategory data-val='danger' data-if="isset($noticeCategory) && $noticeCategory === 'error'" -->
+        <!-- data-attribute="class" data-val="alert alert-{$noticeCategory}" -->
+        <div data-val=Session::get('message')></div>
+<!-- data-endexist -->
+
+        <!-- Content Header (Page header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1 class="m-0">
+                            <!-- data-attribute='class' data-val=$headline['icon'] data-prefix='fa fa-fw ' -->
+                            <i></i> <!-- data-val=$headline['label'] -->
+                        </h1>
+                    </div><!-- /.col -->
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+<!-- data-include="header/breadcrumb.html" -->
+                        </ol>
+                    </div><!-- /.col -->
+                </div><!-- /.row -->
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content-header -->

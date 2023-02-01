@@ -1,0 +1,24 @@
+                    <!-- data-attribute='class' data-val='nav-item menu-open' data-exist=$active -->
+                    <li class="nav-item" data-repeat=$menu>
+
+                        <!-- data-attribute='class' data-val='nav-link active' data-exist=$active -->
+                        <!-- data-attribute='href' data-val=$url data-exist=$url -->
+                        <a class="nav-link">
+                            <!-- data-attribute='class' data-val=$icon data-prefix='fa ' -->
+                            <i></i>
+                            <p data-val=$label></p>
+                        </a>
+
+                        <ul class="nav nav-treeview" data-exist=$sub>
+                            <li class="nav-item" data-repeat=$sub>
+                                <!-- data-attribute='class' data-val='nav-link active' data-exist=$active -->
+                                <!-- data-attribute='href' data-val=$url data-exist=$url -->
+                                <a>
+                                    <!-- data-attribute='class' data-val=$icon data-prefix='fa ' -->
+                                    <i></i>
+                                    <p data-val=$label></p>
+                                </a>
+                            </li>
+                        </ul>
+
+                    </li>
