@@ -64,6 +64,8 @@ class Menu
                     $breadcrumbList = [$config];
                     unset($breadcrumbList[0]['url']);
                 }
+            } else {
+                $config['active'] = false;
             }
 
             // パンクズリストはメニューには表示しない
