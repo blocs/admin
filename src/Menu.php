@@ -30,6 +30,7 @@ class Menu
 
         // メニュー、パンクズリスト
         $menuList = [];
+        $isActive = false;
         foreach ($configList as $config) {
             if (!isset($config['url'])) {
                 if (empty($config['argv'])) {
@@ -41,11 +42,12 @@ class Menu
             isset($config['label']) || $config['label'] = \Blocs\Lang::get($config['lang']);
 
             if (isset($config['sub'])) {
-                list($config['sub'], $subHeadline, $breadcrumbList) = self::get($config['sub'], $breadcrumbList);
+                list($config['sub'], $subHeadline, $breadcrumbList, $isSubActive) = self::get($config['sub'], $breadcrumbList);
 
-                if (!empty($breadcrumbList)) {
+                if ($isSubActive) {
                     // サブメニューでマッチ
                     $config['active'] = true;
+                    $isActive = true;
                     false === $headline && $headline = $subHeadline;
 
                     // パンクズリストに階層を追加
@@ -56,6 +58,7 @@ class Menu
             list($configName) = explode('.', $config['name'], 2);
             if ($configName === $currentName) {
                 $config['active'] = true;
+                $isActive = true;
                 false === $headline && $headline = $config;
 
                 if ($breadcrumb) {
@@ -64,7 +67,7 @@ class Menu
                     $breadcrumbList = [$config];
                     unset($breadcrumbList[0]['url']);
                 }
-            } else {
+            } elseif (empty($config['active'])) {
                 $config['active'] = false;
             }
 
@@ -81,7 +84,7 @@ class Menu
             $menuList[] = $config;
         }
 
-        return [$menuList, $headline, $breadcrumbList];
+        return [$menuList, $headline, $breadcrumbList, $isActive];
     }
 
     public static function headline($icon, $lang)
