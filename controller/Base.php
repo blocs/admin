@@ -576,7 +576,7 @@ class Base extends Controller
 
     public function download($filename, $size = null)
     {
-        if ($redirect = $this->checkDownload()) {
+        if ($redirect = $this->checkDownload($filename)) {
             return $redirect;
         }
 
@@ -599,7 +599,7 @@ class Base extends Controller
         return $storage->download($filename);
     }
 
-    protected function checkDownload()
+    protected function checkDownload($filename)
     {
         // return \App::abort(404);
     }
