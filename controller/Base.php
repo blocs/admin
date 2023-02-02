@@ -16,6 +16,7 @@ class Base extends Controller
     protected $loopItem;
     protected $paginateNum;
     protected $noticeItem;
+    protected $menuName;
 
     private $selectedIdList = [];
     private $deletedNum = 0;
@@ -25,10 +26,8 @@ class Base extends Controller
 
     /* index */
 
-    public function index(Request $request)
+    public function index()
     {
-        $this->request = $request;
-
         $this->prepareIndex();
 
         if (session()->has($this->viewPrefix.'.confirm')) {
@@ -37,6 +36,13 @@ class Base extends Controller
         }
 
         return $this->outputIndex();
+    }
+
+    public function search(Request $request)
+    {
+        $this->request = $request;
+
+        $this->index();
     }
 
     protected function prepareIndex()
@@ -675,11 +681,11 @@ class Base extends Controller
         return $table;
     }
 
-    protected function setupMenu($menuName = null)
+    protected function setupMenu()
     {
-        isset($menuName) || $menuName = VIEW_PREFIX;
+        isset($this->menuName) || $this->menuName = VIEW_PREFIX;
 
-        list($menu, $headline, $breadcrumb) = \Blocs\Menu::get($menuName);
+        list($menu, $headline, $breadcrumb) = \Blocs\Menu::get($this->menuName);
         $this->val['menu'] = $menu;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;

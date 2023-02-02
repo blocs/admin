@@ -2,12 +2,10 @@
 
 namespace App\Admin\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Models\Admin\User;
 
-class HomeController extends Controller
+class HomeController extends \Blocs\Controllers\Base
 {
-    private $val = [];
     private $adminTopUserMonth = 5;
 
     public function __construct()
@@ -15,16 +13,14 @@ class HomeController extends Controller
         define('ROUTE_PREFIX', 'home');
 
         $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
+        $this->menuName = 'admin';
     }
 
     public function index()
     {
         $this->val = array_merge($this->val, $this->chart());
 
-        list($menu, $headline, $breadcrumb) = \Blocs\Menu::get('admin');
-        $this->val['menu'] = $menu;
-        $this->val['headline'] = $headline;
-        $this->val['breadcrumb'] = $breadcrumb;
+        $this->setupMenu();
 
         return view($this->viewPrefix.'.index', $this->val);
     }

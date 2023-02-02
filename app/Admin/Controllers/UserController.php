@@ -15,6 +15,7 @@ class UserController extends \Blocs\Controllers\Base
         $this->loopItem = 'users';
         $this->paginateNum = 20;
         $this->noticeItem = 'email';
+        $this->menuName = 'admin';
     }
 
     protected function prepareIndexSearch(&$mainTable)

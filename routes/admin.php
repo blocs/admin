@@ -39,7 +39,7 @@ Route::middleware(['web', 'auth', UserRole::class])
     ->name('user.')
     ->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
-        Route::post('/search', [UserController::class, 'index'])->name('search');
+        Route::post('/search', [UserController::class, 'search'])->name('search');
         Route::get('/create', [UserController::class, 'create'])->name('create');
         Route::post('/', [UserController::class, 'store'])->name('store');
         Route::get('/{id}/edit', [UserController::class, 'edit'])->where('id', '[0-9]+')->name('edit');
