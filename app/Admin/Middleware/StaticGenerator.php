@@ -15,7 +15,7 @@ class StaticGenerator
             return $response;
         }
 
-        $staticName = self::getStaticName($_SERVER['REQUEST_URI']);
+        $staticName = self::getStaticName($_SERVER['REQUEST_URI'], false);
         $staticLoc = $staticPath.$staticName;
 
         if (200 != $response->status()) {
@@ -36,11 +36,35 @@ class StaticGenerator
     }
 
     // 静的ファイル名を生成
-    private static function getStaticName($staticLoc)
+    private static function getStaticName($staticLoc, $linkFlag = true)
     {
         $uriForPath = request()->getUriForPath('');
+        if ($linkFlag && strncmp($staticLoc, $uriForPath, strlen($uriForPath))) {
+            return $staticLoc;
+        }
+
         $staticName = str_replace($uriForPath, '', $staticLoc);
-        $staticName = str_replace('?', '_', $staticName);
+        $action = basename($staticName);
+
+        if ('download' === $action) {
+            $staticName = dirname($staticName);
+            $action = basename($staticName);
+            if (false !== strpos($action, '.')) {
+                return $staticName;
+            }
+
+            // サイズ指定あり
+            $staticName = dirname($staticName);
+            $fileName = basename($staticName);
+            $staticName = dirname($staticName);
+
+            return "{$staticName}/{$action}/{$fileName}";
+        }
+
+        if (false === strpos($action, '.')) {
+            $staticName = str_replace('?', '_', $staticName);
+            $staticName .= '.html';
+        }
 
         return $staticName;
     }
