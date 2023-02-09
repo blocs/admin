@@ -40,39 +40,59 @@ class Build extends Command
 
     public function handle()
     {
+        $path = $this->argument('path');
+        if (empty($path)) {
+            $path = '';
+        } else {
+            if ('/' !== substr($path, 0, 1)) {
+                $path = '/'.$path;
+            }
+            if ('/' === substr($path, -1)) {
+                $path = substr($path, 0, -1);
+            }
+        }
+
         // publicをstaticにコピー
-        $this->copyDir($this->publicPath, $this->staticPath);
+        $this->copyDir($this->publicPath.$path, $this->staticPath.$path);
 
         // staticの静的コンテンツを更新
-        $this->updateStaticDir($this->staticPath);
+        $this->updateStaticDir($this->staticPath.$path);
 
         if (!empty(env('AWS_BUCKET'))) {
             // 更新のあったファイルを差分反映
             $s3Disk = \Storage::disk('s3');
 
+            $uploadList = [];
             $this->uploadList = array_unique($this->uploadList);
             foreach ($this->uploadList as $uploadFile) {
+                if (strncmp($uploadFile, $path, strlen($path))) {
+                    // 対象外の更新ファイル
+                    $uploadList[] = $uploadFile;
+                    continue;
+                }
+
                 $s3Disk->putFileAs(dirname($uploadFile), $this->staticPath.$uploadFile, basename($uploadFile));
 
-                echo <<< END_of_TEXT
-S3 Upload "{$uploadFile}"
-
-END_of_TEXT;
+                echo "S3 Upload \"{$uploadFile}\""."\n";
             }
 
+            $deleteList = [];
             $this->deleteList = array_unique($this->deleteList);
             foreach ($this->deleteList as $deleteFile) {
+                if (strncmp($deleteFile, $path, strlen($path))) {
+                    // 対象外の削除ファイル
+                    $deleteList[] = $deleteFile;
+                    continue;
+                }
+
                 $s3Disk->delete($deleteFile);
 
-                echo <<< END_of_TEXT
-S3 Delete "{$deleteFile}"
-
-END_of_TEXT;
+                echo "S3 Delete \"{$deleteFile}\""."\n";
             }
         }
 
         // 設定ファイルを掃除
-        $this->staticGenerator->refreshBuildConfig();
+        $this->staticGenerator->refreshBuildConfig($uploadList, $deleteList);
     }
 
     private function updateStaticDir($staticPath)
@@ -95,7 +115,7 @@ END_of_TEXT;
                 continue;
             }
 
-            if ('_build.json' === basename($publicFile)) {
+            if ('_build.json' === basename($file)) {
                 // 設定ファイル
                 continue;
             }
@@ -111,11 +131,7 @@ END_of_TEXT;
                     // コンテンツを削除した
                     $this->deleteList[] = $staticName;
 
-                    echo <<< END_of_TEXT
-Delete "{$staticName}"
-
-END_of_TEXT;
-
+                    echo "Delete \"{$staticName}\""."\n";
                     continue;
                 }
 
@@ -124,34 +140,24 @@ END_of_TEXT;
                     // コンテンツに更新があった
                     $this->uploadList[] = $staticName;
 
-                    echo <<< END_of_TEXT
-Update "{$staticName}"
-
-END_of_TEXT;
+                    echo "Update \"{$staticName}\""."\n";
                 }
                 continue;
             }
 
-            echo <<< END_of_TEXT
-\e[7;31mNot found "{$staticName}"\e[m
-
-END_of_TEXT;
+            echo "\e[7;31m"."Not found \"{$staticName}\""."\e[m"."\n";
         }
     }
 
     private function copyDir($originalDir, $targetDir)
     {
-        if (!(is_dir($originalDir) && $fileList = scandir($originalDir))) {
-            echo <<< END_of_TEXT
-\e[7;31mNot found "{$originalDir}"\e[m
-
-END_of_TEXT;
-
-            exit;
+        if (!is_dir($originalDir)) {
+            return;
         }
 
         is_dir($targetDir) || mkdir($targetDir, 0777, true) && chmod($targetDir, 0777);
 
+        $fileList = scandir($originalDir);
         foreach ($fileList as $file) {
             if ('.' == substr($file, 0, 1) && '.gitkeep' != $file) {
                 continue;

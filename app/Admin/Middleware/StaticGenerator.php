@@ -29,8 +29,10 @@ class StaticGenerator
 
         if (200 != $response->status()) {
             // 対象ファイルを削除
-            file_exists($staticLoc) && unlink($staticLoc);
-            $this->deleteBuildConfig($staticName);
+            if (file_exists($staticLoc)) {
+                unlink($staticLoc);
+                $this->deleteBuildConfig($staticName);
+            }
 
             return $response;
         }
@@ -38,12 +40,13 @@ class StaticGenerator
         // 保存するディレクトリを準備
         $staticDir = dirname($staticLoc);
         is_dir($staticDir) || mkdir($staticDir, 0777, true) && chmod($staticDir, 0777);
+        $isUpload = !file_exists($staticLoc);
 
         $content = self::convertStaticContent($response->content());
         file_put_contents($staticLoc, $content);
 
         // オリジナルのURLを保存
-        $this->updateBuildConfig($staticName, url($_SERVER['REQUEST_URI']), !file_exists($staticLoc));
+        $this->updateBuildConfig($staticName, url($_SERVER['REQUEST_URI']), $isUpload);
 
         return $response;
     }
@@ -86,7 +89,7 @@ class StaticGenerator
         file_put_contents($fileLoc, json_encode($buildConfig, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($fileLoc, 0666);
     }
 
-    public function refreshBuildConfig()
+    public function refreshBuildConfig($uploadList = [], $deleteList = [])
     {
         $fileLoc = $this->buildConfigPath;
 
@@ -94,7 +97,7 @@ class StaticGenerator
             return;
         }
 
-        $buildConfig = json_decode(file_get_contents($fileLoc), true);
+        $buildConfig = is_file($fileLoc) ? json_decode(file_get_contents($fileLoc), true) : [];
         foreach ($buildConfig as $staticName => $requestUri) {
             if (is_file($this->staticPath.'/'.$staticName)) {
                 continue;
@@ -103,6 +106,9 @@ class StaticGenerator
             // 静的コンテンツがない
             unset($buildConfig[$staticName]);
         }
+
+        empty($uploadList) || $buildConfig['_upload'] = $uploadList;
+        empty($deleteList) || $buildConfig['_delete'] = $deleteList;
 
         if (empty($buildConfig)) {
             unlink($fileLoc);
