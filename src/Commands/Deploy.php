@@ -4,7 +4,7 @@ namespace Blocs\Commands;
 
 use Illuminate\Console\Command;
 
-class Admin extends Command
+class Deploy extends Command
 {
     protected $signature;
     protected $description;
@@ -12,13 +12,13 @@ class Admin extends Command
     protected $rootDir;
     protected $baseDir;
 
-    public function __construct($signature, $description, $fileLoc)
+    public function __construct($signature, $description)
     {
         $this->signature = $signature;
         $this->description = $description;
 
-        $this->rootDir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($fileLoc).'/../../../../'));
-        $this->baseDir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($fileLoc).'/../'));
+        $this->rootDir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../../../../'));
+        $this->baseDir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname(__FILE__).'/../../'));
 
         parent::__construct();
     }

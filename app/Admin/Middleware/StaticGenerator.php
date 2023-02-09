@@ -6,11 +6,20 @@ use Closure;
 
 class StaticGenerator
 {
+    protected $staticPath;
+    protected $buildConfigPath;
+
+    public function __construct()
+    {
+        $this->staticPath = base_path().'/static';
+        $this->buildConfigPath = $this->staticPath.'/_build.json';
+    }
+
     public function handle($request, Closure $next)
     {
         $response = $next($request);
 
-        $staticPath = realpath(dirname(public_path()).'/static');
+        $staticPath = $this->staticPath;
         if (!$staticPath) {
             return $response;
         }
@@ -21,6 +30,7 @@ class StaticGenerator
         if (200 != $response->status()) {
             // 対象ファイルを削除
             file_exists($staticLoc) && unlink($staticLoc);
+            $this->deleteBuildConfig($staticName);
 
             return $response;
         }
@@ -32,7 +42,75 @@ class StaticGenerator
         $content = self::convertStaticContent($response->content());
         file_put_contents($staticLoc, $content);
 
+        // オリジナルのURLを保存
+        $this->updateBuildConfig($staticName, url($_SERVER['REQUEST_URI']), !file_exists($staticLoc));
+
         return $response;
+    }
+
+    public function readBuildConfig()
+    {
+        $fileLoc = $this->buildConfigPath;
+
+        return is_file($fileLoc) ? json_decode(file_get_contents($fileLoc), true) : [];
+    }
+
+    public function deleteBuildConfig($staticName)
+    {
+        $fileLoc = $this->buildConfigPath;
+
+        $buildConfig = is_file($fileLoc) ? json_decode(file_get_contents($fileLoc), true) : [];
+
+        // ファイルを削除する
+        empty($buildConfig['_delete']) && $buildConfig['_delete'] = [];
+        $buildConfig['_delete'][] = $staticName;
+        $buildConfig['_delete'] = array_unique($buildConfig['_delete']);
+
+        file_put_contents($fileLoc, json_encode($buildConfig, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($fileLoc, 0666);
+    }
+
+    public function updateBuildConfig($staticName, $url, $isUpload = false)
+    {
+        $fileLoc = $this->buildConfigPath;
+
+        $buildConfig = is_file($fileLoc) ? json_decode(file_get_contents($fileLoc), true) : [];
+        $buildConfig[$staticName] = $url;
+
+        if ($isUpload) {
+            // 新規追加ファイルはアップロードする
+            empty($buildConfig['_upload']) && $buildConfig['_upload'] = [];
+            $buildConfig['_upload'][] = $staticName;
+            $buildConfig['_upload'] = array_unique($buildConfig['_upload']);
+        }
+
+        file_put_contents($fileLoc, json_encode($buildConfig, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($fileLoc, 0666);
+    }
+
+    public function refreshBuildConfig()
+    {
+        $fileLoc = $this->buildConfigPath;
+
+        if (!is_file($fileLoc)) {
+            return;
+        }
+
+        $buildConfig = json_decode(file_get_contents($fileLoc), true);
+        foreach ($buildConfig as $staticName => $requestUri) {
+            if (is_file($this->staticPath.'/'.$staticName)) {
+                continue;
+            }
+
+            // 静的コンテンツがない
+            unset($buildConfig[$staticName]);
+        }
+
+        if (empty($buildConfig)) {
+            unlink($fileLoc);
+
+            return;
+        }
+
+        file_put_contents($fileLoc, json_encode($buildConfig, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($fileLoc, 0666);
     }
 
     // 静的ファイル名を生成
@@ -72,26 +150,32 @@ class StaticGenerator
     // HTMLのリンクを静的ファイル名に置換
     private static function convertStaticContent($content)
     {
-        $htmlArray = \Blocs\Compiler\Parser::parse($content);
+        $htmlList = \Blocs\Compiler\Parser::parse($content);
 
         $convertedContent = '';
-        while ($htmlArray) {
-            $htmlBuff = array_shift($htmlArray);
+        while ($htmlList) {
+            $htmlBuff = array_shift($htmlList);
 
             if (!is_array($htmlBuff)) {
                 $convertedContent .= $htmlBuff;
                 continue;
             }
 
-            $attrArray = $htmlBuff['attribute'];
+            $tag = $htmlBuff['tag'];
+            $attrList = $htmlBuff['attribute'];
+            if ('input' === $tag && isset($attrList['type']) && 'hidden' === $attrList['type']) {
+                // tokenなどは静的コンテンツに入れない
+                continue;
+            }
+
             foreach (['href', 'src'] as $arrtibute) {
-                if (!isset($attrArray[$arrtibute])) {
+                if (!isset($attrList[$arrtibute])) {
                     continue;
                 }
 
                 // 相対パスに変換
-                $staticName = self::getStaticName($attrArray[$arrtibute]);
-                $htmlBuff['raw'] = str_replace($attrArray[$arrtibute], $staticName, $htmlBuff['raw']);
+                $staticName = self::getStaticName($attrList[$arrtibute]);
+                $htmlBuff['raw'] = str_replace($attrList[$arrtibute], $staticName, $htmlBuff['raw']);
             }
 
             $convertedContent .= $htmlBuff['raw'];
