@@ -40,17 +40,7 @@ class Build extends Command
 
     public function handle()
     {
-        $path = $this->argument('path');
-        if (empty($path)) {
-            $path = '';
-        } else {
-            if ('/' !== substr($path, 0, 1)) {
-                $path = '/'.$path;
-            }
-            if ('/' === substr($path, -1)) {
-                $path = substr($path, 0, -1);
-            }
-        }
+        $path = self::getPath($this->argument('path'));
 
         // publicをstaticにコピー
         $this->copyDir($this->publicPath.$path, $this->staticPath.$path);
@@ -58,41 +48,14 @@ class Build extends Command
         // staticの静的コンテンツを更新
         $this->updateStaticDir($this->staticPath.$path);
 
-        if (!empty(env('AWS_BUCKET'))) {
-            // 更新のあったファイルを差分反映
-            $s3Disk = \Storage::disk('s3');
+        // 更新対象を取得
+        list($uploadList, $deleteList, $noUploadList, $noDeleteList) = $this->getTargetFiles($path);
 
-            $uploadList = [];
-            $this->uploadList = array_unique($this->uploadList);
-            foreach ($this->uploadList as $uploadFile) {
-                if (strncmp($uploadFile, $path, strlen($path))) {
-                    // 対象外の更新ファイル
-                    $uploadList[] = $uploadFile;
-                    continue;
-                }
-
-                $s3Disk->putFileAs(dirname($uploadFile), $this->staticPath.$uploadFile, basename($uploadFile));
-
-                echo "S3 Upload \"{$uploadFile}\""."\n";
-            }
-
-            $deleteList = [];
-            $this->deleteList = array_unique($this->deleteList);
-            foreach ($this->deleteList as $deleteFile) {
-                if (strncmp($deleteFile, $path, strlen($path))) {
-                    // 対象外の削除ファイル
-                    $deleteList[] = $deleteFile;
-                    continue;
-                }
-
-                $s3Disk->delete($deleteFile);
-
-                echo "S3 Delete \"{$deleteFile}\""."\n";
-            }
-        }
+        // 更新のあったファイルを差分反映
+        empty(env('AWS_BUCKET')) || $this->updateS3Disk($uploadList, $deleteList);
 
         // 設定ファイルを掃除
-        $this->staticGenerator->refreshBuildConfig($uploadList, $deleteList);
+        $this->staticGenerator->refreshBuildConfig($noUploadList, $noDeleteList);
     }
 
     private function updateStaticDir($staticPath)
@@ -189,5 +152,72 @@ class Build extends Command
             $staticName = str_replace($this->staticPath, '', $targetDir.'/'.$file);
             $this->uploadList[] = $staticName;
         }
+    }
+
+    // pathの補正
+    private static function getPath($path)
+    {
+        if (empty($path)) {
+            return '';
+        }
+
+        if ('/' !== substr($path, 0, 1)) {
+            $path = '/'.$path;
+        }
+        if ('/' === substr($path, -1)) {
+            $path = substr($path, 0, -1);
+        }
+
+        return $path;
+    }
+
+    private function getTargetFiles($path)
+    {
+        $uploadList = [];
+        $noUploadList = [];
+        $this->uploadList = array_unique($this->uploadList);
+        foreach ($this->uploadList as $uploadFile) {
+            if (strncmp($uploadFile, $path, strlen($path))) {
+                // 対象外の更新ファイル
+                $noUploadList[] = $uploadFile;
+                continue;
+            }
+
+            $uploadList[] = $uploadFile;
+        }
+
+        $deleteList = [];
+        $noDeleteList = [];
+        $this->deleteList = array_unique($this->deleteList);
+        foreach ($this->deleteList as $deleteFile) {
+            if (strncmp($deleteFile, $path, strlen($path))) {
+                // 対象外の削除ファイル
+                $noDeleteList[] = $deleteFile;
+                continue;
+            }
+
+            $deleteList[] = $deleteFile;
+        }
+
+        return [$uploadList, $deleteList, $noUploadList, $noDeleteList];
+    }
+
+    private function updateS3Disk($uploadList, $deleteList)
+    {
+        $s3Disk = \Storage::disk('s3');
+
+        foreach ($uploadList as $uploadFile) {
+            $s3Disk->putFileAs(dirname($uploadFile), $this->staticPath.$uploadFile, basename($uploadFile));
+
+            echo "S3 Upload \"{$uploadFile}\""."\n";
+        }
+
+        foreach ($deleteList as $deleteFile) {
+            $s3Disk->delete($deleteFile);
+
+            echo "S3 Delete \"{$deleteFile}\""."\n";
+        }
+
+        return;
     }
 }
