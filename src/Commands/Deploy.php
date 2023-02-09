@@ -25,12 +25,9 @@ class Deploy extends Command
 
     public function handle()
     {
-        /* 言語ファイルをマージ */
-
+        // 言語ファイルをマージ
         $this->appendLang($this->baseDir.'/lang');
     }
-
-    /* Private function */
 
     private function appendLang($blocsLangDir)
     {

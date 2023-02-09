@@ -8,12 +8,9 @@ class BlocsAdmin extends \Blocs\Commands\Deploy
 {
     public function handle()
     {
-        /* 共通処理 */
-
         parent::handle();
 
-        /* 初期ユーザー登録 */
-
+        // 初期ユーザー登録
         \Artisan::call('migrate');
         \Artisan::call('db:seed --class AdminSeeder');
     }

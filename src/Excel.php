@@ -188,8 +188,6 @@ class Excel
         file_put_contents($filename, $this->generate());
     }
 
-    /* Private function */
-
     private function getName($sheetColumn, $sheetRow)
     {
         if (is_integer($sheetColumn)) {
