@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Admin\Middleware;
+namespace Blocs\Middleware;
 
 use Closure;
 

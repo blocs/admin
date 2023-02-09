@@ -2,7 +2,7 @@
 
 namespace Blocs\Commands;
 
-use App\Admin\Middleware\StaticGenerator;
+use Blocs\Middleware\StaticGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
 

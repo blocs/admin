@@ -4,7 +4,7 @@ use App\Admin\Controllers\HomeController;
 use App\Admin\Controllers\LoginController;
 use App\Admin\Controllers\ProfileController;
 use App\Admin\Controllers\UserController;
-use App\Admin\Middleware\UserRole;
+use Blocs\Middleware\UserRole;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web'])
