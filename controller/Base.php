@@ -593,12 +593,12 @@ class Base extends Controller
         if (isset($size)) {
             $thumbnail = $this->createThumbnail($filename, $size);
             if ($thumbnail) {
-                return response(\File::get($thumbnail))->header('Content-type', $mimeType);
+                return response(\File::get($thumbnail))->header('Content-Type', $mimeType);
             }
         } else {
             $thumbnail = $this->createThumbnail($filename, 'thumbnail');
             if ($thumbnail) {
-                return response($storage->get($filename))->header('Content-type', $mimeType);
+                return response($storage->get($filename))->header('Content-Type', $mimeType);
             }
         }
 
