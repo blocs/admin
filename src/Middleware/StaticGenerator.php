@@ -8,6 +8,9 @@ class StaticGenerator
 {
     protected $staticPath;
     protected $buildConfigPath;
+    protected $buildConfig;
+
+    private $staticExtension;
 
     public function __construct()
     {
@@ -15,17 +18,13 @@ class StaticGenerator
         $this->buildConfigPath = $this->staticPath.'/_build.json';
     }
 
-    public function handle($request, Closure $next)
+    public function handle($request, Closure $next, $staticExtension = null)
     {
         $response = $next($request);
 
-        $staticPath = $this->staticPath;
-        if (!$staticPath) {
-            return $response;
-        }
-
-        $staticName = self::getStaticName($_SERVER['REQUEST_URI'], false);
-        $staticLoc = $staticPath.$staticName;
+        $this->staticExtension = $staticExtension;
+        $staticName = $this->getStaticName($_SERVER['REQUEST_URI']);
+        $staticLoc = $this->staticPath.$staticName;
 
         if (200 != $response->status()) {
             // 対象ファイルを削除
@@ -41,63 +40,77 @@ class StaticGenerator
         $staticDir = dirname($staticLoc);
         is_dir($staticDir) || mkdir($staticDir, 0777, true) && chmod($staticDir, 0777);
 
-        // 静的コンテンツを追加したか
-        $isUpload = !file_exists($staticLoc);
-
-        $content = self::convertStaticContent($response->content());
-        file_put_contents($staticLoc, $content);
-
         // オリジナルのURLを保存
-        $this->updateBuildConfig($staticName, url($_SERVER['REQUEST_URI']), $isUpload);
+        $this->updateBuildConfig($staticName, url($_SERVER['REQUEST_URI']), !file_exists($staticLoc));
+
+        $content = $this->convertStaticContent($response->content());
+        file_put_contents($staticLoc, $content);
 
         return $response;
     }
 
     // 静的ファイル名を生成
-    private static function getStaticName($staticLoc, $linkFlag = true)
+    private function getStaticName($staticName)
     {
-        $uriForPath = request()->getUriForPath('');
-        if ($linkFlag && strncmp($staticLoc, $uriForPath, strlen($uriForPath))) {
-            return $staticLoc;
-        }
-
-        $staticName = str_replace($uriForPath, '', $staticLoc);
         $action = basename($staticName);
+        if (false !== strpos($action, '.')) {
+            // 拡張子あり
+            return $staticName;
+        }
 
         if ('download' === $action) {
             $staticName = dirname($staticName);
-            $action = basename($staticName);
-            if (false !== strpos($action, '.')) {
+            $fileName = basename($staticName);
+            if (false !== strpos($fileName, '.')) {
+                // サイズ指定なし
                 return $staticName;
             }
+            $fileSize = $fileName;
 
             // サイズ指定あり
             $staticName = dirname($staticName);
             $fileName = basename($staticName);
             $staticName = dirname($staticName);
 
-            return "{$staticName}/{$action}/{$fileName}";
+            return "{$staticName}/{$fileSize}/{$fileName}";
         }
 
-        if (false === strpos($action, '.')) {
-            $staticName = str_replace('?', '_', $staticName);
+        $staticName = str_replace('?', '_', $staticName);
+        if (isset($this->staticExtension)) {
+            empty($this->staticExtension) || $staticName .= '.'.$this->staticExtension;
+        } else {
             $staticName .= '.html';
         }
 
         return $staticName;
     }
 
+    private function replaceStaticName($htmlBuff)
+    {
+        // 静的コンテンツへのパスに変換
+        foreach ($this->buildConfig as $staticName => $originalUrl) {
+            if (!is_string($originalUrl)) {
+                continue;
+            }
+
+            $htmlBuff = str_replace($originalUrl, $staticName, $htmlBuff);
+        }
+
+        return $htmlBuff;
+    }
+
     // HTMLのリンクを静的ファイル名に置換
-    private static function convertStaticContent($content)
+    private function convertStaticContent($content)
     {
         $htmlList = \Blocs\Compiler\Parser::parse($content);
+        $this->buildConfig = $this->readBuildConfig();
 
         $convertedContent = '';
         while ($htmlList) {
             $htmlBuff = array_shift($htmlList);
 
             if (!is_array($htmlBuff)) {
-                $convertedContent .= $htmlBuff;
+                $convertedContent .= $this->replaceStaticName($htmlBuff);
                 continue;
             }
 
@@ -108,17 +121,7 @@ class StaticGenerator
                 continue;
             }
 
-            foreach (['href', 'src'] as $arrtibute) {
-                if (!isset($attrList[$arrtibute])) {
-                    continue;
-                }
-
-                // 相対パスに変換
-                $staticName = self::getStaticName($attrList[$arrtibute]);
-                $htmlBuff['raw'] = str_replace($attrList[$arrtibute], $staticName, $htmlBuff['raw']);
-            }
-
-            $convertedContent .= $htmlBuff['raw'];
+            $convertedContent .= $this->replaceStaticName($htmlBuff['raw']);
         }
 
         return $convertedContent;
