@@ -2,7 +2,7 @@
 
 namespace App\Consts;
 
-class Admin
+class Blocs
 {
     public static function define()
     {

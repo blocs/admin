@@ -26,7 +26,7 @@ class AdminServiceProvider extends ServiceProvider
     public function boot()
     {
         // 定数の読み込み
-        is_file(app_path('Consts/Admin.php')) && \App\Consts\Admin::define();
+        is_file(app_path('Consts/Blocs.php')) && \App\Consts\Blocs::define();
 
         // 言語設定を書き換え
         defined('BLOCS_LOCALE') && config(['app.locale' => BLOCS_LOCALE]);
