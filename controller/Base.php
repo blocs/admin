@@ -535,7 +535,7 @@ class Base extends Controller
             $uploadedFile = $this->request->uploadedFile;
             is_array($uploadedFile) || $uploadedFile = json_decode($uploadedFile, true);
 
-            $html = view(VIEW_PREFIX.'.autoinclude.upload_list', ['fileList' => $uploadedFile])->render();
+            $html = view(ADMIN_VIEW_PREFIX.'.autoinclude.upload_list', ['fileList' => $uploadedFile])->render();
 
             return json_encode([
                 'paramname' => $paramname,
@@ -567,7 +567,7 @@ class Base extends Controller
             'size' => $fileupload->getSize(),
             'thumbnail' => $existThumbnail,
         ];
-        $file['html'] = view(VIEW_PREFIX.'.autoinclude.upload_list', ['fileList' => [$file]])->render();
+        $file['html'] = view(ADMIN_VIEW_PREFIX.'.autoinclude.upload_list', ['fileList' => [$file]])->render();
 
         return json_encode($file);
     }
@@ -683,7 +683,7 @@ class Base extends Controller
 
     protected function setupMenu()
     {
-        isset($this->menuName) || $this->menuName = VIEW_PREFIX;
+        isset($this->menuName) || $this->menuName = ADMIN_VIEW_PREFIX;
 
         list($menu, $headline, $breadcrumb) = \Blocs\Menu::get($this->menuName);
         $this->val['menu'] = $menu;

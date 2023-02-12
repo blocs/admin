@@ -10,7 +10,7 @@ class UserController extends \Blocs\Controllers\Base
     {
         define('ROUTE_PREFIX', 'user');
 
-        $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
+        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.'.ROUTE_PREFIX;
         $this->mainTable = 'App\Models\Admin\User';
         $this->loopItem = 'users';
         $this->paginateNum = 20;

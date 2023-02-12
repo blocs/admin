@@ -39,7 +39,7 @@ class LoginController extends Controller
 
         define('ROUTE_PREFIX', 'auth');
 
-        $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
+        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.'.ROUTE_PREFIX;
     }
 
     public function showLoginForm()

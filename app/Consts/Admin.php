@@ -23,6 +23,6 @@ class Admin
         define('BLOCS_INCLUDE_MAX', 20);
 
         // 管理画面のビュー
-        define('VIEW_PREFIX', 'admin');
+        define('ADMIN_VIEW_PREFIX', 'admin');
     }
 }

@@ -12,7 +12,7 @@ class HomeController extends \Blocs\Controllers\Base
     {
         define('ROUTE_PREFIX', 'home');
 
-        $this->viewPrefix = VIEW_PREFIX.'.'.ROUTE_PREFIX;
+        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.'.ROUTE_PREFIX;
         $this->menuName = 'admin';
     }
 
