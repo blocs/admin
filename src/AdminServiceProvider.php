@@ -45,10 +45,6 @@ class AdminServiceProvider extends ServiceProvider
         // databaseをpublish
         $publishList[__DIR__.'/../database'] = database_path();
 
-        // 空のfaviconがあれば削除
-        $faviconLoc = public_path('/favicon.ico');
-        file_exists($faviconLoc) && !filesize($faviconLoc) && unlink($faviconLoc);
-
         // publicをpublish
         $publishList[__DIR__.'/../public'] = public_path();
 
@@ -64,7 +60,7 @@ class AdminServiceProvider extends ServiceProvider
     public function registerBlocsCommand()
     {
         $this->app->singleton('command.blocs.admin', function ($app) {
-            return new BlocsAdmin('blocs:admin', 'Deploy blocs/admin package');
+            return new BlocsAdmin('blocs:admin', 'Deploy blocs/admin package', __FILE__);
         });
 
         $this->commands('command.blocs.admin');
