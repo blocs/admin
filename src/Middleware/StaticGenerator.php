@@ -87,13 +87,29 @@ class StaticGenerator
 
     private function replaceStaticName($htmlBuff)
     {
-        // 静的コンテンツへのパスに変換
+        $originalUrlList = [];
+        $staticNameList = [];
         foreach ($this->buildConfig as $staticName => $originalUrl) {
             if (!is_string($originalUrl)) {
                 continue;
             }
 
-            $htmlBuff = str_replace($originalUrl, $staticName, $htmlBuff);
+            $originalUrlList[] = $originalUrl;
+            $staticNameList[$originalUrl] = $staticName;
+        }
+
+        // 長いURLから置換
+        array_multisort(array_map('strlen', $originalUrlList), SORT_DESC, $originalUrlList);
+
+        foreach ($originalUrlList as $originalUrl) {
+            foreach (['"', "'"] as $quotes) {
+                // 静的コンテンツへのパスに置換
+                $htmlBuff = str_replace(
+                    $quotes.$originalUrl.$quotes,
+                    $quotes.$staticNameList[$originalUrl].$quotes,
+                    $htmlBuff
+                );
+            }
         }
 
         return $htmlBuff;
