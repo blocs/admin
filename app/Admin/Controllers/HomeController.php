@@ -10,6 +10,7 @@ class HomeController extends \Blocs\Controllers\Base
 
     public function __construct()
     {
+        define('BLOCS_AUTOINCLUDE', 'admin');
         define('ROUTE_PREFIX', 'home');
 
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.'.ROUTE_PREFIX;
