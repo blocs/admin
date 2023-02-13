@@ -8,7 +8,7 @@ class UserController extends \Blocs\Controllers\Base
 {
     public function __construct()
     {
-        define('BLOCS_AUTOINCLUDE', 'admin');
+        define('BLOCS_AUTOINCLUDE_DIR', 'admin');
         define('ROUTE_PREFIX', 'user');
 
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.'.ROUTE_PREFIX;

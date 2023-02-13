@@ -6,7 +6,7 @@ class ProfileController extends UserController
 {
     public function __construct()
     {
-        define('BLOCS_AUTOINCLUDE', 'admin');
+        define('BLOCS_AUTOINCLUDE_DIR', 'admin');
         define('ROUTE_PREFIX', 'profile');
 
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.'.ROUTE_PREFIX;
