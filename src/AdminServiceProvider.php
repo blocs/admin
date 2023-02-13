@@ -10,9 +10,12 @@ class BlocsAdmin extends \Blocs\Commands\Deploy
     {
         parent::handle();
 
+        // 必要ファイルをpublish
+        \Artisan::call('vendor:publish', ['--provider' => 'Blocs\AdminServiceProvider']);
+
         // 初期ユーザー登録
         \Artisan::call('migrate');
-        \Artisan::call('db:seed --class AdminSeeder');
+        \Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
     }
 }
 
