@@ -10,6 +10,10 @@ class BlocsAdmin extends \Blocs\Commands\Deploy
     {
         parent::handle();
 
+        // 空のfaviconがあれば削除
+        $faviconPath = public_path('/favicon.ico');
+        file_exists($faviconPath) && !filesize($faviconPath) && unlink($faviconPath);
+
         // 必要ファイルをpublish
         \Artisan::call('vendor:publish', ['--provider' => 'Blocs\AdminServiceProvider']);
 

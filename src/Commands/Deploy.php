@@ -27,10 +27,6 @@ class Deploy extends Command
     {
         // 言語ファイルをマージ
         $this->appendLang($this->baseDir.'/lang');
-
-        // 空のfaviconがあれば置換
-        $faviconLoc = $this->rootDir.'/public/favicon.ico';
-        file_exists($faviconLoc) && !filesize($faviconLoc) && copy($this->baseDir.'/public/favicon.ico', $faviconLoc);
     }
 
     private function appendLang($blocsLangDir)
