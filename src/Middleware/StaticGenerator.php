@@ -164,7 +164,7 @@ class StaticGenerator
             $buildConfig['_upload'] = array_unique($buildConfig['_upload']);
         }
 
-        file_put_contents($buildConfigPath, json_encode($buildConfig, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($buildConfigPath, 0666);
+        file_put_contents($buildConfigPath, json_encode($buildConfig, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n") && chmod($buildConfigPath, 0666);
     }
 
     public function deleteBuildConfig($staticName)
@@ -179,7 +179,7 @@ class StaticGenerator
         $buildConfig['_delete'][] = $staticName;
         $buildConfig['_delete'] = array_unique($buildConfig['_delete']);
 
-        file_put_contents($buildConfigPath, json_encode($buildConfig, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($buildConfigPath, 0666);
+        file_put_contents($buildConfigPath, json_encode($buildConfig, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n") && chmod($buildConfigPath, 0666);
     }
 
     public function refreshBuildConfig($uploadList = [], $deleteList = [])
@@ -208,6 +208,6 @@ class StaticGenerator
             return;
         }
 
-        file_put_contents($buildConfigPath, json_encode($buildConfig, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)) && chmod($buildConfigPath, 0666);
+        file_put_contents($buildConfigPath, json_encode($buildConfig, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n") && chmod($buildConfigPath, 0666);
     }
 }
