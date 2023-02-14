@@ -54,15 +54,15 @@ class Base extends Controller
         $this->keepItem('search');
 
         $this->searchItems = [];
-        if (!empty($this->request->search)) {
+        empty($this->request->search) || $this->val['search'] = $this->request->search;
+
+        if (!empty($this->val['search'])) {
             mb_regex_encoding('utf-8');
-            $this->searchItems = mb_split("[\s,　]+", $this->request->search);
+            $this->searchItems = mb_split("[\s,　]+", $this->val['search']);
 
             foreach ($this->searchItems as $searchNum => $searchItem) {
                 $this->searchItems[$searchNum] = addcslashes($searchItem, '%_\\');
             }
-
-            $this->val['search'] = $this->request->search;
         }
 
         $mainTable = call_user_func($this->mainTable.'::query');
