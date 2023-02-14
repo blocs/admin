@@ -14,7 +14,6 @@ class HomeController extends \Blocs\Controllers\Base
         define('ROUTE_PREFIX', 'home');
 
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.'.ROUTE_PREFIX;
-        $this->menuName = 'admin';
     }
 
     public function index()

@@ -4,10 +4,22 @@ namespace Blocs;
 
 class Menu
 {
-    public static function get($name, $breadcrumbList = [])
+    public static function get($name = 'root', $breadcrumbList = [])
     {
         // 設定読み込み
         $configList = config('menu');
+
+        // 追加設定の読み込み
+        if (file_exists(config_path('menu.json'))) {
+            $configJson = json_decode(file_get_contents(config_path('menu.json')), true);
+
+            $configList = config('menu');
+            foreach ($configList as $menuName => $config) {
+                if (!empty($configJson[$menuName])) {
+                    $configList[$menuName] = array_merge($config, $configJson[$menuName]);
+                }
+            }
+        }
 
         // 指定されたhedline読み込み
         if (isset($configList['headline'])) {

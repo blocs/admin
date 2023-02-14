@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'admin' => [
+    'root' => [
         [
             'name' => 'home',
             'lang' => '管理トップ',

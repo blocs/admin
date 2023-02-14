@@ -12,7 +12,6 @@ class ProfileController extends UserController
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.'.ROUTE_PREFIX;
         $this->mainTable = 'App\Models\Admin\User';
         $this->noticeItem = 'email';
-        $this->menuName = 'admin';
     }
 
     public function edit($id)

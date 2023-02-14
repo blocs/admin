@@ -16,7 +16,6 @@ class Base extends Controller
     protected $loopItem;
     protected $paginateNum;
     protected $noticeItem;
-    protected $menuName;
 
     private $selectedIdList = [];
     private $deletedNum = 0;
@@ -683,9 +682,7 @@ class Base extends Controller
 
     protected function setupMenu()
     {
-        isset($this->menuName) || $this->menuName = ADMIN_VIEW_PREFIX;
-
-        list($menu, $headline, $breadcrumb) = \Blocs\Menu::get($this->menuName);
+        list($menu, $headline, $breadcrumb) = \Blocs\Menu::get();
         $this->val['menu'] = $menu;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;

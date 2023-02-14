@@ -11,7 +11,7 @@ class BlocsAdmin extends \Blocs\Commands\Deploy
         parent::handle();
 
         // 空のfaviconがあれば削除
-        $faviconPath = public_path('/favicon.ico');
+        $faviconPath = public_path('favicon.ico');
         file_exists($faviconPath) && !filesize($faviconPath) && unlink($faviconPath);
 
         // 必要ファイルをpublish
@@ -59,7 +59,7 @@ class AdminServiceProvider extends ServiceProvider
         $publishList[__DIR__.'/../resources'] = resource_path();
 
         // routesをpublish
-        $publishList[__DIR__.'/../routes'] = base_path('/routes');
+        $publishList[__DIR__.'/../routes'] = base_path('routes');
 
         $this->publishes($publishList);
     }
