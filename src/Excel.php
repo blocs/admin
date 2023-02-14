@@ -185,7 +185,7 @@ class Excel
      */
     public function save($filename)
     {
-        file_put_contents($filename, $this->generate());
+        file_put_contents($filename, $this->generate()) && chmod($filename, 0666);
     }
 
     private function getName($sheetColumn, $sheetRow)

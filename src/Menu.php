@@ -14,9 +14,11 @@ class Menu
             $configJson = json_decode(file_get_contents(config_path('menu.json')), true);
 
             $configList = config('menu');
-            foreach ($configList as $menuName => $config) {
-                if (!empty($configJson[$menuName])) {
-                    $configList[$menuName] = array_merge($config, $configJson[$menuName]);
+            foreach ($configJson as $menuName => $config) {
+                if (empty($configList[$menuName])) {
+                    $configList[$menuName] = $config;
+                } else {
+                    $configList[$menuName] = array_merge($configList[$menuName], $config);
                 }
             }
         }

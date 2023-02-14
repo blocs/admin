@@ -44,7 +44,7 @@ class StaticGenerator
         $this->updateBuildConfig($staticName, url($_SERVER['REQUEST_URI']), !file_exists($staticLoc));
 
         $content = $this->convertStaticContent($response->content());
-        file_put_contents($staticLoc, $content);
+        file_put_contents($staticLoc, $content) && chmod($staticLoc, 0666);
 
         return $response;
     }
