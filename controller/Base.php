@@ -46,7 +46,7 @@ class Base extends Controller
     {
         $this->request = $request;
 
-        $this->index();
+        return $this->index();
     }
 
     protected function prepareIndex()
