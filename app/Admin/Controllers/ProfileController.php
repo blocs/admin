@@ -6,10 +6,9 @@ class ProfileController extends UserController
 {
     public function __construct()
     {
-        define('BLOCS_AUTOINCLUDE_DIR', 'admin');
-        define('ROUTE_PREFIX', 'profile');
+        parent::__construct();
 
-        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.'.ROUTE_PREFIX;
+        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.profile';
         $this->mainTable = 'App\Models\Admin\User';
         $this->noticeItem = 'email';
     }

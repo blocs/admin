@@ -9,9 +9,9 @@ class UserController extends \Blocs\Controllers\Base
     public function __construct()
     {
         define('BLOCS_AUTOINCLUDE_DIR', 'admin');
-        define('ROUTE_PREFIX', 'user');
+        parent::__construct();
 
-        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.'.ROUTE_PREFIX;
+        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.user';
         $this->mainTable = 'App\Models\Admin\User';
         $this->loopItem = 'users';
         $this->paginateNum = 20;

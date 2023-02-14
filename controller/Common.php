@@ -37,4 +37,19 @@ trait Common
             $this->val[$keyItem] = session($sessionKey);
         }
     }
+
+    public static function getRoutePrefix()
+    {
+        $currentName = \Route::currentRouteName();
+
+        if (empty($currentName)) {
+            return $currentName;
+        }
+
+        $currentNameList = explode('.', $currentName);
+        array_pop($currentNameList);
+        $currentPrefix = implode('.', $currentNameList);
+
+        return $currentPrefix;
+    }
 }

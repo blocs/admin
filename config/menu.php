@@ -11,14 +11,14 @@ return [
     ],
     'admin_menu' => [
         [
-            'name' => 'profile.edit',
+            'name' => 'admin.profile.edit',
             'argv' => ['id' => 0],
             'lang' => 'プロフィール',
             'icon' => 'fa-cog',
             'breadcrumb' => true,
         ],
         [
-            'name' => 'user.index',
+            'name' => 'admin.user.index',
             'lang' => 'ユーザー管理',
             'icon' => 'fa-users',
         ],

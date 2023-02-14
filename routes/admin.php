@@ -23,8 +23,8 @@ Route::middleware(['web', 'auth', UserRole::class])
 );
 
 Route::middleware(['web', 'auth', UserRole::class])
-    ->prefix('profile')
-    ->name('profile.')
+    ->prefix('admin/profile')
+    ->name('admin.profile.')
     ->group(function () {
         Route::get('/{id}/edit', [ProfileController::class, 'edit'])->where('id', '[0-9]+')->name('edit');
         Route::post('/{id}', [ProfileController::class, 'update'])->where('id', '[0-9]+')->name('update');
@@ -35,8 +35,8 @@ Route::middleware(['web', 'auth', UserRole::class])
 );
 
 Route::middleware(['web', 'auth', UserRole::class])
-    ->prefix('user')
-    ->name('user.')
+    ->prefix('admin/user')
+    ->name('admin.user.')
     ->group(function () {
         Route::get('/', [UserController::class, 'index'])->name('index');
         Route::post('/search', [UserController::class, 'search'])->name('search');

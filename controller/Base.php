@@ -23,6 +23,11 @@ class Base extends Controller
 
     use Common;
 
+    public function __construct()
+    {
+        define('ROUTE_PREFIX', self::getRoutePrefix());
+    }
+
     /* index */
 
     public function index()

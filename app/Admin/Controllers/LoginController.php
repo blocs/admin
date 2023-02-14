@@ -38,9 +38,8 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
 
         define('BLOCS_AUTOINCLUDE_DIR', 'admin');
-        define('ROUTE_PREFIX', 'auth');
 
-        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.'.ROUTE_PREFIX;
+        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.auth';
     }
 
     public function showLoginForm()

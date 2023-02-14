@@ -2,6 +2,8 @@
 
 namespace Blocs;
 
+use Blocs\Controllers\Common;
+
 class Menu
 {
     public static function get($name = 'root', $breadcrumbList = [])
@@ -39,8 +41,7 @@ class Menu
         $configList = $configList[$name];
 
         // ルート名を取得
-        $currentName = \Route::currentRouteName();
-        empty($currentName) || list($currentName) = explode('.', $currentName, 2);
+        $currentPrefix = Common::getRoutePrefix();
 
         // メニュー、パンクズリスト
         $menuList = [];
@@ -69,8 +70,11 @@ class Menu
                 }
             }
 
-            list($configName) = explode('.', $config['name'], 2);
-            if ($configName === $currentName) {
+            $configNameList = explode('.', $config['name']);
+            array_pop($configNameList);
+            $configPrefix = implode('.', $configNameList);
+
+            if ($configPrefix === $currentPrefix) {
                 $config['active'] = true;
                 $isActive = true;
                 false === $headline && $headline = $config;
