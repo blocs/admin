@@ -15,12 +15,19 @@ class Menu
         if (file_exists(config_path('menu.json'))) {
             $configJson = json_decode(file_get_contents(config_path('menu.json')), true);
 
-            $configList = config('menu');
             foreach ($configJson as $menuName => $config) {
                 if (empty($configList[$menuName])) {
                     $configList[$menuName] = $config;
-                } else {
-                    $configList[$menuName] = array_merge($configList[$menuName], $config);
+                    continue;
+                }
+
+                $menuNameList = [];
+                foreach ($configList[$menuName] as $menu) {
+                    $menuNameList[] = $menu['name'];
+                }
+
+                foreach ($config as $menu) {
+                    in_array($menu['name'], $menuNameList) || $configList[$menuName][] = $menu;
                 }
             }
         }

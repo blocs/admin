@@ -82,8 +82,16 @@ class Deploy extends Command
         foreach ($blocsJson as $menuName => $config) {
             if (empty($configJson[$menuName])) {
                 $configJson[$menuName] = $config;
-            } else {
-                $configJson[$menuName] = array_merge($configJson[$menuName], $config);
+                continue;
+            }
+
+            $menuNameList = [];
+            foreach ($configJson[$menuName] as $menu) {
+                $menuNameList[] = $menu['name'];
+            }
+
+            foreach ($config as $menu) {
+                in_array($menu['name'], $menuNameList) || $configJson[$menuName][] = $menu;
             }
         }
 
