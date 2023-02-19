@@ -611,7 +611,7 @@ class Base extends Controller
 
     protected function checkDownload($filename)
     {
-        // return \App::abort(404);
+        // \App::abort(404);
     }
 
     protected function getSize($size)
