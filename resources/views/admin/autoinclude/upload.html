@@ -124,7 +124,7 @@ function cancelUploaded(ele) {
 	var tr = $(ele).closest('tr');
 	var filename = $(tr).data('filename');
 	var container = $(ele).closest('.upload-container');
-	var input = $(container).find('input.upload');
+	var input = $(container).find('input.ai-upload');
 
 	tr.remove();
 	if (!input.prop('multiple')) {
@@ -155,7 +155,7 @@ function parseUploaded(name) {
 	return uploaded;
 }
 $(function(){
-	$('input.upload').each(function(){
+	$('input.ai-upload').each(function(){
 		setUploader($(this).attr('name'), $(this).attr('accept'));
 	});
 	$('form').on('click', '.fileList .cancel', function(){
