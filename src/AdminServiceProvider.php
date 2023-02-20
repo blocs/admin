@@ -20,6 +20,8 @@ class BlocsAdmin extends \Blocs\Commands\Deploy
         // 初期ユーザー登録
         \Artisan::call('migrate');
         \Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
+
+        echo "Deploy was completed successfully.\n";
     }
 }
 
