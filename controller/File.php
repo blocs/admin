@@ -1,0 +1,118 @@
+<?php
+
+namespace Blocs\Controllers;
+
+use Illuminate\Http\Request;
+
+trait File
+{
+    public function upload(Request $request)
+    {
+        $this->request = $request;
+        $paramname = $this->request->name;
+
+        if (isset($this->request->uploadedFile)) {
+            $uploadedFile = $this->request->uploadedFile;
+            is_array($uploadedFile) || $uploadedFile = json_decode($uploadedFile, true);
+
+            $html = view(ADMIN_VIEW_PREFIX.'.autoinclude.upload_list', ['fileList' => $uploadedFile])->render();
+
+            return json_encode([
+                'paramname' => $paramname,
+                'html' => $html,
+            ]);
+        }
+
+        $fileupload = $this->request->file('upload');
+        $mimeType = $fileupload->getMimeType();
+
+        $extension = $fileupload->extension();
+        if (!$extension) {
+            return json_encode([
+                'paramname' => $paramname,
+                'error' => \Blocs\Lang::get('error:fileupload_error_php'),
+            ]);
+        }
+
+        $this->validateUpload($paramname);
+
+        $filename = md5($fileupload->get()).'.'.$extension;
+        $fileupload->storeAs('upload', $filename);
+
+        $existThumbnail = $this->createThumbnail('upload/'.$filename, 'thumbnail') ? 1 : 0;
+        $file = [
+            'paramname' => $paramname,
+            'filename' => $filename,
+            'name' => $fileupload->getClientOriginalName(),
+            'size' => $fileupload->getSize(),
+            'thumbnail' => $existThumbnail,
+        ];
+        $file['html'] = view(ADMIN_VIEW_PREFIX.'.autoinclude.upload_list', ['fileList' => [$file]])->render();
+
+        return json_encode($file);
+    }
+
+    protected function validateUpload($paramname)
+    {
+        list($rules, $messages) = \Blocs\Validate::upload($this->viewPrefix, $paramname);
+        empty($rules) || $this->request->validate($rules, $messages);
+    }
+
+    /* download */
+
+    public function download($filename, $size = null)
+    {
+        if ($redirect = $this->checkDownload($filename)) {
+            return $redirect;
+        }
+
+        $storage = \Storage::disk();
+        $filename = 'upload/'.$filename;
+        $mimeType = $storage->mimeType($filename);
+
+        if (isset($size)) {
+            $thumbnail = $this->createThumbnail($filename, $size);
+            if ($thumbnail) {
+                return response(\File::get($thumbnail))->header('Content-Type', $mimeType);
+            }
+        } else {
+            $thumbnail = $this->createThumbnail($filename, 'thumbnail');
+            if ($thumbnail) {
+                return response($storage->get($filename))->header('Content-Type', $mimeType);
+            }
+        }
+
+        return $storage->download($filename);
+    }
+
+    protected function checkDownload($filename)
+    {
+        // \App::abort(404);
+    }
+
+    protected function getSize($size)
+    {
+        // 画像のサイズを指定できるように
+        $downloadSize = [
+            'thumbnail' => [80, 10000, false],
+            's' => [380, 10000, false],
+            's@2x' => [760, 10000, false],
+            'm' => [585, 10000, false],
+            'm@2x' => [1170, 10000, false],
+            'l' => [1200, 10000, false],
+            'l@2x' => [2400, 10000, false],
+        ];
+
+        return $downloadSize[$size];
+    }
+
+    private function createThumbnail($filename, $size)
+    {
+        // ストレージからサムネイルファイル作成
+        $path = \Storage::path($filename);
+        list($width, $height, $crop) = $this->getSize($size);
+        $thumbnail = \Blocs\Thumbnail::create($path, $width, $height, $crop);
+
+        return $thumbnail;
+    }
+}

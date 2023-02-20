@@ -52,4 +52,30 @@ trait Common
 
         return $currentPrefix;
     }
+
+    // テーブルのデータと入力値をマージ
+    protected static function mergeTable($table, $request)
+    {
+        if (!is_array($table) || !is_array($request)) {
+            return $table;
+        }
+
+        foreach ($request as $sKey => $mValue) {
+            if (isset($table[$sKey]) && is_array($mValue) && is_array($table[$sKey])) {
+                $table[$sKey] = self::mergeTable($table[$sKey], $mValue);
+            } else {
+                $table[$sKey] = $mValue;
+            }
+        }
+
+        return $table;
+    }
+
+    protected function setupMenu()
+    {
+        list($menu, $headline, $breadcrumb) = \Blocs\Menu::get();
+        $this->val['menu'] = $menu;
+        $this->val['headline'] = $headline;
+        $this->val['breadcrumb'] = $breadcrumb;
+    }
 }
