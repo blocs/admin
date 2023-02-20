@@ -22,6 +22,8 @@ class BlocsAdmin extends \Blocs\Commands\Deploy
         \Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
 
         echo "Deploy was completed successfully.\n";
+        echo 'Login URL is '.route('login').".\n";
+        echo "Initial ID/Pass is admin/admin.\n";
     }
 }
 
