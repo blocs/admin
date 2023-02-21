@@ -2,10 +2,13 @@
 
 namespace App\Admin\Controllers;
 
-class ProfileController extends UserController
+class ProfileController extends \Blocs\Controllers\Base
 {
+    use UserEditTrait;
+
     public function __construct()
     {
+        define('BLOCS_AUTOINCLUDE_DIR', 'admin');
         parent::__construct();
 
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.profile';
@@ -28,7 +31,7 @@ class ProfileController extends UserController
 
     protected function prepareUpdate()
     {
-        $requestData = parent::prepareUpdate();
+        $requestData = $this->prepareUpdateTrait();
 
         if (empty($this->request->file)) {
             // 画像ファイルの削除
