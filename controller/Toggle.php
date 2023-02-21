@@ -10,7 +10,7 @@ trait Toggle
 
     public function toggle($id)
     {
-        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
+        $this->getCurrent($id);
         $this->val['id'] = $id;
 
         if (empty($this->tableData->disabled_at)) {

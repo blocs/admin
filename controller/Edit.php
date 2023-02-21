@@ -10,10 +10,10 @@ trait Edit
 
     public function edit($id)
     {
-        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
+        $this->getCurrent($id);
         $this->val['id'] = $id;
 
-        empty(old()) && !empty($this->val['id']) && $this->getCurrent();
+        empty(old()) && $this->val = array_merge($this->tableData->toArray(), $this->val);
 
         $this->prepareEdit();
 
@@ -23,13 +23,6 @@ trait Edit
         }
 
         return $this->outputEdit();
-    }
-
-    protected function getCurrent()
-    {
-        $tableData = $this->tableData->toArray();
-
-        $this->val = array_merge($tableData, $this->val);
     }
 
     protected function prepareEdit()
@@ -43,11 +36,36 @@ trait Edit
         return view($this->viewPrefix.'.edit', $this->val);
     }
 
+    /* show */
+
+    public function show($id)
+    {
+        $this->getCurrent($id);
+        $this->val['id'] = $id;
+
+        $this->val = array_merge($this->tableData->toArray(), $this->val);
+
+        $this->prepareShow();
+
+        return $this->outputShow();
+    }
+
+    protected function prepareShow()
+    {
+    }
+
+    protected function outputShow()
+    {
+        $this->setupMenu();
+
+        return view($this->viewPrefix.'.show', $this->val);
+    }
+
     /* update */
 
     public function confirmUpdate($id, Request $request)
     {
-        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
+        $this->getCurrent($id);
         $this->val['id'] = $id;
         $this->request = $request;
 
@@ -82,7 +100,7 @@ trait Edit
 
     public function update($id, Request $request)
     {
-        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
+        $this->getCurrent($id);
         $this->val['id'] = $id;
         $this->request = $request;
 

@@ -72,11 +72,15 @@ class UserController extends \Blocs\Controllers\Base
         }
 
         // 旧パスワードをチェック
+        $user = call_user_func($this->mainTable.'::find', $this->val['id']);
+        if ('' === $user->password) {
+            return;
+        }
+
         if (empty($this->request->password_old)) {
             return $this->backEdit('', 'パスワードが違います。', 'password_old');
         }
 
-        $user = call_user_func($this->mainTable.'::find', $this->val['id']);
         if (!Hash::check($this->request->password_old, $user->password)) {
             return $this->backEdit('', 'パスワードが違います。', 'password_old');
         }

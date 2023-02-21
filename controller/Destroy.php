@@ -11,7 +11,7 @@ trait Destroy
 
     public function confirmDestroy($id, Request $request)
     {
-        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
+        $this->getCurrent($id);
         $this->val['id'] = $id;
         $this->request = $request;
 
@@ -44,7 +44,7 @@ trait Destroy
 
     public function destroy($id, Request $request)
     {
-        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
+        $this->getCurrent($id);
         $this->val['id'] = $id;
         $this->request = $request;
 

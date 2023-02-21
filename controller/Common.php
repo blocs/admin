@@ -38,6 +38,11 @@ trait Common
         }
     }
 
+    protected function getCurrent($id)
+    {
+        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
+    }
+
     public static function getRoutePrefix()
     {
         $currentName = \Route::currentRouteName();
