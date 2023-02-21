@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 
 trait File
 {
+    protected $uploadStorage;
+
     public function upload(Request $request)
     {
         $this->request = $request;
@@ -36,10 +38,11 @@ trait File
 
         $this->validateUpload($paramname);
 
+        isset($this->uploadStorage) || $this->uploadStorage = 'upload';
         $filename = md5($fileupload->get()).'.'.$extension;
-        $fileupload->storeAs('upload', $filename);
+        $fileupload->storeAs($this->uploadStorage, $filename);
 
-        $existThumbnail = $this->createThumbnail('upload/'.$filename, 'thumbnail') ? 1 : 0;
+        $existThumbnail = $this->createThumbnail($this->uploadStorage.'/'.$filename, 'thumbnail') ? 1 : 0;
         $file = [
             'paramname' => $paramname,
             'filename' => $filename,
@@ -66,8 +69,10 @@ trait File
             return $redirect;
         }
 
+        isset($this->uploadStorage) || $this->uploadStorage = 'upload';
+        $filename = $this->uploadStorage.'/'.$filename;
+
         $storage = \Storage::disk();
-        $filename = 'upload/'.$filename;
         $mimeType = $storage->mimeType($filename);
 
         if (isset($size)) {
