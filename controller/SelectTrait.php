@@ -4,7 +4,7 @@ namespace Blocs\Controllers;
 
 use Illuminate\Http\Request;
 
-trait Select
+trait SelectTrait
 {
     private $selectedIdList = [];
     private $deletedNum = 0;
@@ -69,6 +69,7 @@ trait Select
 
         $this->prepareSelect();
         $this->executeSelect();
+        $this->logSelect();
 
         return $this->outputSelect();
     }
@@ -84,6 +85,9 @@ trait Select
         }
 
         $this->deletedNum = call_user_func($this->mainTable.'::destroy', $this->selectedIdList);
+
+        $this->logData = new \stdClass();
+        $this->logData->id = $this->selectedIdList;
     }
 
     protected function outputSelect()

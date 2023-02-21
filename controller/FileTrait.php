@@ -4,7 +4,7 @@ namespace Blocs\Controllers;
 
 use Illuminate\Http\Request;
 
-trait File
+trait FileTrait
 {
     protected $uploadStorage;
 

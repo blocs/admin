@@ -4,7 +4,7 @@ namespace Blocs\Controllers;
 
 use Illuminate\Http\Request;
 
-trait Edit
+trait UpdateTrait
 {
     private $tableData;
 
@@ -118,6 +118,7 @@ trait Edit
         }
 
         $this->executeUpdate($this->prepareUpdate());
+        $this->logUpdate();
 
         return $this->outputUpdate();
     }
@@ -146,6 +147,9 @@ trait Edit
         }
 
         $this->tableData->fill($requestData)->save();
+
+        $this->logData = (object) $requestData;
+        $this->logData->id = $this->val['id'];
     }
 
     protected function outputUpdate()

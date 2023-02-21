@@ -16,15 +16,16 @@ class Base extends Controller
     protected $paginateNum;
     protected $noticeItem;
 
-    use Back;
-    use Common;
-    use Copy;
-    use Create;
-    use Destroy;
-    use Edit;
-    use File;
-    use Select;
-    use Toggle;
+    use BackTrait;
+    use CommonTrait;
+    use CopyTrait;
+    use DestroyTrait;
+    use FileTrait;
+    use LogTrait;
+    use SelectTrait;
+    use StoreTrait;
+    use ToggleTrait;
+    use UpdateTrait;
 
     public function __construct()
     {

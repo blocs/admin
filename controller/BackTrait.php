@@ -2,7 +2,7 @@
 
 namespace Blocs\Controllers;
 
-trait Back
+trait BackTrait
 {
     protected function backIndex($category, $code)
     {

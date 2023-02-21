@@ -4,7 +4,7 @@ namespace Blocs\Controllers;
 
 use Illuminate\Http\Request;
 
-trait Create
+trait StoreTrait
 {
     public function create()
     {
@@ -78,6 +78,7 @@ trait Create
         }
 
         $this->executeStore($this->prepareStore());
+        $this->logStore();
 
         return $this->outputStore();
     }
@@ -92,7 +93,10 @@ trait Create
             return;
         }
 
-        call_user_func($this->mainTable.'::create', $requestData);
+        $lastInsert = call_user_func($this->mainTable.'::create', $requestData);
+
+        $this->logData = (object) $requestData;
+        $this->logData->id = $lastInsert->id;
     }
 
     protected function outputStore()

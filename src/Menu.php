@@ -2,7 +2,7 @@
 
 namespace Blocs;
 
-use Blocs\Controllers\Common;
+use Blocs\Controllers\CommonTrait;
 
 class Menu
 {
@@ -48,7 +48,7 @@ class Menu
         $configList = $configList[$name];
 
         // ルート名を取得
-        $currentPrefix = Common::getRoutePrefix();
+        $currentPrefix = CommonTrait::getRoutePrefix();
 
         // メニュー、パンクズリスト
         $menuList = [];

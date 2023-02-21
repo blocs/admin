@@ -2,7 +2,7 @@
 
 namespace Blocs\Controllers;
 
-trait Copy
+trait CopyTrait
 {
     private $tableData;
 

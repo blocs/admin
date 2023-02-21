@@ -2,7 +2,7 @@
 
 namespace Blocs\Controllers;
 
-trait Common
+trait CommonTrait
 {
     protected function addOption($formName, $optionList)
     {

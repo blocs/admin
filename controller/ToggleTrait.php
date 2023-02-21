@@ -4,7 +4,7 @@ namespace Blocs\Controllers;
 
 use Illuminate\Support\Carbon;
 
-trait Toggle
+trait ToggleTrait
 {
     private $tableData;
 

@@ -4,7 +4,7 @@ namespace Blocs\Controllers;
 
 use Illuminate\Http\Request;
 
-trait Destroy
+trait DestroyTrait
 {
     private $tableData;
     private $deletedNum = 0;
@@ -59,6 +59,7 @@ trait Destroy
 
         $this->prepareDestroy();
         $this->executeDestroy();
+        $this->logDestroy();
 
         return $this->outputDestroy();
     }
@@ -70,6 +71,9 @@ trait Destroy
     protected function executeDestroy()
     {
         $this->deletedNum = call_user_func($this->mainTable.'::destroy', $this->val['id']);
+
+        $this->logData = new \stdClass();
+        $this->logData->id = $this->val['id'];
     }
 
     protected function outputDestroy()
