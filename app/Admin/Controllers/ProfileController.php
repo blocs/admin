@@ -29,10 +29,8 @@ class ProfileController extends \Blocs\Controllers\Base
         ]);
     }
 
-    protected function prepareUpdate()
+    protected function prepareUpdateTrait(&$requestData)
     {
-        $requestData = $this->prepareUpdateTrait();
-
         if (empty($this->request->file)) {
             // 画像ファイルの削除
             $requestData['file'] = null;
@@ -44,7 +42,5 @@ class ProfileController extends \Blocs\Controllers\Base
             $fileList = json_decode($requestData['file'], true);
             $requestData['filename'] = $fileList[0]['filename'];
         }
-
-        return $requestData;
     }
 }

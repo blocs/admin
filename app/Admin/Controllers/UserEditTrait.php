@@ -37,7 +37,7 @@ trait UserEditTrait
         }
     }
 
-    protected function prepareUpdateTrait()
+    protected function prepareUpdate()
     {
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
@@ -49,6 +49,12 @@ trait UserEditTrait
         ];
         empty($this->request->password_new) || $requestData['password'] = Hash::make($this->request->password_new);
 
+        $this->prepareUpdateTrait($requestData);
+
         return $requestData;
+    }
+
+    protected function prepareUpdateTrait(&$requestData)
+    {
     }
 }

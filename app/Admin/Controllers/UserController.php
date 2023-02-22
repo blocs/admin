@@ -55,9 +55,4 @@ class UserController extends \Blocs\Controllers\Base
             'role' => $this->val['role'],
         ];
     }
-
-    protected function prepareUpdate()
-    {
-        return $this->prepareUpdateTrait();
-    }
 }
