@@ -6,8 +6,6 @@ use Illuminate\Support\Carbon;
 
 trait ToggleTrait
 {
-    private $tableData;
-
     public function toggle($id)
     {
         $this->getCurrent($id);

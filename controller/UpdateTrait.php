@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 
 trait UpdateTrait
 {
-    private $tableData;
-
     public function edit($id)
     {
         $this->getCurrent($id);

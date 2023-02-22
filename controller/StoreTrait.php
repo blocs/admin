@@ -94,6 +94,7 @@ trait StoreTrait
         }
 
         $lastInsert = $this->mainTable::create($requestData);
+        $this->val['id'] = $lastInsert->id;
 
         $this->logData = (object) $requestData;
         $this->logData->id = $lastInsert->id;

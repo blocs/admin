@@ -4,8 +4,6 @@ namespace Blocs\Controllers;
 
 trait CopyTrait
 {
-    private $tableData;
-
     public function copy($id)
     {
         $this->getCurrent($id);

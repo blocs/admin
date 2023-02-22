@@ -9,6 +9,7 @@ class Base extends Controller
 {
     protected $val = [];
     protected $request;
+    protected $tableData;
 
     protected $viewPrefix;
     protected $mainTable;

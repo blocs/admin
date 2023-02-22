@@ -24,8 +24,7 @@ trait UserEditTrait
         }
 
         // 旧パスワードをチェック
-        $user = $this->mainTable::find($this->val['id']);
-        if ('' === $user->password) {
+        if ('' === $this->tableData->password) {
             return;
         }
 
@@ -33,7 +32,7 @@ trait UserEditTrait
             return $this->backEdit('', 'パスワードが違います。', 'password_old');
         }
 
-        if (!Hash::check($this->request->password_old, $user->password)) {
+        if (!Hash::check($this->request->password_old, $this->tableData->password)) {
             return $this->backEdit('', 'パスワードが違います。', 'password_old');
         }
     }
