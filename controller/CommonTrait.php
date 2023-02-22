@@ -40,7 +40,7 @@ trait CommonTrait
 
     protected function getCurrent($id)
     {
-        $this->tableData = call_user_func($this->mainTable.'::findOrFail', $id);
+        $this->tableData = $this->mainTable::findOrFail($id);
     }
 
     public static function getRoutePrefix()

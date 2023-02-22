@@ -69,7 +69,7 @@ class Base extends Controller
             }
         }
 
-        $mainTable = call_user_func($this->mainTable.'::query');
+        $mainTable = $this->mainTable::query();
 
         // 検索条件、ソートなど
         $this->prepareIndexSearch($mainTable);

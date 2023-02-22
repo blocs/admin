@@ -32,7 +32,7 @@ trait CopyTrait
             return;
         }
 
-        call_user_func($this->mainTable.'::create', $requestData);
+        $this->mainTable::create($requestData);
     }
 
     protected function outputCopy()

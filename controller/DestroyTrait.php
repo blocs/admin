@@ -70,7 +70,7 @@ trait DestroyTrait
 
     protected function executeDestroy()
     {
-        $this->deletedNum = call_user_func($this->mainTable.'::destroy', $this->val['id']);
+        $this->deletedNum = $this->mainTable::destroy($this->val['id']);
 
         $this->logData = new \stdClass();
         $this->logData->id = $this->val['id'];

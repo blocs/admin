@@ -24,7 +24,7 @@ trait UserEditTrait
         }
 
         // 旧パスワードをチェック
-        $user = call_user_func($this->mainTable.'::find', $this->val['id']);
+        $user = $this->mainTable::find($this->val['id']);
         if ('' === $user->password) {
             return;
         }

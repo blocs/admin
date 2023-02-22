@@ -93,7 +93,7 @@ trait StoreTrait
             return;
         }
 
-        $lastInsert = call_user_func($this->mainTable.'::create', $requestData);
+        $lastInsert = $this->mainTable::create($requestData);
 
         $this->logData = (object) $requestData;
         $this->logData->id = $lastInsert->id;
