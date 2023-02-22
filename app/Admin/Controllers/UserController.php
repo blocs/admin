@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends \Blocs\Controllers\Base
 {
-    use UserEditTrait;
+    use UserUpdateTrait;
 
     public function __construct()
     {

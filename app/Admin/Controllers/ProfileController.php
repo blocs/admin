@@ -4,7 +4,7 @@ namespace App\Admin\Controllers;
 
 class ProfileController extends \Blocs\Controllers\Base
 {
-    use UserEditTrait;
+    use UserUpdateTrait;
 
     public function __construct()
     {

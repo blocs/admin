@@ -4,7 +4,7 @@ namespace App\Admin\Controllers;
 
 use Illuminate\Support\Facades\Hash;
 
-trait UserEditTrait
+trait UserUpdateTrait
 {
     protected function outputEdit()
     {
