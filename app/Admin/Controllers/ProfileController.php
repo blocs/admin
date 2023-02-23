@@ -42,5 +42,7 @@ class ProfileController extends \Blocs\Controllers\Base
             $fileList = json_decode($requestData['file'], true);
             $requestData['filename'] = $fileList[0]['filename'];
         }
+
+        unset($requestData['role']);
     }
 }
