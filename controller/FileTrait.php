@@ -92,7 +92,7 @@ trait FileTrait
 
     protected function checkDownload($filename)
     {
-        // \App::abort(404);
+        // abort(404);
     }
 
     protected function getSize($size)
