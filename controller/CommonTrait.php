@@ -83,4 +83,12 @@ trait CommonTrait
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
     }
+
+    protected function getSubKey()
+    {
+        $mainClassList = explode('\\', $this->mainTable);
+        $mainClassName = array_pop($mainClassList);
+
+        return strtolower($mainClassName).'_id';
+    }
 }
