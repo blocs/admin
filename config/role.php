@@ -2,6 +2,6 @@
 
 return [
     'admin' => [
-        'admin.user.*'
+        'admin.*'
     ],
 ];
