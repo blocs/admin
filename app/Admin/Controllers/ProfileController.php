@@ -8,7 +8,7 @@ class ProfileController extends \Blocs\Controllers\Base
 
     public function __construct()
     {
-        define('BLOCS_AUTOINCLUDE_DIR', 'admin');
+        defined('BLOCS_AUTOINCLUDE_DIR') || define('BLOCS_AUTOINCLUDE_DIR', 'admin');
         parent::__construct();
 
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.profile';

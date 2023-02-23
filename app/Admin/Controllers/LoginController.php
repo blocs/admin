@@ -37,7 +37,7 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
 
-        define('BLOCS_AUTOINCLUDE_DIR', 'admin');
+        defined('BLOCS_AUTOINCLUDE_DIR') || define('BLOCS_AUTOINCLUDE_DIR', 'admin');
 
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.auth';
     }
