@@ -131,20 +131,38 @@ class Menu
     {
         isset($currentName) || $currentName = \Route::currentRouteName();
 
+        // UserRoleをチェック
+        $isUserRole = false;
+        foreach (\Route::getRoutes() as $route) {
+            if ($route->getName() !== $currentName) {
+                continue;
+            }
+
+            $middlewareList = \Route::gatherRouteMiddleware($route);
+            empty($middlewareList) && $middlewareList = [];
+            foreach ($middlewareList as $middleware) {
+                if (false !== strpos($middleware, 'UserRole')) {
+                    $isUserRole = true;
+                    break;
+                }
+            }
+            break;
+        }
+        if (!$isUserRole) {
+            // UserRoleがない
+            return true;
+        }
+
         // 必要な権限を取得
         $configRole = config('role');
         $roleList = [];
         foreach ($configRole as $roleName => $routeNameList) {
-            foreach ($routeNameList as $routeName) {
-                if (false !== strpos($currentName, $routeName)) {
+            foreach ($routeNameList as $routePreg) {
+                if (preg_match('/'.$routePreg.'/', $currentName)) {
                     $roleList[] = $roleName;
                     break;
                 }
             }
-        }
-
-        if (empty($roleList)) {
-            return true;
         }
 
         // 自分の権限を取得

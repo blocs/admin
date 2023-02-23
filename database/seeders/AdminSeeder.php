@@ -24,6 +24,7 @@ class AdminSeeder extends Seeder
                'password' => '$2y$10$Jsfm3aerQQZuOqilLwhKCeK6K/L8QxBIbeMjcmcwtXMXhp27ZNVau',
                'created_at' => Carbon::now(),
                'updated_at' => Carbon::now(),
+               'role' => 'admin',
            ]);
         }
     }

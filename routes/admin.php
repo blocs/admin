@@ -15,14 +15,14 @@ Route::middleware(['web'])
     }
 );
 
-Route::middleware(['web', 'auth', UserRole::class])
+Route::middleware(['web', 'auth'])
     ->group(function () {
         Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::get('/clear', [HomeController::class, 'clear']);
     }
 );
 
-Route::middleware(['web', 'auth', UserRole::class])
+Route::middleware(['web', 'auth'])
     ->prefix('admin/profile')
     ->name('admin.profile.')
     ->group(function () {
