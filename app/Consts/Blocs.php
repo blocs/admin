@@ -7,22 +7,22 @@ class Blocs
     public static function define()
     {
         // 言語設定
-        define('BLOCS_LOCALE', 'ja');
+        defined('BLOCS_LOCALE') || define('BLOCS_LOCALE', 'ja');
 
         // テンプレートのキャッシュを保存するディレクトリ
-        define('BLOCS_CACHE_DIR', config('view.compiled'));
+        defined('BLOCS_CACHE_DIR') || define('BLOCS_CACHE_DIR', config('view.compiled'));
 
         // テンプレートのルートディレクトリ
         $viewPathList = config('view.paths');
-        define('BLOCS_ROOT_DIR', $viewPathList[0]);
+        defined('BLOCS_ROOT_DIR') || define('BLOCS_ROOT_DIR', $viewPathList[0]);
 
         // optionをつなぐ文字列
-        define('BLOCS_OPTION_SEPARATOR', ', ');
+        defined('BLOCS_OPTION_SEPARATOR') || define('BLOCS_OPTION_SEPARATOR', ', ');
 
         // includeの上限設定
-        define('BLOCS_INCLUDE_MAX', 20);
+        defined('BLOCS_INCLUDE_MAX') || define('BLOCS_INCLUDE_MAX', 20);
 
         // 管理画面のビュー
-        define('ADMIN_VIEW_PREFIX', 'admin');
+        defined('ADMIN_VIEW_PREFIX') || define('ADMIN_VIEW_PREFIX', 'admin');
     }
 }
