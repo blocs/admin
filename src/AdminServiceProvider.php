@@ -20,11 +20,13 @@ class BlocsAdmin extends \Blocs\Commands\Deploy
         // 初期ユーザー登録
         \Artisan::call('migrate');
         \Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
-        \Artisan::call('route:clear');
 
         echo "Deploy was completed successfully.\n";
+
+        \Artisan::call('route:cache');
         echo 'Login URL is '.route('login').".\n";
         echo "Initial ID/Pass is admin/admin.\n";
+        \Artisan::call('route:clear');
     }
 }
 
