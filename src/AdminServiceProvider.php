@@ -48,9 +48,6 @@ class AdminServiceProvider extends ServiceProvider
 
         $publishList = [];
 
-        // appをpublish
-        $publishList[__DIR__.'/../app'] = app_path();
-
         // configをpublish
         $publishList[__DIR__.'/../config'] = config_path();
 
