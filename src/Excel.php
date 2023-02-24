@@ -227,7 +227,7 @@ class Excel
             foreach ($row->c as $cell) {
                 if ($cell['r'] == $cellName) {
                     if ('s' == $cell['t']) {
-                        //文字列の時
+                        // 文字列の時
                         return strval($this->getValue(intval($cell->v)));
                     } else {
                         return strval($cell->v);

@@ -7,16 +7,6 @@ use Illuminate\Http\Request;
 
 class Base extends Controller
 {
-    protected $val = [];
-    protected $request;
-    protected $tableData;
-
-    protected $viewPrefix;
-    protected $mainTable;
-    protected $loopItem;
-    protected $paginateNum;
-    protected $noticeItem;
-
     use BackTrait;
     use CommonTrait;
     use CopyTrait;
@@ -27,6 +17,16 @@ class Base extends Controller
     use StoreTrait;
     use ToggleTrait;
     use UpdateTrait;
+
+    protected $val = [];
+    protected $request;
+    protected $tableData;
+
+    protected $viewPrefix;
+    protected $mainTable;
+    protected $loopItem;
+    protected $paginateNum;
+    protected $noticeItem;
 
     public function __construct()
     {

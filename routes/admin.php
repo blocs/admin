@@ -13,14 +13,14 @@ Route::middleware(['web'])
         Route::post('/login', [LoginController::class, 'login']);
         Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
     }
-);
+    );
 
 Route::middleware(['web', 'auth'])
     ->group(function () {
         Route::get('/home', [HomeController::class, 'index'])->name('home');
         Route::get('/clear', [HomeController::class, 'clear']);
     }
-);
+    );
 
 Route::middleware(['web', 'auth'])
     ->prefix('admin/profile')
@@ -32,7 +32,7 @@ Route::middleware(['web', 'auth'])
         Route::get('/{filename}/download', [ProfileController::class, 'download'])->name('download');
         Route::get('/{filename}/{size}/download', [ProfileController::class, 'download'])->name('thumbnail');
     }
-);
+    );
 
 Route::middleware(['web', 'auth', UserRole::class])
     ->prefix('admin/user')
@@ -48,4 +48,4 @@ Route::middleware(['web', 'auth', UserRole::class])
         Route::post('/select', [UserController::class, 'select'])->name('select');
         Route::post('/{id}/toggle', [UserController::class, 'toggle'])->where('id', '[0-9]+')->name('toggle');
     }
-);
+    );

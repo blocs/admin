@@ -2,8 +2,6 @@
 
 namespace Blocs\Middleware;
 
-use Closure;
-
 class StaticGenerator
 {
     protected $staticPath;
@@ -18,7 +16,7 @@ class StaticGenerator
         $this->buildConfigPath = $this->staticPath.'/_build.json';
     }
 
-    public function handle($request, Closure $next, $staticExtension = null)
+    public function handle($request, \Closure $next, $staticExtension = null)
     {
         $response = $next($request);
 

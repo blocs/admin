@@ -94,7 +94,7 @@ class Build extends Command
                     // コンテンツを削除した
                     $this->deleteList[] = $staticName;
 
-                    echo "Delete \"{$staticName}\""."\n";
+                    echo "Delete \"{$staticName}\"\n";
                     continue;
                 }
 
@@ -103,12 +103,12 @@ class Build extends Command
                     // コンテンツに更新があった
                     $this->uploadList[] = $staticName;
 
-                    echo "Update \"{$staticName}\""."\n";
+                    echo "Update \"{$staticName}\"\n";
                 }
                 continue;
             }
 
-            echo "\e[7;31m"."Not found \"{$staticName}\""."\e[m"."\n";
+            echo "\e[7;31mNot found \"{$staticName}\"\e[m\n";
         }
     }
 
@@ -209,13 +209,13 @@ class Build extends Command
         foreach ($uploadList as $uploadFile) {
             $s3Disk->putFileAs(dirname($uploadFile), $this->staticPath.$uploadFile, basename($uploadFile));
 
-            echo "S3 Upload \"{$uploadFile}\""."\n";
+            echo "S3 Upload \"{$uploadFile}\"\n";
         }
 
         foreach ($deleteList as $deleteFile) {
             $s3Disk->delete($deleteFile);
 
-            echo "S3 Delete \"{$deleteFile}\""."\n";
+            echo "S3 Delete \"{$deleteFile}\"\n";
         }
 
         return;
