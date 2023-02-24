@@ -84,7 +84,7 @@ class Base extends Controller
         }
 
         // データの有無
-        $this->val['loopIs'] = !$this->val[$this->loopItem]->isEmpty();
+        $this->val['isLoop'] = !$this->val[$this->loopItem]->isEmpty();
     }
 
     protected function prepareIndexSearch(&$mainTable)
