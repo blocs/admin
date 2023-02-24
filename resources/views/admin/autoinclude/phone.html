@@ -1,22 +1,22 @@
 <!-- data-include="jquery.html" -->
 
 <script type="text/javascript">
-<!-- data-include="libphonenumber-js.min.js" -->
+    <!-- data-include="libphonenumber-js.min.js" -->
 
-$(function(){
-  $('.ai-phone').on('blur', function(){
-    let validateTel = function (value) {
-      return /^[0０]/.test(value) && libphonenumber.isValidNumber(value, 'JP');
-    }
-    let formatTel = function (value) {
-      return new libphonenumber.AsYouType('JP').input(value);
-    }
-    const postdata = $(this).val();
-    if (!validateTel(postdata)) {
-      return
-    }
-    let formatted = formatTel(postdata);
-    $(this).val(formatted);
-  });
-});
+    $(function(){
+        $('.ai-phone').on('blur', function(){
+            let validateTel = function (value) {
+                return /^[0０]/.test(value) && libphonenumber.isValidNumber(value, 'JP');
+            }
+            let formatTel = function (value) {
+                return new libphonenumber.AsYouType('JP').input(value);
+            }
+            const postdata = $(this).val();
+            if (!validateTel(postdata)) {
+                return
+            }
+            let formatted = formatTel(postdata);
+            $(this).val(formatted);
+        });
+    });
 </script>
