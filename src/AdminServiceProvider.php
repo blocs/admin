@@ -20,7 +20,7 @@ class BlocsAdmin extends \Blocs\Commands\Deploy
         // 初期ユーザー登録
         \Artisan::call('migrate');
         \Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
-        \Artisan::call('route:cache');
+        \Artisan::call('route:clear');
 
         echo "Deploy was completed successfully.\n";
         echo 'Login URL is '.route('login').".\n";
