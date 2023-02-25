@@ -26,11 +26,23 @@ class UserController extends \Blocs\Controllers\Base
             $mainTable->where(function ($query) use ($searchItem) {
                 $query
                     ->where('name', 'LIKE', '%'.$searchItem.'%')
-                    ->orWhere('email', 'LIKE', '%'.$searchItem.'%');
+                    ->orWhere('email', 'LIKE', '%'.$searchItem.'%')
+                    ->orWhere('role', 'LIKE', '%'.$searchItem.'%');
             });
         }
 
         $mainTable->orderBy('email', 'asc');
+    }
+
+    protected function prepareIndex()
+    {
+        parent::prepareIndex();
+
+        foreach ($this->val[$this->loopItem] as $loopKey => $loopValue) {
+            $roleList = explode("\t", $loopValue['role']);
+            empty($roleList) && $roleList = [];
+            $this->val[$this->loopItem][$loopKey]['roles'] = $roleList;
+        }
     }
 
     protected function outputCreate()

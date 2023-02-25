@@ -25,6 +25,10 @@
 		</td>
 		<td class='ellipsis toggle-item'>
 			<a href="{{ route(ROUTE_PREFIX.'.edit', ['id' => $user->id]) }}" data-val=$user->email></a>
+
+			<!-- data-loop=$user->roles -->
+			<span class='label label-info'><!-- data-val=$user->role --></span> 
+			<!-- data-endloop -->
 		</td>
 		<td class='ellipsis' data-val=$user->name></td>
 		<td class='hidden-xs' data-val=$user->created_at->toDateString() data-convert='date'></td>

@@ -18,6 +18,13 @@
 				@error('email') <div class='text-danger'>{{ $message }}</div> @enderror
 			</td>
 		</tr>
+        <tr data-exist=$option_role>
+            <th>
+                <label for='role'><!-- data-lang='label:develop_message_optgroup_group' --></label>
+            </th>
+            <td data-val=$role>
+            </td>
+        </tr>
 		<tr>
 			<th>
 				<label for='name'><!-- data-lang='template:admin_profile_name' --></label>
