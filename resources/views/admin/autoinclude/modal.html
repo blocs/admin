@@ -1,153 +1,153 @@
 <!-- data-bloc='modal_store' -->
 
 <!-- 新規作成のモーダル -->
-	<!-- ボタン設定 -->
-		<!-- data-assign=$modalName data-val='modal_store' data-none=$modalName -->
-		<!-- data-include='button_primary' -->
+    <!-- ボタン設定 -->
+        <!-- data-assign=$modalName data-val='modal_store' data-none=$modalName -->
+        <!-- data-include='button_primary' -->
 
-	<!-- モーダル設定 -->
-		<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.store') data-none=$modalAction -->
-		<!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_new_title' data-none=$modalTitle -->
-		<!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_new_message' data-none=$modalMessage -->
+    <!-- モーダル設定 -->
+        <!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.store') data-none=$modalAction -->
+        <!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_new_title' data-none=$modalTitle -->
+        <!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_new_message' data-none=$modalMessage -->
 
-		<!-- data-bloc='modal_button' -->
-			<!-- data-include='button_back_modal' -->
-			<!-- data-include='button_primary_modal' -->
-		<!-- data-endbloc -->
+        <!-- data-bloc='modal_button' -->
+            <!-- data-include='button_back_modal' -->
+            <!-- data-include='button_primary_modal' -->
+        <!-- data-endbloc -->
 
-		<!-- data-include='modal_confirm' -->
+        <!-- data-include='modal_confirm' -->
 
 <!-- data-endbloc -->
 
 <!-- data-bloc='modal_update' -->
 
 <!-- 更新のモーダル -->
-	<!-- ボタン設定 -->
-		<!-- data-assign=$modalName data-val='modal_update' data-none=$modalName -->
-		<!-- data-include='button_primary' -->
+    <!-- ボタン設定 -->
+        <!-- data-assign=$modalName data-val='modal_update' data-none=$modalName -->
+        <!-- data-include='button_primary' -->
 
-	<!-- モーダル設定 -->
-		<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.update', $id) data-none=$modalAction -->
-		<!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_update_title' data-none=$modalTitle -->
-		<!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_update_message' data-none=$modalMessage -->
+    <!-- モーダル設定 -->
+        <!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.update', $id) data-none=$modalAction -->
+        <!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_update_title' data-none=$modalTitle -->
+        <!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_update_message' data-none=$modalMessage -->
 
-		<!-- data-bloc='modal_button' -->
-			<!-- data-include='button_back_modal' -->
-			<!-- data-assign=$buttonPrimaryModalLabel data-lang='template:resource_blocs_modal_update_button' data-none=$buttonPrimaryModalLabel -->
-			<!-- data-include='button_primary_modal' -->
-		<!-- data-endbloc -->
+        <!-- data-bloc='modal_button' -->
+            <!-- data-include='button_back_modal' -->
+            <!-- data-assign=$buttonPrimaryModalLabel data-lang='template:resource_blocs_modal_update_button' data-none=$buttonPrimaryModalLabel -->
+            <!-- data-include='button_primary_modal' -->
+        <!-- data-endbloc -->
 
-		<!-- data-include='modal_confirm' -->
+        <!-- data-include='modal_confirm' -->
 
 <!-- data-endbloc -->
 
 <!-- data-bloc='modal_destroy' -->
 
 <!-- 削除のモーダル -->
-	<!-- ボタン設定 -->
-		<!-- data-assign=$modalName data-val='modal_destroy' data-none=$modalName -->
-		<!-- data-include='button_danger' -->
+    <!-- ボタン設定 -->
+        <!-- data-assign=$modalName data-val='modal_destroy' data-none=$modalName -->
+        <!-- data-include='button_danger' -->
 
-	<!-- モーダル設定 -->
-		<!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.destroy', $id) data-none=$modalAction -->
-		<!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_delete_title' data-none=$modalTitle -->
-		<!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_delete_message' data-none=$modalMessage -->
+    <!-- モーダル設定 -->
+        <!-- data-assign=$modalAction data-val=route(ROUTE_PREFIX.'.destroy', $id) data-none=$modalAction -->
+        <!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_delete_title' data-none=$modalTitle -->
+        <!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_delete_message' data-none=$modalMessage -->
 
-		<!-- data-bloc='modal_button' -->
-			<!-- data-include='button_back_modal' -->
-			<!-- data-include='button_danger_modal' -->
-		<!-- data-endbloc -->
+        <!-- data-bloc='modal_button' -->
+            <!-- data-include='button_back_modal' -->
+            <!-- data-include='button_danger_modal' -->
+        <!-- data-endbloc -->
 
-		<!-- data-include='modal_confirm' -->
+        <!-- data-include='modal_confirm' -->
 
 <!-- data-endbloc -->
 
 <!-- data-bloc='modal_toggle' -->
 
-	<!-- data-assign=$modalName data-val='modal_toggle' data-none=$modalName -->
-	<!-- data-assign=$modalTitleSubmit data-lang='template:resource_blocs_modal_activate_title' data-none=$modalTitleSubmit -->
-	<!-- data-assign=$modalMessageSubmit data-lang='template:resource_blocs_modal_activate_message' data-none=$modalMessageSubmit -->
-	<!-- data-assign=$modalTitleWarning data-lang='template:resource_blocs_modal_inactivate_title' data-none=$modalTitleWarning -->
-	<!-- data-assign=$modalMessageWarning data-lang='template:resource_blocs_modal_inactivate_message' data-none=$modalMessageWarning -->
+    <!-- data-assign=$modalName data-val='modal_toggle' data-none=$modalName -->
+    <!-- data-assign=$modalTitleSubmit data-lang='template:resource_blocs_modal_activate_title' data-none=$modalTitleSubmit -->
+    <!-- data-assign=$modalMessageSubmit data-lang='template:resource_blocs_modal_activate_message' data-none=$modalMessageSubmit -->
+    <!-- data-assign=$modalTitleWarning data-lang='template:resource_blocs_modal_inactivate_title' data-none=$modalTitleWarning -->
+    <!-- data-assign=$modalMessageWarning data-lang='template:resource_blocs_modal_inactivate_message' data-none=$modalMessageWarning -->
 
-	<script type="text/javascript">
-	$(function(){
-		$('button[data-target="#modal_toggle"]').on('click', function(){
-			var modal_toggle = $('#modal_toggle');
-			if($(this).hasClass('btn-danger') || $(this).hasClass('btn-warning')){
-				modal_toggle.find('.modal-title').text('<!-- data-val=$modalTitleSubmit -->');
-				modal_toggle.find('.modal-message').text('<!-- data-val=$modalMessageSubmit -->');
-				modal_toggle.find('.btn-success').show();
-				modal_toggle.find('.btn-warning').hide();
-			} else {
-				modal_toggle.find('.modal-title').text('<!-- data-val=$modalTitleWarning -->');
-				modal_toggle.find('.modal-message').text('<!-- data-val=$modalMessageWarning -->');
-				modal_toggle.find('.btn-success').hide();
-				modal_toggle.find('.btn-warning').show();
-			}
+    <script type="text/javascript">
+    $(function(){
+        $('button[data-target="#modal_toggle"]').on('click', function(){
+            var modal_toggle = $('#modal_toggle');
+            if($(this).hasClass('btn-danger') || $(this).hasClass('btn-warning')){
+                modal_toggle.find('.modal-title').text('<!-- data-val=$modalTitleSubmit -->');
+                modal_toggle.find('.modal-message').text('<!-- data-val=$modalMessageSubmit -->');
+                modal_toggle.find('.btn-success').show();
+                modal_toggle.find('.btn-warning').hide();
+            } else {
+                modal_toggle.find('.modal-title').text('<!-- data-val=$modalTitleWarning -->');
+                modal_toggle.find('.modal-message').text('<!-- data-val=$modalMessageWarning -->');
+                modal_toggle.find('.btn-success').hide();
+                modal_toggle.find('.btn-warning').show();
+            }
 
-			var tr = $(this).closest('tr');
-			$(this).closest('form').attr('action', '<!-- data-val=route(ROUTE_PREFIX.'.index') -->/' + tr.find('input[name$="[selectedRows][]"]:first').val() + '/toggle');
+            var tr = $(this).closest('tr');
+            $(this).closest('form').attr('action', '<!-- data-val=route(ROUTE_PREFIX.'.index') -->/' + tr.find('input[name$="[selectedRows][]"]:first').val() + '/toggle');
 
-			if(tr.find('.toggle-item').length){
-				modal_toggle.find('.itemtitle').text(tr.find('.toggle-item').text());
-			}
-			modal_toggle.modal('show');
-		});
-	});
-	</script>
+            if(tr.find('.toggle-item').length){
+                modal_toggle.find('.itemtitle').text(tr.find('.toggle-item').text());
+            }
+            modal_toggle.modal('show');
+        });
+    });
+    </script>
 
-	<!-- data-include='modal_common' -->
+    <!-- data-include='modal_common' -->
 
 <!-- data-endbloc -->
 
 <!-- data-bloc='modal_confirm' -->
 
-	<script type="text/javascript">
-	$(function(){
-		$('#<!-- data-val=$modalName -->').find('button').attr('disabled', 'disabled');
-		$('#<!-- data-val=$modalName -->').on('show.bs.modal shown.bs.modal', function () {
-			if($('.modal-notice-item').length){
-				if($('.modal-notice-item').val()){
-					$('#<!-- data-val=$modalName -->').find('.itemtitle').text($('.modal-notice-item').val());
-				} else {
-					$('#<!-- data-val=$modalName -->').find('.itemtitle').text($('.modal-notice-item').text());
-				}
-			}
-			$('#<!-- data-val=$modalName -->').find('button').removeAttr('disabled');
-		});
-	});
-	</script>
+    <script type="text/javascript">
+    $(function(){
+        $('#<!-- data-val=$modalName -->').find('button').attr('disabled', 'disabled');
+        $('#<!-- data-val=$modalName -->').on('show.bs.modal shown.bs.modal', function () {
+            if($('.modal-notice-item').length){
+                if($('.modal-notice-item').val()){
+                    $('#<!-- data-val=$modalName -->').find('.itemtitle').text($('.modal-notice-item').val());
+                } else {
+                    $('#<!-- data-val=$modalName -->').find('.itemtitle').text($('.modal-notice-item').text());
+                }
+            }
+            $('#<!-- data-val=$modalName -->').find('button').removeAttr('disabled');
+        });
+    });
+    </script>
 
-	<!-- data-include='modal_common' -->
+    <!-- data-include='modal_common' -->
 
 <!-- data-endbloc -->
 
 <!-- data-bloc='modal_common' -->
 
-	<!-- data-attribute='id' data-val=$modalName -->
-	<div class='modal fade text-left'>
-		<div class='modal-dialog'>
-			<div class='modal-content'>
-				<div class='modal-header'>
-					<!-- data-include='button_close_modal' -->
-					<h4 class='modal-title' data-val=$modalTitle></h4>
-				</div>
-				<div class='modal-body'>
-					<p class='modal-message' data-val=$modalMessage></p>
-					<div class='itemtitle'></div>
-					<!-- data-include='modal_body' data-exist -->
-				</div>
-				<div class='modal-footer'>
-					<!-- data-include='modal_button' -->
-				</div>
-			</div>
-		</div>
-	</div>
+    <!-- data-attribute='id' data-val=$modalName -->
+    <div class='modal fade text-left'>
+        <div class='modal-dialog'>
+            <div class='modal-content'>
+                <div class='modal-header'>
+                    <!-- data-include='button_close_modal' -->
+                    <h4 class='modal-title' data-val=$modalTitle></h4>
+                </div>
+                <div class='modal-body'>
+                    <p class='modal-message' data-val=$modalMessage></p>
+                    <div class='itemtitle'></div>
+                    <!-- data-include='modal_body' data-exist -->
+                </div>
+                <div class='modal-footer'>
+                    <!-- data-include='modal_button' -->
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<!-- $modalName="" $modalAction="" $modalTitle="" $modalMessage="" $buttonPrimaryModalLabel="" -->
+    <!-- $modalName="" $modalAction="" $modalTitle="" $modalMessage="" $buttonPrimaryModalLabel="" -->
 
-	<!-- data-bloc='modal_body' --><!-- data-endbloc -->
-	<!-- data-bloc='modal_button' --><!-- data-endbloc -->
+    <!-- data-bloc='modal_body' --><!-- data-endbloc -->
+    <!-- data-bloc='modal_button' --><!-- data-endbloc -->
 
 <!-- data-endbloc -->

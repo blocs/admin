@@ -1,33 +1,33 @@
 <!-- data-attribute='style' data-val='display:none' data-none=$menu -->
 <div id='nav'>
-	<ul>
+    <ul>
 
-		@auth
-		<li class='userinfo'>
-			<span data-val=$auth_name></span>
-		</li>
-		@endauth
+        @auth
+        <li class='userinfo'>
+            <span data-val=$auth_name></span>
+        </li>
+        @endauth
 
-		<!-- data-attribute='class' data-val='top' data-none=$repeatIndex -->
-		<!-- data-attribute='class' data-val=' in clearfix active' data-exist=$active -->
+        <!-- data-attribute='class' data-val='top' data-none=$repeatIndex -->
+        <!-- data-attribute='class' data-val=' in clearfix active' data-exist=$active -->
         <!-- data-attribute='class' data-val=' btm' data-none=$menu[$repeatIndex+1] -->
-		<li data-repeat=$menu>
-			<!-- data-attribute='href' data-val=$url data-exist=$url -->
-			<a>
-				<!-- data-attribute='class' data-val=$icon data-prefix='fa ' -->
-				<i data-exist=$icon></i> <!-- data-val=$label -->
-			</a>
-			<ul data-exist=$sub>
-				<li data-repeat=$sub>
-					<!-- data-attribute='href' data-val=$url data-exist=$url -->
-					<a>
-						<!-- data-attribute='class' data-val=$icon data-prefix='fa ' -->
-						<i data-exist=$icon></i> <!-- data-val=$label -->
-					</a>
-				</li>
-			</ul>
-		</li>
+        <li data-repeat=$menu>
+            <!-- data-attribute='href' data-val=$url data-exist=$url -->
+            <a>
+                <!-- data-attribute='class' data-val=$icon data-prefix='fa ' -->
+                <i data-exist=$icon></i> <!-- data-val=$label -->
+            </a>
+            <ul data-exist=$sub>
+                <li data-repeat=$sub>
+                    <!-- data-attribute='href' data-val=$url data-exist=$url -->
+                    <a>
+                        <!-- data-attribute='class' data-val=$icon data-prefix='fa ' -->
+                        <i data-exist=$icon></i> <!-- data-val=$label -->
+                    </a>
+                </li>
+            </ul>
+        </li>
 
-	</ul>
-	<!-- end of id(nav) -->
+    </ul>
+    <!-- end of id(nav) -->
 </div>

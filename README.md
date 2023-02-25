@@ -35,12 +35,12 @@ Blocsでの記述例:
 ```html
 <html>
 <ul>
-	{foreach from=$list item=data}
-	<li>
-		<div>{$data.name}</div>
-		<div>{$data.age}</div>
-	</li>
-	{/foreach}
+    {foreach from=$list item=data}
+    <li>
+        <div>{$data.name}</div>
+        <div>{$data.age}</div>
+    </li>
+    {/foreach}
 </ul>
 </html>
 ```
@@ -49,10 +49,10 @@ Blocsでの記述例:
 ```html
 <html>
 <ul>
-	<li data-repeat=$list>
-		<div data-val=$name>田中太郎</div>
-		<div data-val=$age>19</div>
-	</li>
+    <li data-repeat=$list>
+        <div data-val=$name>田中太郎</div>
+        <div data-val=$age>19</div>
+    </li>
 </ul>
 </html>
 ```

@@ -1,26 +1,26 @@
 <!--
-	data-include="chartjs_2bar_1line"
-	$chartjsColor="Blues3"
-	$graphLegendBar1=\Blocs\Lang::get("template:admin_top_user_legend_registered")
-	$graphLegendBar2=\Blocs\Lang::get("template:admin_top_user_legend_deleted")
-	$graphLegendLine1=\Blocs\Lang::get("template:admin_top_user_legend_accumulated")
+    data-include="chartjs_2bar_1line"
+    $chartjsColor="Blues3"
+    $graphLegendBar1=\Blocs\Lang::get("template:admin_top_user_legend_registered")
+    $graphLegendBar2=\Blocs\Lang::get("template:admin_top_user_legend_deleted")
+    $graphLegendLine1=\Blocs\Lang::get("template:admin_top_user_legend_accumulated")
 -->
 
 <div class='panel panel-primary'>
-	<div class='panel-heading'>
-		<h2 class='panel-title'><!-- data-lang='template:admin_top_user_title' --></h2>
-	</div>
-	<div class='panel-body'>
-		<span class='text-primary'>
-			<small><!-- data-lang='template:admin_top_user_number' --></small>
-		</span>
-		<span class='badge' data-val=$current></span>
-		<span class='text-primary'>
-			<small data-val=$update data-convert='date:"Y/m/d H:i:s"'></small>
-		</span>
-		<div style="background-color:#F2FAFF;">
-			<!-- data-attribute='id' data-val=$graphId -->
-			<canvas style="min-height: 250px; height: 250px; max-height: 300px; max-width: 100%;"></canvas>
-		</div>
-	</div>
+    <div class='panel-heading'>
+        <h2 class='panel-title'><!-- data-lang='template:admin_top_user_title' --></h2>
+    </div>
+    <div class='panel-body'>
+        <span class='text-primary'>
+            <small><!-- data-lang='template:admin_top_user_number' --></small>
+        </span>
+        <span class='badge' data-val=$current></span>
+        <span class='text-primary'>
+            <small data-val=$update data-convert='date:"Y/m/d H:i:s"'></small>
+        </span>
+        <div style="background-color:#F2FAFF;">
+            <!-- data-attribute='id' data-val=$graphId -->
+            <canvas style="min-height: 250px; height: 250px; max-height: 300px; max-width: 100%;"></canvas>
+        </div>
+    </div>
 </div>

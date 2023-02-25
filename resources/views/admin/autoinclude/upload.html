@@ -7,160 +7,160 @@
 
 <script type="text/javascript">
 function setUploader(paramname, accept) {
-	var paramnameId = paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
-	if ($('#'+paramnameId+'_upload').length) {
-		return;
-	}
-	else {
-		$('input[name="'+paramname+'"]').wrap('<div id="'+paramnameId+'_upload" class="upload-container"></div>');
-	}
-	$('input[name="'+paramname+'"]').prop('type', 'text').css({
-		width: 0,
-		opacity: 0,
-		position: 'absolute',
-		bottom: 0
-	});
-	var multiple = $('input[name="'+paramname+'"]').prop('multiple');
-	$('#'+paramnameId+'_upload').append('<div class="upload-buttonbar"><span class="btn btn-default fileinput-button"><span class="fa fa-file"></span> <span><!-- data-lang='template:resource_blocs_fileupload_add' --></span><input type="file" /></span></div><div id="'+paramnameId+'_upload_error" class="text-danger"></div><table class="table table-striped"><tbody class="fileList"></tbody></table>');
-	if (multiple) {
-		$('#'+paramnameId+'_upload').find('input[type=file]').attr('multiple', 'multiple');
-	}
-	if (typeof accept != 'undefined') {
-		$('#'+paramnameId+'_upload').find('input[type=file]').attr('accept', accept);
-	}
-	uploaded = parseUploaded(paramname);
-	if (uploaded.length) {
-		$.ajax({
-			type: 'POST',
-			url: '{{ route(ROUTE_PREFIX.'.upload') }}',
-			data: {
-				name: paramname,
-				_token: $('input[name="_token"]').val(),
-				uploadedFile: $('input[name="'+paramname+'"]').val()
-			},
-			dataType: 'json'
-		}).done(function(data) {
-			var paramnameId = data.paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
-			$('#'+paramnameId+'_upload .fileList').append(data.html);
-		});
-		if (!multiple) {
-			$('#'+paramnameId+'_upload .fileinput-button').hide();
-		}
-	}
-	$('#'+paramnameId+'_upload').fileupload({
-		url: '{{ route(ROUTE_PREFIX.'.upload') }}',
-		paramName : 'upload',
-		formData: {
-			name: paramname,
-			_token: $('input[name="_token"]').val(),
-		},
-		sequentialUploads: true,
-		autoUpload: true,
-		fileList: uploaded
-	}).bind('fileuploaddone', function (e, data) {
-		addUploaded(JSON.parse(data.result));
-	}).bind('fileuploadfail', function (e, data) {
-		var response;
-		if (typeof data.jqXHR.responseText != 'undefined') {
-			response = JSON.parse(data.jqXHR.responseText);
-		}
-		if (typeof response.errors != 'undefined') {
-			$('#'+paramnameId+'_upload_error').text(response.errors.upload[0]);
-			return;
-		}
-		if (typeof data.errorThrown == 'undefined') {
-			return;
-		}
-		if (data.errorThrown == 'Content Too Large') {
-			$('#'+paramnameId+'_upload_error').text('<!-- data-lang='error:fileupload_over_maxsize' -->');
-			return;
-		}
-		$('#'+paramnameId+'_upload_error').text(data.errorThrown);
-	});
+    var paramnameId = paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
+    if ($('#'+paramnameId+'_upload').length) {
+        return;
+    }
+    else {
+        $('input[name="'+paramname+'"]').wrap('<div id="'+paramnameId+'_upload" class="upload-container"></div>');
+    }
+    $('input[name="'+paramname+'"]').prop('type', 'text').css({
+        width: 0,
+        opacity: 0,
+        position: 'absolute',
+        bottom: 0
+    });
+    var multiple = $('input[name="'+paramname+'"]').prop('multiple');
+    $('#'+paramnameId+'_upload').append('<div class="upload-buttonbar"><span class="btn btn-default fileinput-button"><span class="fa fa-file"></span> <span><!-- data-lang='template:resource_blocs_fileupload_add' --></span><input type="file" /></span></div><div id="'+paramnameId+'_upload_error" class="text-danger"></div><table class="table table-striped"><tbody class="fileList"></tbody></table>');
+    if (multiple) {
+        $('#'+paramnameId+'_upload').find('input[type=file]').attr('multiple', 'multiple');
+    }
+    if (typeof accept != 'undefined') {
+        $('#'+paramnameId+'_upload').find('input[type=file]').attr('accept', accept);
+    }
+    uploaded = parseUploaded(paramname);
+    if (uploaded.length) {
+        $.ajax({
+            type: 'POST',
+            url: '{{ route(ROUTE_PREFIX.'.upload') }}',
+            data: {
+                name: paramname,
+                _token: $('input[name="_token"]').val(),
+                uploadedFile: $('input[name="'+paramname+'"]').val()
+            },
+            dataType: 'json'
+        }).done(function(data) {
+            var paramnameId = data.paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
+            $('#'+paramnameId+'_upload .fileList').append(data.html);
+        });
+        if (!multiple) {
+            $('#'+paramnameId+'_upload .fileinput-button').hide();
+        }
+    }
+    $('#'+paramnameId+'_upload').fileupload({
+        url: '{{ route(ROUTE_PREFIX.'.upload') }}',
+        paramName : 'upload',
+        formData: {
+            name: paramname,
+            _token: $('input[name="_token"]').val(),
+        },
+        sequentialUploads: true,
+        autoUpload: true,
+        fileList: uploaded
+    }).bind('fileuploaddone', function (e, data) {
+        addUploaded(JSON.parse(data.result));
+    }).bind('fileuploadfail', function (e, data) {
+        var response;
+        if (typeof data.jqXHR.responseText != 'undefined') {
+            response = JSON.parse(data.jqXHR.responseText);
+        }
+        if (typeof response.errors != 'undefined') {
+            $('#'+paramnameId+'_upload_error').text(response.errors.upload[0]);
+            return;
+        }
+        if (typeof data.errorThrown == 'undefined') {
+            return;
+        }
+        if (data.errorThrown == 'Content Too Large') {
+            $('#'+paramnameId+'_upload_error').text('<!-- data-lang='error:fileupload_over_maxsize' -->');
+            return;
+        }
+        $('#'+paramnameId+'_upload_error').text(data.errorThrown);
+    });
 }
 function addUploaded(data) {
-	var paramname = data.paramname;
-	var paramnameId = paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
+    var paramname = data.paramname;
+    var paramnameId = paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
 
-	if (data.error) {
-		$('#'+paramnameId+'_upload_error').text(data.error);
-		return false;
-	} else {
-		$('#'+paramnameId+'_upload_error').text('');
-	}
+    if (data.error) {
+        $('#'+paramnameId+'_upload_error').text(data.error);
+        return false;
+    } else {
+        $('#'+paramnameId+'_upload_error').text('');
+    }
 
-	if (!$('input[name="'+paramname+'"]').prop('multiple')) {
-		$('#'+paramnameId+'_upload .fileinput-button').hide();
-	}
+    if (!$('input[name="'+paramname+'"]').prop('multiple')) {
+        $('#'+paramnameId+'_upload .fileinput-button').hide();
+    }
 
-	var uploaded = parseUploaded(paramname);
-	var duplicated = 0;
-	$.each(uploaded, function(i, item){
-		if (item.filename == data.filename) {
-			duplicated = 1;
-			return false;
-		}
-	});
-	if (duplicated) {
-		$('#'+paramnameId+'_upload_error').text('<!-- data-lang='error:fileupload_duplicated' -->');
-		return false;
-	};
+    var uploaded = parseUploaded(paramname);
+    var duplicated = 0;
+    $.each(uploaded, function(i, item){
+        if (item.filename == data.filename) {
+            duplicated = 1;
+            return false;
+        }
+    });
+    if (duplicated) {
+        $('#'+paramnameId+'_upload_error').text('<!-- data-lang='error:fileupload_duplicated' -->');
+        return false;
+    };
 
-	$('#'+paramnameId+'_upload .fileList').append(data.html);
-	uploaded.push({
-		filename: data.filename,
-		name: data.name,
-		size: data.size,
-		thumbnail: data.thumbnail
-	});
-	var json = JSON.stringify(uploaded);
-	if ('[]' == json) {
-		json = '';
-	}
-	$('input[name="'+paramname+'"]').val(json).triggerHandler('change');
-	return true;
+    $('#'+paramnameId+'_upload .fileList').append(data.html);
+    uploaded.push({
+        filename: data.filename,
+        name: data.name,
+        size: data.size,
+        thumbnail: data.thumbnail
+    });
+    var json = JSON.stringify(uploaded);
+    if ('[]' == json) {
+        json = '';
+    }
+    $('input[name="'+paramname+'"]').val(json).triggerHandler('change');
+    return true;
 }
 function cancelUploaded(ele) {
-	var tr = $(ele).closest('tr');
-	var filename = $(tr).data('filename');
-	var container = $(ele).closest('.upload-container');
-	var input = $(container).find('input.ai-upload');
+    var tr = $(ele).closest('tr');
+    var filename = $(tr).data('filename');
+    var container = $(ele).closest('.upload-container');
+    var input = $(container).find('input.ai-upload');
 
-	tr.remove();
-	if (!input.prop('multiple')) {
-		$(container).find('.fileinput-button').show();
-	}
+    tr.remove();
+    if (!input.prop('multiple')) {
+        $(container).find('.fileinput-button').show();
+    }
 
-	var uploaded = parseUploaded(input.attr('name'));
-	$.each(uploaded, function(i, item){
-		if (item.filename == filename) {
-			uploaded.splice(i, 1);
-			return false;
-		}
-	});
-	var json = JSON.stringify(uploaded);
-	if ('[]' == json) {
-		json = '';
-	}
-	input.val(json).triggerHandler('change');
-	return true;
+    var uploaded = parseUploaded(input.attr('name'));
+    $.each(uploaded, function(i, item){
+        if (item.filename == filename) {
+            uploaded.splice(i, 1);
+            return false;
+        }
+    });
+    var json = JSON.stringify(uploaded);
+    if ('[]' == json) {
+        json = '';
+    }
+    input.val(json).triggerHandler('change');
+    return true;
 }
 function parseUploaded(name) {
-	var uploaded = [];
-	try {
-		uploaded = JSON.parse($('input[name="'+name+'"]').val());
-	} catch (e) {
-		uploaded = [];
-	}
-	return uploaded;
+    var uploaded = [];
+    try {
+        uploaded = JSON.parse($('input[name="'+name+'"]').val());
+    } catch (e) {
+        uploaded = [];
+    }
+    return uploaded;
 }
 $(function(){
-	$('input.ai-upload').each(function(){
-		setUploader($(this).attr('name'), $(this).attr('accept'));
-	});
-	$('form').on('click', '.fileList .cancel', function(){
-		cancelUploaded(this);
-		return false;
-	})
+    $('input.ai-upload').each(function(){
+        setUploader($(this).attr('name'), $(this).attr('accept'));
+    });
+    $('form').on('click', '.fileList .cancel', function(){
+        cancelUploaded(this);
+        return false;
+    })
 });
 </script>
