@@ -8,15 +8,23 @@ trait MacroTrait
 {
     protected function macro(): void
     {
-        Browser::macro('clickTableCell', function ($rows, $cols, $add = null) {
-            $cell = '//*[@id="inmaincontents"]/form[2]/div/div[1]/table/tbody/tr['.$rows.']/td['.$cols.']';
-            isset($add) && $cell .= '/'.$add;
+        // テーブルのセルをクリック
+        Browser::macro('clickTableCell', function ($rows, $cols, $additional = null) {
+            $selector = '#inmaincontents > form > div > div.box-body.no-padding > table > tbody > tr:nth-child('.$rows.') > td:nth-child('.$cols.')';
 
-            return $this->clickAtXPath($cell);
+            isset($additional) && $selector .= ' > '.$additional;
+
+            return $this->click($selector);
         });
 
-        Browser::macro('clickMenu', function ($menu) {
-            return $this->clickLink($menu)->assertSee($menu);
+        // ファイルアップロード
+        Browser::macro('uploadFile', function ($fileLoc) {
+            return $this->attach('#file_upload > div.upload-buttonbar > span > input[type=file]', $fileLoc)->waitFor('#file_upload > table > tbody > tr > td:nth-child(3) > a');
+        });
+
+        // ファイル削除
+        Browser::macro('deleteFile', function () {
+            return $this->click('#file_upload > table > tbody > tr > td:nth-child(3) > a');
         });
     }
 }

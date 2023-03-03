@@ -18,7 +18,6 @@ class AdminTest extends DuskTestCase
         // マクロを登録
         $this->macro();
 
-        // ログイン
         $this->login();
     }
 
@@ -28,7 +27,7 @@ class AdminTest extends DuskTestCase
     public function testユーザー管理(): void
     {
         $this->browse(function (Browser $browser) {
-            $browser->clickMenu('ユーザー管理');
+            $browser->clickLink('ユーザー管理');
         });
 
         $testUser = new \stdClass();
@@ -45,7 +44,7 @@ class AdminTest extends DuskTestCase
         $this->invalid_user(1, '「'.$testUser->email.'」を無効にしました。');
 
         // テストユーザーを凍結解除
-        $this->invalid_user(1, '「'.$testUser->email.'」を有効にしました。');
+        $this->valid_user(1, '「'.$testUser->email.'」を有効にしました。');
 
         // テストユーザーを削除
         $this->destroy_user($testUser, '1 件のデータを削除しました。');
@@ -61,12 +60,44 @@ class AdminTest extends DuskTestCase
         $this->search_user($testUser2->email);
 
         // テストユーザーを更新
-        $this->update_user($testUser2, '「'.$testUser2->email.'」を更新しました。');
+        $this->update_user($testUser2, $testUser2->email.'_2', '「'.$testUser2->email.'」を更新しました。');
 
         // 1行目のユーザーを選択して削除
         $this->select_user(1, '1 件のデータを削除しました。');
 
         // 重複エラー
         $this->store_user($testUser2, 'このユーザーIDはすでに登録されています。');
+    }
+
+    public function testプロフィール(): void
+    {
+        $this->browse(function (Browser $browser) {
+            // ログアウトボタンをクリック
+            $browser->click('#headicons > ul > li:nth-child(2) > a');
+
+            // 画像を添付
+            $browser->uploadFile(__DIR__.'/logo.png');
+
+            // 画像を削除
+            $browser->deleteFile();
+
+            // 名前を更新
+            $browser->type('name', 'testName')
+            ->press('確認');
+
+            // 更新ボタンをクリック
+            $browser->waitFor('#modal_update')
+            ->press('#modal_update > div > div > div.modal-footer > button.btn.btn-primary.btn-lg');
+
+            // メッセージをチェック
+            $browser->assertSee('プロフィールを更新しました。');
+        });
+    }
+
+    protected function tearDown(): void
+    {
+        $this->logout();
+
+        parent::tearDown();
     }
 }
