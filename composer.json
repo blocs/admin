@@ -1,1 +1,37 @@
-null
+{
+    "name": "blocs\/admin",
+    "type": "library",
+    "description": "The basic package for BLOCS",
+    "keywords": [
+        "PHP",
+        "Package",
+        "Blocs",
+        "Laravel"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "LINEAR JAPAN Co.,Ltd.",
+            "email": "admin@linear-jp.biz",
+            "role": "Lead Developer"
+        }
+    ],
+    "require": {
+        "blocs\/blocs": "*"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Blocs\\AdminServiceProvider"
+            ]
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\Admin\\": "app\/Admin\/",
+            "Blocs\\": "src\/",
+            "Blocs\\Controllers\\": "controller\/",
+            "Tests\\": "tests\/"
+        }
+    }
+}
