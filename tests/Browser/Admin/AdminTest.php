@@ -35,38 +35,38 @@ class AdminTest extends DuskTestCase
         $testUser->password = time();
 
         // テストユーザーを追加
-        $this->store_user($testUser, '「'.$testUser->email.'」を登録しました。');
+        $this->storeUser($testUser, '「'.$testUser->email.'」を登録しました。');
 
         // テストユーザーを検索
-        $this->search_user($testUser->email);
+        $this->searchUser($testUser->email);
 
         // テストユーザーを凍結
-        $this->invalid_user(1, '「'.$testUser->email.'」を無効にしました。');
+        $this->invalidUser(1, '「'.$testUser->email.'」を無効にしました。');
 
         // テストユーザーを凍結解除
-        $this->valid_user(1, '「'.$testUser->email.'」を有効にしました。');
+        $this->validUser(1, '「'.$testUser->email.'」を有効にしました。');
 
         // テストユーザーを削除
-        $this->destroy_user($testUser, '1 件のデータを削除しました。');
+        $this->destroyUser($testUser, '1 件のデータを削除しました。');
 
         $testUser2 = new \stdClass();
         $testUser2->email = time();
         $testUser2->password = time();
 
         // テストユーザーを追加
-        $this->store_user($testUser2, '「'.$testUser2->email.'」を登録しました。');
+        $this->storeUser($testUser2, '「'.$testUser2->email.'」を登録しました。');
 
         // テストユーザーを検索
-        $this->search_user($testUser2->email);
+        $this->searchUser($testUser2->email);
 
         // テストユーザーを更新
-        $this->update_user($testUser2, $testUser2->email.'_2', '「'.$testUser2->email.'」を更新しました。');
+        $this->updateUser($testUser2, $testUser2->email.'_2', '「'.$testUser2->email.'」を更新しました。');
 
         // 1行目のユーザーを選択して削除
-        $this->select_user(1, '1 件のデータを削除しました。');
+        $this->selectUser(1, '1 件のデータを削除しました。');
 
         // 重複エラー
-        $this->store_user($testUser2, 'このユーザーIDはすでに登録されています。');
+        $this->storeUser($testUser2, 'このユーザーIDはすでに登録されています。');
     }
 
     public function testプロフィール(): void
