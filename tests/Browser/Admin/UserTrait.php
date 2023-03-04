@@ -6,7 +6,7 @@ use Laravel\Dusk\Browser;
 
 trait UserTrait
 {
-    protected function search_user($search): void
+    protected function searchUser($search): void
     {
         $this->browse(function (Browser $browser) use ($search) {
             $browser->type('search', $search)
@@ -15,7 +15,7 @@ trait UserTrait
         });
     }
 
-    protected function store_user($user, $message = null): void
+    protected function storeUser($user, $message = null): void
     {
         $this->browse(function (Browser $browser) use ($user, $message) {
             $browser->clickLink('新規作成')
@@ -31,7 +31,7 @@ trait UserTrait
         });
     }
 
-    protected function update_user($user, $name, $message = null): void
+    protected function updateUser($user, $name, $message = null): void
     {
         $this->browse(function (Browser $browser) use ($user, $message) {
             $browser->clickLink($user->email)
@@ -45,7 +45,7 @@ trait UserTrait
         });
     }
 
-    protected function destroy_user($user, $message = null): void
+    protected function destroyUser($user, $message = null): void
     {
         $this->browse(function (Browser $browser) use ($user, $message) {
             $browser->clickLink($user->email)
@@ -58,7 +58,7 @@ trait UserTrait
         });
     }
 
-    protected function invalid_user($rows, $message = null): void
+    protected function invalidUser($rows, $message = null): void
     {
         $this->browse(function (Browser $browser) use ($rows, $message) {
             $browser->clickTableCell($rows, 1, 'button');
@@ -70,7 +70,7 @@ trait UserTrait
         });
     }
 
-    protected function valid_user($rows, $message = null): void
+    protected function validUser($rows, $message = null): void
     {
         $this->browse(function (Browser $browser) use ($rows, $message) {
             $browser->clickTableCell($rows, 1, 'button');
@@ -82,7 +82,7 @@ trait UserTrait
         });
     }
 
-    protected function select_user($rows, $message = null): void
+    protected function selectUser($rows, $message = null): void
     {
         $this->browse(function (Browser $browser) use ($rows, $message) {
             $browser->clickTableCell($rows, 3)
