@@ -9,12 +9,11 @@ trait MacroTrait
     protected function macro(): void
     {
         // テーブルのセルをクリック
-        Browser::macro('clickTableCell', function ($rows, $cols, $additional = null) {
-            $selector = '#inmaincontents > form > div > div.box-body.no-padding > table > tbody > tr:nth-child('.$rows.') > td:nth-child('.$cols.')';
+        Browser::macro('clickTableCell', function ($rows, $cols, $tag = null) {
+            $selector = '//*[@id="inmaincontents"]/form[2]/div/div[1]/table/tbody/tr['.$rows.']/td['.$cols.']';
+            isset($tag) && $selector .= '/'.$tag;
 
-            isset($additional) && $selector .= ' > '.$additional;
-
-            return $this->click($selector);
+            return $this->clickAtXPath($selector);
         });
 
         // ファイルアップロード
@@ -24,7 +23,7 @@ trait MacroTrait
 
         // ファイル削除
         Browser::macro('deleteFile', function () {
-            return $this->click('#file_upload > table > tbody > tr > td:nth-child(3) > a');
+            return $this->clickAtXPath('//*[@id="file_upload"]/table/tbody/tr/td[3]/a');
         });
     }
 }

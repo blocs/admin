@@ -10,7 +10,7 @@ trait UserTrait
     {
         $this->browse(function (Browser $browser) use ($search) {
             $browser->type('search', $search)
-            ->click('#inmaincontents > form > div > div > span:nth-child(1) > button')
+            ->clickAtXPath('//*[@id="inmaincontents"]/form[1]/div/div/span[1]/button')
             ->assertSee($search);
         });
     }
