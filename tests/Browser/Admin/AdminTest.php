@@ -72,8 +72,8 @@ class AdminTest extends DuskTestCase
     public function testプロフィール(): void
     {
         $this->browse(function (Browser $browser) {
-            // ログアウトボタンをクリック
-            $browser->click('#headicons > ul > li:nth-child(2) > a');
+            // プロフィールボタンをクリック
+            $browser->clickAtXpath('//*[@id="headicons"]/ul/li[2]/a');
 
             // 画像を添付
             $browser->uploadFile(__DIR__.'/logo.png');
