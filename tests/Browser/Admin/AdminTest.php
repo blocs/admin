@@ -73,7 +73,7 @@ class AdminTest extends DuskTestCase
     {
         $this->browse(function (Browser $browser) {
             // プロフィールボタンをクリック
-            $browser->clickAtXpath('//*[@id="headicons"]/ul/li[2]/a');
+            $browser->click('#headicons > ul > li:nth-child(2) > a');
 
             // 画像を添付
             $browser->uploadFile(__DIR__.'/logo.png');
