@@ -10,16 +10,18 @@ trait UserTrait
     {
         $this->browse(function (Browser $browser) use ($search) {
             $browser->type('search', $search)
-            ->clickAtXPath('//*[@id="inmaincontents"]/form[1]/div/div/span[1]/button')
-            ->assertSee($search);
+            ->press('#inmaincontents > form > div > div > span:nth-child(1) > button');
+
+            $browser->assertSee($search);
         });
     }
 
-    protected function storeUser($user, $message = null): void
+    protected function storeUser($user, $message): void
     {
         $this->browse(function (Browser $browser) use ($user, $message) {
-            $browser->clickLink('新規作成')
-            ->type('email', $user->email)
+            $browser->clickLink('新規作成');
+
+            $browser->type('email', $user->email)
             ->type('password', $user->password)
             ->type('repassword', $user->password)
             ->press('確認');
@@ -27,38 +29,40 @@ trait UserTrait
             $browser->waitFor('#modal_store')
             ->press('#modal_store > div > div > div.modal-footer > button.btn.btn-primary.btn-lg');
 
-            isset($message) && $browser->assertSee($message);
+            $browser->assertSee($message);
         });
     }
 
-    protected function updateUser($user, $name, $message = null): void
+    protected function updateUser($user, $name, $message): void
     {
         $this->browse(function (Browser $browser) use ($user, $message) {
-            $browser->clickLink($user->email)
-            ->type('name', $user->email.'_2')
+            $browser->clickLink($user->email);
+
+            $browser->type('name', $user->email.'_2')
             ->press('確認');
 
             $browser->waitFor('#modal_update')
             ->press('#modal_update > div > div > div.modal-footer > button.btn.btn-primary.btn-lg');
 
-            isset($message) && $browser->assertSee($message);
+            $browser->assertSee($message);
         });
     }
 
-    protected function destroyUser($user, $message = null): void
+    protected function destroyUser($user, $message): void
     {
         $this->browse(function (Browser $browser) use ($user, $message) {
-            $browser->clickLink($user->email)
-            ->press('削除');
+            $browser->clickLink($user->email);
+
+            $browser->press('削除');
 
             $browser->waitFor('#modal_destroy')
             ->press('#modal_destroy > div > div > div.modal-footer > button.btn.btn-danger.btn-lg');
 
-            isset($message) && $browser->assertSee($message);
+            $browser->assertSee($message);
         });
     }
 
-    protected function invalidUser($rows, $message = null): void
+    protected function invalidUser($rows, $message): void
     {
         $this->browse(function (Browser $browser) use ($rows, $message) {
             $browser->clickTableCell($rows, 1, 'button');
@@ -66,11 +70,11 @@ trait UserTrait
             $browser->waitFor('#modal_toggle')
             ->press('#modal_toggle > div > div > div.modal-footer > button.btn.btn-warning.btn-lg');
 
-            isset($message) && $browser->assertSee($message);
+            $browser->assertSee($message);
         });
     }
 
-    protected function validUser($rows, $message = null): void
+    protected function validUser($rows, $message): void
     {
         $this->browse(function (Browser $browser) use ($rows, $message) {
             $browser->clickTableCell($rows, 1, 'button');
@@ -78,11 +82,11 @@ trait UserTrait
             $browser->waitFor('#modal_toggle')
             ->press('#modal_toggle > div > div > div.modal-footer > button.btn.btn-success.btn-lg');
 
-            isset($message) && $browser->assertSee($message);
+            $browser->assertSee($message);
         });
     }
 
-    protected function selectUser($rows, $message = null): void
+    protected function selectUser($rows, $message): void
     {
         $this->browse(function (Browser $browser) use ($rows, $message) {
             $browser->clickTableCell($rows, 3)
@@ -91,7 +95,7 @@ trait UserTrait
             $browser->waitFor('#modal_destroy')
             ->press('#modal_destroy > div > div > div.modal-footer > button.btn.btn-danger.btn-lg');
 
-            isset($message) && $browser->assertSee($message);
+            $browser->assertSee($message);
         });
     }
 }
