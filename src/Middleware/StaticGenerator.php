@@ -48,32 +48,35 @@ class StaticGenerator
     }
 
     // 静的ファイル名を生成
-    private function getStaticName($staticName)
+    private function getStaticName($requestUri)
     {
-        $action = basename($staticName);
+        $action = basename($requestUri);
         if (false !== strpos($action, '.')) {
             // 拡張子あり
-            return $staticName;
+            return $requestUri;
         }
 
         if ('download' === $action) {
-            $staticName = dirname($staticName);
+            $staticName = dirname($requestUri);
+
             $fileName = basename($staticName);
+            $staticName = dirname($staticName);
+
             if (false !== strpos($fileName, '.')) {
                 // サイズ指定なし
-                return $staticName;
+                return "{$staticName}/download/{$fileName}";
             }
-            $fileSize = $fileName;
 
             // サイズ指定あり
-            $staticName = dirname($staticName);
+            $fileSize = $fileName;
+
             $fileName = basename($staticName);
             $staticName = dirname($staticName);
 
-            return "{$staticName}/{$fileSize}/{$fileName}";
+            return "{$staticName}/download/{$fileSize}/{$fileName}";
         }
 
-        $staticName = str_replace('?', '_', $staticName);
+        $staticName = str_replace('?', '_', $requestUri);
         if (isset($this->staticExtension)) {
             empty($this->staticExtension) || $staticName .= '.'.$this->staticExtension;
         } else {
@@ -93,14 +96,18 @@ class StaticGenerator
             }
 
             $originalUrlList[] = $originalUrl;
+            $jsonOriginalUrl = substr(json_encode($originalUrl), 1, -1);
+            $originalUrlList[] = $jsonOriginalUrl;
+
             $staticNameList[$originalUrl] = $staticName;
+            $staticNameList[$jsonOriginalUrl] = $staticName;
         }
 
         // 長いURLから置換
         array_multisort(array_map('strlen', $originalUrlList), SORT_DESC, $originalUrlList);
 
         foreach ($originalUrlList as $originalUrl) {
-            foreach (['"', "'"] as $quotes) {
+            foreach (['"', "'", '\\"', "\\'"] as $quotes) {
                 // 静的コンテンツへのパスに置換
                 $htmlBuff = str_replace(
                     $quotes.$originalUrl.$quotes,
