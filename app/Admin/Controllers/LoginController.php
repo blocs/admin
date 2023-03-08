@@ -3,7 +3,6 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -26,7 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = RouteServiceProvider::HOME;
+    protected $redirectTo = ADMIN_LOGIN_REDIRECT_TO;
 
     /**
      * Create a new controller instance.
@@ -49,7 +48,7 @@ class LoginController extends Controller
 
     protected function loggedOut(Request $request)
     {
-        return redirect('/login');
+        return redirect(ADMIN_LOGOUT_REDIRECT_TO);
     }
 
     protected function validateLogin(Request $request)
