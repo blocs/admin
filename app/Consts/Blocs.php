@@ -24,5 +24,11 @@ class Blocs
 
         // 管理画面のビュー
         defined('ADMIN_VIEW_PREFIX') || define('ADMIN_VIEW_PREFIX', 'admin');
+
+        // 管理画面のログイン後の遷移先
+        defined('ADMIN_LOGIN_REDIRECT_TO') || define('ADMIN_LOGIN_REDIRECT_TO', '/home');
+
+        // 管理画面のログアウト後の遷移先
+        defined('ADMIN_LOGOUT_REDIRECT_TO') || define('ADMIN_LOGOUT_REDIRECT_TO', '/login');
     }
 }
