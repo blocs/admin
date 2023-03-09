@@ -10,9 +10,9 @@ class HomeController extends \Blocs\Controllers\Base
 
     public function __construct()
     {
-        defined('BLOCS_AUTOINCLUDE_DIR') || define('BLOCS_AUTOINCLUDE_DIR', 'admin');
         parent::__construct();
 
+        $GLOBALS['BLOCS_AUTOINCLUDE_DIR'] = 'admin';
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.home';
     }
 
