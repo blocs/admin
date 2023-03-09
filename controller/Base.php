@@ -30,7 +30,7 @@ class Base extends Controller
 
     public function __construct()
     {
-        defined('ROUTE_PREFIX') || define('ROUTE_PREFIX', self::getRoutePrefix());
+        $GLOBALS['ROUTE_PREFIX'] = self::getRoutePrefix();
     }
 
     /* index */
