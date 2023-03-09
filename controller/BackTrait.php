@@ -6,7 +6,7 @@ trait BackTrait
 {
     protected function backIndex($category, $code)
     {
-        $resirectIndex = redirect()->route(ROUTE_PREFIX.'.index');
+        $resirectIndex = redirect()->route($GLOBALS['ROUTE_PREFIX'].'.index');
 
         $category && $resirectIndex = $resirectIndex->with([
             'category' => $category,
@@ -18,7 +18,7 @@ trait BackTrait
 
     protected function backEdit($category, $code, $noticeForm = '', ...$msgArgList)
     {
-        $resirectEdit = redirect()->route(ROUTE_PREFIX.'.edit', $this->val)->withInput();
+        $resirectEdit = redirect()->route($GLOBALS['ROUTE_PREFIX'].'.edit', $this->val)->withInput();
 
         if ($category) {
             $msgArgList = array_merge([$category, $code], $msgArgList);
