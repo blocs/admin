@@ -52,27 +52,23 @@ class HomeController extends \Blocs\Controllers\Base
         $param['current'] = $current;
         $param['update'] = date(DATE_ATOM);
 
-        $insertList = [];
+        $createList = [];
+        $deleteList = [];
         $recordList = User::where(
             'created_at', '>', $xaxis[count($xaxis) - 1].'-00'
-        )->where(
-            'created_at', '<', $xaxis[0].'-32'
-        )->withTrashed()->get()->toArray();
+        )->orWhere(
+            'deleted_at', '>', $xaxis[count($xaxis) - 1].'-00'
+        )->withTrashed()->select('created_at', 'deleted_at')->get()->toArray();
 
         foreach ($recordList as $record) {
             $month = substr($record['created_at'], 0, 7);
-            isset($insertList[$month]) || $insertList[$month] = 0;
-            ++$insertList[$month];
-        }
+            isset($createList[$month]) || $createList[$month] = 0;
+            ++$createList[$month];
 
-        $deleteList = [];
-        $recordList = User::where(
-            'deleted_at', '>', $xaxis[count($xaxis) - 1].'-00'
-        )->where(
-            'deleted_at', '<', $xaxis[0].'-32'
-        )->withTrashed()->get()->toArray();
+            if (empty($record['deleted_at'])) {
+                continue;
+            }
 
-        foreach ($recordList as $record) {
             $month = substr($record['deleted_at'], 0, 7);
             isset($deleteList[$month]) || $deleteList[$month] = 0;
             ++$deleteList[$month];
@@ -88,7 +84,7 @@ class HomeController extends \Blocs\Controllers\Base
             $line1[] = $current;
             $y2axisMax < $current && $y2axisMax = $current;
 
-            $each = isset($insertList[$xlabel]) ? $insertList[$xlabel] : 0;
+            $each = isset($createList[$xlabel]) ? $createList[$xlabel] : 0;
             $yaxisMax < $each && $yaxisMax = $each;
 
             $bar1[] = $each;
