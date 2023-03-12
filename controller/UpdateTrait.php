@@ -152,6 +152,12 @@ trait UpdateTrait
 
     protected function outputUpdate()
     {
-        return $this->backIndex('success', 'data_updated', $this->request->{$this->noticeItem});
+        if (isset($this->request->{$this->noticeItem})) {
+            $noticeItem = $this->request->{$this->noticeItem};
+        } else {
+            $noticeItem = $this->tableData->{$this->noticeItem};
+        }
+
+        return $this->backIndex('success', 'data_updated', $noticeItem);
     }
 }
