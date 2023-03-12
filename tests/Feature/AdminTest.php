@@ -1,0 +1,262 @@
+<?php
+
+namespace Tests\Feature;
+
+use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
+
+class AdminTest extends TestCase
+{
+    private $response;
+    private $data;
+
+    public function test(): void
+    {
+        $scriptFile = __DIR__.'/script.xlsx';
+        $scriptList = $this->parseExcel($scriptFile);
+
+//      $scriptFile = __DIR__.'/script.json';
+//      $scriptList = json_decode(file_get_contents($scriptFile), true);
+
+        empty($scriptList) && $this->outputFatal("Error: {$scriptFile}");
+        $this->outputMessage("Script: {$scriptFile}");
+
+        foreach ($scriptList as $scriptNo => $testScript) {
+            // メッセージ表示
+            if (!empty($testScript['description'])) {
+                $message = ($scriptNo + 1).'.'.$this->replaceDataKeyList($testScript['description']);
+                $this->outputMessage($message);
+            }
+
+            $this->executeScript($scriptNo, $testScript);
+        }
+    }
+
+    private function executeScript($scriptNo, $testScript)
+    {
+        if (empty($testScript['assertInvalid_0'])) {
+            $this->response = $this->followingRedirects();
+        } else {
+            $this->response = $this;
+        }
+
+        $assertList = [];
+        foreach ($testScript as $method => $arguments) {
+            // データを置換
+            $arguments = $this->replaceDataKeyList($arguments);
+
+            if (in_array($method, ['description', 'method', 'uri', 'query', 'file', 'data', 'dump'])) {
+                $testScript[$method] = $arguments;
+                continue;
+            }
+
+            if (!strncmp($method, 'assert', 6)) {
+                // Assertは後でまとめて実行
+                $assertList[$method] = $arguments;
+                continue;
+            }
+
+            $this->response = $this->executeMethod($method, $arguments);
+        }
+
+        // HTTP Request
+        if ('post' === $testScript['method']) {
+            $postQuery = empty($testScript['query']) ? [] : $testScript['query'];
+            $this->response = $this->executeMethod('post', [$testScript['uri'], $postQuery]);
+        } elseif ('upload' === $testScript['method']) {
+            // アップロードファイルの生成
+            $uploadFile = new UploadedFile(__DIR__.'/'.$testScript['file'], basename($testScript['file']));
+            $this->response = $this->executeMethod('post', [$testScript['uri'], [
+                'upload' => $uploadFile,
+            ]]);
+        } else {
+            $this->response = $this->executeMethod('get', $testScript['uri']);
+        }
+
+        $this->beforeAssert($scriptNo, $testScript);
+
+        // コンテンツをdump
+        if (isset($testScript['dump'])) {
+            if (200 === $this->response->status()) {
+                file_put_contents($testScript['dump'], $this->response->getContent());
+                $this->outputMessage(" -> {$testScript['dump']}");
+            } else {
+                $this->outputMessage(' -> '.$this->response->status());
+            }
+        }
+
+        // Assert
+        foreach ($assertList as $method => $arguments) {
+            list($method) = explode('_', $method, 2);
+
+            $this->executeMethod($method, $arguments);
+        }
+
+        // データの準備
+        isset($testScript['data']) && $this->prepareData($testScript['data']);
+    }
+
+    protected function beforeAssert($scriptNo, $testScript)
+    {
+    }
+
+    private function executeMethod($method, $arguments)
+    {
+        if (is_array($arguments)) {
+            return call_user_func_array([$this->response, $method], $arguments);
+        }
+
+        return call_user_func([$this->response, $method], $arguments);
+    }
+
+    private function prepareData($dataList)
+    {
+        foreach ($dataList as $dataKey => $value) {
+            if ('lastInsertId' === $value) {
+                // storeしたidを取得
+                $this->data[$dataKey] = \DB::getPdo()->lastInsertId();
+                continue;
+            }
+
+            if ('content' === $value) {
+                // 取得したコンテンツを保存
+                $this->data[$dataKey] = $this->response->getContent();
+                continue;
+            }
+
+            list($type, $value) = explode('.', $value, 2);
+            if ('fake' === $type) {
+                // ダミーデータを作成
+                $this->data[$dataKey] = fake()->{$value}();
+                continue;
+            }
+
+            if ('json' === $type) {
+                $jsonData = $this->response->getContent();
+                $jsonList = json_decode($jsonData, true);
+
+                // JSONデータを保存
+                isset($jsonList[$dataKey]) && $this->data[$dataKey] = $jsonList[$dataKey];
+                continue;
+            }
+        }
+    }
+
+    private function replaceDataKeyList($queryList)
+    {
+        if (!is_array($queryList)) {
+            is_string($queryList) && $queryList = $this->replaceDataKey($queryList);
+
+            return $queryList;
+        }
+
+        foreach ($queryList as $key => $value) {
+            is_string($value) && $queryList[$key] = $this->replaceDataKey($value);
+        }
+
+        return $queryList;
+    }
+
+    private function replaceDataKey($query)
+    {
+        preg_match_all('/\<([^\>]+)\>/', $query, $dataKeyList);
+
+        foreach ($dataKeyList[1] as $dataKey) {
+            if (!strncmp($dataKey, 'fake.', 5)) {
+                // ダミーデータを作成
+                $dataKey = substr($dataKey, 5);
+                $this->data[$dataKey] = fake()->{$dataKey}();
+
+                // データを置換
+                $query = str_replace("<fake.{$dataKey}>", $this->data[$dataKey], $query);
+
+                continue;
+            }
+
+            if (!isset($this->data[$dataKey])) {
+                continue;
+            }
+
+            // データを置換
+            $query = str_replace("<{$dataKey}>", $this->data[$dataKey], $query);
+        }
+
+        return $query;
+    }
+
+    private function parseExcel($scriptFile)
+    {
+        $excel = new \Blocs\Excel($scriptFile);
+
+        $scriptList = [];
+        for ($scriptNo = 0; $description = $excel->get(1, 0, $scriptNo + 1); ++$scriptNo) {
+            // description
+            $scriptList[$scriptNo]['description'] = $description;
+
+            // method
+            $method = $excel->get(1, 1, $scriptNo + 1);
+            empty($method) && $method = 'get';
+            $scriptList[$scriptNo]['method'] = $method;
+
+            // uri
+            $scriptList[$scriptNo]['uri'] = $excel->get(1, 2, $scriptNo + 1);
+
+            // query
+            $query = $excel->get(1, 3, $scriptNo + 1);
+            if (!empty($query)) {
+                $query = json_decode('{'.$query.'}', true);
+                empty($query) && $this->outputFatal('JSON Error: Line'.($scriptNo + 1).' query');
+                $scriptList[$scriptNo]['query'] = $query;
+            }
+
+            // file
+            ($file = $excel->get(1, 4, $scriptNo + 1)) && $scriptList[$scriptNo]['file'] = $file;
+
+            // assertSee
+            if ($assertSeeList = $excel->get(1, 5, $scriptNo + 1)) {
+                $assertSeeList = explode("\n", $assertSeeList);
+
+                foreach ($assertSeeList as $assertNum => $assertSee) {
+                    $scriptList[$scriptNo]['assertSee_'.$assertNum] = $assertSee;
+                }
+            }
+
+            // assertStatus
+            ($assertStatus = $excel->get(1, 6, $scriptNo + 1)) && $scriptList[$scriptNo]['assertStatus'] = intval($assertStatus);
+
+            // assertInvalid
+            if ($assertInvalidList = $excel->get(1, 7, $scriptNo + 1)) {
+                $assertInvalidList = explode("\n", $assertInvalidList);
+
+                foreach ($assertInvalidList as $assertNum => $assertInvalid) {
+                    $scriptList[$scriptNo]['assertInvalid_'.$assertNum] = $assertInvalid;
+                }
+            }
+
+            // data
+            $data = $excel->get(1, 8, $scriptNo + 1);
+            if (!empty($data)) {
+                $data = json_decode('{'.$data.'}', true);
+                empty($data) && $this->outputFatal('JSON Error: Line'.($scriptNo + 1).' data');
+                $scriptList[$scriptNo]['data'] = $data;
+            }
+
+            // dump
+            ($dump = $excel->get(1, 9, $scriptNo + 1)) && $scriptList[$scriptNo]['dump'] = $dump;
+        }
+
+        return $scriptList;
+    }
+
+    private function outputMessage($message)
+    {
+        echo "{$message}\n";
+        ob_flush();
+    }
+
+    private function outputFatal($message)
+    {
+        echo "\e[7;31m{$message}\e[m\n";
+        exit;
+    }
+}

@@ -1,0 +1,106 @@
+[
+    {
+        "description": "管理者ログイン",
+        "method": "post",
+        "uri": "\/login",
+        "query": {
+            "email": "admin",
+            "password": "admin"
+        },
+        "assertSee": "管理トップ",
+        "data": {
+            "email": "fake.email",
+            "name": "fake.name",
+            "password": "fake.password"
+        }
+    },
+    {
+        "description": "テストユーザー新規登録\n（<email>\/<password>）",
+        "method": "post",
+        "uri": "\/admin\/user",
+        "query": {
+            "email": "<email>",
+            "role": [
+                "admin"
+            ],
+            "name": "<name>",
+            "password": "<password>",
+            "repassword": "<password>"
+        },
+        "assertSee": "「<email>」を登録しました。",
+        "data": {
+            "id": "lastInsertId"
+        }
+    },
+    {
+        "description": "ログアウト",
+        "method": "post",
+        "uri": "\/logout",
+        "assertSee": "ログイン"
+    },
+    {
+        "description": "<email>ログイン",
+        "method": "post",
+        "uri": "\/login",
+        "query": {
+            "email": "<email>",
+            "password": "<password>"
+        },
+        "assertSee": "管理トップ",
+        "assertSee_1": "<name>",
+        "data": {
+            "name": "fake.name"
+        }
+    },
+    {
+        "description": "ユーザー名変更",
+        "method": "post",
+        "uri": "\/admin\/user\/<id>",
+        "query": {
+            "name": "<name>?"
+        },
+        "assertSee": "「<email>」を更新しました。"
+    },
+    {
+        "description": "アバターアップロード",
+        "method": "upload",
+        "uri": "\/admin\/profile\/upload",
+        "file": "logo.png",
+        "data": {
+            "file": "content",
+            "filename": "json.filename"
+        },
+        "assertStatus": 200
+    },
+    {
+        "description": "アバターダウンロード",
+        "method": "get",
+        "uri": "\/admin\/profile\/<filename>\/download",
+        "assertStatus": 200
+    },
+    {
+        "description": "ユーザー名変更",
+        "method": "post",
+        "uri": "\/admin\/profile\/<id>",
+        "query": {
+            "name": "<name>!",
+            "file": "[<file>]"
+        },
+        "assertSee": "プロフィールを更新しました。"
+    },
+    {
+        "description": "ユーザー名変更",
+        "method": "post",
+        "uri": "\/admin\/profile\/<id>",
+        "query": {
+            "name": "<name>#"
+        },
+        "assertSee": "プロフィールを更新しました。"
+    },
+    {
+        "description": "ログアウト",
+        "method": "post",
+        "uri": "\/logout",
+        "assertSee": "ログイン"
+    }
+]
