@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Browser\Admin;
+namespace Tests\Browser;
 
 use Laravel\Dusk\Browser;
 use Tests\DuskTestCase;
