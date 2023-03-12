@@ -18,9 +18,8 @@ trait CommonTrait
         $sessionKey = $this->viewPrefix.'.search.'.$keyItem;
 
         if (isset($this->request)) {
-            $requestItemList = array_keys($this->request->all());
-            if (in_array($keyItem, $requestItemList)) {
-                if (isset($this->request->$keyItem) && strlen($this->request->$keyItem)) {
+            if ($this->request->has($keyItem)) {
+                if (strlen($this->request->$keyItem)) {
                     // sessionに保存
                     session([$sessionKey => $this->request->$keyItem]);
                 } else {

@@ -13,7 +13,7 @@ trait FileTrait
         $this->request = $request;
         $paramname = $this->request->name;
 
-        if (isset($this->request->uploadedFile)) {
+        if ($this->request->has('uploadedFile')) {
             $uploadedFile = $this->request->uploadedFile;
             is_array($uploadedFile) || $uploadedFile = json_decode($uploadedFile, true);
 

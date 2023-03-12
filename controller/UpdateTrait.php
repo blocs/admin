@@ -152,7 +152,7 @@ trait UpdateTrait
 
     protected function outputUpdate()
     {
-        if (isset($this->request->{$this->noticeItem})) {
+        if ($this->request->has($this->noticeItem)) {
             $noticeItem = $this->request->{$this->noticeItem};
         } else {
             $noticeItem = $this->tableData->{$this->noticeItem};
