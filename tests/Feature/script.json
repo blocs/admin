@@ -7,27 +7,22 @@
             "email": "admin",
             "password": "admin"
         },
-        "assertSee": "管理トップ",
-        "data": {
-            "email": "fake.email",
-            "name": "fake.name",
-            "password": "fake.password"
-        }
+        "assertSee_0": "管理トップ"
     },
     {
         "description": "テストユーザー新規登録\n（<email>\/<password>）",
         "method": "post",
         "uri": "\/admin\/user",
         "query": {
-            "email": "<email>",
+            "email": "<fake.email>",
             "role": [
                 "admin"
             ],
-            "name": "<name>",
-            "password": "<password>",
+            "name": "<fake.name>",
+            "password": "<fake.password>",
             "repassword": "<password>"
         },
-        "assertSee": "「<email>」を登録しました。",
+        "assertSee_0": "「<email>」を登録しました。",
         "data": {
             "id": "lastInsertId"
         }
@@ -36,7 +31,7 @@
         "description": "ログアウト",
         "method": "post",
         "uri": "\/logout",
-        "assertSee": "ログイン"
+        "assertSee_0": "ログイン"
     },
     {
         "description": "<email>ログイン",
@@ -46,31 +41,54 @@
             "email": "<email>",
             "password": "<password>"
         },
-        "assertSee": "管理トップ",
-        "assertSee_1": "<name>",
-        "data": {
-            "name": "fake.name"
-        }
+        "assertSee_0": "管理トップ",
+        "assertSee_1": "<name>"
+    },
+    {
+        "description": "テストユーザー新規登録\n重複エラー",
+        "method": "post",
+        "uri": "\/admin\/user",
+        "query": {
+            "email": "<email>"
+        },
+        "assertInvalid_0": "email",
+        "assertInvalid_1": "password",
+        "assertInvalid_2": "repassword"
+    },
+    {
+        "description": "テストユーザー検索",
+        "method": "post",
+        "uri": "\/admin\/user\/search",
+        "query": {
+            "search": "<email>"
+        },
+        "assertSee_0": "<name>"
     },
     {
         "description": "ユーザー名変更",
         "method": "post",
         "uri": "\/admin\/user\/<id>",
         "query": {
-            "name": "<name>?"
+            "name": "<fake.name>"
         },
-        "assertSee": "「<email>」を更新しました。"
+        "assertSee_0": "「<email>」を更新しました。"
+    },
+    {
+        "description": "プロフィール表示",
+        "method": "get",
+        "uri": "\/admin\/profile\/<id>\/edit",
+        "assertStatus": 200
     },
     {
         "description": "アバターアップロード",
         "method": "upload",
         "uri": "\/admin\/profile\/upload",
         "file": "logo.png",
+        "assertStatus": 200,
         "data": {
             "file": "content",
             "filename": "json.filename"
-        },
-        "assertStatus": 200
+        }
     },
     {
         "description": "アバターダウンロード",
@@ -83,24 +101,36 @@
         "method": "post",
         "uri": "\/admin\/profile\/<id>",
         "query": {
-            "name": "<name>!",
+            "name": "<fake.name>",
             "file": "[<file>]"
         },
-        "assertSee": "プロフィールを更新しました。"
+        "assertSee_0": "プロフィールを更新しました。"
     },
     {
         "description": "ユーザー名変更",
         "method": "post",
         "uri": "\/admin\/profile\/<id>",
         "query": {
-            "name": "<name>#"
+            "name": "<fake.name>"
         },
-        "assertSee": "プロフィールを更新しました。"
+        "assertSee_0": "プロフィールを更新しました。"
+    },
+    {
+        "description": "ユーザー無効化",
+        "method": "post",
+        "uri": "\/admin\/user\/<id>\/toggle",
+        "assertSee_0": "「<email>」を無効にしました。"
+    },
+    {
+        "description": "テストユーザー削除",
+        "method": "post",
+        "uri": "\/admin\/user\/<id>\/destroy",
+        "assertSee_0": "1 件のデータを削除しました。"
     },
     {
         "description": "ログアウト",
         "method": "post",
         "uri": "\/logout",
-        "assertSee": "ログイン"
+        "assertSee_0": "ログイン"
     }
 ]
