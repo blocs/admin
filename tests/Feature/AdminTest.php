@@ -12,11 +12,12 @@ class AdminTest extends TestCase
 
     public function test(): void
     {
-        $scriptFile = __DIR__.'/script.xlsx';
-        $scriptList = $this->parseExcel($scriptFile);
-
-//      $scriptFile = __DIR__.'/script.json';
+        $scriptFile = __DIR__.'/script.json';
 //      $scriptList = json_decode(file_get_contents($scriptFile), true);
+
+        $scriptExcel = __DIR__.'/script.xlsx';
+        $scriptList = $this->parseExcel($scriptExcel);
+        file_put_contents($scriptFile, json_encode($scriptList, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n") && chmod($scriptFile, 0666);
 
         empty($scriptList) && $this->outputFatal("Error: {$scriptFile}");
         $this->outputMessage("Script: {$scriptFile}");
@@ -184,9 +185,9 @@ class AdminTest extends TestCase
         return $query;
     }
 
-    private function parseExcel($scriptFile)
+    private function parseExcel($scriptExcel)
     {
-        $excel = new \Blocs\Excel($scriptFile);
+        $excel = new \Blocs\Excel($scriptExcel);
 
         $scriptList = [];
         for ($scriptNo = 0; $description = $excel->get(1, 0, $scriptNo + 1); ++$scriptNo) {
