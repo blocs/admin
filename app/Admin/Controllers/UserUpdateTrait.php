@@ -42,12 +42,12 @@ trait UserUpdateTrait
         $requestData = [];
 
         // nameの補完
-        if (isset($this->request->name)) {
+        if ($this->request->has('name')) {
             $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
             $requestData['name'] = $this->val['name'];
         }
 
-        if (isset($this->request->role)) {
+        if ($this->request->has('role')) {
             $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);
             $requestData['role'] = $this->val['role'];
         }
