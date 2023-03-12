@@ -39,14 +39,19 @@ trait UserUpdateTrait
 
     protected function prepareUpdate()
     {
-        // nameの補完
-        $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
-        $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);
+        $requestData = [];
 
-        $requestData = [
-            'name' => $this->val['name'],
-            'role' => $this->val['role'],
-        ];
+        // nameの補完
+        if (isset($this->request->name)) {
+            $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
+            $requestData['name'] = $this->val['name'];
+        }
+
+        if (isset($this->request->role)) {
+            $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);
+            $requestData['role'] = $this->val['role'];
+        }
+
         empty($this->request->password_new) || $requestData['password'] = Hash::make($this->request->password_new);
 
         $this->prepareUpdateTrait($requestData);

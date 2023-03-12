@@ -39,7 +39,7 @@ trait FileTrait
         $this->validateUpload($paramname);
 
         isset($this->uploadStorage) || $this->uploadStorage = 'upload';
-        $filename = md5($fileupload->get()).'.'.$extension;
+        $filename = md5(file_get_contents($fileupload->getPathname())).'.'.$extension;
         $fileupload->storeAs($this->uploadStorage, $filename);
 
         $existThumbnail = $this->createThumbnail($this->uploadStorage.'/'.$filename, 'thumbnail') ? 1 : 0;
