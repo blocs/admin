@@ -25,6 +25,7 @@ class AdminTest extends TestCase
         foreach ($scriptList as $scriptNo => $testScript) {
             // メッセージ表示
             if (!empty($testScript['description'])) {
+                // データを置換
                 $message = ($scriptNo + 1).'.'.$this->replaceDataKeyList($testScript['description']);
                 $this->outputMessage($message);
             }
@@ -44,7 +45,7 @@ class AdminTest extends TestCase
         $assertList = [];
         foreach ($testScript as $method => $arguments) {
             // データを置換
-            $arguments = $this->replaceDataKeyList($arguments);
+            'description' !== $method && $arguments = $this->replaceDataKeyList($arguments);
 
             if (in_array($method, ['description', 'method', 'uri', 'query', 'file', 'data', 'dump'])) {
                 $testScript[$method] = $arguments;
@@ -152,7 +153,7 @@ class AdminTest extends TestCase
         }
 
         foreach ($queryList as $key => $value) {
-            is_string($value) && $queryList[$key] = $this->replaceDataKey($value);
+            $queryList[$key] = $this->replaceDataKeyList($value);
         }
 
         return $queryList;
@@ -174,9 +175,8 @@ class AdminTest extends TestCase
                 continue;
             }
 
-            if (!isset($this->data[$dataKey])) {
-                continue;
-            }
+            // データが未定義
+            isset($this->data[$dataKey]) || $this->outputFatal('Data Error: Not defined '.$dataKey);
 
             // データを置換
             $query = str_replace("<{$dataKey}>", $this->data[$dataKey], $query);
