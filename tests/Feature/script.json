@@ -7,19 +7,26 @@
             "email": "admin",
             "password": "admin"
         },
-        "assertSee_0": "管理トップ"
+        "assertSee_0": "管理トップ",
+        "assertSee_1": "admin"
     },
     {
-        "description": "テストユーザー新規登録\n（<email>\/<password>）",
+        "description": "キャッシュクリア",
+        "method": "get",
+        "uri": "\/clear",
+        "assertStatus": 200
+    },
+    {
+        "description": "テストユーザー新規登録\n（<fake.email>\/<fake.password>）",
         "method": "post",
         "uri": "\/admin\/user",
         "query": {
-            "email": "<fake.email>",
+            "email": "<email>",
             "role": [
                 "admin"
             ],
             "name": "<fake.name>",
-            "password": "<fake.password>",
+            "password": "<password>",
             "repassword": "<password>"
         },
         "assertSee_0": "「<email>」を登録しました。",
@@ -28,9 +35,24 @@
         }
     },
     {
+        "description": "テストユーザー検索",
+        "method": "post",
+        "uri": "\/admin\/user\/search",
+        "query": {
+            "search": "<email>"
+        },
+        "assertSee_0": "<email>"
+    },
+    {
         "description": "ログアウト",
         "method": "post",
         "uri": "\/logout",
+        "assertSee_0": "ログイン"
+    },
+    {
+        "description": "ログイン前にユーザー管理を表示",
+        "method": "get",
+        "uri": "\/admin\/user",
         "assertSee_0": "ログイン"
     },
     {
@@ -56,13 +78,31 @@
         "assertInvalid_2": "repassword"
     },
     {
+        "description": "ユーザー一覧表示",
+        "method": "get",
+        "uri": "\/admin\/user",
+        "assertSee_0": "ユーザー管理"
+    },
+    {
         "description": "テストユーザー検索",
         "method": "post",
         "uri": "\/admin\/user\/search",
         "query": {
             "search": "<email>"
         },
-        "assertSee_0": "<name>"
+        "assertSee_0": "<email>"
+    },
+    {
+        "description": "ユーザー新規登録画面表示",
+        "method": "get",
+        "uri": "\/admin\/user\/create",
+        "assertSee_0": "ユーザー管理"
+    },
+    {
+        "description": "ユーザー編集画面表示",
+        "method": "get",
+        "uri": "\/admin\/user\/<id>\/edit",
+        "assertSee_0": "ユーザー管理"
     },
     {
         "description": "ユーザー名変更",
@@ -97,6 +137,12 @@
         "assertStatus": 200
     },
     {
+        "description": "アバターサムネイルダウンロード",
+        "method": "get",
+        "uri": "\/admin\/profile\/<filename>\/thumbnail\/download",
+        "assertStatus": 200
+    },
+    {
         "description": "ユーザー名変更",
         "method": "post",
         "uri": "\/admin\/profile\/<id>",
@@ -122,10 +168,72 @@
         "assertSee_0": "「<email>」を無効にしました。"
     },
     {
+        "description": "ユーザー有効化",
+        "method": "post",
+        "uri": "\/admin\/user\/<id>\/toggle",
+        "assertSee_0": "「<email>」を有効にしました。"
+    },
+    {
         "description": "テストユーザー削除",
         "method": "post",
         "uri": "\/admin\/user\/<id>\/destroy",
         "assertSee_0": "1 件のデータを削除しました。"
+    },
+    {
+        "description": "テストユーザー新規登録\n（<fake.email>\/<fake.password>）",
+        "method": "post",
+        "uri": "\/admin\/user",
+        "query": {
+            "email": "<email>",
+            "role": [
+                "admin"
+            ],
+            "name": "<fake.name>",
+            "password": "<password>",
+            "repassword": "<password>"
+        },
+        "assertSee_0": "「<email>」を登録しました。",
+        "data": {
+            "del_id_1": "lastInsertId"
+        }
+    },
+    {
+        "description": "テストユーザー新規登録\n（<fake.email>\/<fake.password>）",
+        "method": "post",
+        "uri": "\/admin\/user",
+        "query": {
+            "email": "<email>",
+            "role": [
+                "admin"
+            ],
+            "name": "<fake.name>",
+            "password": "<password>",
+            "repassword": "<password>"
+        },
+        "assertSee_0": "「<email>」を登録しました。",
+        "data": {
+            "del_id_2": "lastInsertId"
+        }
+    },
+    {
+        "description": "ユーザー一覧から、テストユーザーを一括削除",
+        "method": "post",
+        "uri": "\/admin\/user\/select",
+        "query": {
+            "users": [
+                {
+                    "selectedRows": [
+                        "<del_id_1>"
+                    ]
+                },
+                {
+                    "selectedRows": [
+                        "<del_id_2>"
+                    ]
+                }
+            ]
+        },
+        "assertSee_0": "2 件のデータを削除しました。"
     },
     {
         "description": "ログアウト",
