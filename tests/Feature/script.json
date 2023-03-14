@@ -126,8 +126,10 @@
         "file": "logo.png",
         "assertStatus": 200,
         "data": {
-            "file": "content",
-            "filename": "json.filename"
+            "filename": "json.filename",
+            "name": "json.name",
+            "size": "json.size",
+            "thumbnail": "json.thumbnail"
         }
     },
     {
@@ -148,7 +150,7 @@
         "uri": "\/admin\/profile\/<id>",
         "query": {
             "name": "<fake.name>",
-            "file": "[<file>]"
+            "file": "[{\"filename\": \"<filename>\",\n\"name\": \"<name>\",\n\"size\": \"<size>\",\n\"thumbnail\": \"<thumbnail>\"}]"
         },
         "assertSee_0": "プロフィールを更新しました。"
     },
