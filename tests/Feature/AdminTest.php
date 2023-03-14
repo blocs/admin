@@ -36,11 +36,7 @@ class AdminTest extends TestCase
 
     private function executeScript($scriptNo, $testScript)
     {
-        if (empty($testScript['assertInvalid_0'])) {
-            $this->response = $this->followingRedirects();
-        } else {
-            $this->response = $this;
-        }
+        $this->response = $this;
 
         $assertList = [];
         foreach ($testScript as $method => $arguments) {
@@ -75,7 +71,10 @@ class AdminTest extends TestCase
             $this->response = $this->executeMethod('get', $testScript['uri']);
         }
 
-        $this->beforeAssert($scriptNo, $testScript);
+        $this->prepareAssert($scriptNo, $testScript);
+
+        // データの準備
+        isset($testScript['data']) && $this->prepareData($testScript['data']);
 
         // コンテンツをdump
         if (isset($testScript['dump'])) {
@@ -87,19 +86,25 @@ class AdminTest extends TestCase
             }
         }
 
+        if (empty($testScript['assertInvalid_0']) && 302 === $this->response->status()) {
+            $this->response = $this->followRedirects($this->response);
+        }
+
         // Assert
         foreach ($assertList as $method => $arguments) {
             list($method) = explode('_', $method, 2);
 
             $this->executeMethod($method, $arguments);
         }
-
-        // データの準備
-        isset($testScript['data']) && $this->prepareData($testScript['data']);
     }
 
-    protected function beforeAssert($scriptNo, $testScript)
+    protected function prepareAssert($scriptNo, $testScript)
     {
+        /*
+        if (0 === $scriptNo) {
+            dd($testScript);
+        }
+        */
     }
 
     private function executeMethod($method, $arguments)
@@ -205,7 +210,7 @@ class AdminTest extends TestCase
             // query
             $query = $excel->get(1, 3, $scriptNo + 1);
             if (!empty($query)) {
-                $query = json_decode('{'.$query.'}', true);
+                $query = json_decode($query, true);
                 empty($query) && $this->outputFatal('JSON Error: Line'.($scriptNo + 1).' query');
                 $scriptList[$scriptNo]['query'] = $query;
             }
@@ -237,7 +242,7 @@ class AdminTest extends TestCase
             // data
             $data = $excel->get(1, 8, $scriptNo + 1);
             if (!empty($data)) {
-                $data = json_decode('{'.$data.'}', true);
+                $data = json_decode($data, true);
                 empty($data) && $this->outputFatal('JSON Error: Line'.($scriptNo + 1).' data');
                 $scriptList[$scriptNo]['data'] = $data;
             }
