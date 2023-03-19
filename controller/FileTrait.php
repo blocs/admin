@@ -28,18 +28,10 @@ trait FileTrait
         $fileupload = $this->request->file('upload');
         $mimeType = $fileupload->getMimeType();
 
-        $extension = $fileupload->extension();
-        if (!$extension) {
-            return json_encode([
-                'paramname' => $paramname,
-                'error' => \Blocs\Lang::get('error:fileupload_error_php'),
-            ]);
-        }
-
         $this->validateUpload($paramname);
 
         isset($this->uploadStorage) || $this->uploadStorage = 'upload';
-        $filename = md5(file_get_contents($fileupload->getPathname())).'.'.$extension;
+        $filename = md5(file_get_contents($fileupload->getPathname()));
         $fileupload->storeAs($this->uploadStorage, $filename);
 
         $existThumbnail = $this->createThumbnail($this->uploadStorage.'/'.$filename, 'thumbnail') ? 1 : 0;
@@ -80,11 +72,11 @@ trait FileTrait
             if ($thumbnail) {
                 return response(\File::get($thumbnail))->header('Content-Type', $mimeType);
             }
-        } else {
-            $thumbnail = $this->createThumbnail($filename, 'thumbnail');
-            if ($thumbnail) {
-                return response($storage->get($filename))->header('Content-Type', $mimeType);
-            }
+        }
+
+        $thumbnail = $this->createThumbnail($filename, 'thumbnail');
+        if ($thumbnail) {
+            return response($storage->get($filename))->header('Content-Type', $mimeType);
         }
 
         return $storage->download($filename);

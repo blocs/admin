@@ -141,7 +141,7 @@ class Menu
             $middlewareList = \Route::gatherRouteMiddleware($route);
             empty($middlewareList) && $middlewareList = [];
             foreach ($middlewareList as $middleware) {
-                if (false !== strpos($middleware, 'UserRole')) {
+                if (false !== strpos($middleware, '\UserRole')) {
                     $isUserRole = true;
                     break;
                 }
