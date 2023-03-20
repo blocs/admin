@@ -10,6 +10,7 @@ trait FileTrait
 
     public function upload(Request $request)
     {
+        $this->val = [];
         $this->request = $request;
         $paramname = $this->request->name;
 
@@ -57,6 +58,8 @@ trait FileTrait
 
     public function download($filename, $size = null)
     {
+        $this->val = [];
+
         if ($redirect = $this->checkDownload($filename)) {
             return $redirect;
         }

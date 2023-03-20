@@ -16,7 +16,7 @@ class HomeController extends \Blocs\Controllers\Base
 
     public function index()
     {
-        $this->val = array_merge($this->val, $this->chart());
+        $this->val = $this->chart();
 
         $this->setupMenu();
 
@@ -106,7 +106,7 @@ class HomeController extends \Blocs\Controllers\Base
         return $param;
     }
 
-    public static function getYaxisMax($yaxisMax)
+    private static function getYaxisMax($yaxisMax)
     {
         $scale = pow(10, strlen(floor($yaxisMax * 1.3)) - 1);
         $yaxisMax = intval(ceil($yaxisMax * 1.3 / $scale) * $scale);
