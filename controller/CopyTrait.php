@@ -6,6 +6,8 @@ trait CopyTrait
 {
     public function copy($id)
     {
+        $this->val = [];
+
         $this->getCurrent($id);
         $this->val['id'] = $id;
 

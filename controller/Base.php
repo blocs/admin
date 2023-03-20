@@ -18,7 +18,7 @@ class Base extends Controller
     use ToggleTrait;
     use UpdateTrait;
 
-    protected $val = [];
+    protected $val;
     protected $request;
     protected $tableData;
 
@@ -32,6 +32,8 @@ class Base extends Controller
 
     public function index()
     {
+        $this->val = [];
+
         $this->prepareIndex();
 
         if (session()->has($this->viewPrefix.'.confirm')) {
@@ -44,6 +46,7 @@ class Base extends Controller
 
     public function search(Request $request)
     {
+        $this->val = [];
         $this->request = $request;
 
         return $this->index();
@@ -90,6 +93,9 @@ class Base extends Controller
     {
         $this->val['paginate'] = $mainTable->paginate($this->paginateNum);
         $this->val[$this->loopItem] = $this->val['paginate'];
+
+        // 存在しないページ
+        $this->val['paginate']->lastPage() < $this->val['paginate']->currentPage() && abort(404);
     }
 
     protected function outputIndex()

@@ -10,6 +10,8 @@ trait DestroyTrait
 
     public function confirmDestroy($id, Request $request)
     {
+        $this->val = [];
+
         $this->getCurrent($id);
         $this->val['id'] = $id;
         $this->request = $request;
@@ -43,6 +45,8 @@ trait DestroyTrait
 
     public function destroy($id, Request $request)
     {
+        $this->val = [];
+
         $this->getCurrent($id);
         $this->val['id'] = $id;
         $this->request = $request;
