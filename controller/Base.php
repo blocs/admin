@@ -28,11 +28,6 @@ class Base extends Controller
     protected $paginateNum;
     protected $noticeItem;
 
-    public function __construct()
-    {
-        $GLOBALS['ROUTE_PREFIX'] = self::getRoutePrefix();
-    }
-
     /* index */
 
     public function index()

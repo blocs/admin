@@ -6,7 +6,7 @@
         <!-- data-include='button_primary' -->
 
     <!-- モーダル設定 -->
-        <!-- data-assign=$modalAction data-val=route($GLOBALS['ROUTE_PREFIX'].'.store') data-none=$modalAction -->
+        <!-- data-assign=$modalAction data-val=route(\Blocs\Common::routePrefix().'.store') data-none=$modalAction -->
         <!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_new_title' data-none=$modalTitle -->
         <!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_new_message' data-none=$modalMessage -->
 
@@ -27,7 +27,7 @@
         <!-- data-include='button_primary' -->
 
     <!-- モーダル設定 -->
-        <!-- data-assign=$modalAction data-val=route($GLOBALS['ROUTE_PREFIX'].'.update', $id) data-none=$modalAction -->
+        <!-- data-assign=$modalAction data-val=route(\Blocs\Common::routePrefix().'.update', $id) data-none=$modalAction -->
         <!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_update_title' data-none=$modalTitle -->
         <!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_update_message' data-none=$modalMessage -->
 
@@ -49,7 +49,7 @@
         <!-- data-include='button_danger' -->
 
     <!-- モーダル設定 -->
-        <!-- data-assign=$modalAction data-val=route($GLOBALS['ROUTE_PREFIX'].'.destroy', $id) data-none=$modalAction -->
+        <!-- data-assign=$modalAction data-val=route(\Blocs\Common::routePrefix().'.destroy', $id) data-none=$modalAction -->
         <!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_delete_title' data-none=$modalTitle -->
         <!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_delete_message' data-none=$modalMessage -->
 
@@ -87,7 +87,7 @@
             }
 
             var tr = $(this).closest('tr');
-            $(this).closest('form').attr('action', '<!-- data-val=route($GLOBALS['ROUTE_PREFIX'].'.index') -->/' + tr.find('input[name$="[selectedRows][]"]:first').val() + '/toggle');
+            $(this).closest('form').attr('action', '<!-- data-val=route(\Blocs\Common::routePrefix().'.index') -->/' + tr.find('input[name$="[selectedRows][]"]:first').val() + '/toggle');
 
             if(tr.find('.toggle-item').length){
                 modal_toggle.find('.itemtitle').text(tr.find('.toggle-item').text());

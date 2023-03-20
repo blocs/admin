@@ -2,8 +2,6 @@
 
 namespace Blocs;
 
-use Blocs\Controllers\CommonTrait;
-
 class Menu
 {
     public static function get($name = 'root', $breadcrumbList = [])
@@ -48,7 +46,7 @@ class Menu
         $configList = $configList[$name];
 
         // ルート名を取得
-        $currentPrefix = CommonTrait::getRoutePrefix();
+        $currentPrefix = \Blocs\Common::routePrefix();
 
         // メニュー、パンクズリスト
         $menuList = [];
@@ -167,7 +165,7 @@ class Menu
 
         // 自分の権限を取得
         $_userData = \Auth::user();
-        $myRoleList = explode("\t", $_userData['role']);
+        $myRoleList = empty($_userData['role']) ? [] : explode("\t", $_userData['role']);
 
         foreach ($myRoleList as $myRole) {
             if (in_array($myRole, $roleList)) {

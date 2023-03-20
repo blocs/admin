@@ -10,9 +10,7 @@ class UserController extends \Blocs\Controllers\Base
 
     public function __construct()
     {
-        parent::__construct();
-
-        $GLOBALS['BLOCS_AUTOINCLUDE_DIR'] = 'admin';
+        $this->setAutoinclude(resource_path('views/admin/autoinclude'));
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.user';
         $this->mainTable = 'App\Models\Admin\User';
         $this->loopItem = 'users';

@@ -42,21 +42,6 @@ trait CommonTrait
         $this->tableData = $this->mainTable::findOrFail($id);
     }
 
-    public static function getRoutePrefix()
-    {
-        $currentName = \Route::currentRouteName();
-
-        if (empty($currentName)) {
-            return $currentName;
-        }
-
-        $currentNameList = explode('.', $currentName);
-        array_pop($currentNameList);
-        $currentPrefix = implode('.', $currentNameList);
-
-        return $currentPrefix;
-    }
-
     // テーブルのデータと入力値をマージ
     protected static function mergeTable($table, $request)
     {
@@ -83,11 +68,8 @@ trait CommonTrait
         $this->val['breadcrumb'] = $breadcrumb;
     }
 
-    protected function getSubKey()
+    protected function setAutoinclude($autoincludeDir)
     {
-        $mainClassList = explode('\\', $this->mainTable);
-        $mainClassName = array_pop($mainClassList);
-
-        return strtolower($mainClassName).'_id';
+        $GLOBALS[\Route::currentRouteAction()]['BLOCS_AUTOINCLUDE_DIR'] = $autoincludeDir;
     }
 }
