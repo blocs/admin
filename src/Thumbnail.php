@@ -14,7 +14,7 @@ class Thumbnail
         $thumbLoc = BLOCS_CACHE_DIR.'/'.$thumbName;
 
         // サムネイルファイルの拡張子を取得
-        $thumbExt = self::extension($tmpLoc);
+        $thumbExt = self::extension(file_get_contents($tmpLoc));
 
         if (is_file($thumbLoc)) {
             // すでにサムネイルファイルが存在している時
@@ -151,10 +151,10 @@ class Thumbnail
     }
 
     // 拡張子を取得
-    public static function extension($filePath): string
+    public static function extension($content): string
     {
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime_type = finfo_file($finfo, $filePath);
+        $mime_type = finfo_buffer($finfo, $content);
         finfo_close($finfo);
 
         $mimeTypes = new MimeTypes();
