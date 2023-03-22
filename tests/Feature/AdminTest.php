@@ -79,7 +79,7 @@ class AdminTest extends TestCase
         // コンテンツをdump
         if (isset($testScript['dump'])) {
             if (200 === $this->response->status()) {
-                file_put_contents($testScript['dump'], $this->response->getContent());
+                file_put_contents($testScript['dump'], $this->response->getContent()) && chmod($testScript['dump'], 0666);
                 $this->outputMessage(" -> {$testScript['dump']}");
             } else {
                 $this->outputMessage(' -> '.$this->response->status());
