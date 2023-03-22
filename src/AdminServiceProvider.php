@@ -44,6 +44,10 @@ class AdminServiceProvider extends ServiceProvider
 
         // 言語設定を書き換え
         defined('BLOCS_LOCALE') && config(['app.locale' => BLOCS_LOCALE]);
+        if (defined('BLOCS_TIMEZONE')) {
+            config(['app.timezone' => BLOCS_TIMEZONE]);
+            date_default_timezone_set(BLOCS_TIMEZONE);
+        }
 
         // ルーティング追加
         is_file(base_path('routes/admin.php')) && $this->loadRoutesFrom(base_path('routes/admin.php'));
