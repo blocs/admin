@@ -28,7 +28,7 @@ class Proxy
         $response = $this->get($url);
 
         $cache = new \stdClass();
-        $cache->status = $response->status();
+        $cache->status = $response->getStatusCode();
 
         if (200 != $cache->status) {
             self::$cache[$url] = $cache;
@@ -36,14 +36,14 @@ class Proxy
             return $cache;
         }
 
-        $content = $response->content();
+        $content = $response->getContent();
         $extension = \Blocs\Thumbnail::extension($content);
+
         $cache->extension = $extension;
+        $cache->content = $content;
 
         // 容量が増えないようにhtmlのみキャッシュ
-        'html' === $extension && $cache->content = $content;
-
-        self::$cache[$url] = $cache;
+        'html' === $extension && self::$cache[$url] = $cache;
 
         return $cache;
     }
