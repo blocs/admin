@@ -154,6 +154,9 @@ class Build extends Command
                 echo "Delete \"{$staticName}\"\n";
             }
         }
+
+        // ファイルがないディレクトリは削除
+        glob($staticDir.'/*') || rmdir($staticDir);
     }
 
     private function getBuildList()
