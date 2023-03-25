@@ -3,6 +3,7 @@
 namespace Blocs\Commands;
 
 use Blocs\Middleware\StaticGenerator;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Proxy
 {
@@ -36,7 +37,11 @@ class Proxy
             return $cache;
         }
 
-        $content = $response->getContent();
+        if ($response->baseResponse instanceof StreamedResponse) {
+            $content = $response->streamedContent();
+        } else {
+            $content = $response->getContent();
+        }
         $extension = \Blocs\Thumbnail::extension($content);
 
         $cache->extension = $extension;

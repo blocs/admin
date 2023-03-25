@@ -8,7 +8,7 @@ class StaticGenerator
     {
         $response = $next($request);
 
-        if (200 !== $response->status()) {
+        if (200 !== $response->getStatusCode()) {
             return $response;
         }
 
