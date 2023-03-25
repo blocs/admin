@@ -78,15 +78,15 @@ class AdminTest extends TestCase
 
         // コンテンツをdump
         if (isset($testScript['dump'])) {
-            if (200 === $this->response->status()) {
+            if (200 === $this->response->getStatusCode()) {
                 file_put_contents($testScript['dump'], $this->response->getContent()) && chmod($testScript['dump'], 0666);
                 $this->outputMessage(" -> {$testScript['dump']}");
             } else {
-                $this->outputMessage(' -> '.$this->response->status());
+                $this->outputMessage(' -> '.$this->response->getStatusCode());
             }
         }
 
-        if (empty($testScript['assertInvalid_0']) && 302 === $this->response->status()) {
+        if (empty($testScript['assertInvalid_0']) && 302 === $this->response->getStatusCode()) {
             $this->response = $this->followRedirects($this->response);
         }
 
