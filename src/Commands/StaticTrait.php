@@ -144,7 +144,7 @@ trait StaticTrait
         preg_match_all('/["\'](https?:\/\/[^\s<"\']*)/', $content, $matchs);
         $urlList = array_unique($matchs[1]);
         if (empty($urlList)) {
-            return $content;
+            return [];
         }
 
         $baseUrl = url('');
