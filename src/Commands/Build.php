@@ -96,11 +96,16 @@ class Build extends Command
                 continue;
             }
 
-            if (file_exists($staticDir.'/'.$file)) {
-                $beforeContents = file_get_contents($staticDir.'/'.$file);
-                $afterContents = file_get_contents($publicDir.'/'.$file);
+            $publicContent = file_get_contents($publicDir.'/'.$file);
+            if ('html' === $fileExt) {
+                // 静的リンクに置換
+                $publicContent = $this->convertStatic($publicContent);
+            }
 
-                if ($beforeContents === $afterContents) {
+            if (file_exists($staticDir.'/'.$file)) {
+                $staticContent = file_get_contents($staticDir.'/'.$file);
+
+                if ($staticContent === $publicContent) {
                     continue;
                 }
             }
@@ -109,7 +114,7 @@ class Build extends Command
             array_push(self::$uploadList, $staticName);
 
             // コンテンツに更新があった
-            copy($publicDir.'/'.$file, $staticDir.'/'.$file) && chmod($staticDir.'/'.$file, 0666);
+            file_put_contents($staticDir.'/'.$file, $publicContent) && chmod($staticDir.'/'.$file, 0666);
 
             echo "Update \"{$staticName}\"\n";
         }
