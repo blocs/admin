@@ -13,6 +13,12 @@ trait StaticTrait
 
     private function getStaticName($requestUri, $extension)
     {
+        if ('/' === substr($requestUri, -1)) {
+            $requestUri .= 'index.'.$extension;
+
+            return $requestUri;
+        }
+
         // 拡張子をつける
         $requestUri .= '.'.$extension;
 
@@ -20,7 +26,8 @@ trait StaticTrait
         $urlList = explode('?', $requestUri, 2);
 
         if (count($urlList) > 1) {
-            $requestUri = $urlList[0].'---'.$urlList[1];
+            '/' !== substr($urlList[0], -1) && $urlList[0] .= '/';
+            $requestUri = $urlList[0].$urlList[1];
         }
 
         return $requestUri;
@@ -32,14 +39,21 @@ trait StaticTrait
 
         // 拡張子をなくす
         $basename = basename($requestUri);
+        if (!strncmp($basename, 'index', 5)) {
+            $requestUri = dirname($requestUri);
+            '/' !== substr($requestUri, -1) && $requestUri .= '/';
+
+            return $requestUri;
+        }
+
         $basename = explode('.', $basename, 2);
         count($basename) > 1 && $requestUri = substr($requestUri, 0, -1 * strlen($basename[1]) - 1);
 
         // 引数を戻す
-        $urlList = explode('---', $requestUri, 2);
+        $query = basename($requestUri);
 
-        if (count($urlList) > 1) {
-            $requestUri = $urlList[0].'?'.$urlList[1];
+        if (false !== strpos($query, '=')) {
+            $requestUri = dirname($requestUri).'?'.$query;
         }
 
         return $requestUri;
@@ -191,10 +205,6 @@ trait StaticTrait
         $baseUrl = url('');
         $staticLocList = [];
         foreach ($urlList as $url) {
-            if ('/' === substr($url, -1)) {
-                continue;
-            }
-
             // コンテンツを取得
             $requestUri = substr($url, strlen($baseUrl));
             $response = self::$proxy->cache($requestUri);
