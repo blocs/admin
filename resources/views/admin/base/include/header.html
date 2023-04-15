@@ -58,7 +58,9 @@ $(function(){
 </script>
 <!-- data-endexist -->
 
-<form method='post' action="{{ route(\Blocs\Common::routePrefix().'.search') }}" role='search'>
+<!-- data-assign=$searchAction data-val=route(\Blocs\Common::routePrefix().'.search') data-none=$searchAction -->
+<!-- data-attribute="action" data-val=$searchAction -->
+<form method='post' role='search'>
     @csrf
     <div class='box'>
 <!-- data-include='search_filter_before' data-exist -->
