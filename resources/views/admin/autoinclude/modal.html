@@ -107,7 +107,10 @@
     <script type="text/javascript">
     $(function(){
         $('#<!-- data-val=$modalName -->').find('button').attr('disabled', 'disabled');
-        $('#<!-- data-val=$modalName -->').on('show.bs.modal shown.bs.modal', function () {
+        $('#<!-- data-val=$modalName -->').on('show.bs.modal', function () {
+            return $('#<!-- data-val=$modalName -->').closest('form')[0].reportValidity();
+        });
+        $('#<!-- data-val=$modalName -->').on('shown.bs.modal', function () {
             if($('.modal-notice-item').length){
                 if($('.modal-notice-item').val()){
                     $('#<!-- data-val=$modalName -->').find('.itemtitle').text($('.modal-notice-item').val());
