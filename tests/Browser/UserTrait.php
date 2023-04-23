@@ -27,6 +27,7 @@ trait UserTrait
             ->press('確認');
 
             $browser->waitFor('#modal_store')
+            ->pause(500)
             ->press('#modal_store > div > div > div.modal-footer > button.btn.btn-primary.btn-lg');
 
             $browser->assertSee($message);
@@ -42,6 +43,7 @@ trait UserTrait
             ->press('確認');
 
             $browser->waitFor('#modal_update')
+            ->pause(500)
             ->press('#modal_update > div > div > div.modal-footer > button.btn.btn-primary.btn-lg');
 
             $browser->assertSee($message);
@@ -56,6 +58,7 @@ trait UserTrait
             $browser->press('削除');
 
             $browser->waitFor('#modal_destroy')
+            ->pause(500)
             ->press('#modal_destroy > div > div > div.modal-footer > button.btn.btn-danger.btn-lg');
 
             $browser->assertSee($message);
@@ -68,6 +71,7 @@ trait UserTrait
             $browser->clickTableCell($rows, 1, 'button');
 
             $browser->waitFor('#modal_toggle')
+            ->pause(500)
             ->press('#modal_toggle > div > div > div.modal-footer > button.btn.btn-warning.btn-lg');
 
             $browser->assertSee($message);
@@ -80,6 +84,7 @@ trait UserTrait
             $browser->clickTableCell($rows, 1, 'button');
 
             $browser->waitFor('#modal_toggle')
+            ->pause(500)
             ->press('#modal_toggle > div > div > div.modal-footer > button.btn.btn-success.btn-lg');
 
             $browser->assertSee($message);
@@ -93,6 +98,7 @@ trait UserTrait
             ->press('削除');
 
             $browser->waitFor('#modal_destroy')
+            ->pause(500)
             ->press('#modal_destroy > div > div > div.modal-footer > button.btn.btn-danger.btn-lg');
 
             $browser->assertSee($message);
