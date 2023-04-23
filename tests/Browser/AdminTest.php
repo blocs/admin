@@ -87,6 +87,7 @@ class AdminTest extends DuskTestCase
 
             // 更新ボタンをクリック
             $browser->waitFor('#modal_update')
+            ->pause(500)
             ->press('#modal_update > div > div > div.modal-footer > button.btn.btn-primary.btn-lg');
 
             // メッセージをチェック

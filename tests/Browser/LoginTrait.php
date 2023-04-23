@@ -26,6 +26,7 @@ trait LoginTrait
             $browser->click('#headicons > ul > li:nth-child(3) > a');
 
             $browser->waitFor('#modal_logout')
+            ->pause(500)
             ->press('ログアウト');
 
             $browser->assertSee('ログイン');
