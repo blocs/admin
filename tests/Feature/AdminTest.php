@@ -12,12 +12,16 @@ class AdminTest extends TestCase
 
     public function test(): void
     {
-        $scriptFile = __DIR__.'/script.json';
-//      $scriptList = json_decode(file_get_contents($scriptFile), true);
+        // Excel形式
+        $scriptFile = __DIR__.'/script.xlsx';
+        $scriptList = $this->parseExcel($scriptFile);
 
-        $scriptExcel = __DIR__.'/script.xlsx';
-        $scriptList = $this->parseExcel($scriptExcel);
-        file_put_contents($scriptFile, json_encode($scriptList, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n") && chmod($scriptFile, 0666);
+        // JSON形式でexport
+//      file_put_contents($scriptFile, json_encode(__DIR__.'/script.json', JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n") && chmod($scriptFile, 0666);
+
+        // JSON形式
+//      $scriptFile = __DIR__.'/script.json';
+//      $scriptList = json_decode(file_get_contents($scriptFile), true);
 
         empty($scriptList) && $this->outputFatal("Error: {$scriptFile}");
         $this->outputMessage("Script: {$scriptFile}");
