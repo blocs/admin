@@ -2,9 +2,12 @@
 
 namespace Blocs\Middleware;
 
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
 class StaticGenerator
 {
-    public function handle($request, \Closure $next)
+    public function handle(Request $request, \Closure $next): Response
     {
         $response = $next($request);
 
