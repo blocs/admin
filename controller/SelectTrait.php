@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 
 trait SelectTrait
 {
-    private $selectedIdList = [];
-    private $deletedNum = 0;
+    protected $selectedIdList = [];
+    protected $deletedNum = 0;
 
     public function confirmSelect(Request $request)
     {

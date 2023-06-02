@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 trait DestroyTrait
 {
-    private $deletedNum = 0;
+    protected $deletedNum = 0;
 
     public function confirmDestroy($id, Request $request)
     {
