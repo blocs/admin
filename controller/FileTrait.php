@@ -82,7 +82,7 @@ trait FileTrait
             return response($storage->get($filename))->header('Content-Type', $mimeType);
         }
 
-        return $storage->download($filename);
+        return $storage->download($filename, basename($filename).'.'.\Blocs\Thumbnail::extension($storage->get($filename)));
     }
 
     protected function checkDownload($filename)
