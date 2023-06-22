@@ -2,8 +2,6 @@
 
 namespace App\Admin\Controllers;
 
-use Illuminate\Support\Facades\Hash;
-
 trait UserUpdateTrait
 {
     protected function outputEdit()
@@ -32,7 +30,7 @@ trait UserUpdateTrait
             return $this->backEdit('', 'パスワードが違います。', 'password_old');
         }
 
-        if (!Hash::check($this->request->password_old, $this->tableData->password)) {
+        if (!password_verify($this->request->password_old, $this->tableData->password)) {
             return $this->backEdit('', 'パスワードが違います。', 'password_old');
         }
     }
@@ -52,7 +50,7 @@ trait UserUpdateTrait
             $requestData['role'] = $this->val['role'];
         }
 
-        empty($this->request->password_new) || $requestData['password'] = Hash::make($this->request->password_new);
+        empty($this->request->password_new) || $requestData['password'] = bcrypt($this->request->password_new);
 
         $this->prepareUpdateTrait($requestData);
 
