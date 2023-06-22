@@ -2,8 +2,6 @@
 
 namespace App\Admin\Controllers;
 
-use Illuminate\Support\Facades\Hash;
-
 class UserController extends \Blocs\Controllers\Base
 {
     use UserUpdateTrait;
@@ -61,7 +59,7 @@ class UserController extends \Blocs\Controllers\Base
         return [
             'email' => $this->request->email,
             'name' => $this->val['name'],
-            'password' => Hash::make($this->request->password),
+            'password' => bcrypt($this->request->password),
             'role' => $this->val['role'],
         ];
     }
