@@ -3,6 +3,7 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
+use Blocs\Middleware\RedirectIfAuthenticated;
 use Illuminate\Http\Request;
 
 class LoginController extends Controller
@@ -35,7 +36,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest')->except('logout');
+        $this->middleware(RedirectIfAuthenticated::class)->except('logout');
 
         $this->setAutoinclude(resource_path('views/admin/autoinclude'));
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.auth';
