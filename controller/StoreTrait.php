@@ -89,6 +89,7 @@ trait StoreTrait
 
     protected function prepareStore()
     {
+        return $this->request->all();
     }
 
     protected function executeStore($requestData = [])
