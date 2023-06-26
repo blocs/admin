@@ -146,7 +146,7 @@ trait UpdateTrait
 
     protected function prepareUpdate()
     {
-        return $this->request->all();
+        return $this->prepareStore();
     }
 
     protected function executeUpdate($requestData = [])

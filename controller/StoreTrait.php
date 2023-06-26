@@ -89,7 +89,16 @@ trait StoreTrait
 
     protected function prepareStore()
     {
-        return $this->request->all();
+        $requestData = $this->request->all();
+
+        foreach ($requestData as $key => $value) {
+            if (is_array($value)) {
+                // option項目
+                $requestData[$key] = implode("\t", $value);
+            }
+        }
+
+        return $requestData;
     }
 
     protected function executeStore($requestData = [])
