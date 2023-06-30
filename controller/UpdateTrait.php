@@ -27,6 +27,7 @@ trait UpdateTrait
 
     protected function prepareEdit()
     {
+        return $this->prepareCreate();
     }
 
     protected function outputEdit()
