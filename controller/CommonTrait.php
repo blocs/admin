@@ -22,6 +22,7 @@ trait CommonTrait
                 if (strlen($this->request->$keyItem)) {
                     // sessionに保存
                     session([$sessionKey => $this->request->$keyItem]);
+                    $this->val[$keyItem] = $this->request->$keyItem;
                 } else {
                     // sessionを削除
                     session()->forget($sessionKey);
