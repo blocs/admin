@@ -4,38 +4,61 @@ namespace Blocs\Controllers;
 
 trait BackTrait
 {
-    protected function backIndex($category, $code)
+    protected function backIndex($category = null, $message = null)
     {
         $resirectIndex = redirect()->route(\Blocs\Common::routePrefix().'.index');
 
-        $category && $resirectIndex = $resirectIndex->with([
-            'category' => $category,
-            'message' => \Blocs\Lang::get(implode(':', func_get_args())),
-        ]);
+        if (!$category) {
+            return $resirectIndex;
+        }
 
-        return $resirectIndex;
+        // langからメッセージを取得
+        $code = implode(':', func_get_args());
+        ($langMessage = $this->getMessage($code)) != false && $message = $langMessage;
+
+        return $resirectIndex->with([
+            'category' => $category,
+            'message' => $message,
+        ]);
     }
 
-    protected function backEdit($category, $code, $noticeForm = '', ...$msgArgList)
+    protected function backEdit($category = null, $message = null, $noticeForm = null, ...$msgArgList)
     {
         $resirectEdit = redirect()->route(\Blocs\Common::routePrefix().'.edit', $this->val)->withInput();
 
+        if (!$category && !$noticeForm) {
+            return $resirectEdit;
+        }
+
+        // langからメッセージを取得
         if ($category) {
-            $msgArgList = array_merge([$category, $code], $msgArgList);
-            $resirectEdit = $resirectEdit->with([
-                'category' => $category,
-                'message' => \Blocs\Lang::get(implode(':', $msgArgList)),
-            ]);
+            $msgArgList = array_merge([$category, $message], $msgArgList);
         } else {
-            $msgArgList = array_merge([$code], $msgArgList);
+            $msgArgList = array_merge([$message], $msgArgList);
         }
+        $code = implode(':', $msgArgList);
+        ($langMessage = $this->getMessage($code)) != false && $message = $langMessage;
 
-        if ($noticeForm) {
-            $resirectEdit = $resirectEdit->withErrors([
-                $noticeForm => \Blocs\Lang::get(implode(':', $msgArgList)),
+        if ($category) {
+            return $resirectEdit->with([
+                'category' => $category,
+                'message' => $message,
             ]);
         }
 
-        return $resirectEdit;
+        return $resirectEdit->withErrors([
+            $noticeForm => $message,
+        ]);
+    }
+
+    private function getMessage($code)
+    {
+        $langMessage = \Blocs\Lang::get($code);
+        if ($langMessage == $code) {
+            // langからメッセージを取得できない
+            return false;
+        }
+
+        return $langMessage;
     }
 }
