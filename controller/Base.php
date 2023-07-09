@@ -57,8 +57,6 @@ class Base extends Controller
         $this->keepItem('search');
 
         $this->searchItems = [];
-        empty($this->request->search) || $this->val['search'] = $this->request->search;
-
         if (!empty($this->val['search'])) {
             mb_regex_encoding('utf-8');
             $this->searchItems = mb_split("[\s,　]+", $this->val['search']);
