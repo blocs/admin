@@ -1,109 +1,149 @@
-<!-- data-bloc='modal_store' -->
+<!-- data-bloc='button_close_modal' -->
+    <button type='button' class='close' data-dismiss='modal' aria-hidden='true'>
+        &times;
+    </button>
+<!-- data-endbloc -->
 
-<!-- 新規作成のモーダル -->
+<!-- data-bloc='button_back_modal' -->
+    <!-- data-attribute='data-dismiss' data-val='modal' -->
+    <!--
+        data-include='button'
+        $buttonModalBackClass='btn btn-default btn-lg'
+        $buttonClass=$buttonModalBackClass
+        $buttonModalBackIcon='fa fa-arrow-left'
+        $buttonIcon=$buttonModalBackIcon
+        $buttonModalBackLabel=\Blocs\Lang::get('template:resource_blocs_button_back')
+        $buttonLabel=$buttonModalBackLabel
+    -->
+
+    <!-- $buttonModalBackClass='' $buttonModalBackIcon='' $buttonModalBackLabel='' -->
+<!-- data-endbloc -->
+
+<!-- data-bloc='button_modal' -->
+    <!-- data-attribute='formaction' data-val=$modalAction -->
+    <!--
+        data-include='button'
+        $buttonType='submit'
+        $buttonClass=$buttonModalClass
+        $buttonIcon=$buttonModalIcon
+        $buttonLabel=$buttonModalLabel
+    -->
+
+    <!-- $buttonModalClass='' $buttonModalIcon='' $buttonModalLabel='' -->
+<!-- data-endbloc -->
+
+<!-- data-bloc='button_primary_modal' -->
+    <!--
+        data-include='button_modal'
+        $buttonModalClass='btn btn-primary btn-lg'
+        $buttonModalIcon='fa fa-arrow-right'
+        $buttonModalLabel=\Blocs\Lang::get('template:resource_blocs_button_submit')
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc='button_info_modal' -->
+    <!--
+        data-include='button_modal'
+        $buttonModalClass='btn btn-info btn-lg'
+        $buttonModalIcon='fa fa-info-circle'
+        $buttonModalLabel=\Blocs\Lang::get('template:resource_blocs_button_submit')
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc='button_success_modal' -->
+    <!--
+        data-include='button_modal'
+        $buttonModalClass='btn btn-success btn-lg'
+        $buttonModalIcon='fa fa-check'
+        $buttonModalLabel=\Blocs\Lang::get('template:resource_blocs_button_submit')
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc='button_danger_modal' -->
+    <!--
+        data-include='button_modal'
+        $buttonModalClass='btn btn-danger btn-lg'
+        $buttonModalIcon='fa fa-trash'
+        $buttonModalLabel=\Blocs\Lang::get('template:resource_blocs_button_delete')
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc='button_warning_modal' -->
+    <!--
+        data-include='button_modal'
+        $buttonModalClass='btn btn-warning btn-lg'
+        $buttonModalIcon='fa fa-exclamation-triangle'
+        $buttonModalLabel=\Blocs\Lang::get('template:resource_blocs_button_execute')
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc='modal_store' -->
+    <!-- 新規作成のモーダル -->
+    <!-- data-assign=$modalName data-val='modal_store' data-none=$modalName -->
+
     <!-- ボタン設定 -->
-        <!-- data-assign=$modalName data-val='modal_store' data-none=$modalName -->
-        <!-- data-include='button_primary' -->
+    <!-- data-include='button_primary' -->
 
     <!-- モーダル設定 -->
-        <!-- data-assign=$modalAction data-val=route(\Blocs\Common::routePrefix().'.store') data-none=$modalAction -->
-        <!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_new_title' data-none=$modalTitle -->
-        <!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_new_message' data-none=$modalMessage -->
+    <!-- data-bloc='modal_button' -->
+        <!-- data-include='button_back_modal' -->
+        <!-- data-include='button_primary_modal' -->
+    <!-- data-endbloc -->
 
-        <!-- data-bloc='modal_button' -->
-            <!-- data-include='button_back_modal' -->
-            <!-- data-include='button_primary_modal' -->
-        <!-- data-endbloc -->
-
-        <!-- data-include='modal_confirm' -->
-
+    <!--
+        data-include='modal_confirm'
+        $modalAction=route(\Blocs\Common::routePrefix().'.store')
+        $modalTitle=\Blocs\Lang::get('template:resource_blocs_modal_new_title')
+        $modalMessage=\Blocs\Lang::get('template:resource_blocs_modal_new_message')
+    -->
 <!-- data-endbloc -->
 
 <!-- data-bloc='modal_update' -->
+    <!-- 更新のモーダル -->
+    <!-- data-assign=$modalName data-val='modal_update' data-none=$modalName -->
 
-<!-- 更新のモーダル -->
     <!-- ボタン設定 -->
-        <!-- data-assign=$modalName data-val='modal_update' data-none=$modalName -->
-        <!-- data-include='button_primary' -->
+    <!-- data-include='button_primary' -->
 
     <!-- モーダル設定 -->
-        <!-- data-assign=$modalAction data-val=route(\Blocs\Common::routePrefix().'.update', $id) data-none=$modalAction -->
-        <!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_update_title' data-none=$modalTitle -->
-        <!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_update_message' data-none=$modalMessage -->
+    <!-- data-bloc='modal_button' -->
+        <!-- data-include='button_back_modal' -->
+        <!--
+            data-include='button_primary_modal'
+            $buttonModalLabel=\Blocs\Lang::get('template:resource_blocs_modal_update_button')
+        -->
+    <!-- data-endbloc -->
 
-        <!-- data-bloc='modal_button' -->
-            <!-- data-include='button_back_modal' -->
-            <!-- data-assign=$buttonPrimaryModalLabel data-lang='template:resource_blocs_modal_update_button' data-none=$buttonPrimaryModalLabel -->
-            <!-- data-include='button_primary_modal' -->
-        <!-- data-endbloc -->
-
-        <!-- data-include='modal_confirm' -->
-
+    <!--
+        data-include='modal_confirm'
+        $modalAction=route(\Blocs\Common::routePrefix().'.update', $id)
+        $modalTitle=\Blocs\Lang::get('template:resource_blocs_modal_update_title')
+        $modalMessage=\Blocs\Lang::get('template:resource_blocs_modal_update_message')
+    -->
 <!-- data-endbloc -->
 
 <!-- data-bloc='modal_destroy' -->
+    <!-- 削除のモーダル -->
+    <!-- data-assign=$modalName data-val='modal_destroy' data-none=$modalName -->
 
-<!-- 削除のモーダル -->
     <!-- ボタン設定 -->
-        <!-- data-assign=$modalName data-val='modal_destroy' data-none=$modalName -->
-        <!-- data-include='button_danger' -->
+    <!-- data-include='button_danger' -->
 
     <!-- モーダル設定 -->
-        <!-- data-assign=$modalAction data-val=route(\Blocs\Common::routePrefix().'.destroy', $id) data-none=$modalAction -->
-        <!-- data-assign=$modalTitle data-lang='template:resource_blocs_modal_delete_title' data-none=$modalTitle -->
-        <!-- data-assign=$modalMessage data-lang='template:resource_blocs_modal_delete_message' data-none=$modalMessage -->
+    <!-- data-bloc='modal_button' -->
+        <!-- data-include='button_back_modal' -->
+        <!-- data-include='button_danger_modal' -->
+    <!-- data-endbloc -->
 
-        <!-- data-bloc='modal_button' -->
-            <!-- data-include='button_back_modal' -->
-            <!-- data-include='button_danger_modal' -->
-        <!-- data-endbloc -->
-
-        <!-- data-include='modal_confirm' -->
-
-<!-- data-endbloc -->
-
-<!-- data-bloc='modal_toggle' -->
-
-    <!-- data-assign=$modalName data-val='modal_toggle' data-none=$modalName -->
-    <!-- data-assign=$formAction data-val=route(\Blocs\Common::routePrefix().'.index') data-none=$formAction -->
-    <!-- data-assign=$modalTitleSubmit data-lang='template:resource_blocs_modal_activate_title' data-none=$modalTitleSubmit -->
-    <!-- data-assign=$modalMessageSubmit data-lang='template:resource_blocs_modal_activate_message' data-none=$modalMessageSubmit -->
-    <!-- data-assign=$modalTitleWarning data-lang='template:resource_blocs_modal_inactivate_title' data-none=$modalTitleWarning -->
-    <!-- data-assign=$modalMessageWarning data-lang='template:resource_blocs_modal_inactivate_message' data-none=$modalMessageWarning -->
-
-    <script type="text/javascript">
-    $(function(){
-        $('button[data-target="#modal_toggle"]').on('click', function(){
-            var modal_toggle = $('#modal_toggle');
-            if($(this).hasClass('btn-danger') || $(this).hasClass('btn-warning')){
-                modal_toggle.find('.modal-title').text('<!-- data-val=$modalTitleSubmit -->');
-                modal_toggle.find('.modal-message').text('<!-- data-val=$modalMessageSubmit -->');
-                modal_toggle.find('.btn-success').show();
-                modal_toggle.find('.btn-warning').hide();
-            } else {
-                modal_toggle.find('.modal-title').text('<!-- data-val=$modalTitleWarning -->');
-                modal_toggle.find('.modal-message').text('<!-- data-val=$modalMessageWarning -->');
-                modal_toggle.find('.btn-success').hide();
-                modal_toggle.find('.btn-warning').show();
-            }
-
-            var tr = $(this).closest('tr');
-            $(this).closest('form').attr('action', '<!-- data-val=$formAction -->/' + tr.find('input[name$="[selectedRows][]"]:first').val() + '/toggle');
-
-            if(tr.find('.toggle-item').length){
-                modal_toggle.find('.itemtitle').text(tr.find('.toggle-item').text());
-            }
-            modal_toggle.modal('show');
-        });
-    });
-    </script>
-
-    <!-- data-include='modal_common' -->
-
+    <!--
+        data-include='modal_confirm'
+        $modalAction=route(\Blocs\Common::routePrefix().'.destroy', $id)
+        $modalTitle=\Blocs\Lang::get('template:resource_blocs_modal_delete_title')
+        $modalMessage=\Blocs\Lang::get('template:resource_blocs_modal_delete_message')
+    -->
 <!-- data-endbloc -->
 
 <!-- data-bloc='modal_confirm' -->
-
     <script type="text/javascript">
     $(function(){
         $('#<!-- data-val=$modalName -->').find('button').attr('disabled', 'disabled');
@@ -113,9 +153,9 @@
         $('#<!-- data-val=$modalName -->').on('shown.bs.modal', function () {
             if($('.modal-notice-item').length){
                 if($('.modal-notice-item').val()){
-                    $('#<!-- data-val=$modalName -->').find('.itemtitle').text($('.modal-notice-item').val());
+                    $('#<!-- data-val=$modalName -->').find('.itemTitle').text($('.modal-notice-item').val());
                 } else {
-                    $('#<!-- data-val=$modalName -->').find('.itemtitle').text($('.modal-notice-item').text());
+                    $('#<!-- data-val=$modalName -->').find('.itemTitle').text($('.modal-notice-item').text());
                 }
             }
             $('#<!-- data-val=$modalName -->').find('button').removeAttr('disabled');
@@ -124,11 +164,73 @@
     </script>
 
     <!-- data-include='modal_common' -->
+<!-- data-endbloc -->
 
+<!-- data-bloc='modal_toggle' -->
+    <!-- トグルのモーダル -->
+    <!-- data-assign=$modalName data-val='modal_toggle' data-none=$modalName -->
+
+    <!-- モーダル設定 -->
+    <!-- data-bloc='modal_button' -->
+        <!-- data-include='button_back_modal' -->
+        <!--
+            data-include='button_success_modal'
+            $buttonModalActiveIcon='fa fa-check'
+            $buttonModalIcon=$buttonModalActiveIcon
+            $buttonModalLabel=$buttonModalActiveLabel
+        -->
+        <!--
+            data-include='button_warning_modal'
+            $buttonModalInactiveIcon='fa fa-exclamation-triangle'
+            $buttonModalIcon=$buttonModalInactiveIcon
+            $buttonModalLabel=$buttonModalInactiveLabel
+        -->
+
+        <!-- $buttonModalActiveLabel='' $buttonModalInactiveLabel='' -->
+    <!-- data-endbloc -->
+
+    <!--
+        data-include='modal_confirm_toggle'
+        $formAction=route(\Blocs\Common::routePrefix().'.index')
+        $modalActiveTitle=\Blocs\Lang::get('template:resource_blocs_modal_activate_title')
+        $modalActiveMessage=\Blocs\Lang::get('template:resource_blocs_modal_activate_message')
+        $modalInactiveTitle=\Blocs\Lang::get('template:resource_blocs_modal_inactivate_title')
+        $modalInactiveMessage=\Blocs\Lang::get('template:resource_blocs_modal_inactivate_message')
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc='modal_confirm_toggle' -->
+    <script type="text/javascript">
+    $(function(){
+        $('button[data-target="#modal_toggle"]').on('click', function(){
+            var modal_toggle = $('#modal_toggle');
+            if($(this).hasClass('btn-danger') || $(this).hasClass('btn-warning')){
+                modal_toggle.find('.modal-title').text('<!-- data-val=$modalActiveTitle -->');
+                modal_toggle.find('.modal-message').text('<!-- data-val=$modalActiveMessage -->');
+                modal_toggle.find('.btn-success').show();
+                modal_toggle.find('.btn-warning').hide();
+            } else {
+                modal_toggle.find('.modal-title').text('<!-- data-val=$modalInactiveTitle -->');
+                modal_toggle.find('.modal-message').text('<!-- data-val=$modalInactiveMessage -->');
+                modal_toggle.find('.btn-success').hide();
+                modal_toggle.find('.btn-warning').show();
+            }
+
+            var tr = $(this).closest('tr');
+            $(this).closest('form').attr('action', '<!-- data-val=$formAction -->/' + tr.find('input[name$="[selectedRows][]"]:first').val() + '/toggle');
+
+            if(tr.find('.toggle-item').length){
+                modal_toggle.find('.itemTitle').text(tr.find('.toggle-item').text());
+            }
+            modal_toggle.modal('show');
+        });
+    });
+    </script>
+
+    <!-- data-include='modal_common' -->
 <!-- data-endbloc -->
 
 <!-- data-bloc='modal_common' -->
-
     <!-- data-attribute='id' data-val=$modalName -->
     <div class='modal fade text-left'>
         <div class='modal-dialog'>
@@ -139,7 +241,7 @@
                 </div>
                 <div class='modal-body'>
                     <p class='modal-message' data-val=$modalMessage></p>
-                    <div class='itemtitle'></div>
+                    <div class='itemTitle'></div>
                     <!-- data-include='modal_body' data-exist -->
                 </div>
                 <div class='modal-footer'>
@@ -149,9 +251,8 @@
         </div>
     </div>
 
-    <!-- $modalName="" $modalAction="" $formAction="" $modalTitle="" $modalMessage="" $buttonPrimaryModalLabel="" -->
-
     <!-- data-bloc='modal_body' --><!-- data-endbloc -->
     <!-- data-bloc='modal_button' --><!-- data-endbloc -->
 
+    <!-- $modalName='' $modalAction='' $formAction='' $modalTitle='' $modalMessage='' -->
 <!-- data-endbloc -->
