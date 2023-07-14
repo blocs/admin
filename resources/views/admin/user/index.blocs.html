@@ -35,30 +35,20 @@
     </tr>
 </tbody>
 
-<!-- data-bloc='modal_button' -->
-<!-- data-include='button_back_modal' -->
-<!--
-    data-include='button_success_modal'
-    $buttonSuccessModalLabel=\Blocs\Lang::get('template:admin_user_button_valid')
--->
-<!--
-    data-include='button_warning_modal'
-    $buttonWarningModalLabel=\Blocs\Lang::get('template:admin_user_button_invalid')
--->
-<!-- data-endbloc -->
-
 <!--
     data-include='modal_toggle'
-    $modalTitleSubmit=\Blocs\Lang::get('template:admin_user_valid_title')
-    $modalMessageSubmit=\Blocs\Lang::get('template:admin_user_valid_message')
-    $modalTitleWarning=\Blocs\Lang::get('template:admin_user_invalid_title')
-    $modalMessageWarning=\Blocs\Lang::get('template:admin_user_invalid_message')
+    $modalActiveTitle=\Blocs\Lang::get('template:admin_user_valid_title')
+    $modalActiveMessage=\Blocs\Lang::get('template:admin_user_valid_message')
+    $buttonModalActiveLabel=\Blocs\Lang::get('template:admin_user_button_valid')
+    $modalInactiveTitle=\Blocs\Lang::get('template:admin_user_invalid_title')
+    $modalInactiveMessage=\Blocs\Lang::get('template:admin_user_invalid_message')
+    $buttonModalInactiveLabel=\Blocs\Lang::get('template:admin_user_button_invalid')
     data-exist=$isLoop
 -->
 
 <!-- data-include='index_paginate' -->
 
-<!-- data-include='button_new' -->
+<!-- data-include='button_create' -->
 <!--
     data-include='modal_destroy'
     $modalAction=route(\Blocs\Common::routePrefix().'.select')
