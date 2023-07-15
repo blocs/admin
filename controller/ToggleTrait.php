@@ -8,8 +8,6 @@ trait ToggleTrait
 {
     public function toggle($id)
     {
-        $this->val = [];
-
         $this->getCurrent($id);
         $this->val['id'] = $id;
 

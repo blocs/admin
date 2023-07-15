@@ -8,8 +8,6 @@ trait UpdateTrait
 {
     public function edit($id)
     {
-        $this->val = [];
-
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
@@ -41,8 +39,6 @@ trait UpdateTrait
 
     public function show($id)
     {
-        $this->val = [];
-
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
@@ -68,8 +64,6 @@ trait UpdateTrait
 
     public function confirmUpdate($id, Request $request)
     {
-        $this->val = [];
-
         $this->getCurrent($id);
         $this->val['id'] = $id;
         $this->request = $request;
@@ -98,8 +92,6 @@ trait UpdateTrait
 
     protected function outputConfirmUpdate()
     {
-        $this->val = [];
-
         $this->setupMenu();
 
         return view($this->viewPrefix.'.confirmUpdate', $this->val);
@@ -107,8 +99,6 @@ trait UpdateTrait
 
     public function update($id, Request $request)
     {
-        $this->val = [];
-
         $this->getCurrent($id);
         $this->val['id'] = $id;
         $this->request = $request;
