@@ -11,7 +11,6 @@ trait SelectTrait
 
     public function confirmSelect(Request $request)
     {
-        $this->val = [];
         $this->request = $request;
 
         if ($redirect = $this->validateSelect()) {
@@ -53,7 +52,6 @@ trait SelectTrait
 
     public function select(Request $request)
     {
-        $this->val = [];
         $this->request = $request;
 
         if (session()->has($this->viewPrefix.'.confirm')) {

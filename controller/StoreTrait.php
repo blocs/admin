@@ -8,8 +8,6 @@ trait StoreTrait
 {
     public function create()
     {
-        $this->val = [];
-
         $this->prepareCreate();
 
         if (session()->has($this->viewPrefix.'.confirm')) {
@@ -35,7 +33,6 @@ trait StoreTrait
 
     public function confirmStore(Request $request)
     {
-        $this->val = [];
         $this->request = $request;
 
         if ($redirect = $this->validateStore()) {
@@ -69,7 +66,6 @@ trait StoreTrait
 
     public function store(Request $request)
     {
-        $this->val = [];
         $this->request = $request;
 
         if (session()->has($this->viewPrefix.'.confirm')) {
