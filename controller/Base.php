@@ -18,7 +18,7 @@ class Base extends Controller
     use ToggleTrait;
     use UpdateTrait;
 
-    protected $val;
+    protected $val = [];
     protected $request;
     protected $tableData;
 
@@ -32,8 +32,6 @@ class Base extends Controller
 
     public function index()
     {
-        $this->val = [];
-
         $this->prepareIndex();
 
         if (session()->has($this->viewPrefix.'.confirm')) {
@@ -46,7 +44,6 @@ class Base extends Controller
 
     public function search(Request $request)
     {
-        $this->val = [];
         $this->request = $request;
 
         return $this->index();
