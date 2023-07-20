@@ -31,5 +31,9 @@ class Blocs
 
         // 管理画面のログアウト後の遷移先
         defined('ADMIN_LOGOUT_REDIRECT_TO') || define('ADMIN_LOGOUT_REDIRECT_TO', '/login');
+
+        // サムネイルの品質
+        defined('ADMIN_IMAGE_JPEG_QUALITY') || define('ADMIN_IMAGE_JPEG_QUALITY', -1);
+        defined('ADMIN_IMAGE_PNG_QUALITY') || define('ADMIN_IMAGE_PNG_QUALITY', -1);
     }
 }
