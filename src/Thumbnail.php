@@ -128,15 +128,18 @@ class Thumbnail
 
                 return;
             case 'jpg':
-                imagejpeg($image, $thumbLoc);
+                defined('ADMIN_IMAGE_JPEG_QUALITY') || define('ADMIN_IMAGE_JPEG_QUALITY', -1);
+                imagejpeg($image, $thumbLoc, ADMIN_IMAGE_JPEG_QUALITY);
 
                 return;
             case 'jpeg':
-                imagejpeg($image, $thumbLoc);
+                defined('ADMIN_IMAGE_JPEG_QUALITY') || define('ADMIN_IMAGE_JPEG_QUALITY', -1);
+                imagejpeg($image, $thumbLoc, ADMIN_IMAGE_JPEG_QUALITY);
 
                 return;
             case 'png':
-                imagepng($image, $thumbLoc);
+                defined('ADMIN_IMAGE_PNG_QUALITY') || define('ADMIN_IMAGE_PNG_QUALITY', -1);
+                imagepng($image, $thumbLoc, ADMIN_IMAGE_PNG_QUALITY);
 
                 return;
             case 'wbmp':
