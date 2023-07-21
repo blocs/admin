@@ -4,10 +4,12 @@ namespace Blocs\Controllers;
 
 trait CopyTrait
 {
+    protected $copyId;
+
     public function copy($id)
     {
         $this->getCurrent($id);
-        $this->val['id'] = $id;
+        $this->copyId = $id;
 
         $this->executeCopy($this->prepareCopy());
 
@@ -30,7 +32,11 @@ trait CopyTrait
             return;
         }
 
-        $this->mainTable::create($requestData);
+        $lastInsert = $this->mainTable::create($requestData);
+        $this->val['id'] = $lastInsert->id;
+
+        $this->logData = (object) $requestData;
+        $this->logData->id = $lastInsert->id;
     }
 
     protected function outputCopy()
