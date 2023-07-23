@@ -98,7 +98,12 @@ class AdminTest extends TestCase
         foreach ($assertList as $method => $arguments) {
             list($method) = explode('_', $method, 2);
 
-            $this->executeMethod($method, $arguments);
+            if ('assertSee' == $method) {
+                // HTMLをエスケープしない
+                $this->executeMethod($method, [$arguments, false]);
+            } else {
+                $this->executeMethod($method, $arguments);
+            }
         }
     }
 
@@ -132,6 +137,12 @@ class AdminTest extends TestCase
             if ('content' === $value) {
                 // 取得したコンテンツを保存
                 $this->data[$dataKey] = $this->response->getContent();
+                continue;
+            }
+
+            if (false == strpos($value, '.')) {
+                // 値を代入
+                $this->data[$dataKey] = $value;
                 continue;
             }
 
