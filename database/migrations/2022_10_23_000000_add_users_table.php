@@ -15,10 +15,10 @@ class AddUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->softDeletes();
-            $table->timestamp('disabled_at', 0)->nullable();
-            $table->string('role')->nullable();
-            $table->string('file')->nullable();
-            $table->string('filename')->nullable();
+            $table->timestamp('disabled_at')->nullable();
+            $table->text('role')->nullable();
+            $table->text('file')->nullable();
+            $table->string('filename', 32)->nullable();
         });
     }
 
