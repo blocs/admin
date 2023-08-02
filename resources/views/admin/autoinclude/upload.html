@@ -124,7 +124,7 @@ function cancelUploaded(ele) {
     var tr = $(ele).closest('tr');
     var filename = $(tr).data('filename');
     var container = $(ele).closest('.upload-container');
-    var input = $(container).find('input.ai-upload');
+    var input = $(container).find('input:eq(0)');
 
     tr.remove();
     if (!input.prop('multiple')) {
@@ -155,8 +155,13 @@ function parseUploaded(name) {
     return uploaded;
 }
 $(function(){
-    $('input.ai-upload').each(function(){
-        setUploader($(this).attr('name'), $(this).attr('accept'));
+    new MutationObserver((mutations) => {
+        $('.ai-upload').each(function(){
+            setUploader($(this).attr('name'), $(this).attr('accept'));
+        }).removeClass('ai-upload');;
+    }).observe(document, {
+        childList: true,
+        subtree: true
     });
     $('form').on('click', '.fileList .cancel', function(){
         cancelUploaded(this);
