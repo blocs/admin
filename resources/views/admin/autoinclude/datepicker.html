@@ -11,9 +11,9 @@
 
 $(function(){
     new MutationObserver((mutations) => {
-        $(".ai-datepicker").datepicker({
+        $('.ai-datepicker').datepicker({
             dateFormat: "yy-mm-dd"
-        }).removeClass("ai-datepicker");
+        }).removeClass('ai-datepicker');
     }).observe(document, {
         childList: true,
         subtree: true
