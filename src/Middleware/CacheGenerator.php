@@ -15,6 +15,7 @@ class CacheGenerator
 
         if (200 === $response->getStatusCode()) {
             file_put_contents($cacheFile, $response->getContent());
+            touch($cacheFile, time() + BLOCS_CACHE_SECOND);
         }
 
         return $response;
