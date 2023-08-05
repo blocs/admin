@@ -22,6 +22,35 @@ trait BackTrait
         ]);
     }
 
+    protected function backCreate($category = null, $message = null, $noticeForm = null, ...$msgArgList)
+    {
+        $resirectCreate = redirect()->route(\Blocs\Common::routePrefix().'.create', $this->val)->withInput();
+
+        if (!$category && !$noticeForm) {
+            return $resirectCreate;
+        }
+
+        // langからメッセージを取得
+        if ($category) {
+            $msgArgList = array_merge([$category, $message], $msgArgList);
+        } else {
+            $msgArgList = array_merge([$message], $msgArgList);
+        }
+        $code = implode(':', $msgArgList);
+        ($langMessage = $this->getMessage($code)) != false && $message = $langMessage;
+
+        if ($category) {
+            return $resirectCreate->with([
+                'category' => $category,
+                'message' => $message,
+            ]);
+        }
+
+        return $resirectCreate->withErrors([
+            $noticeForm => $message,
+        ]);
+    }
+
     protected function backEdit($category = null, $message = null, $noticeForm = null, ...$msgArgList)
     {
         $resirectEdit = redirect()->route(\Blocs\Common::routePrefix().'.edit', $this->val)->withInput();
