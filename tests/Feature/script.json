@@ -31,7 +31,7 @@
         },
         "assertSee_0": "「<email>」を登録しました。",
         "data": {
-            "id": "lastInsertId"
+            "id": "maxId.users"
         }
     },
     {
