@@ -17,7 +17,7 @@ class AdminTest extends TestCase
         $scriptList = $this->parseExcel($scriptFile);
 
         // JSON形式でexport
-//      file_put_contents($scriptFile, json_encode(__DIR__.'/script.json', JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n") && chmod($scriptFile, 0666);
+//      file_put_contents(__DIR__.'/script.json', json_encode($scriptList, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n") && chmod($scriptFile, 0666);
 
         // JSON形式
 //      $scriptFile = __DIR__.'/script.json';
@@ -159,6 +159,12 @@ class AdminTest extends TestCase
 
                 // JSONデータを保存
                 isset($jsonList[$dataKey]) && $this->data[$dataKey] = $jsonList[$dataKey];
+                continue;
+            }
+
+            if ('maxId' === $type) {
+                // ダミーデータを作成
+                $this->data[$dataKey] = \DB::table($value)->max('id');
                 continue;
             }
         }
