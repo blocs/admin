@@ -26,58 +26,14 @@ trait BackTrait
     {
         $resirectCreate = redirect()->route(\Blocs\Common::routePrefix().'.create', $this->val)->withInput();
 
-        if (!$category && !$noticeForm) {
-            return $resirectCreate;
-        }
-
-        // langからメッセージを取得
-        if ($category) {
-            $msgArgList = array_merge([$category, $message], $msgArgList);
-        } else {
-            $msgArgList = array_merge([$message], $msgArgList);
-        }
-        $code = implode(':', $msgArgList);
-        ($langMessage = $this->getMessage($code)) != false && $message = $langMessage;
-
-        if ($category) {
-            return $resirectCreate->with([
-                'category' => $category,
-                'message' => $message,
-            ]);
-        }
-
-        return $resirectCreate->withErrors([
-            $noticeForm => $message,
-        ]);
+        return $this->backCreateEdit($resirectCreate, $category, $message, $noticeForm, $msgArgList);
     }
 
     protected function backEdit($category = null, $message = null, $noticeForm = null, ...$msgArgList)
     {
         $resirectEdit = redirect()->route(\Blocs\Common::routePrefix().'.edit', $this->val)->withInput();
 
-        if (!$category && !$noticeForm) {
-            return $resirectEdit;
-        }
-
-        // langからメッセージを取得
-        if ($category) {
-            $msgArgList = array_merge([$category, $message], $msgArgList);
-        } else {
-            $msgArgList = array_merge([$message], $msgArgList);
-        }
-        $code = implode(':', $msgArgList);
-        ($langMessage = $this->getMessage($code)) != false && $message = $langMessage;
-
-        if ($category) {
-            return $resirectEdit->with([
-                'category' => $category,
-                'message' => $message,
-            ]);
-        }
-
-        return $resirectEdit->withErrors([
-            $noticeForm => $message,
-        ]);
+        return $this->backCreateEdit($resirectEdit, $category, $message, $noticeForm, $msgArgList);
     }
 
     private function getMessage($code)
@@ -89,5 +45,32 @@ trait BackTrait
         }
 
         return $langMessage;
+    }
+
+    private function backCreateEdit($resirect, $category, $message, $noticeForm, $msgArgList)
+    {
+        if (!$category && !$noticeForm) {
+            return $resirect;
+        }
+
+        // langからメッセージを取得
+        if ($category) {
+            $msgArgList = array_merge([$category, $message], $msgArgList);
+        } else {
+            $msgArgList = array_merge([$message], $msgArgList);
+        }
+        $code = implode(':', $msgArgList);
+        ($langMessage = $this->getMessage($code)) != false && $message = $langMessage;
+
+        if ($category) {
+            return $resirect->with([
+                'category' => $category,
+                'message' => $message,
+            ]);
+        }
+
+        return $resirect->withErrors([
+            $noticeForm => $message,
+        ]);
     }
 }
