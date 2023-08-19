@@ -196,16 +196,25 @@ class AdminTest extends TestCase
                 $this->data[$dataKey] = fake()->{$dataKey}();
 
                 // データを置換
-                $query = str_replace("<fake.{$dataKey}>", $this->data[$dataKey], $query);
+                $query = preg_replace("/<fake.{$dataKey}>/", $this->data[$dataKey], $query, 1);
+
+                continue;
+            }
+
+            if (is_file(__DIR__.'/'.$dataKey)) {
+                // データをファイルから読み込み
+                $this->data[$dataKey] = $this->replaceDataKey(file_get_contents(__DIR__.'/'.$dataKey));
+            }
+
+            if (isset($this->data[$dataKey])) {
+                // データを置換
+                $query = str_replace("<{$dataKey}>", $this->data[$dataKey], $query);
 
                 continue;
             }
 
             // データが未定義
-            isset($this->data[$dataKey]) || $this->outputFatal('Data Error: Not defined '.$dataKey);
-
-            // データを置換
-            $query = str_replace("<{$dataKey}>", $this->data[$dataKey], $query);
+            $this->outputFatal('Data Error: Not defined '.$dataKey);
         }
 
         return $query;
