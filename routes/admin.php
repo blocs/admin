@@ -7,6 +7,22 @@ use App\Admin\Controllers\UserController;
 use Blocs\Middleware\UserRole;
 use Illuminate\Support\Facades\Route;
 
+/*
+Route::get('/sitemap', function () {
+    $routes = collect(Route::getRoutes())->map(function ($route) {
+        return [
+            'url' => $route->uri,
+            'method' => $route->methods[0],
+            'controller' => $route->action['controller'] ?? null,
+            'name' => $route->action['as'] ?? null,
+            'middlewares' => $route->action['middleware'] ?? null,
+        ];
+    });
+
+    return response()->view('sitemap', ['routes' => $routes])->header('Content-Type', 'text/xml');
+});
+*/
+
 Route::middleware(['web'])
     ->group(function () {
         Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
