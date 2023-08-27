@@ -15,7 +15,7 @@ Route::get('/sitemap', function () {
             'method' => $route->methods[0],
             'controller' => $route->action['controller'] ?? null,
             'name' => $route->action['as'] ?? null,
-            'middlewares' => $route->action['middleware'] ?? null,
+            'middlewares' => $route->action['middleware'] ?? [],
         ];
     });
 
