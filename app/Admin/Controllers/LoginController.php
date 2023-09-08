@@ -22,6 +22,11 @@ class LoginController extends Controller
     use \Blocs\Auth\AuthenticatesUsers;
     use \Blocs\Controllers\CommonTrait;
 
+    protected $val = [];
+    protected $tableData;
+    protected $mainTable;
+    protected $viewPrefix;
+
     /**
      * Where to redirect users after login.
      *
