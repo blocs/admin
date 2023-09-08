@@ -36,7 +36,6 @@ class UserController extends \Blocs\Controllers\Base
 
         foreach ($this->val[$this->loopItem] as $loopKey => $loopValue) {
             $roleList = explode("\t", $loopValue['role']);
-            empty($roleList) && $roleList = [];
             $this->val[$this->loopItem][$loopKey]['roles'] = $roleList;
         }
     }

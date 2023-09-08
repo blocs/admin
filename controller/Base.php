@@ -27,6 +27,7 @@ class Base extends Controller
     protected $loopItem;
     protected $paginateNum;
     protected $noticeItem;
+    protected $searchItems;
 
     /* index */
 

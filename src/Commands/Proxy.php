@@ -10,6 +10,7 @@ class Proxy
     use \Illuminate\Foundation\Testing\Concerns\MakesHttpRequests;
 
     private static $cache;
+    protected $app;
 
     public function __construct()
     {
