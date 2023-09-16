@@ -9,6 +9,7 @@ namespace Blocs;
 class Excel
 {
     use ExcelSetTrait;
+
     private $excelName;
     private $excelTemplate;
 
