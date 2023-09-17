@@ -13,8 +13,8 @@ class Excel
     private $excelName;
     private $excelTemplate;
 
-    private $sharedName = 'xl/sharedStrings.xml';
     private $worksheetXml = [];
+    private $sharedName = 'xl/sharedStrings.xml';
 
     /**
      * @param string $excelName テンプレートファイル名
@@ -34,7 +34,7 @@ class Excel
     public function get($sheetNo, $sheetColumn, $sheetRow)
     {
         // 指定されたシートの読み込み
-        $sheetName = 'xl/worksheets/sheet'.$sheetNo.'.xml';
+        $sheetName = 'xl/worksheets/sheet'.$this->getSheetNo($sheetNo).'.xml';
         $worksheetXml = $this->getWorksheetXml($sheetName);
 
         // 指定されたシートがない
@@ -83,6 +83,19 @@ class Excel
         return $this->worksheetXml[$sheetName];
     }
 
+    private function getSheetNo($sheetName)
+    {
+        $worksheetXml = $this->getWorksheetXml('xl/workbook.xml');
+        $sheets = $worksheetXml->sheets[0]->sheet;
+
+        $sheetNames = [];
+        foreach ($sheets as $sheet) {
+            $sheetNames[strval($sheet->attributes()->name)] = intval($sheet->attributes()->sheetId);
+        }
+
+        return isset($sheetNames[$sheetName]) ? $sheetNames[$sheetName] - 1 : $sheetName;
+    }
+
     private function getName($sheetColumn, $sheetRow)
     {
         if (is_integer($sheetColumn)) {
@@ -96,6 +109,23 @@ class Excel
         $rowName = $sheetRow;
 
         return [$columnName, $rowName];
+    }
+
+    private function getColumnName($columnIndex)
+    {
+        $columnName = '';
+        $currentColIndex = $columnIndex;
+        while (true) {
+            $alphabetIndex = $currentColIndex % 26;
+            $alphabet = chr(ord('A') + $alphabetIndex);
+            $columnName = $alphabet.$columnName;
+            if ($currentColIndex < 26) {
+                break;
+            }
+            $currentColIndex = intval(floor(($currentColIndex - 26) / 26));
+        }
+
+        return $columnName;
     }
 
     private function getValueSheet($worksheetXml, $columnName, $rowName)
@@ -134,9 +164,9 @@ class Excel
         }
 
         // 共通ファイルで文字列を検索すること
-        $shareNo = 0;
+        $sharedIndex = 0;
         foreach ($sharedXml->si as $sharedSi) {
-            if ($shareNo == $stringIndex) {
+            if ($sharedIndex == $stringIndex) {
                 $string = '';
 
                 // 装飾されている文字列を取得
@@ -149,26 +179,9 @@ class Excel
 
                 return $string;
             }
-            ++$shareNo;
+            ++$sharedIndex;
         }
 
         return false;
-    }
-
-    private function getColumnName($columnIndex)
-    {
-        $columnName = '';
-        $currentColIndex = $columnIndex;
-        while (true) {
-            $alphabetIndex = $currentColIndex % 26;
-            $alphabet = chr(ord('A') + $alphabetIndex);
-            $columnName = $alphabet.$columnName;
-            if ($currentColIndex < 26) {
-                break;
-            }
-            $currentColIndex = intval(floor(($currentColIndex - 26) / 26));
-        }
-
-        return $columnName;
     }
 }
