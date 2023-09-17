@@ -8,7 +8,11 @@ namespace Blocs;
  */
 trait ExcelSetTrait
 {
+    private $sharedString;
+    private $setValue = [];
+
     private $addShared = false;
+    private $addSharedString = [];
 
     /**
      * @param string $sheetNo     シートの番号、左から1,2とカウント
@@ -19,19 +23,18 @@ trait ExcelSetTrait
     public function set($sheetNo, $sheetColumn, $sheetRow, $value)
     {
         // 指定されたシートの読み込み
-        $sheetName = 'xl/worksheets/sheet'.$sheetNo.'.xml';
+        $sheetName = 'xl/worksheets/sheet'.$this->getSheetNo($sheetNo).'.xml';
         $worksheetXml = $this->getWorksheetXml($sheetName);
 
         // 指定されたシートがない
         if (false === $worksheetXml) {
-            return $this;
+            return false;
         }
 
         // 列番号、行番号を列名、行名に変換
         list($columnName, $rowName) = $this->getName($sheetColumn, $sheetRow);
 
-        // 指定されたセルに値をセット
-        $this->worksheetXml[$sheetName] = $this->setValueSheet($worksheetXml, $columnName, $rowName, $value);
+        $this->setValue[$sheetName][$rowName][$columnName.$rowName] = $value;
 
         return $this;
     }
@@ -65,6 +68,16 @@ trait ExcelSetTrait
      */
     public function generate()
     {
+        // 指定されたセルに値をセット
+        foreach ($this->setValue as $sheetName => $setValue) {
+            $worksheetXml = $this->getWorksheetXml($sheetName);
+
+            $this->worksheetXml[$sheetName] = $this->setValueSheet($worksheetXml, $setValue);
+        }
+
+        // 文字列を追加
+        empty($this->addSharedString) || $this->updateSharedXml();
+
         $excelTemplate = $this->excelTemplate;
 
         $tempName = tempnam(BLOCS_CACHE_DIR, 'excel');
@@ -117,56 +130,57 @@ trait ExcelSetTrait
         return $excelGenerated;
     }
 
-    private function setValueSheet($worksheetXml, $columnName, $rowName, $value)
+    private function setValueSheet($worksheetXml, $setValue)
     {
-        $cellName = $columnName.$rowName;
-
         $rows = $worksheetXml->sheetData->row;
         foreach ($rows as $row) {
-            if ($row['r'] != $rowName) {
+            $rowName = strval($row['r']);
+            if (empty($setValue[$rowName])) {
                 continue;
             }
 
             foreach ($row->c as $cell) {
-                if ($cell['r'] == $cellName) {
-                    // 値の置き換え
-                    $this->setValue($cell, $value);
+                $cellName = strval($cell['r']);
 
-                    return $worksheetXml;
+                if (!isset($setValue[$rowName][$cellName])) {
+                    continue;
                 }
+
+                // 値の置き換え
+                $this->setValue($cell, $setValue[$rowName][$cellName]);
+
+                unset($setValue[$rowName][$cellName]);
             }
 
-            // セルを追加して値をセット
-            $cell = $row->addChild('c');
-            $cell['r'] = $cellName;
-            $this->setValue($cell, $value);
-
-            // 列の順序をソート
-            $sortCellList = [];
-            $sortCellNameList = [];
-            foreach ($row->c as $cell) {
-                // ソートのために左詰に変換
-                $sortCellName = sprintf('% 20s', strval($cell['r']));
-                $sortCellNameList[] = $sortCellName;
-                $sortCellList[$sortCellName] = clone $cell;
-            }
-            sort($sortCellNameList);
-
-            unset($row->c);
-            foreach ($sortCellNameList as $sortCellName) {
-                $this->appendChild($row, $sortCellList[$sortCellName]);
+            foreach ($setValue[$rowName] as $cellName => $value) {
+                // セルを追加して値をセット
+                $cell = $row->addChild('c');
+                $cell['r'] = $cellName;
+                $this->setValue($cell, $value);
             }
 
-            return $worksheetXml;
+            unset($setValue[$rowName]);
+
+            $this->sortRow($row);
         }
 
-        // 列を追加して値をセット
-        $row = $worksheetXml->sheetData->addChild('row');
-        $row['r'] = $rowName;
+        foreach ($setValue as $rowName => $cellValue) {
+            if (empty($cellValue)) {
+                continue;
+            }
 
-        $cell = $row->addChild('c');
-        $cell['r'] = $cellName;
-        $this->setValue($cell, $value);
+            // 列を追加して値をセット
+            $row = $worksheetXml->sheetData->addChild('row');
+            $row['r'] = $rowName;
+
+            foreach ($cellValue as $cellName => $value) {
+                $cell = $row->addChild('c');
+                $cell['r'] = $cellName;
+                $this->setValue($cell, $value);
+            }
+
+            $this->sortRow($row);
+        }
 
         // 行の順序をソート
         $sortRowList = [];
@@ -186,6 +200,25 @@ trait ExcelSetTrait
         return $worksheetXml;
     }
 
+    private function sortRow($row)
+    {
+        // 列の順序をソート
+        $sortCellList = [];
+        $sortCellNameList = [];
+        foreach ($row->c as $cell) {
+            // ソートのために左詰に変換
+            $sortCellName = sprintf('% 20s', strval($cell['r']));
+            $sortCellNameList[] = $sortCellName;
+            $sortCellList[$sortCellName] = clone $cell;
+        }
+        sort($sortCellNameList);
+
+        unset($row->c);
+        foreach ($sortCellNameList as $sortCellName) {
+            $this->appendChild($row, $sortCellList[$sortCellName]);
+        }
+    }
+
     private function setValue($cell, $value)
     {
         if (is_numeric($value)) {
@@ -196,40 +229,54 @@ trait ExcelSetTrait
             return;
         }
 
+        // SimpleXMLElementの変換もれに対応
+        $value = str_replace('&', '&amp;', $value);
+
+        isset($this->sharedString) || $this->getSharedString();
+
+        // 文字列を追加
+        $stringIndex = array_search($value, $this->sharedString);
+        if (false === $stringIndex) {
+            $this->sharedString[] = $value;
+            $this->addSharedString[] = $value;
+            $stringIndex = count($this->sharedString) - 1;
+        }
+
+        // 文字列を指定
+        $cell->v = $stringIndex;
+        $cell['t'] = 's';
+    }
+
+    private function getSharedString()
+    {
         // 文字列の共通ファイルの読み込み
         $sharedXml = $this->getWorksheetXml($this->sharedName);
 
         // 共通ファイルがない時は作成
         false === $sharedXml && $sharedXml = $this->addShared();
 
-        // SimpleXMLElementの変換もれに対応
-        $value = str_replace('&', '&amp;', $value);
-
         // 共通ファイルで文字列を検索すること
-        $shareNo = 0;
+        $this->sharedString = [];
         foreach ($sharedXml->si as $sharedSi) {
-            if (strval($sharedSi->t) == $value) {
-                $stringIndex = $shareNo;
-                break;
-            }
-            ++$shareNo;
+            $this->sharedString[] = strval($sharedSi->t);
         }
+    }
 
-        if (empty($stringIndex)) {
-            // 文字列を共通ファイルに追加
-            $sharedXml['count'] = intval($sharedXml['count']) + 1;
-            $sharedXml['uniqueCount'] = intval($sharedXml['uniqueCount']) + 1;
+    private function updateSharedXml()
+    {
+        // 文字列の共通ファイルの読み込み
+        $sharedXml = $this->getWorksheetXml($this->sharedName);
 
+        // 文字列を共通ファイルに追加
+        $sharedXml['count'] = intval($sharedXml['count']) + count($this->addSharedString);
+        $sharedXml['uniqueCount'] = intval($sharedXml['uniqueCount']) + count($this->addSharedString);
+
+        foreach ($this->addSharedString as $value) {
             $addString = $sharedXml->addChild('si');
             $addString->addChild('t', $value);
-            $stringIndex = $sharedXml->si->count() - 1;
-
-            $this->worksheetXml[$this->sharedName] = $sharedXml;
         }
 
-        // 文字列を指定
-        $cell->v = $stringIndex;
-        $cell['t'] = 's';
+        $this->worksheetXml[$this->sharedName] = $sharedXml;
     }
 
     private function appendChild(\SimpleXMLElement $target, \SimpleXMLElement $addElement)
