@@ -67,7 +67,7 @@ class LoginController extends Controller
     {
         return array_merge(
             $request->only($this->username(), 'password'),
-            ['disabled_at' => null]
+            ['deleted_at' => null, 'disabled_at' => null]
         );
     }
 }
