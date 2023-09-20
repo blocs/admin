@@ -24,8 +24,7 @@ class CacheGenerator
         if (file_exists($cacheFile) && empty($cacheIgnore)) {
             if (time() < filemtime($cacheFile) || empty($cacheSecond)) {
                 // キャッシュ出力
-                echo file_get_contents($cacheFile);
-                exit;
+                return response(file_get_contents($cacheFile), 200)->header('Content-Type', 'text/html');
             }
 
             empty($cacheSecond) || touch($cacheFile, time() + $cacheSecond);
@@ -33,8 +32,8 @@ class CacheGenerator
 
         $response = $next($request);
 
-        // キャッシュ作成
         if (200 === $response->getStatusCode() && empty($cacheIgnore)) {
+            // キャッシュ作成
             file_put_contents($cacheFile, $response->getContent());
             empty($cacheSecond) || touch($cacheFile, time() + $cacheSecond);
         }
