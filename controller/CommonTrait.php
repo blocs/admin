@@ -15,7 +15,7 @@ trait CommonTrait
             return;
         }
 
-        $sessionKey = $this->viewPrefix.'.search.'.$keyItem;
+        $sessionKey = $this->viewPrefix.'.'.$keyItem;
 
         if (isset($this->request)) {
             if ($this->request->has($keyItem)) {
