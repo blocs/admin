@@ -15,7 +15,7 @@
             <td>
                 <input type='text' id='email' name='email' class='form-control modal-notice-item' value='' required />
 
-                <!-- data-form="email" data-validate="unique:users" data-lang="このユーザーIDはすでに登録されています。" -->
+                <!-- data-form="email" data-validate="softUnique:users" data-lang="このユーザーIDはすでに登録されています。" -->
                 @error('email') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>
         </tr>
