@@ -19,6 +19,7 @@ class AddUsersTable extends Migration
             $table->text('role')->nullable();
             $table->text('file')->nullable();
             $table->string('filename', 32)->nullable();
+            $table->dropUnique(['email']);
         });
     }
 
@@ -35,6 +36,7 @@ class AddUsersTable extends Migration
             $table->dropColumn('role');
             $table->dropColumn('file');
             $table->dropColumn('filename');
+            $table->unique(['email']);
         });
     }
 }
