@@ -57,6 +57,7 @@ class AdminServiceProvider extends ServiceProvider
         // appをpublish
         $publishList[__DIR__.'/../app/Consts'] = app_path('Consts');
         $publishList[__DIR__.'/../app/Models'] = app_path('Models');
+        $publishList[__DIR__.'/../app/Rules'] = app_path('Rules');
 
         // configをpublish
         $publishList[__DIR__.'/../config'] = config_path();
