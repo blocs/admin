@@ -17,24 +17,33 @@ trait CommonTrait
 
         $sessionKey = $this->viewPrefix.'.'.$keyItem;
 
-        if (isset($this->request)) {
-            if ($this->request->has($keyItem)) {
-                if (strlen($this->request->$keyItem)) {
-                    // sessionに保存
-                    session([$sessionKey => $this->request->$keyItem]);
-                    $this->val[$keyItem] = $this->request->$keyItem;
-                } else {
-                    // sessionを削除
-                    session()->forget($sessionKey);
-                }
+        // POST
+        if (isset($this->request) && $this->request->has($keyItem)) {
+            $this->saveItem($keyItem, $this->request->$keyItem, $sessionKey);
+            return;
+        }
 
-                return;
-            }
+        // GET
+        if (request()->query($keyItem)) {
+            $this->saveItem($keyItem, request()->query($keyItem), $sessionKey);
+            return;
         }
 
         if (session()->has($sessionKey)) {
             // sessionがあれば読み込む
             $this->val[$keyItem] = session($sessionKey);
+        }
+    }
+
+    private function saveItem($keyItem, $keyValue, $sessionKey)
+    {
+        if (strlen($keyValue)) {
+            // sessionに保存
+            session([$sessionKey => $keyValue]);
+            $this->val[$keyItem] = $keyValue;
+        } else {
+            // sessionを削除
+            session()->forget($sessionKey);
         }
     }
 
