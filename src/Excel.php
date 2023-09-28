@@ -93,7 +93,7 @@ class Excel
             $sheetNames[strval($sheet->attributes()->name)] = intval($sheet->attributes()->sheetId);
         }
 
-        return isset($sheetNames[$sheetName]) ? $sheetNames[$sheetName] - 1 : $sheetName;
+        return isset($sheetNames[$sheetName]) ? $sheetNames[$sheetName] : $sheetName;
     }
 
     private function getName($sheetColumn, $sheetRow)
