@@ -20,12 +20,14 @@ trait CommonTrait
         // POST
         if (isset($this->request) && $this->request->has($keyItem)) {
             $this->saveItem($keyItem, $this->request->$keyItem, $sessionKey);
+
             return;
         }
 
         // GET
         if (request()->query($keyItem)) {
             $this->saveItem($keyItem, request()->query($keyItem), $sessionKey);
+
             return;
         }
 
