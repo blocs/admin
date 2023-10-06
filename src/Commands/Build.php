@@ -144,11 +144,11 @@ class Build extends Command
             $requestUri = $this->getRequestUri($staticLoc);
             if (
                 // 対象外のurl
-                false === $this->checkStaticUrl($requestUri) ||
+                false === $this->checkStaticUrl($requestUri)
                 // 静的コンテンツが作れなかった
-                false === ($newStaticLoc = $this->buildStatic($requestUri)) ||
+                || false === ($newStaticLoc = $this->buildStatic($requestUri))
                 // 静的コンテンツの名前が変更
-                $newStaticLoc !== $staticLoc
+                || $newStaticLoc !== $staticLoc
             ) {
                 $staticName = substr($staticLoc, strlen(self::$staticPath));
                 array_push(self::$deleteList, $staticName);
