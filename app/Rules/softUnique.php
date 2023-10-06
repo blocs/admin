@@ -32,7 +32,14 @@ class softUnique implements DataAwareRule, ValidationRule
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
         $tableWhere = \DB::table($this->tableName)->where($attribute, $value);
-        if ($tableWhere->whereNull('deleted_at')->exists()) {
+
+        // 削除データは無視
+        $tableWhere = $tableWhere->whereNull('deleted_at');
+
+        // 編集時の自データはOK       
+        empty(request()->route('id')) || $tableWhere = $tableWhere->where('id', '!=', request()->route('id'));
+
+        if ($tableWhere->exists()) {
             $fail($this->message);
         }
     }
