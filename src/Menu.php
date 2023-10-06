@@ -30,7 +30,7 @@ class Menu
             }
         }
 
-        // 指定されたhedline読み込み
+        // 指定されたheadline読み込み
         if (isset($configList['headline'])) {
             $headline = $configList['headline'];
             config(['menu.headline' => null]);
@@ -101,6 +101,11 @@ class Menu
 
             // 権限があるかチェック
             if (!self::checkRole($config['name'])) {
+                continue;
+            }
+
+            $guard = isset($config['guard']) ? $config['guard'] : 'web';
+            if (!\Auth::guard($guard)->check()) {
                 continue;
             }
 
