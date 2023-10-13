@@ -224,6 +224,9 @@
             }
             modal_toggle.modal('show');
         });
+        $('tbody tr a, tbody tr button, tbody tr input').on('click', function(ev){
+            ev.stopPropagation();
+        });
     });
     </script>
 
