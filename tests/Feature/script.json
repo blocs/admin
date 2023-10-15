@@ -11,12 +11,6 @@
         "assertSee_1": "admin"
     },
     {
-        "description": "キャッシュクリア",
-        "method": "get",
-        "uri": "\/clear",
-        "assertStatus": 200
-    },
-    {
         "description": "テストユーザー新規登録\n（<fake.email>\/<fake.password>）",
         "method": "post",
         "uri": "\/admin\/user",
@@ -242,5 +236,15 @@
         "method": "post",
         "uri": "\/logout",
         "assertSee_0": "ログイン"
+    },
+    {
+        "description": "<email>ログイン失敗",
+        "method": "post",
+        "uri": "\/login",
+        "query": {
+            "email": "<email>",
+            "password": "<password>"
+        },
+        "assertSee_0": "ログインに失敗しました。"
     }
 ]

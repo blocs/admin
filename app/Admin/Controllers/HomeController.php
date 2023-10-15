@@ -23,13 +23,6 @@ class HomeController extends \Blocs\Controllers\Base
         return view($this->viewPrefix.'.index', $this->val);
     }
 
-    public function clear()
-    {
-        \Artisan::call('view:clear');
-
-        return redirect()->route('home');
-    }
-
     protected function chart()
     {
         $param = [];
