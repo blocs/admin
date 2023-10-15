@@ -26,6 +26,9 @@ class AdminTest extends TestCase
         empty($scriptList) && $this->outputFatal("Error: {$scriptFile}");
         $this->outputMessage("Script: {$scriptFile}");
 
+        // キャッシュクリア
+        \Artisan::call('view:clear');
+
         foreach ($scriptList as $scriptNo => $testScript) {
             // メッセージ表示
             if (!empty($testScript['description'])) {
