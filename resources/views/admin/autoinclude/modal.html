@@ -116,7 +116,7 @@
 
     <!--
         data-include='modal_confirm'
-        $modalAction=route(\Blocs\Common::routePrefix().'.update', $id)
+        $modalAction=route(\Blocs\Common::routePrefix().'.update', ['id' => $id])
         $modalTitle=\Blocs\Lang::get('template:resource_blocs_modal_update_title')
         $modalMessage=\Blocs\Lang::get('template:resource_blocs_modal_update_message')
     -->
@@ -137,7 +137,7 @@
 
     <!--
         data-include='modal_confirm'
-        $modalAction=route(\Blocs\Common::routePrefix().'.destroy', $id)
+        $modalAction=route(\Blocs\Common::routePrefix().'.destroy', ['id' => $id])
         $modalTitle=\Blocs\Lang::get('template:resource_blocs_modal_delete_title')
         $modalMessage=\Blocs\Lang::get('template:resource_blocs_modal_delete_message')
     -->
