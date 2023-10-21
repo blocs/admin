@@ -7,22 +7,6 @@ use App\Admin\Controllers\UserController;
 use Blocs\Middleware\UserRole;
 use Illuminate\Support\Facades\Route;
 
-/*
-Route::get('/sitemap', function () {
-    $routes = collect(Route::getRoutes())->map(function ($route) {
-        return [
-            'url' => $route->uri,
-            'method' => $route->methods[0],
-            'controller' => $route->action['controller'] ?? null,
-            'name' => $route->action['as'] ?? null,
-            'middlewares' => $route->action['middleware'] ?? [],
-        ];
-    });
-
-    return response()->view('sitemap', ['routes' => $routes])->header('Content-Type', 'text/xml');
-});
-*/
-
 Route::middleware(['web'])
     ->group(function () {
         Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -64,3 +48,65 @@ Route::middleware(['web', 'auth', UserRole::class])
         Route::post('/{id}/toggle', [UserController::class, 'toggle'])->where('id', '[0-9]+')->name('toggle');
     }
     );
+
+/*
+Route::get('/sitemap', function () {
+    $routes = collect(Route::getRoutes())->map(function ($route) {
+        return [
+            'url' => $route->uri,
+            'method' => $route->methods[0],
+            'controller' => $route->action['controller'] ?? null,
+            'name' => $route->action['as'] ?? null,
+            'middlewares' => $route->action['middleware'] ?? [],
+        ];
+    });
+
+    return response()->view('sitemap', ['routes' => $routes])->header('Content-Type', 'text/xml');
+});
+
+Route::get('/validate', function () {
+    $viewsDir = storage_path('framework/views/');
+
+    $validates = [];
+    $fileList = scandir($viewsDir);
+    foreach ($fileList as $file) {
+        if ('.' == substr($file, 0, 1) || '.json' != substr($file, -5)) {
+            continue;
+        }
+
+        $jsonData = json_decode(file_get_contents(storage_path('framework/views/'.$file)));
+        if (empty($jsonData->validate)) {
+            continue;
+        }
+
+        foreach ($jsonData->validate as $template => $validate) {
+            foreach ($validate as $formName => $formValidates) {
+                foreach ($formValidates as $formValidate) {
+                    $templateLoc = str_replace(resource_path('views/'), '', $template);
+                    list($messageKey) = explode(':', $formValidate, 2);
+                    $validates[] = [
+                        'loc' => $templateLoc,
+                        'name' => $formName,
+                        'validate' => $formValidate,
+                        'message' => isset($jsonData->message->$template->$formName->$messageKey) ? $jsonData->message->$template->$formName->$messageKey : '',
+                    ];
+                }
+            }
+        }
+
+        foreach ($jsonData->upload as $formName => $uploadValidate) {
+            foreach ($uploadValidate->validate as $formValidate) {
+                list($messageKey) = explode(':', $formValidate, 2);
+                $validates[] = [
+                    'loc' => $templateLoc,
+                    'name' => $formName,
+                    'validate' => $formValidate,
+                    'message' => isset($uploadValidate->message->$messageKey) ? $uploadValidate->message->$messageKey : '',
+                ];
+            }
+        }
+    }
+
+    return response()->view('validate', ['validates' => $validates])->header('Content-Type', 'text/xml');
+});
+*/
