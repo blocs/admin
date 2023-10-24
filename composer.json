@@ -32,6 +32,9 @@
             "Blocs\\": "src\/",
             "Blocs\\Controllers\\": "controller\/",
             "Tests\\": "tests\/"
-        }
+        },
+        "files": [
+            "app\/Helpers\/helper.php"
+        ]
     }
 }

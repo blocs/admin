@@ -23,7 +23,7 @@ class ProfileController extends \Blocs\Controllers\Base
     {
         return redirect()->route('home')->with([
             'category' => 'success',
-            'message' => \Blocs\Lang::get('success:admin_profile_updated'),
+            'message' => lang('success:admin_profile_updated'),
         ]);
     }
 

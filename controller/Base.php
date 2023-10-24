@@ -87,7 +87,7 @@ class Base extends Controller
 
     protected function prepareIndexPaginate(&$mainTable)
     {
-        $pagePath = route(\Blocs\Common::routePrefix().'.index');
+        $pagePath = route(prefix().'.index');
         $this->val['paginate'] = $mainTable->paginate($this->paginateNum)->withPath($pagePath);
         $this->val[$this->loopItem] = $this->val['paginate'];
 
