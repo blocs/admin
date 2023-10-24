@@ -32,7 +32,7 @@ function setUploader(paramname, accept) {
     if (uploaded.length) {
         $.ajax({
             type: 'POST',
-            url: '{{ route(\Blocs\Common::routePrefix().'.upload') }}',
+            url: '{{ route(prefix().'.upload') }}',
             data: {
                 name: paramname,
                 _token: $('input[name="_token"]').val(),
@@ -48,7 +48,7 @@ function setUploader(paramname, accept) {
         }
     }
     $('#'+paramnameId+'_upload').fileupload({
-        url: '{{ route(\Blocs\Common::routePrefix().'.upload') }}',
+        url: '{{ route(prefix().'.upload') }}',
         paramName : 'upload',
         formData: {
             name: paramname,

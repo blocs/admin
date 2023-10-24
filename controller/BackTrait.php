@@ -6,7 +6,7 @@ trait BackTrait
 {
     protected function backIndex($category = null, $message = null)
     {
-        $resirectIndex = redirect()->route(\Blocs\Common::routePrefix().'.index');
+        $resirectIndex = redirect()->route(prefix().'.index');
 
         if (!$category) {
             return $resirectIndex;
@@ -24,21 +24,21 @@ trait BackTrait
 
     protected function backCreate($category = null, $message = null, $noticeForm = null, ...$msgArgList)
     {
-        $resirectCreate = redirect()->route(\Blocs\Common::routePrefix().'.create', $this->val)->withInput();
+        $resirectCreate = redirect()->route(prefix().'.create', $this->val)->withInput();
 
         return $this->backCreateEdit($resirectCreate, $category, $message, $noticeForm, $msgArgList);
     }
 
     protected function backEdit($category = null, $message = null, $noticeForm = null, ...$msgArgList)
     {
-        $resirectEdit = redirect()->route(\Blocs\Common::routePrefix().'.edit', $this->val)->withInput();
+        $resirectEdit = redirect()->route(prefix().'.edit', $this->val)->withInput();
 
         return $this->backCreateEdit($resirectEdit, $category, $message, $noticeForm, $msgArgList);
     }
 
     private function getMessage($code)
     {
-        $langMessage = \Blocs\Lang::get($code);
+        $langMessage = lang($code);
         if ($langMessage == $code) {
             // langからメッセージを取得できない
             return false;
