@@ -24,7 +24,7 @@
             -->
         </td>
         <td class='ellipsis toggle-item'>
-            <a href="{{ route(\Blocs\Common::routePrefix().'.edit', ['id' => $user->id]) }}" data-val=$user->email></a>
+            <a href="{{ route('admin.user.edit', ['id' => $user->id]) }}" data-val=$user->email></a>
 
             <!-- data-loop=$user->roles -->
             <span class='label label-info'><!-- data-val=$role --></span>
@@ -51,7 +51,7 @@
 <!-- data-include='button_create' -->
 <!--
     data-include='modal_destroy'
-    $modalAction=route(\Blocs\Common::routePrefix().'.select')
+    $modalAction=route('admin.user.select')
     data-exist=$isLoop
 -->
 
