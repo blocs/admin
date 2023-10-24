@@ -59,7 +59,7 @@ class Menu
                     $config['url'] = route($config['name'], $config['argv']);
                 }
             }
-            isset($config['label']) || $config['label'] = \Blocs\Lang::get($config['lang']);
+            isset($config['label']) || $config['label'] = lang($config['lang']);
 
             if (isset($config['sub'])) {
                 list($config['sub'], $subHeadline, $breadcrumbList, $isSubActive) = self::get($config['sub'], $breadcrumbList);
@@ -119,14 +119,14 @@ class Menu
     {
         config(['menu.headline' => [
             'icon' => $icon,
-            'label' => \Blocs\Lang::get($lang),
+            'label' => lang($lang),
         ]]);
     }
 
     public static function breadcrumb($lang)
     {
         config(['menu.breadcrumb' => [
-            'label' => \Blocs\Lang::get($lang),
+            'label' => lang($lang),
         ]]);
     }
 
