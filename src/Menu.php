@@ -46,7 +46,7 @@ class Menu
         $configList = $configList[$name];
 
         // ルート名を取得
-        $currentPrefix = \Blocs\Common::routePrefix();
+        $currentPrefix = prefix();
 
         // メニュー、パンクズリスト
         $menuList = [];

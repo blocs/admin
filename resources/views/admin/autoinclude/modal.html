@@ -12,7 +12,7 @@
         $buttonClass=$buttonModalBackClass
         $buttonModalBackIcon='fa fa-arrow-left'
         $buttonIcon=$buttonModalBackIcon
-        $buttonModalBackLabel=\Blocs\Lang::get('template:resource_blocs_button_back')
+        $buttonModalBackLabel=lang('template:resource_blocs_button_back')
         $buttonLabel=$buttonModalBackLabel
     -->
 
@@ -37,7 +37,7 @@
         data-include='button_modal'
         $buttonModalClass='btn btn-primary btn-lg'
         $buttonModalIcon='fa fa-arrow-right'
-        $buttonModalLabel=\Blocs\Lang::get('template:resource_blocs_button_submit')
+        $buttonModalLabel=lang('template:resource_blocs_button_submit')
     -->
 <!-- data-endbloc -->
 
@@ -46,7 +46,7 @@
         data-include='button_modal'
         $buttonModalClass='btn btn-info btn-lg'
         $buttonModalIcon='fa fa-info-circle'
-        $buttonModalLabel=\Blocs\Lang::get('template:resource_blocs_button_submit')
+        $buttonModalLabel=lang('template:resource_blocs_button_submit')
     -->
 <!-- data-endbloc -->
 
@@ -55,7 +55,7 @@
         data-include='button_modal'
         $buttonModalClass='btn btn-success btn-lg'
         $buttonModalIcon='fa fa-check'
-        $buttonModalLabel=\Blocs\Lang::get('template:resource_blocs_button_submit')
+        $buttonModalLabel=lang('template:resource_blocs_button_submit')
     -->
 <!-- data-endbloc -->
 
@@ -64,7 +64,7 @@
         data-include='button_modal'
         $buttonModalClass='btn btn-danger btn-lg'
         $buttonModalIcon='fa fa-trash'
-        $buttonModalLabel=\Blocs\Lang::get('template:resource_blocs_button_delete')
+        $buttonModalLabel=lang('template:resource_blocs_button_delete')
     -->
 <!-- data-endbloc -->
 
@@ -73,7 +73,7 @@
         data-include='button_modal'
         $buttonModalClass='btn btn-warning btn-lg'
         $buttonModalIcon='fa fa-exclamation-triangle'
-        $buttonModalLabel=\Blocs\Lang::get('template:resource_blocs_button_execute')
+        $buttonModalLabel=lang('template:resource_blocs_button_execute')
     -->
 <!-- data-endbloc -->
 
@@ -92,9 +92,9 @@
 
     <!--
         data-include='modal_confirm'
-        $modalAction=route(\Blocs\Common::routePrefix().'.store')
-        $modalTitle=\Blocs\Lang::get('template:resource_blocs_modal_new_title')
-        $modalMessage=\Blocs\Lang::get('template:resource_blocs_modal_new_message')
+        $modalAction=route(prefix().'.store')
+        $modalTitle=lang('template:resource_blocs_modal_new_title')
+        $modalMessage=lang('template:resource_blocs_modal_new_message')
     -->
 <!-- data-endbloc -->
 
@@ -110,15 +110,15 @@
         <!-- data-include='button_back_modal' -->
         <!--
             data-include='button_primary_modal'
-            $buttonModalLabel=\Blocs\Lang::get('template:resource_blocs_modal_update_button')
+            $buttonModalLabel=lang('template:resource_blocs_modal_update_button')
         -->
     <!-- data-endbloc -->
 
     <!--
         data-include='modal_confirm'
-        $modalAction=route(\Blocs\Common::routePrefix().'.update', ['id' => $id])
-        $modalTitle=\Blocs\Lang::get('template:resource_blocs_modal_update_title')
-        $modalMessage=\Blocs\Lang::get('template:resource_blocs_modal_update_message')
+        $modalAction=route(prefix().'.update', ['id' => $id])
+        $modalTitle=lang('template:resource_blocs_modal_update_title')
+        $modalMessage=lang('template:resource_blocs_modal_update_message')
     -->
 <!-- data-endbloc -->
 
@@ -137,9 +137,9 @@
 
     <!--
         data-include='modal_confirm'
-        $modalAction=route(\Blocs\Common::routePrefix().'.destroy', ['id' => $id])
-        $modalTitle=\Blocs\Lang::get('template:resource_blocs_modal_delete_title')
-        $modalMessage=\Blocs\Lang::get('template:resource_blocs_modal_delete_message')
+        $modalAction=route(prefix().'.destroy', ['id' => $id])
+        $modalTitle=lang('template:resource_blocs_modal_delete_title')
+        $modalMessage=lang('template:resource_blocs_modal_delete_message')
     -->
 <!-- data-endbloc -->
 
@@ -191,11 +191,11 @@
 
     <!--
         data-include='modal_confirm_toggle'
-        $formAction=route(\Blocs\Common::routePrefix().'.index')
-        $modalActiveTitle=\Blocs\Lang::get('template:resource_blocs_modal_activate_title')
-        $modalActiveMessage=\Blocs\Lang::get('template:resource_blocs_modal_activate_message')
-        $modalInactiveTitle=\Blocs\Lang::get('template:resource_blocs_modal_inactivate_title')
-        $modalInactiveMessage=\Blocs\Lang::get('template:resource_blocs_modal_inactivate_message')
+        $formAction=route(prefix().'.index')
+        $modalActiveTitle=lang('template:resource_blocs_modal_activate_title')
+        $modalActiveMessage=lang('template:resource_blocs_modal_activate_message')
+        $modalInactiveTitle=lang('template:resource_blocs_modal_inactivate_title')
+        $modalInactiveMessage=lang('template:resource_blocs_modal_inactivate_message')
     -->
 <!-- data-endbloc -->
 
