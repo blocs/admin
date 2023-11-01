@@ -11,7 +11,10 @@ trait UpdateTrait
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
-        empty(old()) && $this->val = array_merge($this->tableData->toArray(), $this->val);
+        if (empty(old())) {
+            $this->val = array_merge($this->getAccessor($this->tableData), $this->val);
+            $this->val = array_merge($this->tableData->toArray(), $this->val);
+        }
 
         $this->prepareEdit();
 
@@ -42,6 +45,7 @@ trait UpdateTrait
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
+        $this->val = array_merge($this->getAccessor($this->tableData), $this->val);
         $this->val = array_merge($this->tableData->toArray(), $this->val);
 
         $this->prepareShow();
@@ -146,6 +150,7 @@ trait UpdateTrait
             return;
         }
 
+        $requestData = array_merge($this->setMutator($this->tableData), $requestData);
         $this->tableData->fill($requestData)->save();
 
         $this->logData = (object) $requestData;
