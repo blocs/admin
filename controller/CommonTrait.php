@@ -2,6 +2,8 @@
 
 namespace Blocs\Controllers;
 
+use Illuminate\Support\Str;
+
 trait CommonTrait
 {
     protected function addOption($formName, $optionList)
@@ -83,5 +85,35 @@ trait CommonTrait
     protected function setAutoinclude($autoincludeDir)
     {
         $GLOBALS[\Route::currentRouteAction()]['BLOCS_AUTOINCLUDE_DIR'] = $autoincludeDir;
+    }
+
+    protected function getAccessor($model)
+    {
+        $methods = get_class_methods($model);
+
+        $accessor = [];
+        foreach ($methods as $method) {
+            if (!strncmp($method, 'get', 3) && 'Attribute' === substr($method, -9) && $columnName = substr($method, 3, -9)) {
+                $columnName = Str::snake($columnName);
+                $accessor[$columnName] = $model->$columnName;
+            }
+        }
+
+        return $accessor;
+    }
+
+    protected function setMutator($model)
+    {
+        $methods = get_class_methods($model);
+
+        $mutator = [];
+        foreach ($methods as $method) {
+            if (!strncmp($method, 'set', 3) && 'Attribute' === substr($method, -9) && $columnName = substr($method, 3, -9)) {
+                $columnName = Str::snake($columnName);
+                $mutator[$columnName] = '';
+            }
+        }
+
+        return $mutator;
     }
 }
