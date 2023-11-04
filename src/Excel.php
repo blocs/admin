@@ -51,6 +51,39 @@ class Excel
         return $value;
     }
 
+    /**
+     * @param string $sheetNo シートの番号、左から1,2とカウント
+     */
+    public function all($sheetNo)
+    {
+        // 指定されたシートの読み込み
+        $sheetName = 'xl/worksheets/sheet'.$this->getSheetNo($sheetNo).'.xml';
+        $worksheetXml = $this->getWorksheetXml($sheetName);
+
+        // 指定されたシートがない
+        if (false === $worksheetXml) {
+            return false;
+        }
+
+        // 全データを取得
+        $allData = [];
+        $rows = $worksheetXml->sheetData->row;
+        foreach ($rows as $row) {
+            $rowData = [];
+            foreach ($row->c as $cell) {
+                if ('s' == $cell['t']) {
+                    // 文字列の時
+                    $rowData[] = strval($this->getValue(intval($cell->v)));
+                } else {
+                    $rowData[] = strval($cell->v);
+                }
+            }
+            $allData[] = $rowData;
+        }
+
+        return $allData;
+    }
+
     private function getWorksheetString($sheetName)
     {
         // シートがない時
@@ -88,9 +121,10 @@ class Excel
         $worksheetXml = $this->getWorksheetXml('xl/workbook.xml');
         $sheets = $worksheetXml->sheets[0]->sheet;
 
+        $sheetNo = 0;
         $sheetNames = [];
         foreach ($sheets as $sheet) {
-            $sheetNames[strval($sheet->attributes()->name)] = intval($sheet->attributes()->sheetId);
+            $sheetNames[strval($sheet->attributes()->name)] = ++$sheetNo;
         }
 
         return isset($sheetNames[$sheetName]) ? $sheetNames[$sheetName] : $sheetName;
