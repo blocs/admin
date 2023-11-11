@@ -31,6 +31,10 @@ class softUnique implements DataAwareRule, ValidationRule
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
+        if (!strlen($value)) {
+            return;
+        }
+
         $tableWhere = \DB::table($this->tableName)->where($attribute, $value);
 
         // 削除データは無視
