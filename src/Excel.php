@@ -78,6 +78,10 @@ class Excel
                     $rowData[] = strval($cell->v);
                 }
             }
+
+            while (count(array_keys($allData)) + 1 < $row['r']) {
+                $allData[] = [];
+            }
             $allData[] = $rowData;
         }
 
