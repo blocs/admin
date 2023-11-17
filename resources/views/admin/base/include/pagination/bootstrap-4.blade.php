@@ -1,6 +1,7 @@
 @if ($paginator->hasPages())
+<div class="box-footer clearfix">
     <nav>
-        <ul class="pagination">
+        <ul class="pagination pagination-sm no-margin pull-right">
             {{-- Previous Page Link --}}
             @if ($paginator->onFirstPage())
                 <li class="page-item disabled" aria-disabled="true" aria-label="@lang('pagination.previous')">
@@ -43,4 +44,5 @@
             @endif
         </ul>
     </nav>
+</div>
 @endif
