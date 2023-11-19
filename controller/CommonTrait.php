@@ -110,7 +110,7 @@ trait CommonTrait
         foreach ($methods as $method) {
             if (!strncmp($method, 'set', 3) && 'Attribute' === substr($method, -9) && $columnName = substr($method, 3, -9)) {
                 $columnName = Str::snake($columnName);
-                $mutator[$columnName] = '';
+                $mutator[$columnName] = isset(request()->$columnName) ? request()->$columnName : '';
             }
         }
 
