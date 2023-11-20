@@ -161,7 +161,7 @@ class Menu
         $roleList = [];
         foreach ($configRole as $roleName => $routeNameList) {
             foreach ($routeNameList as $routePreg) {
-                if (preg_match('/'.$routePreg.'/', $currentName)) {
+                if (preg_match('/^'.$routePreg.'/', $currentName)) {
                     $roleList[] = $roleName;
                     break;
                 }
