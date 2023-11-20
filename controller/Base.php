@@ -98,10 +98,13 @@ class Base extends Controller
         } else {
             $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName)->setPageName($this->paginateName)->withPath($pagePath);
         }
-        $this->val[$this->loopItem] = $this->val['paginate'];
 
         // 存在しないページ
-        $this->val['paginate']->lastPage() < $this->val['paginate']->currentPage() && abort(404);
+        if ($this->val['paginate']->lastPage() < $this->val['paginate']->currentPage()) {
+            $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName, $this->val['paginate']->lastPage())->setPageName($this->paginateName)->withPath($pagePath);
+        }
+
+        $this->val[$this->loopItem] = $this->val['paginate'];
     }
 
     protected function outputIndex()
