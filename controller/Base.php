@@ -26,6 +26,7 @@ class Base extends Controller
     protected $mainTable;
     protected $loopItem;
     protected $paginateNum;
+    protected $paginateName;
     protected $noticeItem;
     protected $searchItems;
 
@@ -87,8 +88,16 @@ class Base extends Controller
 
     protected function prepareIndexPaginate(&$mainTable)
     {
+        isset($this->paginateName) || $this->paginateName = 'page';
+        $this->keepItem($this->paginateName);
+
         $pagePath = route(prefix().'.index');
-        $this->val['paginate'] = $mainTable->paginate($this->paginateNum)->withPath($pagePath);
+
+        if (isset($this->val[$this->paginateName])) {
+            $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName, $this->val[$this->paginateName])->setPageName($this->paginateName)->withPath($pagePath);
+        } else {
+            $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName)->setPageName($this->paginateName)->withPath($pagePath);
+        }
         $this->val[$this->loopItem] = $this->val['paginate'];
 
         // 存在しないページ
