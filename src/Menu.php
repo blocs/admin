@@ -100,7 +100,7 @@ class Menu
             }
 
             // 権限があるかチェック
-            if (!self::checkRole($config['name'])) {
+            if (empty($config['role']) && !self::checkRole($config['name'])) {
                 continue;
             }
 
@@ -133,28 +133,6 @@ class Menu
     public static function checkRole($currentName = null)
     {
         isset($currentName) || $currentName = \Route::currentRouteName();
-
-        // UserRoleをチェック
-        $isUserRole = false;
-        foreach (\Route::getRoutes() as $route) {
-            if ($route->getName() !== $currentName) {
-                continue;
-            }
-
-            $middlewareList = \Route::gatherRouteMiddleware($route);
-            empty($middlewareList) && $middlewareList = [];
-            foreach ($middlewareList as $middleware) {
-                if (false !== strpos($middleware, '\UserRole')) {
-                    $isUserRole = true;
-                    break;
-                }
-            }
-            break;
-        }
-        if (!$isUserRole) {
-            // UserRoleがない
-            return true;
-        }
 
         // 必要な権限を取得
         $configRole = config('role');
