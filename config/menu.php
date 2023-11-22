@@ -7,6 +7,7 @@ return [
             'lang' => '管理トップ',
             'icon' => 'fa-cogs',
             'sub' => 'admin_menu',
+            'role' => true,
         ],
     ],
     'admin_menu' => [
