@@ -7,28 +7,7 @@ class Menu
     public static function get($name = 'root', $breadcrumbList = [])
     {
         // 設定読み込み
-        $configList = config('menu');
-
-        // 追加設定の読み込み
-        if (file_exists(config_path('menu.json'))) {
-            $configJson = json_decode(file_get_contents(config_path('menu.json')), true);
-
-            foreach ($configJson as $menuName => $config) {
-                if (empty($configList[$menuName])) {
-                    $configList[$menuName] = $config;
-                    continue;
-                }
-
-                $menuNameList = [];
-                foreach ($configList[$menuName] as $menu) {
-                    $menuNameList[] = $menu['name'];
-                }
-
-                foreach ($config as $menu) {
-                    in_array($menu['name'], $menuNameList) || $configList[$menuName][] = $menu;
-                }
-            }
-        }
+        $configList = self::getJson(config('menu'));
 
         // 指定されたheadline読み込み
         if (isset($configList['headline'])) {
@@ -38,6 +17,7 @@ class Menu
             $headline = false;
         }
 
+        // 指定されたbreadcrumbを追加
         $breadcrumb = isset($configList['breadcrumb']) ? $configList['breadcrumb'] : false;
 
         if (!isset($configList[$name])) {
@@ -45,14 +25,11 @@ class Menu
         }
         $configList = $configList[$name];
 
-        // ルート名を取得
-        $currentPrefix = prefix();
-
         // メニュー、パンクズリスト
         $menuList = [];
         $isActive = false;
         foreach ($configList as $config) {
-            if (!isset($config['url'])) {
+            if (!isset($config['url']) && empty($config['breadcrumb'])) {
                 if (empty($config['argv'])) {
                     $config['url'] = route($config['name']);
                 } else {
@@ -61,11 +38,12 @@ class Menu
             }
             isset($config['label']) || $config['label'] = lang($config['lang']);
 
+            $config['active'] = false;
             if (isset($config['sub'])) {
                 list($config['sub'], $subHeadline, $breadcrumbList, $isSubActive) = self::get($config['sub'], $breadcrumbList);
 
                 if ($isSubActive) {
-                    // サブメニューでマッチ
+                    // サブメニューがactive
                     $config['active'] = true;
                     $isActive = true;
                     false === $headline && $headline = $subHeadline;
@@ -75,23 +53,20 @@ class Menu
                 }
             }
 
-            $configNameList = explode('.', $config['name']);
-            array_pop($configNameList);
-            $configPrefix = implode('.', $configNameList);
-
-            if ($configPrefix === $currentPrefix) {
+            // メニューがactive
+            if (self::checkActive($config)) {
                 $config['active'] = true;
                 $isActive = true;
                 false === $headline && $headline = $config;
 
-                if ($breadcrumb) {
-                    $breadcrumbList = [$config, $breadcrumb];
-                } else {
-                    $breadcrumbList = [$config];
-                    unset($breadcrumbList[0]['url']);
+                if (empty($breadcrumbList)) {
+                    if ($breadcrumb) {
+                        $breadcrumbList = [$config, $breadcrumb];
+                    } else {
+                        $breadcrumbList = [$config];
+                        unset($breadcrumbList[0]['url']);
+                    }
                 }
-            } elseif (empty($config['active'])) {
-                $config['active'] = false;
             }
 
             // パンクズリストはメニューには表示しない
@@ -157,5 +132,51 @@ class Menu
         }
 
         return false;
+    }
+
+    private static function getJson($configList)
+    {
+        if (!file_exists(config_path('menu.json'))) {
+            return $configList;
+        }
+
+        $configJson = json_decode(file_get_contents(config_path('menu.json')), true);
+
+        foreach ($configJson as $menuName => $config) {
+            if (empty($configList[$menuName])) {
+                $configList[$menuName] = $config;
+                continue;
+            }
+
+            $menuNameList = [];
+            foreach ($configList[$menuName] as $menu) {
+                $menuNameList[] = $menu['name'];
+            }
+
+            foreach ($config as $menu) {
+                in_array($menu['name'], $menuNameList) || $configList[$menuName][] = $menu;
+            }
+        }
+
+        return $configList;
+    }
+
+    private static function checkActive($config)
+    {
+        if (!empty($config['breadcrumb'])) {
+            // パンくずは完全一致
+            $currentName = \Route::currentRouteName();
+
+            return $config['name'] === $currentName;
+        }
+
+        // メニューはメソッド以外一致
+        $currentPrefix = prefix();
+
+        $configNameList = explode('.', $config['name']);
+        array_pop($configNameList);
+        $configPrefix = implode('.', $configNameList);
+
+        return $configPrefix === $currentPrefix;
     }
 }
