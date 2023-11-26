@@ -13,7 +13,6 @@ return [
     'admin_menu' => [
         [
             'name' => 'admin.profile.edit',
-            'argv' => ['id' => 0],
             'lang' => 'プロフィール',
             'icon' => 'fa-cog',
             'breadcrumb' => true,
