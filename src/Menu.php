@@ -4,21 +4,13 @@ namespace Blocs;
 
 class Menu
 {
-    public static function get($name = 'root', $breadcrumbList = [])
+    private static $headline;
+    private static $breadcrumbList = [];
+
+    public static function get($name = 'root')
     {
         // 設定読み込み
         $configList = self::getJson(config('menu'));
-
-        // 指定されたheadline読み込み
-        if (isset($configList['headline'])) {
-            $headline = $configList['headline'];
-            config(['menu.headline' => null]);
-        } else {
-            $headline = false;
-        }
-
-        // 指定されたbreadcrumbを追加
-        $breadcrumb = isset($configList['breadcrumb']) ? $configList['breadcrumb'] : false;
 
         if (!isset($configList[$name])) {
             return [[], [], []];
@@ -26,9 +18,13 @@ class Menu
         $configList = $configList[$name];
 
         // メニュー、パンクズリスト
-        $menuList = [];
+        $subMenuList = [];
         $isActive = false;
         foreach ($configList as $config) {
+            // ラベル
+            isset($config['label']) || $config['label'] = lang($config['lang']);
+
+            // リンク先
             if (!isset($config['url']) && empty($config['breadcrumb'])) {
                 if (empty($config['argv'])) {
                     $config['url'] = route($config['name']);
@@ -36,37 +32,32 @@ class Menu
                     $config['url'] = route($config['name'], $config['argv']);
                 }
             }
-            isset($config['label']) || $config['label'] = lang($config['lang']);
 
-            $config['active'] = false;
+            // サブメニュー
             if (isset($config['sub'])) {
-                list($config['sub'], $subHeadline, $breadcrumbList, $isSubActive) = self::get($config['sub'], $breadcrumbList);
-
-                if ($isSubActive) {
-                    // サブメニューがactive
-                    $config['active'] = true;
-                    $isActive = true;
-                    false === $headline && $headline = $subHeadline;
-
-                    // パンクズリストに階層を追加
-                    array_unshift($breadcrumbList, $config);
-                }
+                list($config['sub'], $buff, $buff, $isSubActive) = self::get($config['sub']);
+            } else {
+                $isSubActive = false;
             }
 
-            // メニューがactive
-            if (self::checkActive($config)) {
+            // メニューかサブメニューがactive
+            if (self::checkActive($config) || $isSubActive) {
                 $config['active'] = true;
                 $isActive = true;
-                false === $headline && $headline = $config;
 
-                if (empty($breadcrumbList)) {
-                    if ($breadcrumb) {
-                        $breadcrumbList = [$config, $breadcrumb];
-                    } else {
-                        $breadcrumbList = [$config];
-                        unset($breadcrumbList[0]['url']);
-                    }
+                // headlineを設定
+                empty(self::$headline) && self::$headline = $config;
+
+                if (empty(self::$breadcrumbList)) {
+                    // パンクズリストの最後
+                    self::$breadcrumbList = [$config];
+                    unset(self::$breadcrumbList[0]['url']);
+                } else {
+                    // パンクズリストに階層を追加
+                    array_unshift(self::$breadcrumbList, $config);
                 }
+            } else {
+                $config['active'] = false;
             }
 
             // パンクズリストはメニューには表示しない
@@ -79,30 +70,31 @@ class Menu
                 continue;
             }
 
-            $guard = isset($config['guard']) ? $config['guard'] : 'web';
-            if (!\Auth::guard($guard)->check()) {
+            if (isset($config['guard']) && !\Auth::guard($config['guard'])->check()) {
                 continue;
             }
 
-            $menuList[] = $config;
+            $subMenuList[] = $config;
         }
 
-        return [$menuList, $headline, $breadcrumbList, $isActive];
+        return [$subMenuList, self::$headline, self::$breadcrumbList, $isActive];
     }
 
     public static function headline($icon, $lang)
     {
-        config(['menu.headline' => [
+        // 指定されたheadlineを設定
+        self::$headline = [
             'icon' => $icon,
             'label' => lang($lang),
-        ]]);
+        ];
     }
 
     public static function breadcrumb($lang)
     {
-        config(['menu.breadcrumb' => [
+        // 指定されたbreadcrumbを設定
+        self::$breadcrumbList[] = [
             'label' => lang($lang),
-        ]]);
+        ];
     }
 
     public static function checkRole($currentName = null)
