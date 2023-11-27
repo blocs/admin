@@ -90,10 +90,8 @@ class Base extends Controller
     {
         isset($this->paginateName) || $this->paginateName = 'page';
 
-        if (isset($this->request) && $this->request->has('search')) {
-            // 検索条件を変えた時はクリア
-            session()->forget($this->paginateName);
-        } else {
+        if (!isset($this->request) || !$this->request->has('search')) {
+            // 検索条件の指定がない時はページをキープ
             $this->keepItem($this->paginateName);
         }
 
