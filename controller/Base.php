@@ -89,7 +89,13 @@ class Base extends Controller
     protected function prepareIndexPaginate(&$mainTable)
     {
         isset($this->paginateName) || $this->paginateName = 'page';
-        $this->keepItem($this->paginateName);
+
+        if (isset($this->request) && $this->request->has('search')) {
+            // 検索条件を変えた時はクリア
+            session()->forget($this->paginateName);
+        } else {
+            $this->keepItem($this->paginateName);
+        }
 
         $pagePath = route(prefix().'.index');
 
