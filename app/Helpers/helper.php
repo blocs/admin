@@ -13,3 +13,30 @@ if (!function_exists('prefix')) {
         return \Blocs\Common::routePrefix();
     }
 }
+
+if (!function_exists('convert')) {
+    function convert($str, $formName = null, $template = null)
+    {
+        isset($template) && \Blocs\Option::set($template, $formName);
+
+        if (isset($formName)) {
+            return \Blocs\Common::convertDefault($str, $formName);
+        }
+
+        return \Blocs\Common::convertDefault($str);
+    }
+}
+
+if (!function_exists('setOption')) {
+    function setOption($formName, $template)
+    {
+        \Blocs\Option::set($template, $formName);
+    }
+}
+
+if (!function_exists('addOption')) {
+    function addOption($formName, $optionList)
+    {
+        \Blocs\Option::add($formName, $optionList);
+    }
+}
