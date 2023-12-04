@@ -101,19 +101,4 @@ trait CommonTrait
 
         return $accessor;
     }
-
-    protected function setMutator($model)
-    {
-        $methods = get_class_methods($model);
-
-        $mutator = [];
-        foreach ($methods as $method) {
-            if (!strncmp($method, 'set', 3) && 'Attribute' === substr($method, -9) && $columnName = substr($method, 3, -9)) {
-                $columnName = Str::snake($columnName);
-                $mutator[$columnName] = '';
-            }
-        }
-
-        return $mutator;
-    }
 }
