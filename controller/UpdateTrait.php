@@ -150,7 +150,6 @@ trait UpdateTrait
             return;
         }
 
-        $requestData = array_merge($this->setMutator($this->tableData), $requestData);
         $this->tableData->fill($requestData)->save();
 
         $this->logData = (object) $requestData;

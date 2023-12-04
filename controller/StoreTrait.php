@@ -107,7 +107,6 @@ trait StoreTrait
             return;
         }
 
-        $requestData = array_merge($this->setMutator(new $this->mainTable()), $requestData);
         $lastInsert = $this->mainTable::create($requestData);
         $this->val['id'] = $lastInsert->id;
 
