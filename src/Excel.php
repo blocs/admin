@@ -70,16 +70,25 @@ class Excel
         $rows = $worksheetXml->sheetData->row;
         foreach ($rows as $row) {
             $rowData = [];
+            $columnIndex = 0;
             foreach ($row->c as $cell) {
+                while ($this->getColumnName($columnIndex).$row['r'] != $cell['r']) {
+                    // 空白セルを追加
+                    $rowData[] = '';
+                    ++$columnIndex;
+                }
+
                 if ('s' == $cell['t']) {
                     // 文字列の時
                     $rowData[] = strval($this->getValue(intval($cell->v)));
                 } else {
                     $rowData[] = strval($cell->v);
                 }
+                ++$columnIndex;
             }
 
             while (count(array_keys($allData)) + 1 < $row['r']) {
+                // 空白行を追加
                 $allData[] = [];
             }
             $allData[] = $rowData;
