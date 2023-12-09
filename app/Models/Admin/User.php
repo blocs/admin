@@ -44,4 +44,14 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function getDisabledAtAttribute($value)
+    {
+        return isset($value) ? 1 : 0;
+    }
+
+    public function setDisabledAtAttribute($value)
+    {
+        $this->attributes['disabled_at'] = empty($value) ? null : now();
+    }
 }
