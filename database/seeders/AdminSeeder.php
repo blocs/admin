@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Admin\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Carbon;
 
 class AdminSeeder extends Seeder
 {
@@ -20,8 +19,8 @@ class AdminSeeder extends Seeder
                'email' => $initUser,
                'name' => $initUser,
                'password' => '$2y$10$Jsfm3aerQQZuOqilLwhKCeK6K/L8QxBIbeMjcmcwtXMXhp27ZNVau',
-               'created_at' => Carbon::now(),
-               'updated_at' => Carbon::now(),
+               'created_at' => now(),
+               'updated_at' => now(),
                'role' => 'admin',
            ]);
         }

@@ -2,8 +2,6 @@
 
 namespace Blocs\Controllers;
 
-use Illuminate\Support\Carbon;
-
 trait ToggleTrait
 {
     public function toggle($id)
@@ -11,12 +9,8 @@ trait ToggleTrait
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
-        if (empty($this->tableData->disabled_at)) {
-            $this->tableData->disabled_at = Carbon::now();
-        } else {
-            $this->tableData->disabled_at = null;
-        }
-
+        // 有効と無効の切替
+        $this->tableData->disabled_at = empty($this->tableData->disabled_at);
         $this->tableData->save();
 
         return $this->outputToggle();
