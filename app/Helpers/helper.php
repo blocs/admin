@@ -27,10 +27,10 @@ if (!function_exists('convert')) {
     }
 }
 
-if (!function_exists('setOption')) {
-    function setOption($formName, $template)
+if (!function_exists('getOption')) {
+    function getOption($formName, $template)
     {
-        \Blocs\Option::set($template, $formName);
+        \Blocs\Option::get($template, $formName);
     }
 }
 
@@ -38,5 +38,12 @@ if (!function_exists('addOption')) {
     function addOption($formName, $optionList)
     {
         \Blocs\Option::add($formName, $optionList);
+    }
+}
+
+if (!function_exists('setOption')) {
+    function setOption($formName, $template)
+    {
+        \Blocs\Option::set($template, $formName);
     }
 }
