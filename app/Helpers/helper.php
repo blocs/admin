@@ -30,7 +30,7 @@ if (!function_exists('convert')) {
 if (!function_exists('getOption')) {
     function getOption($formName, $template)
     {
-        \Blocs\Option::get($template, $formName);
+        return \Blocs\Option::get($template, $formName);
     }
 }
 
