@@ -74,6 +74,11 @@ class Menu
                 continue;
             }
 
+            // パンくずには、headlineにメニュー表示
+            if (!empty(self::$headline) && !empty(self::$headline['breadcrumb']) && $config['active']) {
+                empty(self::$headline['menu']) && self::$headline['menu'] = $config['label'];
+            }
+
             $subMenuList[] = $config;
         }
 
