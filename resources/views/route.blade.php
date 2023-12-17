@@ -1,4 +1,4 @@
-<sitemap>
+<route>
     @foreach ($routes as $route)
         <url>
             <loc>{{ url($route['url']) }}</loc>
@@ -8,4 +8,4 @@
             <middlewares>{{ implode(', ', $route['middlewares']) }}</middlewares>
         </url>
     @endforeach
-</sitemap>
+</route>
