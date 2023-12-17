@@ -11,7 +11,7 @@ Route::middleware(['web'])
     ->group(function () {
         Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [LoginController::class, 'login']);
-        Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+        Route::match(['get', 'post'], '/logout', [LoginController::class, 'logout'])->name('logout');
     }
     );
 
@@ -50,7 +50,7 @@ Route::middleware(['web', 'auth', UserRole::class])
     );
 
 /*
-Route::get('/sitemap', function () {
+Route::get('/route', function () {
     $routes = collect(Route::getRoutes())->map(function ($route) {
         return [
             'url' => $route->uri,
@@ -61,7 +61,7 @@ Route::get('/sitemap', function () {
         ];
     });
 
-    return response()->view('sitemap', ['routes' => $routes])->header('Content-Type', 'text/xml');
+    return response()->view('route', ['routes' => $routes])->header('Content-Type', 'text/xml');
 });
 
 Route::get('/validate', function () {
