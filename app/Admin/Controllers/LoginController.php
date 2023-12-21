@@ -60,7 +60,7 @@ class LoginController extends Controller
     protected function validateLogin(Request $request)
     {
         list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.login');
-        empty($rules) || $request->validate($rules, $messages);
+        empty($rules) || $request->validate($rules, $messages, $this->getLabel($this->viewPrefix.'.login'));
     }
 
     protected function credentials(Request $request)

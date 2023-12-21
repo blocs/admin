@@ -50,7 +50,7 @@ trait FileTrait
     protected function validateUpload($paramname)
     {
         list($rules, $messages) = \Blocs\Validate::upload($this->viewPrefix, $paramname);
-        empty($rules) || $this->request->validate($rules, $messages);
+        empty($rules) || $this->request->validate($rules, $messages, $this->getLabel($this->viewPrefix));
     }
 
     /* download */
