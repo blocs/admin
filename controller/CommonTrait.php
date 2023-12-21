@@ -101,4 +101,27 @@ trait CommonTrait
 
         return $accessor;
     }
+
+    protected function getLabel($template)
+    {
+        // 設定ファイルを読み込み
+        $path = \Blocs\Common::getPath($this->viewPrefix.'.create');
+        $config = \Blocs\Common::readConfig($path);
+
+        $labels = [];
+        if (!isset($config['label'][$path])) {
+            return $labels;
+        }
+
+        foreach ($config['label'][$path] as $formName => $label) {
+            if (false === strpos($label, 'data-')) {
+                $labels[$formName] = $label;
+            } else {
+                isset($blocsCompiler) || $blocsCompiler = new \Blocs\Compiler\BlocsCompiler();
+                $labels[$formName] = $blocsCompiler->template($label);
+            }
+        }
+
+        return $labels;
+    }
 }
