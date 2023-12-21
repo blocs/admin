@@ -86,7 +86,7 @@ trait UpdateTrait
     protected function validateUpdate()
     {
         list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.edit', $this->request);
-        empty($rules) || $this->request->validate($rules, $messages);
+        empty($rules) || $this->request->validate($rules, $messages, $this->getLabel($this->viewPrefix.'.edit'));
     }
 
     protected function prepareConfirmUpdate()

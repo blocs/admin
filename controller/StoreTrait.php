@@ -49,7 +49,7 @@ trait StoreTrait
     protected function validateStore()
     {
         list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.create', $this->request);
-        empty($rules) || $this->request->validate($rules, $messages);
+        empty($rules) || $this->request->validate($rules, $messages, $this->getLabel($this->viewPrefix.'.create'));
     }
 
     protected function prepareConfirmStore()
