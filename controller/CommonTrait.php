@@ -19,6 +19,11 @@ trait CommonTrait
 
         $sessionKey = $this->viewPrefix.'.'.$keyItem;
 
+        // viewPrefixが変わるとクリア
+        if (($lastSessionKey = session('viewPrefix').'.'.$keyItem) !== $sessionKey) {
+            session()->forget($sessionKey);
+        }
+
         // POST
         if (isset($this->request) && $this->request->has($keyItem)) {
             $this->saveItem($keyItem, $this->request->$keyItem, $sessionKey);
@@ -80,6 +85,9 @@ trait CommonTrait
         $this->val['menu'] = $menu;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
+
+        // keepItemで使用
+        isset($this->viewPrefix) && session(['viewPrefix' => $this->viewPrefix]);
     }
 
     protected function setAutoinclude($autoincludeDir)
