@@ -42,7 +42,7 @@
                 <!-- data-attribute='required' data-exist=$required  -->
                 <select class='form-control'>
                     <!-- data-attribute='value' data-val=$value  -->
-                    <!-- data-attribute='selected' data-if="$default == $value"  -->
+                    <!-- data-attribute='selected' data-if="isset($default) && $default == $value"  -->
                     <option value='' data-repeat=$options><!-- $label --></option>
                 </select>
 
@@ -59,7 +59,7 @@
                 <label class='radio-inline' data-repeat=$options>
                     <!-- data-attribute='name' data-val=$name -->
                     <!-- data-attribute='value' data-val=$value  -->
-                    <!-- data-attribute='checked' data-if="$default == $value"  -->
+                    <!-- data-attribute='checked' data-if="isset($default) && $default == $value"  -->
                     <input type='radio' /> <!-- data-val=$label data-convert='raw' -->
                 </label>
 
@@ -79,7 +79,7 @@
                 <label class='checkbox-inline' data-repeat=$options>
                     <!-- data-attribute='name' data-val=$name.'[]' -->
                     <!-- data-attribute='value' data-val=$value  -->
-                    <!-- data-attribute='checked' data-if="$default == $value"  -->
+                    <!-- data-attribute='checked' data-if="isset($default) && $default == $value"  -->
                     <input type='checkbox' /> <!-- data-val=$label data-convert='raw' -->
                 </label>
 
