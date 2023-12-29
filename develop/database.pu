@@ -1,0 +1,6 @@
+    Class "CLASS_NAME" as LOOP_ITEM <<M,AAFFAA)>> {
+        MENU_LANG
+        ---
+       +id [PK]
+        FORM_LIST
+    }
