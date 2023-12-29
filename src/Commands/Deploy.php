@@ -75,7 +75,7 @@ class Deploy extends Command
         $configJson = [];
         $laravelMenuPath = config_path('menu.json');
         if (file_exists($laravelMenuPath)) {
-            $configJson = json_decode(file_get_contents(config_path('menu.json')), true);
+            $configJson = json_decode(file_get_contents($laravelMenuPath), true);
         }
         empty($configJson) && $configJson = [];
 

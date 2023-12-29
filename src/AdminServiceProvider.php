@@ -90,5 +90,11 @@ class AdminServiceProvider extends ServiceProvider
         });
 
         $this->commands('command.blocs.build');
+
+        $this->app->singleton('command.blocs.develop', function ($app) {
+            return new \Blocs\Commands\Develop('blocs:develop {path?}', 'Develop application');
+        });
+
+        $this->commands('command.blocs.develop');
     }
 }

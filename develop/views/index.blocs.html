@@ -1,0 +1,34 @@
+<!-- $searchPlaceholder='' -->
+<!-- $unselectable=0 -->
+
+<!-- data-include='/admin/base/index.html' -->
+
+<thead>
+    <tr>
+        <th class='col-xs-1'></th>
+<!-- HEAD_HTML -->
+    </tr>
+</thead>
+<tbody>
+    <!-- data-attribute='class' data-val='danger' data-exist=$selectedRows -->
+    <tr data-loop=$<!-- LOOP_ITEM -->>
+        <td>
+            <!-- data-attribute='value' data-val=$<!-- SINGULAR_ITEM -->->id -->
+            <input type='checkbox' name='selectedRows[]' style='display:none;' />
+
+            <a href='{{ route('<!-- EDIT_NAME -->', ['id' => $<!-- SINGULAR_ITEM -->->id]) }}' data-val=$<!-- SINGULAR_ITEM -->->id></a>
+        </td>
+<!-- BODY_HTML -->
+    </tr>
+</tbody>
+
+<!-- data-include='index_paginate' -->
+
+<!-- data-include='button_create' -->
+<!--
+    data-include='modal_destroy'
+    $modalAction=route('<!-- SELECT_NAME -->')
+    data-exist=$isLoop
+-->
+
+<!-- data-include='index_footer' -->

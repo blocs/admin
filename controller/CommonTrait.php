@@ -113,7 +113,7 @@ trait CommonTrait
     protected function getLabel($template)
     {
         // 設定ファイルを読み込み
-        $path = \Blocs\Common::getPath($this->viewPrefix.'.create');
+        $path = \Blocs\Common::getPath($template);
         $config = \Blocs\Common::readConfig($path);
 
         $labels = [];
