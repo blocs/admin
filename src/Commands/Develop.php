@@ -127,12 +127,12 @@ class Develop extends Command
         $migrationPath = 'create_'.$loopItem.'_table.php';
 
         if ($migrations = glob(database_path('migrations').'/*_'.$migrationPath)) {
-            $migrate = basename($migrations[0]);
-            echo "Migrate \"{$migrate}\" ? ";
+            $migrationPath = $migrations[0];
+            echo 'Migrate "'.basename($migrationPath).'" ? ';
 
             if ('y' === trim(strtolower(fgets(STDIN)))) {
                 // テーブル再作成
-                \Artisan::call('migrate:refresh', ['--path' => 'database/migrations/'.$migrate]);
+                \Artisan::call('migrate:refresh', ['--path' => 'database/migrations/'.basename($migrationPath)]);
             }
 
             return;
@@ -159,10 +159,10 @@ class Develop extends Command
         $migration = str_replace('/* ITEM_LIST */', $this->getList($itemList, "\n            "), $migration);
 
         file_put_contents($migrationPath, $migration);
-        echo "Make migration \"{$loopItem}\"\n";
+        echo 'Make migration "'.basename($migrationPath)."\"\n";
 
         // テーブル作成
-        \Artisan::call('migrate');
+        \Artisan::call('migrate:refresh', ['--path' => 'database/migrations/'.basename($migrationPath)]);
 
         // テープル定義表示
         $this->makeDiagram($developJson, $loopItem);
@@ -220,11 +220,11 @@ class Develop extends Command
 
         $blocsCompiler = new \Blocs\Compiler\BlocsCompiler();
         foreach ($developJson['entry'] as $formName => $form) {
-            $replaceItem['HEAD_HTML'] .= "<th class='col-xs-1'>".$form['label'].'</th>';
+            $replaceItem['HEAD_HTML'] .= "        <th class='col-xs-1'>".$form['label'].'</th>'."\n";
 
-            $replaceItem['BODY_HTML'] .= '<td data-val=$'.$replaceItem['SINGULAR_ITEM'].'->'.$formName;
-            'upload' === $form['type'] && $replaceItem['BODY_HTML'] .= " data-convert='raw_download'";
-            $replaceItem['BODY_HTML'] .= '></td>';
+            $replaceItem['BODY_HTML'] .= '        <td data-val=$'.$replaceItem['SINGULAR_ITEM'].'->'.$formName;
+            'upload' === $form['type'] && $replaceItem['BODY_HTML'] .= " data-convert='raw_upload'";
+            $replaceItem['BODY_HTML'] .= '></td>'."\n";
 
             $form['name'] = $formName;
             $form['noticeItem'] = ($noticeItem == $formName);
