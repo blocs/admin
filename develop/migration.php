@@ -10,6 +10,8 @@ return new class() extends Migration {
      */
     public function up(): void
     {
+        Schema::dropIfExists('LOOP_ITEM');
+
         Schema::create('LOOP_ITEM', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
