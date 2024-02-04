@@ -13,6 +13,10 @@ trait FileTrait
         $this->request = $request;
         $paramname = $this->request->name;
 
+
+        // XSS対策 不適切な文字を削除
+        $paramname = str_replace(['<', '>', '/', '"', "'"], '', $paramname);
+
         if ($this->request->has('uploadedFile')) {
             $uploadedFile = $this->request->uploadedFile;
             is_array($uploadedFile) || $uploadedFile = json_decode($uploadedFile, true);
