@@ -47,3 +47,40 @@ if (!function_exists('setOption')) {
         \Blocs\Option::set($template, $formName);
     }
 }
+
+if (!function_exists('doc')) {
+    function doc(...$argvs)
+    {
+        if (!isset($GLOBALS['DOC_GENERATOR'])) {
+            return;
+        }
+
+        if (count($argvs) > 2) {
+            $in = $argvs[0] ?? [];
+            $main = $argvs[1] ?? [];
+            $out = $argvs[2] ?? [];
+        } elseif (count($argvs) > 1) {
+            $in = $argvs[0] ?? [];
+            $main = $argvs[1] ?? [];
+            $out = [];
+        } else {
+            $in = [];
+            $main = $argvs[0] ?? [];
+            $out = [];
+        }
+
+        is_array($in) || $in = [$in => []];
+        is_array($main) || $main = [$main];
+        is_array($out) || $out = [$out => []];
+
+        $backtrace = debug_backtrace();
+        $GLOBALS['DOC_GENERATOR'][] = [
+            'path' => $backtrace[0]['file'],
+            'function' => $backtrace[1]['function'],
+            'line' => $backtrace[0]['line'],
+            'in' => $in,
+            'main' => $main,
+            'out' => $out,
+        ];
+    }
+}

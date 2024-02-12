@@ -21,6 +21,8 @@ class ProfileController extends \Blocs\Controllers\Base
 
     protected function outputUpdate()
     {
+        unset($this->val, $this->request, $this->tableData);
+
         return redirect()->route('home')->with([
             'category' => 'success',
             'message' => lang('success:admin_profile_updated'),

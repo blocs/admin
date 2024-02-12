@@ -49,11 +49,17 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        return view($this->viewPrefix.'.login');
+        doc('画面表示');
+        $view = view($this->viewPrefix.'.login');
+        unset($this->val, $this->request, $this->tableData);
+
+        return $view;
     }
 
     protected function loggedOut(Request $request)
     {
+        unset($this->val, $this->request, $this->tableData);
+
         return redirect(ADMIN_LOGOUT_REDIRECT_TO);
     }
 

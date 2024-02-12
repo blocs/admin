@@ -68,10 +68,13 @@ class Base extends Controller
         $mainTable = $this->mainTable::query();
 
         // 検索条件、ソートなど
+        doc('検索条件の設定');
         $this->prepareIndexSearch($mainTable);
 
+        doc('データの取得');
         if (empty($this->paginateNum)) {
             // ページネーションなし
+            doc('全件取得');
             $this->val[$this->loopItem] = $mainTable->get();
         } else {
             // ページネーションあり
@@ -97,6 +100,7 @@ class Base extends Controller
 
         $pagePath = route(prefix().'.index');
 
+        doc(['データベース' => $this->loopItem], '<'.$this->loopItem.'>から、指定された<'.$this->paginateName.'>の'.$this->paginateNum.'件を取得');
         if (isset($this->val[$this->paginateName])) {
             $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName, $this->val[$this->paginateName])->setPageName($this->paginateName)->withPath($pagePath);
         } else {
@@ -115,6 +119,10 @@ class Base extends Controller
     {
         $this->setupMenu();
 
-        return view($this->viewPrefix.'.index', $this->val);
+        doc('画面表示');
+        $view = view($this->viewPrefix.'.index', $this->val);
+        unset($this->val, $this->request, $this->tableData);
+
+        return $view;
     }
 }

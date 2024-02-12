@@ -14,6 +14,8 @@ trait ExcelSetTrait
     private $addShared = false;
     private $addSharedString = [];
 
+    private $sheetName;
+
     /**
      * @param string $sheetNo     シートの番号、左から1,2とカウント
      * @param string $sheetColumn 編集するカラムの列番号、もしくは列名
@@ -35,6 +37,13 @@ trait ExcelSetTrait
         list($columnName, $rowName) = $this->getName($sheetColumn, $sheetRow);
 
         $this->setValue[$sheetName][$rowName][$columnName.$rowName] = $value;
+
+        return $this;
+    }
+
+    public function name($sheetNo, $newSheetName)
+    {
+        $this->sheetName[$sheetNo] = $newSheetName;
 
         return $this;
     }
@@ -91,6 +100,14 @@ trait ExcelSetTrait
 
             if ('xl/workbook.xml' == $sheetName) {
                 $worksheetXml = $this->getWorksheetXml($sheetName);
+
+                // シート名を変更
+                foreach ($this->sheetName as $sheetNo => $newSheetName) {
+                    if (isset($worksheetXml->sheets[0]->sheet[$sheetNo - 1])) {
+                        $worksheetXml->sheets[0]->sheet[$sheetNo - 1]['name'] = $newSheetName;
+                        $worksheetString = $worksheetXml->asXML();
+                    }
+                }
 
                 if (isset($worksheetXml->calcPr['forceFullCalc'])) {
                     // テンプレートそのままのシート
