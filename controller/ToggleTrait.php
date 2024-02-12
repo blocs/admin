@@ -11,7 +11,7 @@ trait ToggleTrait
         $this->val['id'] = $id;
 
         // 有効と無効の切替
-        doc(null, "データの更新\n有効ならば無効に変更、無効ならば有効に変更", ['データベース' => $this->loopItem]);
+        doc(null, "データの更新\nデータ有効ならば無効に、無効ならば有効に変更", ['データベース' => $this->loopItem]);
         $this->tableData->disabled_at = empty($this->tableData->disabled_at);
         $this->tableData->save();
 
