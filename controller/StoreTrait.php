@@ -53,7 +53,7 @@ trait StoreTrait
     protected function validateStore()
     {
         doc(['POST' => '入力値', 'TEMPLATE' => $this->viewPrefix.'.create'], '入力値を新規作成画面の条件で検証');
-        doc(null, 'エラーがあれば編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.create']);
+        doc(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.create']);
         list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.create', $this->request);
         empty($rules) || $this->request->validate($rules, $messages, $this->getLabel($this->viewPrefix.'.create'));
     }
