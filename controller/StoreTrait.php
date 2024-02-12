@@ -26,7 +26,11 @@ trait StoreTrait
     {
         $this->setupMenu();
 
-        return view($this->viewPrefix.'.create', $this->val);
+        doc('画面表示');
+        $view = view($this->viewPrefix.'.create', $this->val);
+        unset($this->val, $this->request, $this->tableData);
+
+        return $view;
     }
 
     /* store */
@@ -48,6 +52,8 @@ trait StoreTrait
 
     protected function validateStore()
     {
+        doc(['POST' => '入力値', 'TEMPLATE' => $this->viewPrefix.'.create'], '入力値を新規作成画面の条件で検証');
+        doc(null, 'エラーがあれば編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.create']);
         list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.create', $this->request);
         empty($rules) || $this->request->validate($rules, $messages, $this->getLabel($this->viewPrefix.'.create'));
     }
@@ -61,7 +67,11 @@ trait StoreTrait
     {
         $this->setupMenu();
 
-        return view($this->viewPrefix.'.confirmStore', $this->val);
+        doc('画面表示');
+        $view = view($this->viewPrefix.'.confirmStore', $this->val);
+        unset($this->val, $this->request, $this->tableData);
+
+        return $view;
     }
 
     public function store(Request $request)
@@ -72,11 +82,13 @@ trait StoreTrait
             // 確認画面からの遷移
             $this->request->merge(session($this->viewPrefix.'.confirm'));
         } else {
+            doc('データの検証');
             if ($redirect = $this->validateStore()) {
                 return $redirect;
             }
         }
 
+        doc('データの追加');
         $this->executeStore($this->prepareStore());
         $this->logStore();
 
@@ -107,6 +119,7 @@ trait StoreTrait
             return;
         }
 
+        doc(null, 'データを追加', ['データベース' => $this->loopItem]);
         $lastInsert = $this->mainTable::create($requestData);
         $this->val['id'] = $lastInsert->id;
 

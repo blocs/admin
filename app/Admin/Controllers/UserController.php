@@ -18,6 +18,11 @@ class UserController extends \Blocs\Controllers\Base
 
     protected function prepareIndexSearch(&$mainTable)
     {
+        doc([
+            '<search>があれば、<'.$this->loopItem.'>のnameを<search>で部分一致検索',
+            '<search>があれば、<'.$this->loopItem.'>のemailを<search>で部分一致検索',
+            '<search>があれば、<'.$this->loopItem.'>のroleを<search>で部分一致検索',
+        ]);
         foreach ($this->searchItems as $searchItem) {
             $mainTable->where(function ($query) use ($searchItem) {
                 $query
@@ -27,6 +32,7 @@ class UserController extends \Blocs\Controllers\Base
             });
         }
 
+        doc('emailで昇順にソート');
         $mainTable->orderBy('email', 'asc');
     }
 
@@ -52,6 +58,7 @@ class UserController extends \Blocs\Controllers\Base
     protected function prepareStore()
     {
         // nameの補完
+        doc('<name>がなければ、<email>を指定する');
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
         $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);
 

@@ -26,6 +26,7 @@ trait SelectTrait
 
     protected function validateSelect()
     {
+        doc(['POST' => '選択データ'], "データが選択されていなければ、メッセージをセットして一覧画面に戻る\n".lang('error:data_not_selected'), ['FORWARD' => $this->viewPrefix.'.index']);
         if (empty($this->request->{$this->loopItem})) {
             return $this->backIndex('error', 'data_not_selected');
         }
@@ -47,7 +48,11 @@ trait SelectTrait
     {
         $this->setupMenu();
 
-        return view($this->viewPrefix.'.confirmSelect', $this->val);
+        doc('画面表示');
+        $view = view($this->viewPrefix.'.confirmSelect', $this->val);
+        unset($this->val, $this->request, $this->tableData);
+
+        return $view;
     }
 
     public function select(Request $request)
@@ -62,11 +67,13 @@ trait SelectTrait
                 empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'][0];
             }
         } else {
+            doc('データの検証');
             if ($redirect = $this->validateSelect()) {
                 return $redirect;
             }
         }
 
+        doc('データの一括処理');
         $this->prepareSelect();
         $this->executeSelect();
         $this->logSelect();
@@ -84,6 +91,7 @@ trait SelectTrait
             return;
         }
 
+        doc(['POST' => '選択データ'], 'データを削除', ['データベース' => $this->loopItem]);
         $this->deletedNum = $this->mainTable::destroy($this->selectedIdList);
 
         $this->logData = new \stdClass();

@@ -13,7 +13,6 @@ trait FileTrait
         $this->request = $request;
         $paramname = $this->request->name;
 
-
         // XSS対策 不適切な文字を削除
         $paramname = str_replace(['<', '>', '/', '"', "'"], '', $paramname);
 
