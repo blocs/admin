@@ -96,7 +96,7 @@ trait UpdateTrait
     protected function validateUpdate()
     {
         doc(['POST' => '入力値', 'TEMPLATE' => $this->viewPrefix.'.edit'], '入力値を編集画面の条件で検証');
-        doc(null, 'エラーがあれば編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.edit']);
+        doc(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.edit']);
         list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.edit', $this->request);
         empty($rules) || $this->request->validate($rules, $messages, $this->getLabel($this->viewPrefix.'.edit'));
     }
