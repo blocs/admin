@@ -145,17 +145,10 @@ class Excel
 
     private function getName($sheetColumn, $sheetRow)
     {
-        if (is_integer($sheetColumn)) {
-            $columnName = $this->getColumnName($sheetColumn);
-            $rowName = intval($sheetRow) + 1;
+        is_integer($sheetColumn) && $sheetColumn = $this->getColumnName($sheetColumn);
+        is_integer($sheetRow) && $sheetRow = $sheetRow + 1;
 
-            return [$columnName, $rowName];
-        }
-
-        $columnName = $sheetColumn;
-        $rowName = $sheetRow;
-
-        return [$columnName, $rowName];
+        return [$sheetColumn, $sheetRow];
     }
 
     private function getColumnName($columnIndex)

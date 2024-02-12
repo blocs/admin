@@ -26,18 +26,21 @@ trait CommonTrait
 
         // POST
         if (isset($this->request) && $this->request->has($keyItem)) {
+            doc(['POST' => $keyItem], 'POSTに<'.$keyItem.'>があれば、セッションに保存', ['セッション' => $keyItem]);
             $this->saveItem($keyItem, $this->request->$keyItem, $sessionKey);
 
             return;
         }
 
         // GET
+        doc(['GET' => $keyItem], 'GETに<'.$keyItem.'>があれば、セッションに保存', ['セッション' => $keyItem]);
         if (request()->query($keyItem)) {
             $this->saveItem($keyItem, request()->query($keyItem), $sessionKey);
 
             return;
         }
 
+        doc(['セッション' => $keyItem], 'セッションに<'.$keyItem.'>があれば、読み込み');
         if (session()->has($sessionKey)) {
             // sessionがあれば読み込む
             $this->val[$keyItem] = session($sessionKey);
@@ -81,6 +84,7 @@ trait CommonTrait
 
     protected function setupMenu()
     {
+        doc(['設定ファイル' => 'config/menu.php'], 'メニュー表示の設定');
         list($menu, $headline, $breadcrumb) = \Blocs\Menu::get();
         $this->val['menu'] = $menu;
         $this->val['headline'] = $headline;

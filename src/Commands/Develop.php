@@ -7,8 +7,6 @@ use Illuminate\Support\Str;
 
 class Develop extends Command
 {
-    use StaticTrait;
-
     protected $signature;
     protected $description;
 
@@ -23,7 +21,7 @@ class Develop extends Command
     public function handle()
     {
         $path = $this->argument('path');
-        if (empty($path)) {
+        if (!file_exists($path)) {
             return;
         }
 

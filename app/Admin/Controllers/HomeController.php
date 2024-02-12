@@ -20,7 +20,11 @@ class HomeController extends \Blocs\Controllers\Base
 
         $this->setupMenu();
 
-        return view($this->viewPrefix.'.index', $this->val);
+        doc('画面表示');
+        $view = view($this->viewPrefix.'.index', $this->val);
+        unset($this->val, $this->request, $this->tableData);
+
+        return $view;
     }
 
     protected function chart()
