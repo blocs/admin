@@ -17,8 +17,6 @@ trait UserUpdateTrait
     {
         parent::validateUpdate();
 
-        doc(['POST' => 'password_old', 'データベース' => $this->loopItem], '<password_old>があれば、<'.$this->loopItem.'>をチェック');
-        doc(null, "<password_old>が一致しなければ、メッセージをセットして編集画面に戻る\n".'パスワードが違います。', ['FORWARD' => prefix().'.edit']);
         if (empty($this->request->password_new)) {
             return;
         }
@@ -35,6 +33,8 @@ trait UserUpdateTrait
         if (!password_verify($this->request->password_old, $this->tableData->password)) {
             return $this->backEdit('', 'パスワードが違います。', 'password_old');
         }
+        doc(['POST' => 'password_old', 'データベース' => $this->loopItem], '<password_old>があれば、<'.$this->loopItem.'>をチェック');
+        doc(null, "<password_old>が一致しなければ、メッセージをセットして編集画面に戻る\n・".'パスワードが違います。', ['FORWARD' => prefix().'.edit']);
     }
 
     protected function prepareUpdate()
@@ -42,11 +42,11 @@ trait UserUpdateTrait
         $requestData = [];
 
         // nameの補完
-        doc('<name>がなければ、<email>を指定する');
         if ($this->request->has('name')) {
             $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
             $requestData['name'] = $this->val['name'];
         }
+        doc('<name>がなければ、<email>を指定する');
 
         if ($this->request->has('role')) {
             $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);

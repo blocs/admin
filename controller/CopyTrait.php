@@ -11,7 +11,10 @@ trait CopyTrait
         $this->getCurrent($id);
         $this->copyId = $id;
 
+        doc('# データのコピー');
         $this->executeCopy($this->prepareCopy());
+
+        doc('# 画面遷移');
 
         return $this->outputCopy();
     }
