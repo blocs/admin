@@ -80,13 +80,25 @@ Route::get('/validate', function () {
         }
 
         foreach ($jsonData->validate as $template => $validate) {
+            $labels = [];
+            if (isset($jsonData->label->$template)) {
+                foreach ($jsonData->label->$template as $formName => $label) {
+                    if (false === strpos($label, 'data-')) {
+                        $labels[$formName] = $label;
+                    } else {
+                        isset($blocsCompiler) || $blocsCompiler = new \Blocs\Compiler\BlocsCompiler();
+                        $labels[$formName] = $blocsCompiler->template($label);
+                    }
+                }
+            }
+
             foreach ($validate as $formName => $formValidates) {
                 foreach ($formValidates as $formValidate) {
                     $templateLoc = str_replace(resource_path('views/'), '', $template);
                     list($messageKey) = explode(':', $formValidate, 2);
                     $validates[] = [
                         'loc' => $templateLoc,
-                        'name' => $formName,
+                        'name' => $labels[$formName] ?? $formName,
                         'validate' => $formValidate,
                         'message' => isset($jsonData->message->$template->$formName->$messageKey) ? $jsonData->message->$template->$formName->$messageKey : '',
                     ];
