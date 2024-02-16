@@ -53,7 +53,13 @@ trait FileTrait
     protected function validateUpload($paramname)
     {
         list($rules, $messages) = \Blocs\Validate::upload($this->viewPrefix, $paramname);
-        empty($rules) || $this->request->validate($rules, $messages, $this->getLabel($this->viewPrefix.'.create'));
+        if (!empty($rules)) {
+            $labels = $this->getLabel($this->viewPrefix.'.create');
+            $this->request->validate($rules, $messages, $labels);
+            $validates = $this->getValidate($rules, $messages, $labels);
+            doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
+            doc(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.create']);
+        }
     }
 
     /* download */

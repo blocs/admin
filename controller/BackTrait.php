@@ -16,8 +16,7 @@ trait BackTrait
         // langからメッセージを取得
         $code = implode(':', func_get_args());
         ($langMessage = $this->getMessage($code)) != false && $message = $langMessage;
-
-        doc("メッセージをセット\n".$message);
+        doc("メッセージをセット\n・".$message);
         doc(null, '一覧画面に戻る', ['FORWARD' => prefix().'.index']);
 
         return $resirectIndex->with([
@@ -30,8 +29,7 @@ trait BackTrait
     {
         $resirectCreate = redirect()->route(prefix().'.create', $this->val)->withInput();
         unset($this->val, $this->request, $this->tableData);
-
-        doc("メッセージをセット\n".$message);
+        doc("メッセージをセット\n・".$message);
         doc(null, '新規作成画面に戻る', ['FORWARD' => prefix().'.create']);
 
         return $this->backCreateEdit($resirectCreate, $category, $message, $noticeForm, $msgArgList);
@@ -41,8 +39,7 @@ trait BackTrait
     {
         $resirectEdit = redirect()->route(prefix().'.edit', $this->val)->withInput();
         unset($this->val, $this->request, $this->tableData);
-
-        doc("メッセージをセット\n".$message);
+        doc("メッセージをセット\n・".$message);
         doc(null, '編集画面に戻る', ['FORWARD' => prefix().'.edit']);
 
         return $this->backCreateEdit($resirectEdit, $category, $message, $noticeForm, $msgArgList);

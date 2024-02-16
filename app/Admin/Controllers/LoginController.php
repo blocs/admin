@@ -49,9 +49,9 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        doc('画面表示');
         $view = view($this->viewPrefix.'.login');
         unset($this->val, $this->request, $this->tableData);
+        doc('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -66,7 +66,13 @@ class LoginController extends Controller
     protected function validateLogin(Request $request)
     {
         list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.login');
-        empty($rules) || $request->validate($rules, $messages, $this->getLabel($this->viewPrefix.'.login'));
+        if (!empty($rules)) {
+            $labels = $this->getLabel($this->viewPrefix.'.login');
+            $request->validate($rules, $messages, $labels);
+            $validates = $this->getValidate($rules, $messages, $labels);
+            doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
+            doc(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.login']);
+        }
     }
 
     protected function credentials(Request $request)

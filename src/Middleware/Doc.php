@@ -11,7 +11,7 @@ class Doc
 {
     private $keyword;
     private $neglect;
-    private $indent;
+    private $headline;
     private $comment;
 
     public function handle(Request $request, \Closure $next): Response
@@ -35,7 +35,7 @@ class Doc
         $this->readConfig($routeClass, $routeMethod, $excel);
 
         $startLine = 5;
-        $mainNo = 1;
+        $headlineNo = 1;
         $indentNo = 1;
         $steps = $GLOBALS['DOC_GENERATOR'];
 
@@ -45,7 +45,7 @@ class Doc
             if (!$steps[$endNo]['in'] && 200 === $response->getStatusCode()) {
                 // 画面表示の入力を記述
                 $viewPath = str_replace(resource_path('views/'), '', $response->original->getPath());
-                $viewPath && $steps[$endNo]['in'] = ['TEMPLATE' => $viewPath];
+                $viewPath && $steps[$endNo]['in'] = ['テンプレート' => $viewPath];
             }
 
             if (!$steps[$endNo]['out']) {
@@ -74,7 +74,7 @@ class Doc
             $line > $maxLine && $maxLine = $line;
 
             // 処理機能を記述
-            $line = $this->writeMain($startLine, $step, $excel, $mainNo, $indentNo);
+            $line = $this->writeMain($startLine, $step, $excel, $headlineNo, $indentNo);
             $line > $maxLine && $maxLine = $line;
 
             // 出力を記述
@@ -107,34 +107,49 @@ class Doc
         return ++$line;
     }
 
-    private function writeMain($line, $step, $excel, &$mainNo, &$indentNo)
+    private function writeMain($line, $step, $excel, &$headlineNo, &$indentNo)
     {
         foreach ($step['main'] as $main) {
-            $indent = in_array($line + 1, $this->indent);
-
             $comments = explode("\n", $main);
             $main = array_shift($comments);
 
-            $column = $indent ? 'L' : 'K';
-            if ($indent) {
-                $mainIndentNo = ($mainNo - 1).'.'.$indentNo;
+            $headline = in_array($line + 1, $this->headline);
+            if (!$headline) {
+                // #から始まると見出し
+                $headline = !strncmp($main, '#', 1);
+                $headline && $main = trim(substr($main, 1));
+            }
 
-                // インデントあり
+            $column = $headline ? 'K' : 'L';
+            if ($headline) {
+                $headlineIndentNo = $headlineNo;
+
+                // 見出し
+                $excel->set(1, $column, $line, $headlineNo.'. '.$this->replaceMain($main));
+                ++$headlineNo;
+                $indentNo = 1;
+            } else {
+                $headlineIndentNo = ($headlineNo - 1).'.'.$indentNo;
+
+                // インデント
                 $excel->set(1, $column, $line, $indentNo.') '.$this->replaceMain($main));
                 ++$indentNo;
-            } else {
-                $mainIndentNo = $mainNo;
-
-                // インデントなし
-                $excel->set(1, $column, $line, $mainNo.'. '.$this->replaceMain($main));
-                ++$mainNo;
-                $indentNo = 1;
             }
             ++$line;
 
             // 追加コメントを記述
-            $column = $indent ? 'M' : 'L';
-            isset($this->comment[$mainIndentNo]) && $comments = array_merge($comments, explode("\n", $this->comment[$mainIndentNo]));
+            $column = $headline ? 'L' : 'M';
+            isset($this->comment[$headlineIndentNo]) && $comments = array_merge($comments, explode("\n", $this->comment[$headlineIndentNo]));
+
+            // バリデーション
+            count($step['validate']) && $comments[] .= '<入力値>: <条件>: <メッセージ>';
+            foreach ($step['validate'] as $validate) {
+                $validateComment = '・'.$validate['name'];
+                empty($validate['validate']) || $validateComment .= ': '.$validate['validate'];
+                empty($validate['message']) || $validateComment .= ': '.$validate['message'];
+                $comments[] .= $validateComment;
+            }
+
             foreach ($comments as $comment) {
                 $excel->set(1, $column, $line, $this->replaceMain($comment));
                 ++$line;
@@ -143,7 +158,7 @@ class Doc
 
         // 処理の箇所を記述
         $path = str_replace(base_path('/'), '', $step['path']);
-        $column = $indent ? 'M' : 'L';
+        $column = $headline ? 'L' : 'M';
         $excel->set(1, $column, $line, $path.'@'.$step['function'].':'.$step['line']);
         ++$line;
 
@@ -172,7 +187,7 @@ class Doc
         $config = [];
         $keyword = [];
         $neglect = [];
-        $indent = [];
+        $headline = [];
         $comment = [];
 
         if (file_exists(base_path('docs/common.php'))) {
@@ -201,7 +216,7 @@ class Doc
             isset($config[$routeMethod]['neglect']) && $neglect = array_merge($neglect, $config[$routeMethod]['neglect']);
 
             // インデント行を取得
-            isset($config[$routeMethod]['indent']) && $indent = $this->getIndent($config[$routeMethod]['indent']);
+            isset($config[$routeMethod]['headline']) && $headline = $this->getHeadline($config[$routeMethod]['headline']);
 
             // 追加コメントを取得
             isset($config['comment']) && $comment = $this->mergeArray($comment, $config['comment']);
@@ -210,7 +225,7 @@ class Doc
 
         $this->keyword = $keyword;
         $this->neglect = $neglect;
-        $this->indent = $indent;
+        $this->headline = $headline;
         $this->comment = $comment;
     }
 
@@ -243,28 +258,28 @@ class Doc
         return $item;
     }
 
-    private function getIndent($configIndents)
+    private function getHeadline($configHeadlines)
     {
-        $indent = [];
-        foreach ($configIndents as $configIndent) {
-            if (preg_match('/^[0-9]+$/', $configIndent)) {
+        $headline = [];
+        foreach ($configHeadlines as $configHeadline) {
+            if (preg_match('/^[0-9]+$/', $configHeadline)) {
                 // 行指定
-                $indent[] = $configIndent;
-            } elseif (preg_match('/^[0-9\-]+$/', $configIndent)) {
+                $headline[] = $configHeadline;
+            } elseif (preg_match('/^[0-9\-]+$/', $configHeadline)) {
                 // 範囲指定
-                list($start, $end) = explode('-', $configIndent);
+                list($start, $end) = explode('-', $configHeadline);
                 $start || $start = 1;
                 if ($start > $end) {
                     continue;
                 }
 
                 while ($start <= $end) {
-                    $indent[] = intval($start);
+                    $headline[] = intval($start);
                     ++$start;
                 }
             }
         }
 
-        return $indent;
+        return $headline;
     }
 }
