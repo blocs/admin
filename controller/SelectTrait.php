@@ -21,12 +21,13 @@ trait SelectTrait
 
         $this->prepareConfirmSelect();
 
+        doc('# 画面表示');
+
         return $this->outputConfirmSelect();
     }
 
     protected function validateSelect()
     {
-        doc(['POST' => '選択データ'], "データが選択されていなければ、メッセージをセットして一覧画面に戻る\n".lang('error:data_not_selected'), ['FORWARD' => $this->viewPrefix.'.index']);
         if (empty($this->request->{$this->loopItem})) {
             return $this->backIndex('error', 'data_not_selected');
         }
@@ -38,6 +39,7 @@ trait SelectTrait
         if (empty($this->selectedIdList)) {
             return $this->backIndex('error', 'data_not_selected');
         }
+        doc(['POST' => '選択データ'], "データが選択されていなければ、メッセージをセットして一覧画面に戻る\n・".lang('error:data_not_selected'), ['FORWARD' => $this->viewPrefix.'.index']);
     }
 
     protected function prepareConfirmSelect()
@@ -48,9 +50,9 @@ trait SelectTrait
     {
         $this->setupMenu();
 
-        doc('画面表示');
         $view = view($this->viewPrefix.'.confirmSelect', $this->val);
         unset($this->val, $this->request, $this->tableData);
+        doc('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -67,16 +69,18 @@ trait SelectTrait
                 empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'][0];
             }
         } else {
-            doc('データの検証');
+            doc('# データの検証');
             if ($redirect = $this->validateSelect()) {
                 return $redirect;
             }
         }
 
-        doc('データの一括処理');
+        doc('# データの一括処理');
         $this->prepareSelect();
         $this->executeSelect();
         $this->logSelect();
+
+        doc('# 画面遷移');
 
         return $this->outputSelect();
     }
@@ -91,8 +95,8 @@ trait SelectTrait
             return;
         }
 
-        doc(['POST' => '選択データ'], 'データを削除', ['データベース' => $this->loopItem]);
         $this->deletedNum = $this->mainTable::destroy($this->selectedIdList);
+        doc(['POST' => '選択データ'], 'データを削除', ['データベース' => $this->loopItem]);
 
         $this->logData = new \stdClass();
         $this->logData->id = $this->selectedIdList;

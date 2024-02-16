@@ -15,6 +15,8 @@ trait StoreTrait
             $this->val = array_merge($this->val, session($this->viewPrefix.'.confirm'));
         }
 
+        doc('# 画面表示');
+
         return $this->outputCreate();
     }
 
@@ -26,9 +28,9 @@ trait StoreTrait
     {
         $this->setupMenu();
 
-        doc('画面表示');
         $view = view($this->viewPrefix.'.create', $this->val);
         unset($this->val, $this->request, $this->tableData);
+        doc('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -47,15 +49,21 @@ trait StoreTrait
 
         $this->prepareConfirmStore();
 
+        doc('# 画面表示');
+
         return $this->outputConfirmStore();
     }
 
     protected function validateStore()
     {
-        doc(['POST' => '入力値', 'TEMPLATE' => $this->viewPrefix.'.create'], '入力値を新規作成画面の条件で検証');
-        doc(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.create']);
         list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.create', $this->request);
-        empty($rules) || $this->request->validate($rules, $messages, $this->getLabel($this->viewPrefix.'.create'));
+        if (!empty($rules)) {
+            $labels = $this->getLabel($this->viewPrefix.'.create');
+            $this->request->validate($rules, $messages, $labels);
+            $validates = $this->getValidate($rules, $messages, $labels);
+            doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
+            doc(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.create']);
+        }
     }
 
     protected function prepareConfirmStore()
@@ -67,9 +75,9 @@ trait StoreTrait
     {
         $this->setupMenu();
 
-        doc('画面表示');
         $view = view($this->viewPrefix.'.confirmStore', $this->val);
         unset($this->val, $this->request, $this->tableData);
+        doc('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -82,15 +90,17 @@ trait StoreTrait
             // 確認画面からの遷移
             $this->request->merge(session($this->viewPrefix.'.confirm'));
         } else {
-            doc('データの検証');
+            doc('# データの検証');
             if ($redirect = $this->validateStore()) {
                 return $redirect;
             }
         }
 
-        doc('データの追加');
+        doc('# データの追加');
         $this->executeStore($this->prepareStore());
         $this->logStore();
+
+        doc('# 画面遷移');
 
         return $this->outputStore();
     }
@@ -119,9 +129,9 @@ trait StoreTrait
             return;
         }
 
-        doc(null, 'データを追加', ['データベース' => $this->loopItem]);
         $lastInsert = $this->mainTable::create($requestData);
         $this->val['id'] = $lastInsert->id;
+        doc(null, 'データを追加', ['データベース' => $this->loopItem]);
 
         $this->logData = (object) $requestData;
         $this->logData->id = $lastInsert->id;

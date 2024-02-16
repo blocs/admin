@@ -22,6 +22,8 @@ trait DestroyTrait
 
         $this->prepareConfirmDestroy();
 
+        doc('# 画面表示');
+
         return $this->outputConfirmDestroy();
     }
 
@@ -38,9 +40,9 @@ trait DestroyTrait
     {
         $this->setupMenu();
 
-        doc('画面表示');
         $view = view($this->viewPrefix.'.confirmDestroy', $this->val);
         unset($this->val, $this->request, $this->tableData);
+        doc('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -60,10 +62,12 @@ trait DestroyTrait
             }
         }
 
-        doc('データの削除');
+        doc('# データの削除');
         $this->prepareDestroy();
         $this->executeDestroy();
         $this->logDestroy();
+
+        doc('# 画面遷移');
 
         return $this->outputDestroy();
     }
@@ -74,8 +78,8 @@ trait DestroyTrait
 
     protected function executeDestroy()
     {
-        doc(['POST' => 'id'], 'データを削除', ['データベース' => $this->loopItem]);
         $this->deletedNum = $this->mainTable::destroy($this->val['id']);
+        doc(['POST' => 'id'], 'データを削除', ['データベース' => $this->loopItem]);
 
         $this->logData = new \stdClass();
         $this->logData->id = $this->val['id'];

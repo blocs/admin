@@ -8,7 +8,7 @@ trait UpdateTrait
 {
     public function edit($id)
     {
-        doc(['POST' => 'id'], '現データの取得');
+        doc(['POST' => 'id'], '# 現データの取得');
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
@@ -24,6 +24,8 @@ trait UpdateTrait
             $this->val = array_merge($this->val, session($this->viewPrefix.'.confirm'));
         }
 
+        doc('# 画面表示');
+
         return $this->outputEdit();
     }
 
@@ -36,9 +38,9 @@ trait UpdateTrait
     {
         $this->setupMenu();
 
-        doc('画面表示');
         $view = view($this->viewPrefix.'.edit', $this->val);
         unset($this->val, $this->request, $this->tableData);
+        doc('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -47,7 +49,7 @@ trait UpdateTrait
 
     public function show($id)
     {
-        doc(['POST' => 'id'], '現データの取得');
+        doc(['POST' => 'id'], '# 現データの取得');
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
@@ -55,6 +57,8 @@ trait UpdateTrait
         $this->val = array_merge($this->tableData->toArray(), $this->val);
 
         $this->prepareShow();
+
+        doc('# 画面表示');
 
         return $this->outputShow();
     }
@@ -67,9 +71,9 @@ trait UpdateTrait
     {
         $this->setupMenu();
 
-        doc('画面表示');
         $view = view($this->viewPrefix.'.show', $this->val);
         unset($this->val, $this->request, $this->tableData);
+        doc('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -90,15 +94,21 @@ trait UpdateTrait
 
         $this->prepareConfirmUpdate();
 
+        doc('# 画面表示');
+
         return $this->outputConfirmUpdate();
     }
 
     protected function validateUpdate()
     {
-        doc(['POST' => '入力値', 'TEMPLATE' => $this->viewPrefix.'.edit'], '入力値を編集画面の条件で検証');
-        doc(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.edit']);
         list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.edit', $this->request);
-        empty($rules) || $this->request->validate($rules, $messages, $this->getLabel($this->viewPrefix.'.edit'));
+        if (!empty($rules)) {
+            $labels = $this->getLabel($this->viewPrefix.'.edit');
+            $this->request->validate($rules, $messages, $labels);
+            $validates = $this->getValidate($rules, $messages, $labels);
+            doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
+            doc(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.edit']);
+        }
     }
 
     protected function prepareConfirmUpdate()
@@ -110,9 +120,9 @@ trait UpdateTrait
     {
         $this->setupMenu();
 
-        doc('画面表示');
         $view = view($this->viewPrefix.'.confirmUpdate', $this->val);
         unset($this->val, $this->request, $this->tableData);
+        doc('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -127,7 +137,7 @@ trait UpdateTrait
             // 確認画面からの遷移
             $this->request->merge(session($this->viewPrefix.'.confirm'));
         } else {
-            doc('データの検証');
+            doc('# データの検証');
             if ($redirect = $this->validateUpdate()) {
                 return $redirect;
             }
@@ -137,9 +147,11 @@ trait UpdateTrait
             return $redirect;
         }
 
-        doc('データの更新');
+        doc('# データの更新');
         $this->executeUpdate($this->prepareUpdate());
         $this->logUpdate();
+
+        doc('# 画面遷移');
 
         return $this->outputUpdate();
     }
@@ -169,8 +181,8 @@ trait UpdateTrait
             return;
         }
 
-        doc(null, 'データを更新', ['データベース' => $this->loopItem]);
         $this->tableData->fill($requestData)->save();
+        doc(null, 'データを更新', ['データベース' => $this->loopItem]);
 
         $this->logData = (object) $requestData;
         $this->logData->id = $this->val['id'];

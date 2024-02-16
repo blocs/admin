@@ -59,19 +59,23 @@ if (!function_exists('doc')) {
             $in = $argvs[0] ?? [];
             $main = $argvs[1] ?? [];
             $out = $argvs[2] ?? [];
+            $validate = $argvs[3] ?? [];
         } elseif (count($argvs) > 1) {
             $in = $argvs[0] ?? [];
             $main = $argvs[1] ?? [];
             $out = [];
+            $validate = [];
         } else {
             $in = [];
             $main = $argvs[0] ?? [];
             $out = [];
+            $validate = [];
         }
 
         is_array($in) || $in = [$in => []];
         is_array($main) || $main = [$main];
         is_array($out) || $out = [$out => []];
+        is_array($validate) || $validate = [$validate => []];
 
         $backtrace = debug_backtrace();
         $GLOBALS['DOC_GENERATOR'][] = [
@@ -81,6 +85,7 @@ if (!function_exists('doc')) {
             'in' => $in,
             'main' => $main,
             'out' => $out,
+            'validate' => $validate,
         ];
     }
 }
