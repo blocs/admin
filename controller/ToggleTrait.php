@@ -6,7 +6,7 @@ trait ToggleTrait
 {
     public function toggle($id)
     {
-        doc(['POST' => 'id'], '# 現データの取得');
+        doc(['POST' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
