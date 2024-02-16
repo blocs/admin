@@ -76,7 +76,7 @@ class Base extends Controller
         if (empty($this->paginateNum)) {
             // ページネーションなし
             $this->val[$this->loopItem] = $mainTable->get();
-            doc('全件取得');
+            doc(['データベース' => $this->loopItem], '<'.$this->loopItem.'>から全件取得');
         } else {
             // ページネーションあり
             $this->prepareIndexPaginate($mainTable);
