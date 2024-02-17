@@ -6,14 +6,15 @@ trait ToggleTrait
 {
     public function toggle($id)
     {
-        doc(['POST' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
+        doc('# データの更新');
+
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
         // 有効と無効の切替
         $this->tableData->disabled_at = empty($this->tableData->disabled_at);
         $this->tableData->save();
-        doc(null, "データの更新\nデータ有効ならば無効に、無効ならば有効に変更", ['データベース' => $this->loopItem]);
+        doc(['GET' => 'id', 'データベース' => $this->loopItem], "idを指定してデータを更新\nデータ有効ならば無効に、無効ならば有効に変更", ['データベース' => $this->loopItem]);
 
         doc('# 画面遷移');
 
