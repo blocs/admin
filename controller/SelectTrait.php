@@ -39,7 +39,7 @@ trait SelectTrait
         if (empty($this->selectedIdList)) {
             return $this->backIndex('error', 'data_not_selected');
         }
-        doc(['POST' => '選択データ'], "データが選択されていなければ、メッセージをセットして一覧画面に戻る\n・".lang('error:data_not_selected'), ['FORWARD' => $this->viewPrefix.'.index']);
+        doc(['POST' => '選択したデータのid'], "データが選択されていなければ、メッセージをセットして一覧画面に戻る\n・".lang('error:data_not_selected'), ['FORWARD' => $this->viewPrefix.'.index']);
     }
 
     protected function prepareConfirmSelect()
@@ -96,7 +96,7 @@ trait SelectTrait
         }
 
         $this->deletedNum = $this->mainTable::destroy($this->selectedIdList);
-        doc(['POST' => '選択データ'], 'データを削除', ['データベース' => $this->loopItem]);
+        doc(['POST' => '選択したデータのid'], '<id>を指定してデータを一括削除', ['データベース' => $this->loopItem]);
 
         $this->logData = new \stdClass();
         $this->logData->id = $this->selectedIdList;
