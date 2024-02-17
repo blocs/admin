@@ -62,7 +62,7 @@ trait StoreTrait
             $this->request->validate($rules, $messages, $labels);
             $validates = $this->getValidate($rules, $messages, $labels);
             doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
-            doc(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.create']);
+            doc(null, 'エラーがあれば、新規作成画面に戻る', ['FORWARD' => $this->viewPrefix.'.create']);
         }
     }
 

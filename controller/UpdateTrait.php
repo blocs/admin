@@ -8,7 +8,7 @@ trait UpdateTrait
 {
     public function edit($id)
     {
-        doc(['POST' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
+        doc(['GET' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
@@ -49,7 +49,7 @@ trait UpdateTrait
 
     public function show($id)
     {
-        doc(['POST' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
+        doc(['GET' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
@@ -182,7 +182,7 @@ trait UpdateTrait
         }
 
         $this->tableData->fill($requestData)->save();
-        doc(null, 'データを更新', ['データベース' => $this->loopItem]);
+        doc(['GET' => 'id', 'POST' => '入力値'], '<id>を指定してデータを更新', ['データベース' => $this->loopItem]);
 
         $this->logData = (object) $requestData;
         $this->logData->id = $this->val['id'];
