@@ -95,7 +95,11 @@ trait SelectTrait
             return;
         }
 
-        $this->deletedNum = $this->mainTable::destroy($this->selectedIdList);
+        try {
+            $this->deletedNum = $this->mainTable::destroy($this->selectedIdList);
+        } catch(\Throwable $e) {
+            abort(500);
+        }
         doc(['POST' => '選択したデータのid'], '<id>を指定してデータを一括削除', ['データベース' => $this->loopItem]);
 
         $this->logData = new \stdClass();

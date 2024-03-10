@@ -181,7 +181,14 @@ trait UpdateTrait
             return;
         }
 
-        $this->tableData->fill($requestData)->save();
+        \DB::beginTransaction();
+        try {
+            $this->tableData->fill($requestData)->save();
+            \DB::commit();
+        } catch(\Throwable $e) {
+            \DB::rollBack();
+            abort(500);
+        }
         doc(['GET' => 'id', 'POST' => '入力値'], '<id>を指定してデータを更新', ['データベース' => $this->loopItem]);
 
         $this->logData = (object) $requestData;
