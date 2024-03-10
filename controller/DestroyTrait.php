@@ -78,7 +78,11 @@ trait DestroyTrait
 
     protected function executeDestroy()
     {
-        $this->deletedNum = $this->mainTable::destroy($this->val['id']);
+        try {
+            $this->deletedNum = $this->mainTable::destroy($this->val['id']);
+        } catch(\Throwable $e) {
+            abort(500);
+        }
         doc(['GET' => 'id'], '<id>を指定してデータを削除', ['データベース' => $this->loopItem]);
 
         $this->logData = new \stdClass();

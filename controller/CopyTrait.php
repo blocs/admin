@@ -35,8 +35,16 @@ trait CopyTrait
             return;
         }
 
-        $lastInsert = $this->mainTable::create($requestData);
+        \DB::beginTransaction();
+        try {
+            $lastInsert = $this->mainTable::create($requestData);
+            \DB::commit();
+        } catch(\Throwable $e) {
+            \DB::rollBack();
+            abort(500);
+        }
         $this->val['id'] = $lastInsert->id;
+        doc(null, 'データを追加', ['データベース' => $this->loopItem]);
 
         $this->logData = (object) $requestData;
         $this->logData->id = $lastInsert->id;
