@@ -185,9 +185,9 @@ trait UpdateTrait
         try {
             $this->tableData->fill($requestData)->save();
             \DB::commit();
-        } catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             \DB::rollBack();
-            abort(500);
+            throw $e;
         }
         doc(['GET' => 'id', 'POST' => '入力値'], '<id>を指定してデータを更新', ['データベース' => $this->loopItem]);
 

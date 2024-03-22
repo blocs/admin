@@ -80,8 +80,8 @@ trait DestroyTrait
     {
         try {
             $this->deletedNum = $this->mainTable::destroy($this->val['id']);
-        } catch(\Throwable $e) {
-            abort(500);
+        } catch (\Throwable $e) {
+            throw $e;
         }
         doc(['GET' => 'id'], '<id>を指定してデータを削除', ['データベース' => $this->loopItem]);
 

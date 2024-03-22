@@ -39,9 +39,9 @@ trait CopyTrait
         try {
             $lastInsert = $this->mainTable::create($requestData);
             \DB::commit();
-        } catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             \DB::rollBack();
-            abort(500);
+            throw $e;
         }
         $this->val['id'] = $lastInsert->id;
         doc(null, 'データを追加', ['データベース' => $this->loopItem]);
