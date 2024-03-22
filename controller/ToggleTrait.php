@@ -17,9 +17,9 @@ trait ToggleTrait
             $this->tableData->disabled_at = empty($this->tableData->disabled_at);
             $this->tableData->save();
             \DB::commit();
-        } catch(\Throwable $e) {
+        } catch (\Throwable $e) {
             \DB::rollBack();
-            abort(500);
+            throw $e;
         }
         doc(['GET' => 'id', 'データベース' => $this->loopItem], "idを指定してデータを更新\nデータ有効ならば無効に、無効ならば有効に変更", ['データベース' => $this->loopItem]);
 
