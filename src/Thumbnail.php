@@ -109,6 +109,8 @@ class Thumbnail
                 return @imagecreatefromjpeg($tmpLoc);
             case 'png':
                 return @imagecreatefrompng($tmpLoc);
+            case 'webp':
+                return @imagecreatefromwebp($tmpLoc);
             case 'wbmp':
                 return @imagecreatefromwbmp($tmpLoc);
             case 'xbm':
@@ -140,6 +142,11 @@ class Thumbnail
             case 'png':
                 defined('ADMIN_IMAGE_PNG_QUALITY') || define('ADMIN_IMAGE_PNG_QUALITY', -1);
                 imagepng($image, $thumbLoc, ADMIN_IMAGE_PNG_QUALITY);
+
+                return;
+            case 'webp':
+                defined('ADMIN_IMAGE_WEBP_QUALITY') || define('ADMIN_IMAGE_WEBP_QUALITY', -1);
+                imagepng($image, $thumbLoc, ADMIN_IMAGE_WEBP_QUALITY);
 
                 return;
             case 'wbmp':
