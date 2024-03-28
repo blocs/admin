@@ -157,7 +157,7 @@ class Doc
         }
 
         // 処理の箇所を記述
-        $path = str_replace(base_path('/'), '', $step['path']);
+        $path = str_replace(base_path().'/', '', $step['path']);
         $column = $headline ? 'L' : 'M';
         $excel->set(1, $column, $line, $path.'@'.$step['function'].':'.$step['line']);
         ++$line;
