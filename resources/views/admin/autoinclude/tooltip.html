@@ -3,7 +3,7 @@
 <script>
 $(function() {
     new MutationObserver((mutations) => {
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-bs-toggle="tooltip"]').tooltip();
     }).observe(document, {
         childList: true,
         subtree: true

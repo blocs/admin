@@ -202,7 +202,7 @@
 <!-- data-bloc='modal_confirm_toggle' -->
     <script type="text/javascript">
     $(function(){
-        $('button[data-target="#modal_toggle"]').on('click', function(){
+        $('button[data-bs-target="#modal_toggle"]').on('click', function(){
             var modal_toggle = $('#modal_toggle');
             if($(this).hasClass('btn-danger') || $(this).hasClass('btn-warning')){
                 modal_toggle.find('.modal-title').text('<!-- data-val=$modalActiveTitle -->');
@@ -240,8 +240,8 @@
         <div class='modal-dialog'>
             <div class='modal-content'>
                 <div class='modal-header'>
-                    <!-- data-include='button_close_modal' -->
                     <h4 class='modal-title' data-val=$modalTitle></h4>
+                    <!-- data-include='button_close_modal' -->
                 </div>
                 <div class='modal-body'>
                     <p class='modal-message' data-val=$modalMessage></p>
