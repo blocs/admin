@@ -35,6 +35,10 @@ class softUnique implements DataAwareRule, ValidationRule
             return;
         }
 
+        // テーブルフォームに対応
+        $attribute = explode('.', $attribute);
+        $attribute = array_pop($attribute);
+
         $tableWhere = \DB::table($this->tableName)->where($attribute, $value);
 
         // 削除データは無視
