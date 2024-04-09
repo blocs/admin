@@ -60,8 +60,7 @@ $(function(){
 <!-- data-endexist -->
 
 <!-- data-assign=$searchAction data-val=route(prefix().'.search') data-none=$searchAction -->
-<!-- data-attribute="action" data-val=$searchAction -->
-<form method='post' role='search'>
+<form method='post' role='search' :action=$searchAction>
     @csrf
     <div class='box'>
 <!-- data-include='search_filter_before' data-exist -->
