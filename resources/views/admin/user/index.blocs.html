@@ -27,7 +27,7 @@
             <a href="{{ route('admin.user.edit', ['id' => $user->id]) }}" data-val=$user->email></a>
 
             <!-- data-loop=$user->roles -->
-            <span class='label label-info'><!-- data-val=$role --></span>
+            <span class='label label-info'><!-- $role --></span>
             <!-- data-endloop -->
         </td>
         <td class='ellipsis' data-val=$user->name></td>
