@@ -140,19 +140,19 @@
 <!-- data-bloc='modal_confirm' -->
     <script type="text/javascript">
     $(function(){
-        $('#<!-- data-val=$modalName -->').find('button').attr('disabled', 'disabled');
-        $('#<!-- data-val=$modalName -->').on('show.bs.modal', function () {
-            return $('#<!-- data-val=$modalName -->').closest('form')[0].reportValidity();
+        $('#<!-- $modalName -->').find('button').attr('disabled', 'disabled');
+        $('#<!-- $modalName -->').on('show.bs.modal', function () {
+            return $('#<!-- $modalName -->').closest('form')[0].reportValidity();
         });
-        $('#<!-- data-val=$modalName -->').on('shown.bs.modal', function () {
+        $('#<!-- $modalName -->').on('shown.bs.modal', function () {
             if($('.modal-notice-item').length){
                 if($('.modal-notice-item').val()){
-                    $('#<!-- data-val=$modalName -->').find('.itemTitle').text($('.modal-notice-item').val());
+                    $('#<!-- $modalName -->').find('.itemTitle').text($('.modal-notice-item').val());
                 } else {
-                    $('#<!-- data-val=$modalName -->').find('.itemTitle').text($('.modal-notice-item').text());
+                    $('#<!-- $modalName -->').find('.itemTitle').text($('.modal-notice-item').text());
                 }
             }
-            $('#<!-- data-val=$modalName -->').find('button').removeAttr('disabled');
+            $('#<!-- $modalName -->').find('button').removeAttr('disabled');
         });
     });
     </script>
@@ -199,19 +199,19 @@
         $('button[data-bs-target="#modal_toggle"]').on('click', function(){
             var modal_toggle = $('#modal_toggle');
             if($(this).hasClass('btn-danger') || $(this).hasClass('btn-warning')){
-                modal_toggle.find('.modal-title').text('<!-- data-val=$modalActiveTitle -->');
-                modal_toggle.find('.modal-message').text('<!-- data-val=$modalActiveMessage -->');
+                modal_toggle.find('.modal-title').text('<!-- $modalActiveTitle -->');
+                modal_toggle.find('.modal-message').text('<!-- $modalActiveMessage -->');
                 modal_toggle.find('.btn-success').show();
                 modal_toggle.find('.btn-warning').hide();
             } else {
-                modal_toggle.find('.modal-title').text('<!-- data-val=$modalInactiveTitle -->');
-                modal_toggle.find('.modal-message').text('<!-- data-val=$modalInactiveMessage -->');
+                modal_toggle.find('.modal-title').text('<!-- $modalInactiveTitle -->');
+                modal_toggle.find('.modal-message').text('<!-- $modalInactiveMessage -->');
                 modal_toggle.find('.btn-success').hide();
                 modal_toggle.find('.btn-warning').show();
             }
 
             var tr = $(this).closest('tr');
-            $(this).closest('form').attr('action', '<!-- data-val=$formAction -->/' + tr.find('input[name$="[selectedRows][]"]:first').val() + '/toggle');
+            $(this).closest('form').attr('action', '<!-- $formAction -->/' + tr.find('input[name$="[selectedRows][]"]:first').val() + '/toggle');
 
             if(tr.find('.toggle-item').length){
                 modal_toggle.find('.itemTitle').text(tr.find('.toggle-item').text());
