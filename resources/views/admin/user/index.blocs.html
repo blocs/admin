@@ -13,25 +13,24 @@
     </tr>
 </thead>
 <tbody>
-    <!-- data-attribute="class" data-val="danger" data-exist=$selectedRows -->
+    <!-- :class="danger" data-exist=$selectedRows -->
     <tr data-loop=$users>
         <td>
-            <!-- data-attribute='value' data-val=$user->id -->
-            <input type='checkbox' name='selectedRows[]' style='display:none;' />
+            <input type='checkbox' name='selectedRows[]' style='display:none;' :value=$user->id />
             <!--
                 data-include='button_toggle'
                 $disabled_at=$user->disabled_at
             -->
         </td>
         <td class='ellipsis toggle-item'>
-            <a href="{{ route('admin.user.edit', ['id' => $user->id]) }}" data-val=$user->email></a>
+            <a href="{{ route('admin.user.edit', ['id' => $user->id]) }}"><!-- $user->email --></a>
 
             <!-- data-loop=$user->roles -->
             <span class='label label-info'><!-- $role --></span>
             <!-- data-endloop -->
         </td>
-        <td class='ellipsis' data-val=$user->name></td>
-        <td class='hidden-xs' data-val=$user->created_at->toDateString() data-convert='date'></td>
+        <td class='ellipsis'><!-- $user->name --></td>
+        <td class='hidden-xs'><!-- data-val=$user->created_at->toDateString() data-convert='date' --></td>
     </tr>
 </tbody>
 
