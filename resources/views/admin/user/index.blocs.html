@@ -22,12 +22,10 @@
                 $disabled_at=$user->disabled_at
             -->
         </td>
-        <td class='ellipsis toggle-item'>
-            <a href="{{ route('admin.user.edit', ['id' => $user->id]) }}"><!-- $user->email --></a>
+        <td class='ellipsis'>
+            <a href="{{ route('admin.user.edit', ['id' => $user->id]) }}" class='toggle-item'><!-- $user->email --></a>
 
-            <!-- data-loop=$user->roles -->
-            <span class='label label-info'><!-- $role --></span>
-            <!-- data-endloop -->
+            <span class='label label-info' data-loop=$user->roles><!-- $role --></span>
         </td>
         <td class='ellipsis'><!-- $user->name --></td>
         <td class='hidden-xs'><!-- $user->created_at->toDateString() data-convert='date' --></td>
