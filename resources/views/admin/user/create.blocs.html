@@ -15,7 +15,7 @@
             <td>
                 <input type='text' id='email' name='email' class='form-control modal-notice-item' value='' required />
 
-                <!-- data-form="email" data-validate="softUnique:users" data-lang="このユーザーIDはすでに登録されています。" -->
+                <!-- !email="softUnique:users" data-lang="このユーザーIDはすでに登録されています。" -->
                 @error('email') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>
         </tr>
@@ -60,7 +60,7 @@
             <td>
                 <input type='password' id='repassword' name='repassword' class='form-control' required />
 
-                <!-- data-form="repassword" data-validate="same:password" data-lang="パスワードが違います。" -->
+                <!-- !repassword="same:password" data-lang="パスワードが違います。" -->
                 @error('repassword') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>
         </tr>
