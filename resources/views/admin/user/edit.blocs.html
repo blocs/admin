@@ -71,7 +71,7 @@
             <td>
                 <input type='password' id='repassword_new' name='repassword_new' class='form-control' />
 
-                <!-- data-form="repassword_new" data-validate="same:password_new" data-lang="パスワードが違います。" -->
+                <!-- !repassword_new="same:password_new" data-lang="パスワードが違います。" -->
                 @error('repassword_new') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>
         </tr>
