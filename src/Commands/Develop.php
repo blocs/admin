@@ -237,7 +237,7 @@ class Develop extends Command
                 }
             }
 
-            $replaceItem['FORM_HTML'] .= $blocsCompiler->template($formHtml, $form);
+            $replaceItem['FORM_HTML'] .= $blocsCompiler->render($formHtml, $form);
         }
 
         $this->copyDir(__DIR__.'/../../develop/views', $viewPath, $replaceItem);
