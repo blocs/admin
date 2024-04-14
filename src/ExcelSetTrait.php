@@ -14,7 +14,7 @@ trait ExcelSetTrait
     private $addShared = false;
     private $addSharedString = [];
 
-    private $sheetName;
+    private $sheetName = [];
 
     /**
      * @param string $sheetNo     シートの番号、左から1,2とカウント
