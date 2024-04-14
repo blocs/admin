@@ -130,7 +130,7 @@ trait CommonTrait
                 $labels[$formName] = $label;
             } else {
                 isset($blocsCompiler) || $blocsCompiler = new \Blocs\Compiler\BlocsCompiler();
-                $labels[$formName] = $blocsCompiler->template($label);
+                $labels[$formName] = $blocsCompiler->render($label);
             }
         }
 
