@@ -10,13 +10,12 @@
     </tr>
 </thead>
 <tbody>
-    <!-- data-attribute='class' data-val='danger' data-exist=$selectedRows -->
+    <!-- :class='danger' data-exist=$selectedRows -->
     <tr data-loop=$<!-- LOOP_ITEM -->>
         <td>
-            <!-- data-attribute='value' data-val=$<!-- SINGULAR_ITEM -->->id -->
-            <input type='checkbox' name='selectedRows[]' style='display:none;' />
+            <input type='checkbox' name='selectedRows[]' style='display:none;' :value=$<!-- SINGULAR_ITEM -->->id />
 
-            <a href='{{ route('<!-- EDIT_NAME -->', ['id' => $<!-- SINGULAR_ITEM -->->id]) }}' data-val=$<!-- SINGULAR_ITEM -->->id></a>
+            <a href='{{ route('<!-- EDIT_NAME -->', ['id' => $<!-- SINGULAR_ITEM -->->id]) }}'><!-- $<!-- SINGULAR_ITEM -->->id --></a>
         </td>
 <!-- BODY_HTML -->
     </tr>
