@@ -1,14 +1,11 @@
         <tr data-if="'text' === $type">
             <th>
-                <!-- data-attribute='for' data-val=$name -->
-                <label><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
+                <label :for=$name><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
             </th>
             <td>
-                <!-- data-attribute='id' data-val=$name -->
-                <!-- data-attribute='name' data-val=$name -->
-                <!-- data-attribute='class' data-val='form-control modal-notice-item' data-exist=$noticeItem  -->
+                <!-- :class='form-control modal-notice-item' data-exist=$noticeItem  -->
                 <!-- data-attribute='required' data-exist=$required  -->
-                <input type='text' class='form-control' value='' />
+                <input type='text' :id=$name :name=$name class='form-control' value='' />
 
                 @error('<!-- $name -->') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>
@@ -16,15 +13,12 @@
 
         <tr data-if="'textarea' === $type">
             <th>
-                <!-- data-attribute='for' data-val=$name -->
-                <label><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
+                <label :for=$name><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
             </th>
             <td>
-                <!-- data-attribute='id' data-val=$name -->
-                <!-- data-attribute='name' data-val=$name -->
-                <!-- data-attribute='class' data-val='form-control modal-notice-item' data-exist=$noticeItem  -->
+                <!-- :class='form-control modal-notice-item' data-exist=$noticeItem  -->
                 <!-- data-attribute='required' data-exist=$required  -->
-                <textarea class='form-control' rows='5'></textarea>
+                <textarea :id=$name :name=$name class='form-control' rows='5'></textarea>
 
                 @error('<!-- $name -->') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>
@@ -32,18 +26,14 @@
 
         <tr data-if="'select' === $type">
             <th>
-                <!-- data-attribute='for' data-val=$name -->
-                <label><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
+                <label :for=$name><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
             </th>
             <td>
-                <!-- data-attribute='id' data-val=$name -->
-                <!-- data-attribute='name' data-val=$name -->
-                <!-- data-attribute='class' data-val='form-control modal-notice-item' data-exist=$noticeItem  -->
+                <!-- :class='form-control modal-notice-item' data-exist=$noticeItem  -->
                 <!-- data-attribute='required' data-exist=$required  -->
-                <select class='form-control'>
-                    <!-- data-attribute='value' data-val=$value  -->
+                <select :id=$name :name=$name class='form-control'>
                     <!-- data-attribute='selected' data-if="isset($default) && $default == $value"  -->
-                    <option value='' data-repeat=$options><!-- $label --></option>
+                    <option value='' data-loop=$options :value=$value><!-- $label --></option>
                 </select>
 
                 @error('<!-- $name -->') <div class='text-danger'>{{ $message }}</div> @enderror
@@ -52,19 +42,16 @@
 
         <tr data-if="'select2' === $type">
             <th>
-                <!-- data-attribute='for' data-val=$name -->
-                <label><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
+                <label :for=$name><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
             </th>
             <td>
-                <!-- data-attribute='id' data-val=$name -->
-                <!-- data-attribute='name' data-val=$name data-none=$multiple -->
-                <!-- data-attribute='name' data-val=$name.'[]' data-exist=$multiple -->
+                <!-- :name=$name data-none=$multiple -->
+                <!-- :name=$name.'[]' data-exist=$multiple -->
                 <!-- data-attribute='required' data-exist=$required  -->
                 <!-- data-attribute='multiple' data-exist=$multiple  -->
-                <select class='form-control ai-select2'>
-                    <!-- data-attribute='value' data-val=$value  -->
+                <select :id=$name class='form-control ai-select2'>
                     <!-- data-attribute='selected' data-if="isset($default) && $default == $value"  -->
-                    <option value='' data-repeat=$options><!-- $label --></option>
+                    <option value='' data-loop=$options :value=$value><!-- $label --></option>
                 </select>
 
                 @error('<!-- $name -->') <div class='text-danger'>{{ $message }}</div> @enderror
@@ -73,19 +60,16 @@
 
         <tr data-if="'radio' === $type">
             <th>
-                <!-- data-attribute='for' data-val=$name -->
-                <label><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
+                <label :for=$name><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
             </th>
             <td class='form-inline'>
-                <label class='radio-inline' data-repeat=$options>
-                    <!-- data-attribute='name' data-val=$name -->
-                    <!-- data-attribute='value' data-val=$value  -->
+                <label class='radio-inline' data-loop=$options>
                     <!-- data-attribute='checked' data-if="isset($default) && $default == $value"  -->
-                    <input type='radio' /> <!-- data-val=$label data-convert='raw' -->
+                    <input type='radio' :name=$name :value=$value /> <!-- $label data-convert='raw' -->
                 </label>
 
                 <!-- data-exist=$required -->
-                <#-- data-form='<!-- $name -->' data-validate='required' -->
+                <#-- !<!-- $name -->='required' -->
                 <!-- data-endexist -->
                 @error('<!-- $name -->') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>
@@ -93,19 +77,17 @@
 
         <tr data-if="'checkbox' === $type">
             <th>
-                <!-- data-attribute='for' data-val=$name -->
-                <label><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
+                <label :for=$name><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
             </th>
             <td class='form-inline'>
-                <label class='checkbox-inline' data-repeat=$options>
-                    <!-- data-attribute='name' data-val=$name.'[]' -->
-                    <!-- data-attribute='value' data-val=$value  -->
+                <label class='checkbox-inline' data-loop=$options>
+                    <!-- :name=$name.'[]' -->
                     <!-- data-attribute='checked' data-if="isset($default) && $default == $value"  -->
-                    <input type='checkbox' /> <!-- data-val=$label data-convert='raw' -->
+                    <input type='checkbox' :value=$value /> <!-- $label data-convert='raw' -->
                 </label>
 
                 <!-- data-exist=$required -->
-                <#-- data-form='<!-- $name -->' data-validate='required' -->
+                <#-- !<!-- $name -->='required' -->
                 <!-- data-endexist -->
                 @error('<!-- $name -->') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>
@@ -113,14 +95,11 @@
 
         <tr data-if="'datepicker' === $type">
             <th>
-                <!-- data-attribute='for' data-val=$name -->
-                <label><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
+                <label :for=$name><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
             </th>
             <td class='form-inline'>
-                <!-- data-attribute='id' data-val=$name -->
-                <!-- data-attribute='name' data-val=$name -->
                 <!-- data-attribute='required' data-exist=$required  -->
-                <input type='text' class='form-control ai-datepicker' value='' />
+                <input type='text' :id=$name :name=$name class='form-control ai-datepicker' value='' />
 
                 @error('<!-- $name -->') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>
@@ -128,14 +107,11 @@
 
         <tr data-if="'upload' === $type">
             <th>
-                <!-- data-attribute='for' data-val=$name -->
-                <label><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
+                <label :for=$name><!-- $label --></label> <!-- data-val='*' data-exist=$required -->
             </th>
             <td class='form-inline'>
-                <!-- data-attribute='id' data-val=$name -->
-                <!-- data-attribute='name' data-val=$name -->
                 <!-- data-attribute='required' data-exist=$required  -->
-                <input type='text' class='form-control ai-upload' value='' />
+                <input type='text' :id=$name :name=$name class='form-control ai-upload' value='' />
 
                 @error('<!-- $name -->') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>

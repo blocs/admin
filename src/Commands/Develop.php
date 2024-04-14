@@ -220,9 +220,9 @@ class Develop extends Command
         foreach ($developJson['entry'] as $formName => $form) {
             $replaceItem['HEAD_HTML'] .= "        <th class='col-xs-1'>".$form['label'].'</th>'."\n";
 
-            $replaceItem['BODY_HTML'] .= '        <td data-val=$'.$replaceItem['SINGULAR_ITEM'].'->'.$formName;
+            $replaceItem['BODY_HTML'] .= '        <td><!-- $'.$replaceItem['SINGULAR_ITEM'].'->'.$formName;
             'upload' === $form['type'] && $replaceItem['BODY_HTML'] .= " data-convert='raw_upload'";
-            $replaceItem['BODY_HTML'] .= '></td>'."\n";
+            $replaceItem['BODY_HTML'] .= ' --></td>'."\n";
 
             $form['name'] = $formName;
             $form['noticeItem'] = ($noticeItem == $formName);
