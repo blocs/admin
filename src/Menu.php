@@ -7,7 +7,7 @@ class Menu
     private static $headline;
     private static $breadcrumbList = [];
 
-    public static function get($name = 'root')
+    public static function get($name = 'root', $maxChild = 1)
     {
         // 設定読み込み
         $configList = self::getJson(config('menu'));
@@ -25,7 +25,7 @@ class Menu
             isset($config['label']) || $config['label'] = lang($config['lang']);
 
             // リンク先
-            if (!isset($config['url']) && empty($config['breadcrumb'])) {
+            if (!isset($config['url']) && empty($config['breadcrumb']) && isset($config['name'])) {
                 if (empty($config['argv'])) {
                     $config['url'] = route($config['name']);
                 } else {
@@ -34,14 +34,17 @@ class Menu
             }
 
             // サブメニュー
+            // $maxChild: サブメニューの最大の深さ
             if (isset($config['sub'])) {
-                list($config['sub'], $buff, $buff, $isSubActive) = self::get($config['sub']);
+                list($config['sub'], $buff, $buff, $isSubActive, $child) = self::get($config['sub'], $maxChild);
+                $child > $maxChild && $maxChild = $child;
             } else {
                 $isSubActive = false;
             }
+            $config['child'] = $maxChild;
 
             // メニューかサブメニューがactive
-            if (self::checkActive($config) || $isSubActive) {
+            if ((isset($config['name']) && self::checkActive($config)) || $isSubActive) {
                 $config['active'] = true;
                 $isActive = true;
 
@@ -82,7 +85,7 @@ class Menu
             $subMenuList[] = $config;
         }
 
-        return [$subMenuList, self::$headline, self::$breadcrumbList, $isActive];
+        return [$subMenuList, self::$headline, self::$breadcrumbList, $isActive, $maxChild + 1];
     }
 
     public static function headline($icon, $lang)
