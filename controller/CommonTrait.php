@@ -49,7 +49,15 @@ trait CommonTrait
 
     private function saveItem($keyItem, $keyValue, $sessionKey)
     {
-        if (strlen($keyValue)) {
+        if (is_string($keyValue) && strlen($keyValue)) {
+            // sessionに保存
+            session([$sessionKey => $keyValue]);
+            $this->val[$keyItem] = $keyValue;
+        } elseif (is_array($keyValue) && count($keyValue)) {
+            // 値をマージ
+            if (session()->has($sessionKey)) {
+                $keyValue = array_merge(session($sessionKey), $keyValue);
+            }
             // sessionに保存
             session([$sessionKey => $keyValue]);
             $this->val[$keyItem] = $keyValue;
