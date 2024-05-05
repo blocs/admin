@@ -32,8 +32,21 @@ class UserController extends \Blocs\Controllers\Base
             '<search>があれば、<'.$this->loopItem.'>のroleを<search>で部分一致検索',
         ]);
 
-        $mainTable->orderBy('email', 'asc');
-        doc('emailで昇順にソート');
+        // ソート
+        $this->keepItem('sort');
+
+        // デフォルトのソート条件
+        if (empty($this->val['sort']) || !is_array($this->val['sort'])) {
+            $this->val['sort'] = [];
+        } else {
+            $this->val['sort'] = array_filter($this->val['sort'], 'strlen');
+        }
+        count($this->val['sort']) || $this->val['sort'] = ['email' => 'asc'];
+
+        foreach (['email', 'role', 'created_at'] as $sortItem) {
+            empty($this->val['sort'][$sortItem]) || $mainTable->orderBy($sortItem, $this->val['sort'][$sortItem]);
+        }
+        doc('指定された条件でソート');
     }
 
     protected function prepareIndex()
