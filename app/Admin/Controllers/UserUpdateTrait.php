@@ -27,14 +27,14 @@ trait UserUpdateTrait
 
         // 現パスワードをチェック
         if (empty($this->request->password_old)) {
-            return $this->backEdit('', lang("template:admin_profile_password_incorrect"), 'password_old');
+            return $this->backEdit('', lang('template:admin_profile_password_incorrect'), 'password_old');
         }
 
         if (!password_verify($this->request->password_old, $this->tableData->password)) {
-            return $this->backEdit('', lang("template:admin_profile_password_incorrect"), 'password_old');
+            return $this->backEdit('', lang('template:admin_profile_password_incorrect'), 'password_old');
         }
         doc(['POST' => 'password_old', 'データベース' => $this->loopItem], '<password_old>があれば、<'.$this->loopItem.'>をチェック');
-        doc(null, "<password_old>が一致しなければ、メッセージをセットして編集画面に戻る\n・".lang("template:admin_profile_password_incorrect"), ['FORWARD' => prefix().'.edit']);
+        doc(null, "<password_old>が一致しなければ、メッセージをセットして編集画面に戻る\n・".lang('template:admin_profile_password_incorrect'), ['FORWARD' => prefix().'.edit']);
     }
 
     protected function prepareUpdate()
