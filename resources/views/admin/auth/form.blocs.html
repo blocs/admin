@@ -1,8 +1,8 @@
-<form method="post" role="form" class="text-start" action="{{ route('login') }}">
+<form method="post" :action=route("login") role="form" class="text-start">
     @csrf
 
-    @error('email') <div class="alert alert-danger" role="alert">{{ $message }}</div> @enderror
-    @error('password') <div class="alert alert-danger" role="alert">{{ $message }}</div> @enderror
+    @error("email") <div class="alert alert-danger" role="alert">{{ $message }}</div> @enderror
+    @error("password") <div class="alert alert-danger" role="alert">{{ $message }}</div> @enderror
 
     <div class="input-group input-group-outline mb-4">
         <label class="form-label"><!-- data-lang="template:admin_login_user_id" --></label>

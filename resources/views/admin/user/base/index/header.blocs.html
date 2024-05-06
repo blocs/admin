@@ -1,55 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title><!-- data-val=$headline["label"] data-postfix=" | " -->BLOCS</title>
-        <!-- data-include="../common/css.html" -->
-    </head>
-    <body class="g-sidenav-show bg-gray-200">
-        <!-- data-include="../common/sideNav.blocs.html" -->
-        <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-            <!-- data-include="../common/topNav.blocs.html" -->
-            <div class="container-fluid py-2">
-                <div class="row mt-0">
-                    <div class="col-12">
-                        <!-- data-include="message.blocs.html" -->
+<!-- data-include="../common/header.blocs.html" -->
 
-                        <!-- :action=route(prefix().'.search') -->
-                        <form method="post" role="search">
-                            @csrf
-                            <!--
-                                data-include="button"
-                                $buttonType="submit"
-                                $buttonClass="d-none"
-                                $buttonLabel="Search"
-                            -->
+<div class="row mt-0">
+    <div class="col-12">
+        <form method="post" :action=route(prefix().".search") role="search">
+            @csrf
+            <!--
+                data-include="button"
+                $buttonType="submit"
+                $buttonClass="d-none"
+                $buttonLabel="Search"
+            -->
 
-                            <div class="d-flex flex-wrap justify-content-between md-3">
-                                <div>
-                                    <!-- data-include="button_left" data-exist -->
-                                </div>
-                                <div>
-                                    <!-- data-include="button_right" data-exist -->
-                                </div>
-                            </div>
-                            <div class="card">
-                                <div class="card-header pb-0">
-                                    <div class="d-flex align-items-center">
-                                        <h5 style="white-space: nowrap;">
-                                            <!-- :class="fas {$headline["icon"]}" -->
-                                            <i></i>
-                                            <!-- $headline["label"] -->
-                                        </h5>
-                                        <p class="text-sm ms-3 mb-0" data-exist=$headline["menu"]>|
-                                            <!-- $headline["menu"] -->
-                                        </p>
-                                    </div>
-                                    <!-- data-include="search.blocs.html" data-exist=$searchPlaceholder -->
-                                </div>
-                                <div class="alert alert-info mx-3" role="alert" data-none=$isLoop>
-                                    <!-- data-lang="template:resource_blocs_base_index_no_data" -->
-                                </div>
+            <div class="d-flex flex-wrap justify-content-between md-3">
+                <div>
+                    <!-- data-include="button_left" data-exist -->
+                </div>
+                <div>
+                    <!-- data-include="button_right" data-exist -->
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header pb-0">
+                    <div class="d-flex align-items-center">
+                        <h5 style="white-space: nowrap;">
+                            <i :class="fas {$headline["icon"]}"></i>
+                            <!-- $headline["label"] -->
+                        </h5>
+                        <p class="text-sm ms-3 mb-0" data-exist=$headline["menu"]>|
+                            <!-- $headline["menu"] -->
+                        </p>
+                    </div>
+                    <!-- data-include="search.blocs.html" data-exist=$searchPlaceholder -->
+                </div>
+                <div class="alert alert-info m-3" role="alert" data-none=$isLoop>
+                    <!-- data-lang="template:resource_blocs_base_index_no_data" -->
+                </div>
 
 <!-- data-bloc="sortHeader" -->
     <!-- data-assign=$sortClass data-val=" " data-none=$sortClass -->
