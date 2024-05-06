@@ -7,7 +7,7 @@
         <div class="collapse" id="ProfileNav">
             <ul class="nav">
                 <li class="nav-item">
-                    <a class="nav-link text-white" href="{{ route('admin.profile.edit', ['id' => $auth_id]) }}">
+                    <a :href=route("admin.profile.edit", ["id" => $auth_id]) class="nav-link text-white">
                         <i class="fas fa-cog"></i> <span class="sidenav-normal ms-3 ps-1"><!-- data-lang="template:admin_menu_profile" --></span>
                     </a>
                 </li>
@@ -33,14 +33,13 @@
         <!-- data-include="navLink" $depth=2 data-none=$sub -->
         <!-- data-include="navItem" $depth=2 data-exist=$sub -->
 
-        <!-- :id="Menu2.{$loopIndex}Nav" -->
         <!-- :class="collapse show" data-exist=$active -->
-        <div class="collapse" data-exist=$sub>
+        <div :id="Menu2.{$loopIndex}Nav" class="collapse" data-exist=$sub>
             <ul class="nav">
                 <!-- :class="nav-item active" data-if="$active && 1 == $child" -->
                 <li class="nav-item" data-loop=$sub data-assign=$subMenu>
-                    <!-- data-include="navLink" $depth=3 data-none=$subMenu['sub'] -->
-                    <!-- data-include="navSub2" data-exist=$subMenu['sub'] -->
+                    <!-- data-include="navLink" $depth=3 data-none=$subMenu["sub"] -->
+                    <!-- data-include="navSub2" data-exist=$subMenu["sub"] -->
                 </li>
             </ul>
         </div>
@@ -51,12 +50,11 @@
 <!-- data-bloc="navSub2" -->
     <!-- data-include="navItem" $depth=3 -->
 
-    <!-- :id="Menu3.{$loopIndex}Nav" -->
     <!-- :class="collapse show" data-exist=$active -->
-    <div class="collapse">
+    <div :id="Menu3.{$loopIndex}Nav" class="collapse">
         <ul class="nav">
             <!-- :class="nav-item active" data-exist=$active -->
-            <li class="nav-item" data-loop=$subMenu['sub']>
+            <li class="nav-item" data-loop=$subMenu["sub"]>
                 <!-- data-include="navLink" $depth=4 -->
             </li>
         </ul>
@@ -65,14 +63,10 @@
 
 <!-- data-bloc="navItem" -->
     <!-- :class="nav-link text-white active" data-exist=$active -->
-    <!-- :href="#Menu{$depth}.{$loopIndex}Nav" -->
-    <!-- :aria-controls="#Menu{$depth}.{$loopIndex}Nav" -->
     <!-- :aria-expanded="true" data-exist=$active -->
-    <a data-bs-toggle="collapse" class="nav-link text-white" role="button" aria-expanded="false">
-        <!-- :class="fas {$icon}" -->
-        <i data-exist=$icon></i> 
-        <!-- :class="nav-link-text ms-{$depth} ps-1" -->
-        <span><!-- $label --></span>
+    <a :href="#Menu{$depth}.{$loopIndex}Nav" data-bs-toggle="collapse" class="nav-link text-white" role="button" aria-expanded="false" :aria-controls="#Menu{$depth}.{$loopIndex}Nav">
+        <i :class="fas {$icon}" data-exist=$icon></i> 
+        <span :class="nav-link-text ms-{$depth} ps-1"><!-- $label --></span>
     </a>
 <!-- data-endbloc -->
 
@@ -80,10 +74,8 @@
     <!-- :class="nav-link text-white active" data-exist=$active -->
     <!-- :href=$url data-exist=$url -->
     <a class="nav-link text-white">
-        <!-- :class="fas {$icon}" -->
-        <i data-exist=$icon></i> 
-        <!-- :class="sidenav-normal ms-{$depth} ps-1" -->
-        <span><!-- $label --></span>
+        <i :class="fas {$icon}" data-exist=$icon></i> 
+        <span :class="sidenav-normal ms-{$depth} ps-1"><!-- $label --></span>
     </a>
 <!-- data-endbloc -->
 
