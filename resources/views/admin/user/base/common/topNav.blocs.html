@@ -1,0 +1,42 @@
+<nav class="navbar navbar-main navbar-expand-lg position-sticky mt-4 top-1 px-0 mx-4 shadow-none border-radius-xl z-index-sticky" id="navbarBlur" data-scroll="true">
+    <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <!-- data-loop=$breadcrumb -->
+                <li class="breadcrumb-item text-sm opacity-5 text-dark" data-exist=$sub><!-- $label --></li>
+                <li class="breadcrumb-item text-sm text-dark active" aria-current="page" data-none=$sub><!-- $label --></li>
+                <!-- data-endloop -->
+            </ol>
+        </nav>
+
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+            <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            </div>
+            <ul class="navbar-nav justify-content-end align-items-center">
+                <li class="nav-item">
+                    <a class="nav-link px-2" href="{{ route('admin.profile.edit', ['id' => $auth_id]) }}">
+                        <i class="fas fa-user-circle"></i>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a" class="nav-link px-2" id="iconNavbarSidenav">
+                        <div class="sidenav-toggler sidenav-toggler-inner">
+                            <i class="sidenav-toggler-line"></i>
+                            <i class="sidenav-toggler-line"></i>
+                            <i class="sidenav-toggler-line"></i>
+                        </div>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link px-2" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- data-include="/admin/auth/autoinclude/modal.html" -->
+<!-- data-include="/admin/auth/autoinclude/button.html" -->
+<!-- data-include="modal_logout" -->

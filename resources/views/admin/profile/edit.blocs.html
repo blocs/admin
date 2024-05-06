@@ -20,7 +20,7 @@
         </tr>
         <tr data-exist=$option_role>
             <th>
-                <label for='role'><!-- data-lang='label:develop_message_optgroup_group' --></label>
+                <label for='role'><!-- data-lang='template:admin_user_role' --></label>
             </th>
             <td data-val=$role>
             </td>
@@ -66,7 +66,7 @@
             <td>
                 <input type='password' id='repassword_new' name='repassword_new' class='form-control' />
 
-                <!-- data-form="repassword_new" data-validate="same:password_new" data-lang="パスワードが違います。" -->
+                <!-- data-form="repassword_new" data-validate="same:password_new" data-lang="template:admin_profile_password_incorrect" -->
                 @error('repassword_new') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>
         </tr>
