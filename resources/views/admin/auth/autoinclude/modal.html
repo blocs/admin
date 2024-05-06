@@ -1,0 +1,195 @@
+<!-- data-bloc="button_back_modal" -->
+    <!-- :data-bs-dismiss="modal" -->
+    <!--
+        data-include="button"
+        $buttonModalBackClass="btn btn-secondary"
+        $buttonClass=$buttonModalBackClass
+        $buttonModalBackIcon="fas fa-arrow-left"
+        $buttonIcon=$buttonModalBackIcon
+        $buttonModalBackLabel=lang("template:resource_blocs_button_back")
+        $buttonLabel=$buttonModalBackLabel
+    -->
+
+    <!-- $buttonModalBackClass="" $buttonModalBackIcon="" $buttonModalBackLabel="" -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="button_modal" -->
+    <!-- :formaction=$modalAction data-exist=$modalAction -->
+    <!--
+        data-include="button"
+        $buttonType="submit"
+        $buttonClass=$buttonModalClass
+        $buttonIcon=$buttonModalIcon
+        $buttonLabel=$buttonModalLabel
+    -->
+
+    <!-- $buttonModalClass="" $buttonModalIcon="" $buttonModalLabel="" -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="button_primary_modal" -->
+    <!--
+        data-include="button_modal"
+        $buttonModalClass="btn btn-primary"
+        $buttonModalIcon="fa fa-arrow-right"
+        $buttonModalLabel=lang("template:resource_blocs_button_submit")
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="button_info_modal" -->
+    <!--
+        data-include="button_modal"
+        $buttonModalClass="btn btn-info"
+        $buttonModalIcon="fa fa-info-circle"
+        $buttonModalLabel=lang("template:resource_blocs_button_submit")
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="button_success_modal" -->
+    <!--
+        data-include="button_modal"
+        $buttonModalClass="btn btn-success"
+        $buttonModalIcon="fa fa-check"
+        $buttonModalLabel=lang("template:resource_blocs_button_submit")
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="button_danger_modal" -->
+    <!--
+        data-include="button_modal"
+        $buttonModalClass="btn btn-danger"
+        $buttonModalIcon="fas fa-trash"
+        $buttonModalLabel=lang("template:resource_blocs_button_delete")
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="button_warning_modal" -->
+    <!--
+        data-include="button_modal"
+        $buttonModalClass="btn btn-warning"
+        $buttonModalIcon="fa fa-exclamation-triangle"
+        $buttonModalLabel=lang("template:resource_blocs_button_warning")
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="modal_logout" -->
+    <!-- ログアウトモーダル -->
+    <!-- data-assign=$modalName data-val="logoutModal" data-none=$modalName -->
+
+    <!-- モーダル設定 -->
+    <!-- data-bloc="modal_button" -->
+        <form method="post">
+            @csrf
+            <!-- data-include="button_back_modal" -->
+            <!--
+                data-include="button_primary_modal"
+                $modalAction=route("logout")
+                $buttonModalIcon="fas fa-sign-out-alt"
+                $buttonModalLabel=lang("template:resource_blocs_logout_button")
+            -->
+        </form>
+    <!-- data-endbloc -->
+
+    <!-- モーダル表示 -->
+    <!--
+        data-include="modal"
+        $modalTitle=lang("template:resource_blocs_logout_title")
+        $modalMessage=lang("template:resource_blocs_logout_message")
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="modal_store" -->
+    <!-- 新規作成モーダル -->
+    <!-- data-assign=$modalName data-val="modal_store" data-none=$modalName -->
+
+    <!-- ボタン設定 -->
+    <!-- data-include="button_primary" -->
+
+    <!-- モーダル設定 -->
+    <!-- data-bloc="modal_button" -->
+        <!-- data-include="button_back_modal" -->
+        <!--
+            data-include="button_primary_modal"
+            $modalAction=route(prefix().".store")
+        -->
+    <!-- data-endbloc -->
+
+    <!-- モーダル表示 -->
+    <!--
+        data-include="modal"
+        $modalTitle=lang("template:resource_blocs_modal_new_title")
+        $modalMessage=lang("template:resource_blocs_modal_new_message")
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="modal_update" -->
+    <!-- 更新モーダル -->
+    <!-- data-assign=$modalName data-val="modal_update" data-none=$modalName -->
+
+    <!-- ボタン設定 -->
+    <!-- data-include="button_primary" -->
+
+    <!-- モーダル設定 -->
+    <!-- data-bloc="modal_button" -->
+        <!-- data-include="button_back_modal" -->
+        <!--
+            data-include="button_primary_modal"
+            $modalAction=route(prefix().".update", ["id" => $id])
+            $buttonModalLabel=lang("template:resource_blocs_modal_update_button")
+        -->
+    <!-- data-endbloc -->
+
+    <!-- モーダル表示 -->
+    <!--
+        data-include="modal"
+        $modalTitle=lang("template:resource_blocs_modal_update_title")
+        $modalMessage=lang("template:resource_blocs_modal_update_message")
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="modal_destroy" -->
+    <!-- 削除モーダル -->
+    <!-- data-assign=$modalName data-val="modalDestroy" data-none=$modalName -->
+
+    <!-- ボタン設定 -->
+    <!-- data-include="button_danger" -->
+
+    <!-- モーダル設定 -->
+    <!-- data-bloc="modal_button" -->
+        <!-- data-include="button_back_modal" -->
+        <!--
+            data-include="button_danger_modal"
+            $modalAction=route(prefix().".destroy", ["id" => $id])
+        -->
+    <!-- data-endbloc -->
+
+    <!-- モーダル表示 -->
+    <!--
+        data-include="modal"
+        $modalTitle=lang("template:resource_blocs_modal_delete_title")
+        $modalMessage=lang("template:resource_blocs_modal_delete_message")
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="modal" -->
+    <div :id=$modalName class="modal fade" tabindex="-1" aria-hidden="true">
+        <!-- :class=$modalClass data-exist=$modalClass -->
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5"><!-- $modalTitle --></h1>
+                </div>
+                <div class="modal-body">
+                    <p><!-- $modalMessage --></p>
+                    <!-- data-include="modal_body" data-exist -->
+                </div>
+                <div class="modal-footer">
+                    <!-- data-include="modal_button" -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- $modalName="" $modalAction="" $modalClass="" $modalTitle="" $modalMessage="" $formAction="" -->
+    <!-- data-bloc="modal_body" --><!-- data-endbloc -->
+    <!-- data-bloc="modal_button" --><!-- data-endbloc -->
+<!-- data-endbloc -->

@@ -1,0 +1,111 @@
+<!-- data-bloc="navProfile" -->
+    <li class="nav-item mt-0 mb-2">
+        <a data-bs-toggle="collapse" href="#ProfileNav" class="nav-link text-white" aria-controls="ProfileNav" role="button" aria-expanded="false">
+            <i class="fas fa-user-circle"></i> <span class="nav-link-text ms-2 ps-1"><!-- $auth_name --></span>
+        </a>
+
+        <div class="collapse" id="ProfileNav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{{ route('admin.profile.edit', ['id' => $auth_id]) }}">
+                        <i class="fas fa-cog"></i> <span class="sidenav-normal ms-3 ps-1"><!-- data-lang="template:admin_menu_profile" --></span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-white" data-bs-toggle="modal" data-bs-target="#logoutModal">
+                        <i class="fas fa-sign-out-alt"></i> <span class="sidenav-normal ms-3 ps-1"><!-- data-lang="template:admin_menu_logout" --></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </li>
+<!-- data-endbloc -->
+
+<!-- data-bloc="navSub" -->
+    <!-- data-loop=$menu -->
+    <hr class="horizontal light mt-0 mb-2" data-exist=$line />
+
+    <li class="nav-item mt-2" data-exist=$index>
+        <h6 class="ps-4 ms-2 text-xs font-weight-bolder text-white"><!-- $index --></h6>
+    </li>
+
+    <li class="nav-item mt-0 mb-2">
+        <!-- data-include="navLink" $depth=2 data-none=$sub -->
+        <!-- data-include="navItem" $depth=2 data-exist=$sub -->
+
+        <!-- :id="Menu2.{$loopIndex}Nav" -->
+        <!-- :class="collapse show" data-exist=$active -->
+        <div class="collapse" data-exist=$sub>
+            <ul class="nav">
+                <!-- :class="nav-item active" data-if="$active && 1 == $child" -->
+                <li class="nav-item" data-loop=$sub data-assign=$subMenu>
+                    <!-- data-include="navLink" $depth=3 data-none=$subMenu['sub'] -->
+                    <!-- data-include="navSub2" data-exist=$subMenu['sub'] -->
+                </li>
+            </ul>
+        </div>
+    </li>
+    <!-- data-endloop -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="navSub2" -->
+    <!-- data-include="navItem" $depth=3 -->
+
+    <!-- :id="Menu3.{$loopIndex}Nav" -->
+    <!-- :class="collapse show" data-exist=$active -->
+    <div class="collapse">
+        <ul class="nav">
+            <!-- :class="nav-item active" data-exist=$active -->
+            <li class="nav-item" data-loop=$subMenu['sub']>
+                <!-- data-include="navLink" $depth=4 -->
+            </li>
+        </ul>
+    </div>
+<!-- data-endbloc -->
+
+<!-- data-bloc="navItem" -->
+    <!-- :class="nav-link text-white active" data-exist=$active -->
+    <!-- :href="#Menu{$depth}.{$loopIndex}Nav" -->
+    <!-- :aria-controls="#Menu{$depth}.{$loopIndex}Nav" -->
+    <!-- :aria-expanded="true" data-exist=$active -->
+    <a data-bs-toggle="collapse" class="nav-link text-white" role="button" aria-expanded="false">
+        <!-- :class="fas {$icon}" -->
+        <i data-exist=$icon></i> 
+        <!-- :class="nav-link-text ms-{$depth} ps-1" -->
+        <span><!-- $label --></span>
+    </a>
+<!-- data-endbloc -->
+
+<!-- data-bloc="navLink" -->
+    <!-- :class="nav-link text-white active" data-exist=$active -->
+    <!-- :href=$url data-exist=$url -->
+    <a class="nav-link text-white">
+        <!-- :class="fas {$icon}" -->
+        <i data-exist=$icon></i> 
+        <!-- :class="sidenav-normal ms-{$depth} ps-1" -->
+        <span><!-- $label --></span>
+    </a>
+<!-- data-endbloc -->
+
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-gradient-gray" id="sidenav-main" data-color="primary">
+    <div class="sidenav-header">
+        <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+        <a class="navbar-brand m-0" href="/">
+            <img src="/assets/img/logos/blocs-mark.svg" class="navbar-brand-img h-100" alt="main_logo" />
+            <span class="ms-2 font-weight-bold text-white">BLOCS</span>
+        </a>
+    </div>
+    <hr class="horizontal light mt-0 mb-2">
+
+    <div class="collapse navbar-collapse  w-auto h-auto" id="sidenav-collapse-main">
+        <ul class="navbar-nav">
+            @auth
+            <!-- data-include="navProfile" -->
+            <hr class="horizontal light mt-0 mb-2">
+            @endauth
+
+            <!-- data-include="navSub" -->
+
+        </ul>
+    </div>
+</aside>

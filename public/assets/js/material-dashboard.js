@@ -264,120 +264,6 @@ if (document.querySelector('.fixed-plugin')) {
 
 }
 
-//Set Sidebar Color
-function sidebarColor(a) {
-  var parent = a.parentElement.children;
-  var color = a.getAttribute("data-color");
-
-  for (var i = 0; i < parent.length; i++) {
-    parent[i].classList.remove('active');
-  }
-
-  if (!a.classList.contains('active')) {
-    a.classList.add('active');
-  } else {
-    a.classList.remove('active');
-  }
-
-  var sidebar = document.querySelector('.sidenav');
-  sidebar.setAttribute("data-color", color);
-
-  if (document.querySelector('#sidenavCard')) {
-    var sidenavCard = document.querySelector('#sidenavCard');
-    let sidenavCardClasses = ['card', 'card-background', 'shadow-none', 'card-background-mask-' + color];
-    sidenavCard.className = '';
-    sidenavCard.classList.add(...sidenavCardClasses);
-
-    var sidenavCardIcon = document.querySelector('#sidenavCardIcon');
-    let sidenavCardIconClasses = ['ni', 'ni-diamond', 'text-gradient', 'text-lg', 'top-0', 'text-' + color];
-    sidenavCardIcon.className = '';
-    sidenavCardIcon.classList.add(...sidenavCardIconClasses);
-  }
-}
-
-// Set Sidebar Type
-function sidebarType(a) {
-  var parent = a.parentElement.children;
-  var color = a.getAttribute("data-class");
-  var body = document.querySelector("body");
-  var bodyWhite = document.querySelector("body:not(.dark-version)");
-  var bodyDark = body.classList.contains('dark-version');
-
-  var colors = [];
-
-  for (var i = 0; i < parent.length; i++) {
-    parent[i].classList.remove('active');
-    colors.push(parent[i].getAttribute('data-class'));
-  }
-
-  if (!a.classList.contains('active')) {
-    a.classList.add('active');
-  } else {
-    a.classList.remove('active');
-  }
-
-  var sidebar = document.querySelector('.sidenav');
-
-  for (var i = 0; i < colors.length; i++) {
-    sidebar.classList.remove(colors[i]);
-  }
-
-  sidebar.classList.add(color);
-
-
-  // Remove text-white/text-dark classes
-  if (color == 'bg-transparent' || color == 'bg-white') {
-    var textWhites = document.querySelectorAll('.sidenav .text-white');
-    for (let i = 0; i < textWhites.length; i++) {
-      textWhites[i].classList.remove('text-white');
-      textWhites[i].classList.add('text-dark');
-    }
-  } else {
-    var textDarks = document.querySelectorAll('.sidenav .text-dark');
-    for (let i = 0; i < textDarks.length; i++) {
-      textDarks[i].classList.add('text-white');
-      textDarks[i].classList.remove('text-dark');
-    }
-  }
-
-  if (color == 'bg-transparent' && bodyDark) {
-    var textDarks = document.querySelectorAll('.navbar-brand .text-dark');
-    for (let i = 0; i < textDarks.length; i++) {
-      textDarks[i].classList.add('text-white');
-      textDarks[i].classList.remove('text-dark');
-    }
-  }
-
-  // Remove logo-white/logo-dark
-
-  if ((color == 'bg-transparent' || color == 'bg-white') && bodyWhite) {
-    var navbarBrand = document.querySelector('.navbar-brand-img');
-    var navbarBrandImg = navbarBrand.src;
-
-    if (navbarBrandImg.includes('logo-ct.png')) {
-      var navbarBrandImgNew = navbarBrandImg.replace("logo-ct", "logo-ct-dark");
-      navbarBrand.src = navbarBrandImgNew;
-    }
-  } else {
-    var navbarBrand = document.querySelector('.navbar-brand-img');
-    var navbarBrandImg = navbarBrand.src;
-    if (navbarBrandImg.includes('logo-ct-dark.png')) {
-      var navbarBrandImgNew = navbarBrandImg.replace("logo-ct-dark", "logo-ct");
-      navbarBrand.src = navbarBrandImgNew;
-    }
-  }
-
-  if (color == 'bg-white' && bodyDark) {
-    var navbarBrand = document.querySelector('.navbar-brand-img');
-    var navbarBrandImg = navbarBrand.src;
-
-    if (navbarBrandImg.includes('logo-ct.png')) {
-      var navbarBrandImgNew = navbarBrandImg.replace("logo-ct", "logo-ct-dark");
-      navbarBrand.src = navbarBrandImgNew;
-    }
-  }
-}
-
 // Set Navbar Fixed
 function navbarFixed(el) {
   let classes = ['position-sticky', 'blur', 'shadow-blur', 'mt-4', 'left-auto', 'top-1', 'z-index-sticky'];
@@ -742,46 +628,6 @@ function toggleSidenav() {
   }
 }
 
-
-// Resize navbar color depends on configurator active type of sidenav
-
-let referenceButtons = document.querySelector('[data-class]');
-
-window.addEventListener("resize", navbarColorOnResize);
-
-function navbarColorOnResize() {
-  if (sidenav) {
-    if (window.innerWidth > 1200) {
-      if (referenceButtons.classList.contains('active') && referenceButtons.getAttribute('data-class') === 'bg-transparent') {
-        sidenav.classList.remove('bg-white');
-      } else {
-        if (!document.querySelector('body').classList.contains('dark-version')) {
-          sidenav.classList.add('bg-white');
-        }
-      }
-    } else {
-      sidenav.classList.remove('bg-transparent');
-    }
-  }
-}
-
-// Deactivate sidenav type buttons on resize and small screens
-window.addEventListener("resize", sidenavTypeOnResize);
-window.addEventListener("load", sidenavTypeOnResize);
-
-function sidenavTypeOnResize() {
-  let elements = document.querySelectorAll('[onclick="sidebarType(this)"]');
-  if (window.innerWidth < 1200) {
-    elements.forEach(function(el) {
-      el.classList.add('disabled');
-    });
-  } else {
-    elements.forEach(function(el) {
-      el.classList.remove('disabled');
-    });
-  }
-}
-
 // Notification function
 function notify(el) {
   var body = document.querySelector('body');
@@ -827,41 +673,19 @@ window.onload = function() {
       this.parentElement.classList.add('is-focused');
     }, false);
 
-    inputs[i].onkeyup = function(e) {
+    inputs[i].addEventListener('input', function(e) {
       if (this.value != "") {
         this.parentElement.classList.add('is-filled');
       } else {
         this.parentElement.classList.remove('is-filled');
       }
-    };
+    }, false);
 
     inputs[i].addEventListener('focusout', function(e) {
       if (this.value != "") {
         this.parentElement.classList.add('is-filled');
       }
       this.parentElement.classList.remove('is-focused');
-    }, false);
-  }
-
-  // Ripple Effect
-  var ripples = document.querySelectorAll('.btn');
-
-  for (var i = 0; i < ripples.length; i++) {
-    ripples[i].addEventListener('click', function(e) {
-      var targetEl = e.target;
-      var rippleDiv = targetEl.querySelector('.ripple');
-
-      rippleDiv = document.createElement('span');
-      rippleDiv.classList.add('ripple');
-      rippleDiv.style.width = rippleDiv.style.height = Math.max(targetEl.offsetWidth, targetEl.offsetHeight) + 'px';
-      targetEl.appendChild(rippleDiv);
-
-      rippleDiv.style.left = (e.offsetX - rippleDiv.offsetWidth / 2) + 'px';
-      rippleDiv.style.top = (e.offsetY - rippleDiv.offsetHeight / 2) + 'px';
-      rippleDiv.classList.add('ripple');
-      setTimeout(function() {
-        rippleDiv.parentElement.removeChild(rippleDiv);
-      }, 600);
     }, false);
   }
 };
@@ -1844,3 +1668,40 @@ var material = {
   }
 
 }
+
+// adding on inputs attributes for calling the focused and defocused functions
+if (document.querySelectorAll('thead input[type=checkbox]').length != 0) {
+  document.querySelectorAll('thead input[type=checkbox]').forEach(function(item, i) {
+    item.addEventListener("click", function(){
+      var checked = this.checked;
+      this.closest('table').querySelectorAll('input[type=checkbox]').forEach(function(item, i) {
+        item.checked= checked;
+      });
+    });
+  });
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+    if (document.querySelectorAll("form[role=search] button.clear").length != 0) {
+        document.querySelector("form[role=search] button.clear").addEventListener("click", function(){
+            document.querySelector("form[role=search]").querySelectorAll("input[type=text], select").forEach(function(item, i) {
+                item.value = '';
+            });
+            document.querySelector("form[role=search]").submit();
+        });
+    }
+
+    if (document.querySelectorAll("form[role=search] select").length != 0) {
+        document.querySelector("form[role=search] select").addEventListener("change", function(){
+            document.querySelector("form[role=search]").submit();
+        });
+    }
+
+    if (document.querySelectorAll("[data-modalaction]").length != 0) {
+        document.querySelectorAll('[data-modalaction]').forEach(function(item, i) {
+            item.addEventListener("click", function(){
+                document.querySelector(this.dataset.bsTarget + " button[type=submit]").setAttribute("formaction", this.dataset.modalaction);
+            });
+        });
+    }
+});

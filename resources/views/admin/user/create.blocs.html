@@ -15,13 +15,13 @@
             <td>
                 <input type='text' id='email' name='email' class='form-control modal-notice-item' value='' required />
 
-                <!-- !email="softUnique:users" data-lang="このユーザーIDはすでに登録されています。" -->
+                <!-- !email="softUnique:users" data-lang="template:admin_user_id_unique" -->
                 @error('email') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>
         </tr>
         <tr data-exist=$option_role>
             <th>
-                <label for='role'><!-- data-lang='label:develop_message_optgroup_group' --></label>
+                <label for='role'><!-- data-lang='template:admin_user_role' --></label>
             </th>
             <td>
                 <div class='checkbox-inline' data-loop=$option_role>
@@ -60,7 +60,7 @@
             <td>
                 <input type='password' id='repassword' name='repassword' class='form-control' required />
 
-                <!-- !repassword="same:password" data-lang="パスワードが違います。" -->
+                <!-- !repassword="same:password" data-lang="template:admin_profile_password_incorrect" -->
                 @error('repassword') <div class='text-danger'>{{ $message }}</div> @enderror
             </td>
         </tr>
