@@ -10,19 +10,18 @@
                 $buttonClass="d-none"
                 $buttonLabel="Search"
             -->
-
             <div class="d-flex flex-wrap justify-content-between md-3">
                 <div>
-                    <!-- data-include="button_left" data-exist -->
+                    <!-- data-include="button_top_left" data-exist -->
                 </div>
                 <div>
-                    <!-- data-include="button_right" data-exist -->
+                    <!-- data-include="button_top_right" data-exist -->
                 </div>
             </div>
             <div class="card">
-                <div class="card-header pb-0">
+                <div class="card-header">
                     <div class="d-flex align-items-center">
-                        <h5 style="white-space: nowrap;">
+                        <h5>
                             <i :class="fas {$headline["icon"]}"></i>
                             <!-- $headline["label"] -->
                         </h5>
@@ -30,6 +29,7 @@
                             <!-- $headline["menu"] -->
                         </p>
                     </div>
+                    <p class="text-sm mb-0"><!-- $subTitle --></p>
                     <!-- data-include="search.blocs.html" data-exist=$searchPlaceholder -->
                 </div>
                 <div class="alert alert-info m-3" role="alert" data-none=$isLoop>
