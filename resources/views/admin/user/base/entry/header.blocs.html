@@ -1,0 +1,27 @@
+<!-- data-include="../common/header.blocs.html" -->
+
+<div class="row mt-0">
+    <div class="col-12">
+        <form method="post">
+            @csrf
+            <div class="d-flex flex-wrap justify-content-between md-3">
+                <div>
+                    <!-- data-include="button_top_left" data-exist -->
+                </div>
+                <div>
+                    <!-- data-include="button_top_right" data-exist -->
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="d-flex align-items-center">
+                        <h5>
+                            <i :class="fas {$headline["icon"]}"></i>
+                            <!-- $headline["label"] -->
+                        </h5>
+                        <p class="text-sm ms-3 mb-0" data-exist=$headline["menu"]>|
+                            <!-- $headline["menu"] -->
+                        </p>
+                    </div>
+                    <p class="text-sm mb-0"><!-- $subTitle --></p>
+                </div>
