@@ -663,7 +663,7 @@ function notify(el) {
 
 window.onload = function() {
   // Material Design Input function
-  var inputs = document.querySelectorAll('input');
+  var inputs = document.querySelectorAll('input, textarea, select');
 
   for (var i = 0; i < inputs.length; i++) {
     if (inputs[i].hasAttribute('value')) {
@@ -852,13 +852,6 @@ function darkMode(el) {
     el.removeAttribute("checked");
   }
 };
-
-// flatpickr init
-if (document.querySelector('.datepicker')) {
-  flatpickr('.datepicker', {
-    mode: "range"
-  });
-}
 
 // validation
 const form = document.getElementById('form');
