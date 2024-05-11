@@ -14,7 +14,7 @@
 <!-- data-bloc="searchFilter" -->
 <!-- data-endbloc -->
 
-<!-- data-include="base/index/header.blocs.html" -->
+<!-- data-include="../base/index/header.blocs.html" -->
 
 <div class="dataTable-wrapper no-footer" data-exist=$isLoop>
     <div class="dataTable-container">
@@ -100,7 +100,7 @@
         </div>
     </div>
     <!-- data-exist=$paginate -->
-    {{ $paginate->links(ADMIN_VIEW_PREFIX.".user.base.index.pagination") }}
+    {{ $paginate->links(ADMIN_VIEW_PREFIX.".base.index.pagination") }}
     <!-- data-endexist -->
 </div>
 
@@ -147,4 +147,4 @@
     data-exist=$isLoop
 -->
 
-<!-- data-include="base/common/footer.blocs.html" -->
+<!-- data-include="../base/common/footer.blocs.html" -->

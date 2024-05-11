@@ -1,116 +1,87 @@
-<!-- data-bloc='button_href' -->
-    <!-- data-attribute='href' data-val=$buttonHref -->
-    <!-- data-attribute='class' data-val=$buttonClass -->
-    <a>
-        <!-- data-attribute='class' data-val=$buttonIcon -->
-        <span></span> <!-- $buttonLabel -->
+<!-- data-bloc="button_href" -->
+    <a :href=$buttonHref :class=$buttonClass>
+        <i :class=$buttonIcon data-exist=$buttonIcon></i> <!-- $buttonLabel -->
     </a>
 
-    <!-- $buttonHref='' $buttonClass='' $buttonIcon='' $buttonLabel='' -->
+    <!-- $buttonHref="" $buttonClass="" $buttonIcon="" $buttonLabel="" -->
 <!-- data-endbloc -->
 
-<!-- data-bloc='button_back' -->
+<!-- data-bloc="button_back" -->
     <!--
-        data-include='button_href'
-        $buttonHref='./'
-        $buttonClass='btn btn-default btn-lg'
-        $buttonIcon='fa fa-arrow-left'
-        $buttonLabel=lang('template:resource_blocs_button_back')
+        data-include="button_href"
+        $buttonHref="./"
+        $buttonClass="btn btn-secondary"
+        $buttonIcon="fas fa-arrow-left"
+        $buttonLabel=lang("template:resource_blocs_button_back")
     -->
 <!-- data-endbloc -->
 
-<!-- data-bloc='button_create' -->
+<!-- data-bloc="button_create" -->
     <!--
-        data-include='button_href'
-        $buttonHref=route(prefix().'.create')
-        $buttonClass='btn btn-primary btn-lg'
-        $buttonIcon='fa fa-plus'
-        $buttonLabel=lang('template:resource_blocs_button_new')
+        data-include="button_href"
+        $buttonHref=route(prefix().".create")
+        $buttonClass="btn btn-primary"
+        $buttonIcon="fa fa-plus"
+        $buttonLabel=lang("template:resource_blocs_button_new")
     -->
 <!-- data-endbloc -->
 
-<!-- data-bloc='button' -->
-    <!-- data-attribute='type' data-val=$buttonType data-exist=$buttonType -->
-    <!-- data-attribute='class' data-val=$buttonClass -->
-    <button type='button'>
-        <!-- data-attribute='class' data-val=$buttonIcon -->
-        <span></span> <!-- $buttonLabel -->
+<!-- data-bloc="button" -->
+    <!-- :type=$buttonType data-exist=$buttonType -->
+    <button type="button" :class=$buttonClass>
+        <i :class=$buttonIcon data-exist=$buttonIcon></i> <!-- $buttonLabel -->
     </button>
 
-    <!-- $buttonType='' $buttonClass='' $buttonIcon='' $buttonLabel='' -->
+    <!-- $buttonType="" $buttonClass="" $buttonIcon="" $buttonLabel="" -->
 <!-- data-endbloc -->
 
-<!-- data-bloc='button_target' -->
-    <!-- data-attribute='data-bs-target' data-val=$modalName data-prefix='#' data-exist=$modalName -->
-    <!-- data-attribute='data-bs-toggle' data-val='modal' data-exist=$modalName -->
-    <!-- data-include='button' -->
+<!-- data-bloc="button_target" -->
+    <!-- :data-bs-toggle="modal" -->
+    <!-- :data-bs-target="#{$modalName}" -->
+    <!-- data-include="button" -->
 <!-- data-endbloc -->
 
-<!-- data-bloc='button_primary' -->
+<!-- data-bloc="button_primary" -->
     <!--
-        data-include='button_target'
-        $buttonClass='btn btn-primary btn-lg'
-        $buttonIcon='fa fa-arrow-right'
-        $buttonLabel=lang('template:resource_blocs_button_confirm')
+        data-include="button_target"
+        $buttonClass="btn btn-primary"
+        $buttonIcon="fa fa-arrow-right"
+        $buttonLabel=lang("template:resource_blocs_button_confirm")
     -->
 <!-- data-endbloc -->
 
-<!-- data-bloc='button_info' -->
+<!-- data-bloc="button_info" -->
     <!--
-        data-include='button_target'
-        $buttonClass='btn btn-info btn-lg'
-        $buttonIcon='fa fa-info-circle'
-        $buttonLabel=lang('template:resource_blocs_button_confirm')
+        data-include="button_target"
+        $buttonClass="btn btn-info"
+        $buttonIcon="fa fa-info-circle"
+        $buttonLabel=lang("template:resource_blocs_button_confirm")
     -->
 <!-- data-endbloc -->
 
-<!-- data-bloc='button_success' -->
+<!-- data-bloc="button_success" -->
     <!--
-        data-include='button_target'
-        $buttonClass='btn btn-success btn-lg'
-        $buttonIcon='fa fa-check'
-        $buttonLabel=lang('template:resource_blocs_button_confirm')
+        data-include="button_target"
+        $buttonClass="btn btn-success"
+        $buttonIcon="fa fa-check"
+        $buttonLabel=lang("template:resource_blocs_button_confirm")
     -->
 <!-- data-endbloc -->
 
-<!-- data-bloc='button_danger' -->
+<!-- data-bloc="button_danger" -->
     <!--
-        data-include='button_target'
-        $buttonClass='btn btn-danger btn-lg'
-        $buttonIcon='fa fa-trash'
-        $buttonLabel=lang('template:resource_blocs_button_delete')
+        data-include="button_target"
+        $buttonClass="btn btn-danger"
+        $buttonIcon="fas fa-trash"
+        $buttonLabel=lang("template:resource_blocs_button_delete")
     -->
 <!-- data-endbloc -->
 
-<!-- data-bloc='button_warning' -->
+<!-- data-bloc="button_warning" -->
     <!--
-        data-include='button_target'
-        $buttonClass='btn btn-warning btn-lg'
-        $buttonIcon='fa fa-exclamation-triangle'
-        $buttonLabel=lang('template:resource_blocs_button_warning')
+        data-include="button_target"
+        $buttonClass="btn btn-warning"
+        $buttonIcon="fa fa-exclamation-triangle"
+        $buttonLabel=lang("template:resource_blocs_button_warning")
     -->
-<!-- data-endbloc -->
-
-<!-- data-bloc='button_toggle' -->
-    <!--
-        data-include='button_target'
-        $buttonClass='btn btn-success btn-sm'
-        $buttonActiveIcon='fa fa-check'
-        $buttonIcon=$buttonActiveIcon
-        $buttonActiveLabel=''
-        $buttonLabel=$buttonActiveLabel
-        data-none=$disabled_at
-    -->
-
-    <!--
-        data-include='button_target'
-        $buttonClass='btn btn-warning btn-sm'
-        $buttonInactiveIcon='fa fa-exclamation-triangle'
-        $buttonIcon=$buttonInactiveIcon
-        $buttonInactiveLabel=''
-        $buttonLabel=$buttonInactiveLabel
-        data-exist=$disabled_at
-    -->
-
-    <!-- $disabled_at='' -->
 <!-- data-endbloc -->

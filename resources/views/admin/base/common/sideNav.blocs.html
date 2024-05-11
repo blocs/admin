@@ -1,12 +1,28 @@
 <!-- data-bloc="navProfile" -->
+    <!-- data-if="'admin.profile' === prefix()" -->
+    <!--
+        $profileActive=true
+        $breadcrumb=[[
+            "label" => lang("template:admin_menu_profile"),
+        ]]
+        $headline=[
+            "icon" => "fa-cog",
+            "label" => lang("template:admin_menu_profile"),
+        ]
+    --><!-- data-endif -->
     <li class="nav-item mt-0 mb-2">
-        <a data-bs-toggle="collapse" href="#ProfileNav" class="nav-link text-white" aria-controls="ProfileNav" role="button" aria-expanded="false">
+        <!-- :class="nav-link text-white active" data-exist=$profileActive -->
+        <!-- :aria-expanded="true" data-exist=$profileActive -->
+        <a href="#ProfileNav" data-bs-toggle="collapse" class="nav-link text-white" role="button" aria-expanded="false" aria-controls="ProfileNav">
             <i class="fas fa-user-circle"></i> <span class="nav-link-text ms-2 ps-1"><!-- $auth_name --></span>
         </a>
 
-        <div class="collapse" id="ProfileNav">
+        <!-- :class="collapse show" data-exist=$profileActive -->
+        <div id="ProfileNav" class="collapse">
             <ul class="nav">
+                <!-- :class="nav-item active" data-exist=$profileActive -->
                 <li class="nav-item">
+                    <!-- :class="nav-link text-white active" data-exist=$profileActive -->
                     <a :href=route("admin.profile.edit", ["id" => $auth_id]) class="nav-link text-white">
                         <i class="fas fa-cog"></i> <span class="sidenav-normal ms-3 ps-1"><!-- data-lang="template:admin_menu_profile" --></span>
                     </a>

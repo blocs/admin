@@ -1,10 +1,10 @@
 <!--
-    data-include="base/entry/header.blocs.html"
+    data-include="../base/entry/header.blocs.html"
     $subTitle="新規作成"
 -->
 
 <div class="card-body pt-2 d-flex flex-column gap-3">
-    <!-- :class="input-group input-group-outline is-invalid" data-if="$errors->has('email')" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("email") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- data-lang="template:admin_profile_user_id" --></label>
         <input type="text" name="email" class="form-control" required />
@@ -29,7 +29,7 @@
         <input type="text" name="name" class="form-control" />
     </div>
 
-    <!-- :class="input-group input-group-outline is-invalid" data-if="$errors->has('password')" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("password") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- data-lang="template:admin_profile_password" --></label>
         <input type="password" name="password" class="form-control" required />
@@ -37,7 +37,7 @@
         @error("password") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
 
-    <!-- :class="input-group input-group-outline is-invalid" data-if="$errors->has('repassword')" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("repassword") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- data-lang="template:admin_profile_password_check" --></label>
         <input type="password" name="repassword" class="form-control" required />
@@ -58,4 +58,4 @@
 <!-- data-bloc="button_bottom_right" -->
 <!-- data-endbloc -->
 
-<!-- data-include="base/common/footer.blocs.html" -->
+<!-- data-include="../base/common/footer.blocs.html" -->
