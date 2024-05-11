@@ -1,12 +1,12 @@
 <!--
-    data-include="base/entry/header.blocs.html"
+    data-include="../base/entry/header.blocs.html"
     $subTitle="編集"
 -->
 
 <input type="hidden" name="updated_at" />
 
 <div class="card-body pt-2 d-flex flex-column gap-3">
-    <!-- :class="input-group input-group-outline is-invalid" data-if="$errors->has('email')" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("email") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- data-lang="template:admin_profile_user_id" --></label>
         <input type="text" name="email" class="form-control" readonly />
@@ -28,7 +28,7 @@
         <input type="text" name="name" class="form-control" />
     </div>
 
-    <!-- :class="input-group input-group-outline is-invalid" data-if="$errors->has('password_old')" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("password_old") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- data-lang="template:admin_profile_password_old" --></label>
         <input type="password" name="password_old" class="form-control" />
@@ -41,7 +41,7 @@
         <input type="password" name="password_new" class="form-control" />
     </div>
 
-    <!-- :class="input-group input-group-outline is-invalid" data-if="$errors->has('repassword_new')" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("repassword_new") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- data-lang="template:admin_profile_new_password_check" --></label>
         <input type="password" name="repassword_new" class="form-control" />
@@ -63,4 +63,4 @@
     <!-- data-include="modal_destroy" -->
 <!-- data-endbloc -->
 
-<!-- data-include="base/common/footer.blocs.html" -->
+<!-- data-include="../base/common/footer.blocs.html" -->
