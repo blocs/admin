@@ -69,7 +69,7 @@ class Menu
             }
 
             // 権限があるかチェック
-            if (empty($config['role']) && !self::checkRole($config['name'])) {
+            if (empty($config['role']) && isset($config['name']) && !self::checkRole($config['name'])) {
                 continue;
             }
 
