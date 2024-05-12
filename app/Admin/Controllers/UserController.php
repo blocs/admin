@@ -14,6 +14,10 @@ class UserController extends \Blocs\Controllers\Base
         $this->loopItem = 'users';
         $this->paginateNum = 20;
         $this->noticeItem = 'email';
+
+        // 役割をメニューにセット
+        $roleList = config('role');
+        empty($roleList) || $this->addOption('role', array_keys($roleList));
     }
 
     protected function prepareIndexSearch(&$mainTable)
@@ -57,15 +61,6 @@ class UserController extends \Blocs\Controllers\Base
             $roleList = explode("\t", $loopValue['role']);
             $this->val[$this->loopItem][$loopKey]['roles'] = $roleList;
         }
-    }
-
-    protected function outputCreate()
-    {
-        // 役割をメニューにセット
-        $roleList = config('role');
-        empty($roleList) || $this->addOption('role', array_keys($roleList));
-
-        return parent::outputCreate();
     }
 
     protected function prepareStore()

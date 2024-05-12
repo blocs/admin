@@ -4,15 +4,6 @@ namespace App\Admin\Controllers;
 
 trait UserUpdateTrait
 {
-    protected function outputEdit()
-    {
-        // 役割をメニューにセット
-        $roleList = config('role');
-        empty($roleList) || $this->addOption('role', array_keys($roleList));
-
-        return parent::outputEdit();
-    }
-
     protected function validateUpdate()
     {
         parent::validateUpdate();
