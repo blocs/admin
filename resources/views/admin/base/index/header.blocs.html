@@ -1,40 +1,39 @@
+<!-- data-bloc="form_start" -->
+<form method="post" :action=route(prefix().".search") role="search">
+    @csrf
+    <!--
+        data-include="button"
+        $buttonType="submit"
+        $buttonClass="d-none"
+        $buttonLabel="Search"
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="form_end" -->
+</form>
+<!-- data-endbloc -->
+
 <!-- data-include="../common/header.blocs.html" -->
 
-<div class="row mt-0">
+<div class="row">
     <div class="col-12">
-        <form method="post" :action=route(prefix().".search") role="search">
-            @csrf
-            <!--
-                data-include="button"
-                $buttonType="submit"
-                $buttonClass="d-none"
-                $buttonLabel="Search"
-            -->
-            <div class="d-flex flex-wrap justify-content-between">
-                <div>
-                    <!-- data-include="button_top_left" data-exist -->
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex align-items-center">
+                    <h5>
+                        <i :class="fas {$headline["icon"]}"></i>
+                        <!-- $headline["label"] -->
+                    </h5>
+                    <p class="text-sm ms-3 mb-0" data-exist=$headline["menu"]>|
+                        <!-- $headline["menu"] -->
+                    </p>
                 </div>
-                <div>
-                    <!-- data-include="button_top_right" data-exist -->
-                </div>
+                <p class="text-sm mb-0"><!-- $subTitle --></p>
+                <!-- data-include="search.blocs.html" data-exist=$searchPlaceholder -->
             </div>
-            <div class="card">
-                <div class="card-header">
-                    <div class="d-flex align-items-center">
-                        <h5>
-                            <i :class="fas {$headline["icon"]}"></i>
-                            <!-- $headline["label"] -->
-                        </h5>
-                        <p class="text-sm ms-3 mb-0" data-exist=$headline["menu"]>|
-                            <!-- $headline["menu"] -->
-                        </p>
-                    </div>
-                    <p class="text-sm mb-0"><!-- $subTitle --></p>
-                    <!-- data-include="search.blocs.html" data-exist=$searchPlaceholder -->
-                </div>
-                <div class="alert alert-info m-3" role="alert" data-none=$isLoop>
-                    <!-- data-lang="template:resource_blocs_base_index_no_data" -->
-                </div>
+            <div class="alert alert-info m-3" role="alert" data-none=$isLoop>
+                <!-- data-lang="template:resource_blocs_base_index_no_data" -->
+            </div>
 
 <!-- data-bloc="sortHeader" -->
     <!-- $sortClass="" data-none -->
