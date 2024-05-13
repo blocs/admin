@@ -43,7 +43,6 @@ class LoginController extends Controller
     {
         $this->middleware(RedirectIfAuthenticated::class)->except('logout');
 
-        $this->setAutoinclude(resource_path('views/admin/autoinclude'));
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.auth';
     }
 
