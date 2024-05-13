@@ -8,7 +8,6 @@ class ProfileController extends \Blocs\Controllers\Base
 
     public function __construct()
     {
-        $this->setAutoinclude(resource_path('views/admin/autoinclude'));
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.profile';
         $this->mainTable = 'App\Models\Admin\User';
         $this->noticeItem = 'email';

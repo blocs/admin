@@ -102,11 +102,6 @@ trait CommonTrait
         isset($this->viewPrefix) && session(['viewPrefix' => $this->viewPrefix]);
     }
 
-    protected function setAutoinclude($autoincludeDir)
-    {
-        $GLOBALS[\Route::currentRouteAction()]['BLOCS_AUTOINCLUDE_DIR'] = $autoincludeDir;
-    }
-
     protected function getAccessor($model)
     {
         $methods = get_class_methods($model);
