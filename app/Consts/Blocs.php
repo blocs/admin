@@ -12,23 +12,23 @@ class Blocs
         date_default_timezone_set('Asia/Tokyo');
 
         // テンプレートのキャッシュを保存するディレクトリ
-        define('BLOCS_CACHE_DIR', config('view.compiled'));
+        defined('BLOCS_CACHE_DIR') || define('BLOCS_CACHE_DIR', config('view.compiled'));
 
         // autoincludeのディレクトリ
         $GLOBALS['BLOCS_AUTOINCLUDE_DIR'] = resource_path('views/admin/autoinclude');
 
         // テンプレートのルートディレクトリ
         $viewPathList = config('view.paths');
-        define('BLOCS_ROOT_DIR', $viewPathList[0]);
+        defined('BLOCS_ROOT_DIR') || define('BLOCS_ROOT_DIR', $viewPathList[0]);
 
         // optionをつなぐ文字列
-        define('BLOCS_OPTION_SEPARATOR', ', ');
+        defined('BLOCS_OPTION_SEPARATOR') || define('BLOCS_OPTION_SEPARATOR', ', ');
 
         // includeの上限設定
-        define('BLOCS_INCLUDE_MAX', 20);
+        defined('BLOCS_INCLUDE_MAX') || define('BLOCS_INCLUDE_MAX', 20);
 
         // 管理画面のビュー
-        define('ADMIN_VIEW_PREFIX', 'admin');
+        defined('ADMIN_VIEW_PREFIX') || define('ADMIN_VIEW_PREFIX', 'admin');
 
         // 管理画面のログイン後の遷移先
         $GLOBALS['ADMIN_LOGIN_REDIRECT_TO'] = '/home';
@@ -37,7 +37,7 @@ class Blocs
         $GLOBALS['ADMIN_LOGOUT_REDIRECT_TO'] = '/login';
 
         // サムネイルの品質
-        define('ADMIN_IMAGE_JPEG_QUALITY', -1);
-        define('ADMIN_IMAGE_PNG_QUALITY', -1);
+        defined('ADMIN_IMAGE_JPEG_QUALITY') || define('ADMIN_IMAGE_JPEG_QUALITY', -1);
+        defined('ADMIN_IMAGE_PNG_QUALITY') || define('ADMIN_IMAGE_PNG_QUALITY', -1);
     }
 }
