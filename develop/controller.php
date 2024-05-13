@@ -6,7 +6,6 @@ class CONTROLLER_NAME extends \Blocs\Controllers\Base
 {
     public function __construct()
     {
-        $this->setAutoinclude(resource_path('views/admin/autoinclude'));
         $this->viewPrefix = 'VIEW_PREFIX';
         $this->mainTable = 'App\Models\MODEL_NAME';
         $this->loopItem = 'LOOP_ITEM';

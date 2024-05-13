@@ -14,6 +14,9 @@ class Blocs
         // テンプレートのキャッシュを保存するディレクトリ
         define('BLOCS_CACHE_DIR', config('view.compiled'));
 
+        // autoincludeのディレクトリ
+        $GLOBALS['BLOCS_AUTOINCLUDE_DIR'] = resource_path('views/admin/autoinclude');
+
         // テンプレートのルートディレクトリ
         $viewPathList = config('view.paths');
         define('BLOCS_ROOT_DIR', $viewPathList[0]);
