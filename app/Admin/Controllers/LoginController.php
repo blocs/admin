@@ -32,7 +32,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = ADMIN_LOGIN_REDIRECT_TO;
+    protected $redirectTo;
 
     /**
      * Create a new controller instance.
@@ -41,6 +41,10 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        // $GLOBALS['ADMIN_LOGIN_REDIRECT_TO'] = '';
+        // $GLOBALS['ADMIN_LOGOUT_REDIRECT_TO'] = '';
+
+        $this->redirectTo = $GLOBALS['ADMIN_LOGIN_REDIRECT_TO'];
         $this->middleware(RedirectIfAuthenticated::class)->except('logout');
 
         $this->viewPrefix = ADMIN_VIEW_PREFIX.'.auth';
@@ -59,7 +63,7 @@ class LoginController extends Controller
     {
         unset($this->val, $this->request, $this->tableData);
 
-        return redirect(ADMIN_LOGOUT_REDIRECT_TO);
+        return redirect($GLOBALS['ADMIN_LOGOUT_REDIRECT_TO']);
     }
 
     protected function validateLogin(Request $request)

@@ -31,10 +31,10 @@ class Blocs
         define('ADMIN_VIEW_PREFIX', 'admin');
 
         // 管理画面のログイン後の遷移先
-        define('ADMIN_LOGIN_REDIRECT_TO', '/home');
+        $GLOBALS['ADMIN_LOGIN_REDIRECT_TO'] = '/home';
 
         // 管理画面のログアウト後の遷移先
-        define('ADMIN_LOGOUT_REDIRECT_TO', '/login');
+        $GLOBALS['ADMIN_LOGOUT_REDIRECT_TO'] = '/login';
 
         // サムネイルの品質
         define('ADMIN_IMAGE_JPEG_QUALITY', -1);
