@@ -7,8 +7,9 @@ class Blocs
     public static function define()
     {
         // 言語設定
-        defined('BLOCS_LOCALE') || define('BLOCS_LOCALE', 'ja');
-        defined('BLOCS_TIMEZONE') || define('BLOCS_TIMEZONE', 'Asia/Tokyo');
+        config(['app.locale' => 'ja']);
+        config(['app.timezone' => 'Asia/Tokyo']);
+        date_default_timezone_set('Asia/Tokyo');
 
         // テンプレートのキャッシュを保存するディレクトリ
         defined('BLOCS_CACHE_DIR') || define('BLOCS_CACHE_DIR', config('view.compiled'));
