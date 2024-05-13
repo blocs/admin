@@ -5,6 +5,7 @@ namespace App\Admin\Controllers;
 use App\Http\Controllers\Controller;
 use Blocs\Middleware\RedirectIfAuthenticated;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -84,5 +85,10 @@ class LoginController extends Controller
             $request->only($this->username(), 'password'),
             ['deleted_at' => null, 'disabled_at' => null]
         );
+    }
+
+    protected function guard()
+    {
+        return Auth::guard();
     }
 }
