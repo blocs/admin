@@ -4,10 +4,10 @@
         document.querySelectorAll(".ai-phone").forEach(function(item, i) {
             item.addEventListener("keyup", function(){
                 let validateTel = function (value) {
-                    return /^[0０]/.test(value) && libphonenumber.isValidNumber(value, 'JP');
+                    return /^[0０]/.test(value) && libphonenumber.isValidNumber(value, "JP");
                 }
                 let formatTel = function (value) {
-                    return new libphonenumber.AsYouType('JP').input(value);
+                    return new libphonenumber.AsYouType("JP").input(value);
                 }
                 const postdata = this.value;
                 if (!validateTel(postdata)) {
