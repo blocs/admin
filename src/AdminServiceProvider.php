@@ -4,7 +4,7 @@ namespace Blocs;
 
 use Illuminate\Support\ServiceProvider;
 
-class BlocsAdmin extends \Blocs\Commands\Deploy
+class BlocsAdmin extends Commands\Deploy
 {
     public function handle()
     {
@@ -59,13 +59,13 @@ class AdminServiceProvider extends ServiceProvider
         $this->commands('command.blocs.admin');
 
         $this->app->singleton('command.blocs.build', function ($app) {
-            return new \Blocs\Commands\Build('blocs:build {path}', 'Build static contents');
+            return new Commands\Build('blocs:build {path}', 'Build static contents');
         });
 
         $this->commands('command.blocs.build');
 
         $this->app->singleton('command.blocs.develop', function ($app) {
-            return new \Blocs\Commands\Develop('blocs:develop {path}', 'Develop application');
+            return new Commands\Develop('blocs:develop {path}', 'Develop application');
         });
 
         $this->commands('command.blocs.develop');
