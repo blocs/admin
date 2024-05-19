@@ -70,13 +70,15 @@ class LoginController extends Controller
     protected function validateLogin(Request $request)
     {
         list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.login');
-        if (!empty($rules)) {
-            $labels = $this->getLabel($this->viewPrefix.'.login');
-            $request->validate($rules, $messages, $labels);
-            $validates = $this->getValidate($rules, $messages, $labels);
-            doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
-            doc(null, 'エラーがあれば、ログイン画面に戻る', ['FORWARD' => $this->viewPrefix.'.login']);
+        if (empty($rules)) {
+            return;
         }
+
+        $labels = $this->getLabel($this->viewPrefix.'.login');
+        $request->validate($rules, $messages, $labels);
+        $validates = $this->getValidate($rules, $messages, $labels);
+        doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
+        doc(null, 'エラーがあれば、ログイン画面に戻る', ['FORWARD' => $this->viewPrefix.'.login']);
     }
 
     protected function credentials(Request $request)

@@ -57,13 +57,15 @@ trait StoreTrait
     protected function validateStore()
     {
         list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.create', $this->request);
-        if (!empty($rules)) {
-            $labels = $this->getLabel($this->viewPrefix.'.create');
-            $this->request->validate($rules, $messages, $labels);
-            $validates = $this->getValidate($rules, $messages, $labels);
-            doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
-            doc(null, 'エラーがあれば、新規作成画面に戻る', ['FORWARD' => $this->viewPrefix.'.create']);
+        if (empty($rules)) {
+            return;
         }
+
+        $labels = $this->getLabel($this->viewPrefix.'.create');
+        $this->request->validate($rules, $messages, $labels);
+        $validates = $this->getValidate($rules, $messages, $labels);
+        doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
+        doc(null, 'エラーがあれば、新規作成画面に戻る', ['FORWARD' => $this->viewPrefix.'.create']);
     }
 
     protected function prepareConfirmStore()

@@ -14,7 +14,15 @@
         <!-- :class="nav-link text-white active" data-exist=$profileActive -->
         <!-- :aria-expanded="true" data-exist=$profileActive -->
         <a href="#ProfileNav" data-bs-toggle="collapse" class="nav-link text-white" role="button" aria-expanded="false" aria-controls="ProfileNav">
-            <i class="fas fa-user-circle"></i> <span class="nav-link-text ms-2 ps-1"><!-- $auth_name --></span>
+            @php
+            if ($auth_file) {
+                $json = json_decode($auth_file, true);
+                isset($json[0]['filename']) && $auth_avator = route('admin.profile.thumbnail', ['filename' => $json[0]['filename'], 'size' => 'thumbnail']);
+            }
+            @endphp
+            <img :src=$auth_avator class="avatar" data-exist=$auth_avator />
+            <i class="fas fa-user-circle" data-none=$auth_avator></i>
+            <span class="nav-link-text ms-2 ps-1"><!-- $auth_name --></span>
         </a>
 
         <!-- :class="collapse show" data-exist=$profileActive -->
