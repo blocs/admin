@@ -11,41 +11,22 @@ trait FileTrait
     public function upload(Request $request)
     {
         $this->request = $request;
-        $paramname = $this->request->name;
 
-        // XSS対策 不適切な文字を削除
-        $paramname = str_replace(['<', '>', '/', '"', "'"], '', $paramname);
-
-        if ($this->request->has('uploadedFile')) {
-            $uploadedFile = $this->request->uploadedFile;
-            is_array($uploadedFile) || $uploadedFile = json_decode($uploadedFile, true);
-
-            $html = view(ADMIN_VIEW_PREFIX.'.autoinclude.upload_list', ['fileList' => $uploadedFile])->render();
-
-            return json_encode([
-                'paramname' => $paramname,
-                'html' => $html,
-            ]);
-        }
+        $this->validateUpload(request()->get('name'));
 
         $fileupload = $this->request->file('upload');
-        $mimeType = $fileupload->getMimeType();
-
-        $this->validateUpload($paramname);
+        $filename = md5(file_get_contents($fileupload->getPathname()));
 
         isset($this->uploadStorage) || $this->uploadStorage = 'upload';
-        $filename = md5(file_get_contents($fileupload->getPathname()));
         $fileupload->storeAs($this->uploadStorage, $filename);
 
         $existThumbnail = $this->createThumbnail($this->uploadStorage.'/'.$filename, 'thumbnail') ? 1 : 0;
         $file = [
-            'paramname' => $paramname,
             'filename' => $filename,
             'name' => $fileupload->getClientOriginalName(),
             'size' => $fileupload->getSize(),
             'thumbnail' => $existThumbnail,
         ];
-        $file['html'] = view(ADMIN_VIEW_PREFIX.'.autoinclude.upload_list', ['fileList' => [$file]])->render();
 
         return json_encode($file);
     }
@@ -53,12 +34,14 @@ trait FileTrait
     protected function validateUpload($paramname)
     {
         list($rules, $messages) = \Blocs\Validate::upload($this->viewPrefix, $paramname);
-        if (!empty($rules)) {
-            $labels = $this->getLabel($this->viewPrefix.'.create');
-            $this->request->validate($rules, $messages, $labels);
-            $validates = $this->getValidate($rules, $messages, $labels);
-            doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
+        if (empty($rules)) {
+            return;
         }
+
+        $labels = $this->getLabel($this->viewPrefix.'.create');
+        $this->request->validate($rules, $messages, $labels);
+        $validates = $this->getValidate($rules, $messages, $labels);
+        doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
     }
 
     /* download */
@@ -76,17 +59,23 @@ trait FileTrait
         $mimeType = $storage->mimeType($filename);
 
         if (isset($size)) {
+            // 画像ファイル
             $thumbnail = $this->createThumbnail($filename, $size);
             if ($thumbnail) {
                 return response(\File::get($thumbnail))->header('Content-Type', $mimeType);
             }
+
+            // 画像以外のファイル
+            return response(base64_decode('R0lGODlhAQABAGAAACH5BAEKAP8ALAAAAAABAAEAAAgEAP8FBAA7'), 200)->header('Content-Type', 'image/gif');
         }
 
+        // 画像ファイル
         $thumbnail = $this->createThumbnail($filename, 'thumbnail');
         if ($thumbnail) {
             return response($storage->get($filename))->header('Content-Type', $mimeType);
         }
 
+        // 画像以外のファイル
         return $storage->download($filename, basename($filename).'.'.\Blocs\Thumbnail::extension($storage->get($filename)));
     }
 
@@ -99,7 +88,7 @@ trait FileTrait
     {
         // 画像のサイズを指定できるように
         $downloadSize = [
-            'thumbnail' => [80, 10000, false],
+            'thumbnail' => [120, 10000, false],
             's' => [380, 10000, false],
             's@2x' => [760, 10000, false],
             'm' => [585, 10000, false],
