@@ -1,171 +1,136 @@
-<!-- $multipart=1 -->
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/10.32.0/css/jquery.fileupload.min.css" integrity="sha512-ETNxpham3n+DST8n2xV+sr8Dc2jYUBbQSwm86C5vJL4t2UJQ5cuPeP4pQqzry/9hS6Qlzul49BFDz1oWEC5e2w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/10.32.0/css/jquery.fileupload-ui.min.css" integrity="sha512-Rlj0RFIHhpUPv4EZzRDhF/oFOPlsggW3VeCYaYqnDLvtgiVHf/jSsPE1DcIbEcwz4gbZs/piR4P9723el8dF5g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-file-upload/10.32.0/js/jquery.fileupload.min.js" integrity="sha512-P7EUiLYW7QUrhYrLgaJ++ok2j2I7Pu0UgGnrpLowujPZicu7mIR0V/Trq+7kl/0nEkp6yNGh8eFJY1JUv3dkPA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.css" integrity="sha512-jU/7UFiaW5UBGODEopEqnbIAHOI8fO6T99m7Tsmqs2gkdujByJfkCbbfPSN4Wlqlb9TGnsuC0YgUgWkRBK7B9A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dropzone/5.9.3/dropzone.min.js" integrity="sha512-U2WE1ktpMTuRBPoCFDzomoIorbOyUv0sP8B+INA3EzNAhehbzED1rOJg6bCqPf/Tuposxb5ja/MAUnC8THSbLQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="text/javascript">
-function setUploader(paramname, accept) {
-    var paramnameId = paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
-    if ($('#'+paramnameId+'_upload').length) {
-        return;
-    }
-    else {
-        $('input[name="'+paramname+'"]').wrap('<div id="'+paramnameId+'_upload" class="upload-container"></div>');
-    }
-    $('input[name="'+paramname+'"]').prop('type', 'text').css({
-        width: 0,
-        opacity: 0,
-        position: 'absolute',
-        bottom: 0
-    });
-    var multiple = $('input[name="'+paramname+'"]').prop('multiple');
-    $('#'+paramnameId+'_upload').append('<div class="upload-buttonbar"><span class="btn btn-default fileinput-button"><span class="fa fa-file"></span> <span><!-- data-lang='template:resource_blocs_fileupload_add' --></span><input type="file" /></span></div><div id="'+paramnameId+'_upload_error" class="text-danger"></div><table class="table table-striped"><tbody class="fileList"></tbody></table>');
-    if (multiple) {
-        $('#'+paramnameId+'_upload').find('input[type=file]').attr('multiple', 'multiple');
-    }
-    if (typeof accept != 'undefined') {
-        $('#'+paramnameId+'_upload').find('input[type=file]').attr('accept', accept);
-    }
-    uploaded = parseUploaded(paramname);
-    if (uploaded.length) {
-        $.ajax({
-            type: 'POST',
-            url: '{{ route(prefix().'.upload') }}',
-            data: {
-                name: paramname,
-                _token: $('input[name="_token"]').val(),
-                uploadedFile: $('input[name="'+paramname+'"]').val()
-            },
-            dataType: 'json'
-        }).done(function(data) {
-            var paramnameId = data.paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
-            $('#'+paramnameId+'_upload .fileList').append(data.html);
-        });
-        if (!multiple) {
-            $('#'+paramnameId+'_upload .fileinput-button').hide();
+    var aiDownload = "{{ route(prefix().'.download', [ 'filename' => 'dummyFilename' ]) }}";
+    var aiThumbnail = "{{ route(prefix().'.thumbnail', [ 'filename' => 'dummyFilename', 'size' => 'thumbnail' ]) }}";
+    var aiFileupload = {
+        update:  function(dropzoneDiv){
+            var fileList = [];
+            dropzoneDiv.querySelectorAll(".dz-preview[data-ai-filename]").forEach(function(previewElement, i) {
+                fileList.push({
+                    filename: previewElement.dataset.aiFilename,
+                    name: previewElement.dataset.aiName,
+                    size: previewElement.dataset.aiSize,
+                    thumbnail: previewElement.dataset.aiThumbnail
+                });
+            });
+            dropzoneDiv.previousElementSibling.value = (fileList.length ? JSON.stringify(fileList) : "");
         }
-    }
-    $('#'+paramnameId+'_upload').fileupload({
-        url: '{{ route(prefix().'.upload') }}',
-        paramName : 'upload',
-        formData: {
-            name: paramname,
-            _token: $('input[name="_token"]').val(),
-        },
-        sequentialUploads: true,
-        autoUpload: true,
-        fileList: uploaded
-    }).bind('fileuploaddone', function (e, data) {
-        addUploaded(JSON.parse(data.result));
-    }).bind('fileuploadfail', function (e, data) {
-        var response;
-        if (typeof data.jqXHR.responseText != 'undefined') {
-            response = JSON.parse(data.jqXHR.responseText);
-        }
-        if (typeof response.errors != 'undefined') {
-            $('#'+paramnameId+'_upload_error').text(response.errors.upload[0]);
-            return;
-        }
-        if (typeof data.errorThrown == 'undefined') {
-            return;
-        }
-        if (data.errorThrown == 'Content Too Large') {
-            $('#'+paramnameId+'_upload_error').text('<!-- data-lang='error:fileupload_over_maxsize' -->');
-            return;
-        }
-        $('#'+paramnameId+'_upload_error').text(data.errorThrown);
-    });
-}
-function addUploaded(data) {
-    var paramname = data.paramname;
-    var paramnameId = paramname.replace(new RegExp('[\\[\\]]', 'g'), '_');
-
-    if (data.error) {
-        $('#'+paramnameId+'_upload_error').text(data.error);
-        return false;
-    } else {
-        $('#'+paramnameId+'_upload_error').text('');
-    }
-
-    if (!$('input[name="'+paramname+'"]').prop('multiple')) {
-        $('#'+paramnameId+'_upload .fileinput-button').hide();
-    }
-
-    var uploaded = parseUploaded(paramname);
-    var duplicated = 0;
-    $.each(uploaded, function(i, item){
-        if (item.filename == data.filename) {
-            duplicated = 1;
-            return false;
-        }
-    });
-    if (duplicated) {
-        $('#'+paramnameId+'_upload_error').text('<!-- data-lang='error:fileupload_duplicated' -->');
-        return false;
     };
 
-    $('#'+paramnameId+'_upload .fileList').append(data.html);
-    uploaded.push({
-        filename: data.filename,
-        name: data.name,
-        size: data.size,
-        thumbnail: data.thumbnail
-    });
-    var json = JSON.stringify(uploaded);
-    if ('[]' == json) {
-        json = '';
-    }
-    $('input[name="'+paramname+'"]').val(json).triggerHandler('change');
-    return true;
-}
-function cancelUploaded(ele) {
-    var tr = $(ele).closest('tr');
-    var filename = $(tr).data('filename');
-    var container = $(ele).closest('.upload-container');
-    var input = $(container).find('input:eq(0)');
-
-    tr.remove();
-    if (!input.prop('multiple')) {
-        $(container).find('.fileinput-button').show();
-    }
-
-    var uploaded = parseUploaded(input.attr('name'));
-    $.each(uploaded, function(i, item){
-        if (item.filename == filename) {
-            uploaded.splice(i, 1);
-            return false;
-        }
-    });
-    var json = JSON.stringify(uploaded);
-    if ('[]' == json) {
-        json = '';
-    }
-    input.val(json).triggerHandler('change');
-    return true;
-}
-function parseUploaded(name) {
-    var uploaded = [];
-    try {
-        uploaded = JSON.parse($('input[name="'+name+'"]').val());
-    } catch (e) {
-        uploaded = [];
-    }
-    return uploaded;
-}
-$(function(){
+    Dropzone.autoDiscover = false;
     new MutationObserver((mutations) => {
-        $('.ai-upload').each(function(){
-            setUploader($(this).attr('name'), $(this).attr('accept'));
-        }).removeClass('ai-upload');;
+        document.querySelectorAll(".ai-upload").forEach(function(item, i) {
+            item.classList.remove("ai-upload");
+            var dropzoneDiv = document.createElement("div");
+            dropzoneDiv.classList.add("dropzone");
+            item.parentNode.insertBefore(dropzoneDiv, item.nextSibling);
+
+            var myDropzone = new Dropzone(dropzoneDiv, {
+                url: "{{ route(prefix().'.upload') }}?name=" + item.name,
+                addRemoveLinks: true,
+                <!-- data-exist=$uploadMessage -->dictDefaultMessage: "<!-- $uploadMessage data-convert="raw" -->",<!-- data-endexist -->
+                <!-- data-exist=$uploadDelete -->dictRemoveFile: "<!-- $uploadDelete data-convert="raw" -->",<!-- data-endexist -->
+                paramName: "upload",
+                maxFiles: (null == item.getAttribute("multiple") ? 1 : null),
+                headers: {
+                    "X-CSRF-TOKEN" : document.querySelector("[name=_token]").value
+                },
+                maxfilesexceeded: (file) => {
+                    var dropzoneDiv = file.previewElement.closest(".dropzone");
+                    dropzoneDiv.dropzone.removeFile(file);
+                },
+                error: (file, message) => {
+                    if (file.previewElement) {
+                        file.previewElement.classList.add("dz-error");
+                        if (typeof message.errors === "object") {
+                            message = message.errors.upload.join("\n");
+                        } else if (typeof message !== "string" && message.error) {
+                            message = message.error;
+                        } else if (typeof message !== "string" && message.message) {
+                            message = message.message;
+                        }
+                        for (let node of file.previewElement.querySelectorAll(
+                            "[data-dz-errormessage]"
+                        )) {
+                            node.textContent = message;
+                        }
+                    }
+                }
+            }).on("success", (file, response) => {
+                var data = JSON.parse(response);
+                delete file.previewElement.querySelector(".dz-details").dataset.dzRemove;
+                var dropzoneDiv = file.previewElement.closest(".dropzone");
+                file.previewElement.dataset.aiTarget = dropzoneDiv.previousElementSibling.name;
+                file.previewElement.dataset.aiFilename = data.filename;
+                file.previewElement.dataset.aiName = data.name;
+                file.previewElement.dataset.aiSize = data.size;
+                file.previewElement.dataset.aiThumbnail = data.thumbnail;
+                aiFileupload.update(dropzoneDiv);
+            }).on("removedfile", (file) => {
+                var aiTarget = file.previewElement.dataset.aiTarget;
+                if (aiTarget) {
+                    var dropzoneDiv = document.querySelector("[name="+aiTarget+"]").nextElementSibling;
+                    aiFileupload.update(dropzoneDiv);
+                }
+            });
+
+            // 既存のファイル表示
+            if (item.value) {
+                var fileList = JSON.parse(item.value);
+                fileList.forEach(function(file, i) {
+                    var mockFile = {
+                        name: file.name,
+                        size: file.size,
+                        accepted: true
+                    };
+                    if (1 == file.thumbnail) {
+                        myDropzone.displayExistingFile(mockFile, aiThumbnail.replace("dummyFilename", file.filename));
+                    } else {
+                        myDropzone.displayExistingFile(mockFile, "", null, null, false);
+
+                    }
+                    var previewElement = dropzoneDiv.querySelector(".dz-preview:last-of-type");
+                    previewElement.dataset.aiTarget = item.name;
+                    previewElement.dataset.aiFilename = file.filename;
+                    previewElement.dataset.aiName = file.name;
+                    previewElement.dataset.aiSize = file.size;
+                    previewElement.dataset.aiThumbnail = file.thumbnail;
+                    myDropzone.files.push(mockFile);
+                    if (1 != file.thumbnail) {
+                        previewElement.querySelector(".dz-image img").removeAttribute("alt");
+                        previewElement.classList.add("dz-file-preview");
+                        previewElement.classList.remove("dz-image-preview");
+                    }
+                });
+            }
+
+            dropzoneDiv.addEventListener("click", function (event) {
+                if (event.target.classList.contains("dz-details") || event.target.closest(".dz-details")) {
+                    var detailElement = event.target.closest(".dz-details") ? event.target.closest(".dz-details") : event.target;
+                    var previewElement = detailElement.parentNode;
+                    var dropzoneDiv = previewElement.closest(".dropzone");
+                    if (previewElement.classList.contains("dz-error")) {
+                        // ファイルの削除
+                        var count = 0;
+                        var previewElements = previewElement.parentNode.querySelectorAll(".dz-preview");
+                        for (var i = 0; i < previewElements.length; i++) {
+                            if (previewElement === previewElements[i]) {
+                                break;
+                            }
+                            ++count;
+                        }
+                        var file = dropzoneDiv.dropzone.files[count];
+                        dropzoneDiv.dropzone.removeFile(file);
+                    } else {
+                        // ファイルへのリンク
+                        window.open(aiDownload.replace("dummyFilename", previewElement.dataset.aiFilename))
+                    }
+                }
+            });
+        });
     }).observe(document, {
         childList: true,
         subtree: true
     });
-    $('form').on('click', '.fileList .cancel', function(){
-        cancelUploaded(this);
-        return false;
-    })
-});
 </script>

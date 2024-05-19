@@ -102,13 +102,15 @@ trait UpdateTrait
     protected function validateUpdate()
     {
         list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.edit', $this->request);
-        if (!empty($rules)) {
-            $labels = $this->getLabel($this->viewPrefix.'.edit');
-            $this->request->validate($rules, $messages, $labels);
-            $validates = $this->getValidate($rules, $messages, $labels);
-            doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
-            doc(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.edit']);
+        if (empty($rules)) {
+            return;
         }
+
+        $labels = $this->getLabel($this->viewPrefix.'.edit');
+        $this->request->validate($rules, $messages, $labels);
+        $validates = $this->getValidate($rules, $messages, $labels);
+        doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
+        doc(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.edit']);
     }
 
     protected function prepareConfirmUpdate()
