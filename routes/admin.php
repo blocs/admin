@@ -23,7 +23,7 @@ Route::middleware(['web', 'auth'])
 
 Route::middleware(['web', 'auth'])
     ->prefix('admin/profile')
-    ->name('admin.profile.')
+    ->name('profile.')
     ->group(function () {
         Route::get('/{id}/edit', [ProfileController::class, 'edit'])->where('id', '[0-9]+')->name('edit');
         Route::post('/{id}', [ProfileController::class, 'update'])->where('id', '[0-9]+')->name('update');

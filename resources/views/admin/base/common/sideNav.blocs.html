@@ -1,5 +1,5 @@
 <!-- data-bloc="navProfile" -->
-    <!-- data-if="'admin.profile' === prefix()" -->
+    <!-- data-if="'profile' === prefix()" -->
     <!--
         $profileActive=true
         $breadcrumb=[[
@@ -14,14 +14,8 @@
         <!-- :class="nav-link text-white active" data-exist=$profileActive -->
         <!-- :aria-expanded="true" data-exist=$profileActive -->
         <a href="#ProfileNav" data-bs-toggle="collapse" class="nav-link text-white" role="button" aria-expanded="false" aria-controls="ProfileNav">
-            @php
-            if ($auth_file) {
-                $json = json_decode($auth_file, true);
-                isset($json[0]['filename']) && $auth_avator = route('admin.profile.thumbnail', ['filename' => $json[0]['filename'], 'size' => 'thumbnail']);
-            }
-            @endphp
-            <img :src=$auth_avator class="avatar" data-exist=$auth_avator />
-            <i class="fas fa-user-circle" data-none=$auth_avator></i>
+            <!-- data-val=$auth_file data-convert="raw_thumbnail:'avatar':'profile'" data-exist=$auth_file -->
+            <i class="fas fa-user-circle" data-none=$auth_file></i>
             <span class="nav-link-text ms-2 ps-1"><!-- $auth_name --></span>
         </a>
 
@@ -31,7 +25,7 @@
                 <!-- :class="nav-item active" data-exist=$profileActive -->
                 <li class="nav-item">
                     <!-- :class="nav-link text-white active" data-exist=$profileActive -->
-                    <a :href=route("admin.profile.edit", ["id" => $auth_id]) class="nav-link text-white">
+                    <a :href=route("profile.edit", ["id" => $auth_id]) class="nav-link text-white">
                         <i class="fas fa-cog"></i> <span class="sidenav-normal ms-3 ps-1"><!-- data-lang="template:admin_menu_profile" --></span>
                     </a>
                 </li>
@@ -54,7 +48,7 @@
     </li>
 
     <li class="nav-item mt-0 mb-2">
-        <!-- data-include="navLink" $depth=2 data-none=$sub -->
+        <!-- data-include="navLink" $depth=2 data-unless="isset($sub)" -->
         <!-- data-include="navItem" $depth=2 data-exist=$sub -->
 
         <!-- :class="collapse show" data-exist=$active -->
@@ -62,7 +56,7 @@
             <ul class="nav">
                 <!-- :class="nav-item active" data-if="$active && 1 == $child" -->
                 <li class="nav-item" data-loop=$sub data-assign=$subMenu>
-                    <!-- data-include="navLink" $depth=3 data-none=$subMenu["sub"] -->
+                    <!-- data-include="navLink" $depth=3 data-unless="isset($subMenu["sub"])" -->
                     <!-- data-include="navSub2" data-exist=$subMenu["sub"] -->
                 </li>
             </ul>
