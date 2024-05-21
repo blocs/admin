@@ -221,7 +221,7 @@ class Develop extends Command
             $replaceItem['HEAD_HTML'] .= "        <th class='col-xs-1'>".$form['label'].'</th>'."\n";
 
             $replaceItem['BODY_HTML'] .= '        <td><!-- $'.$replaceItem['SINGULAR_ITEM'].'->'.$formName;
-            'upload' === $form['type'] && $replaceItem['BODY_HTML'] .= " data-convert='raw_upload'";
+            'upload' === $form['type'] && $replaceItem['BODY_HTML'] .= " data-convert='raw_download'";
             $replaceItem['BODY_HTML'] .= ' --></td>'."\n";
 
             $form['name'] = $formName;
