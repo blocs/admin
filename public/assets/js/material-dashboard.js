@@ -1567,9 +1567,9 @@ var material = {
         showCloseButton: true,
         showCancelButton: true,
         focusConfirm: false,
-        confirmButtonText: '<i class="fa fa-thumbs-up"></i> Great!',
+        confirmButtonText: '<i class="fa-solid fa-thumbs-up"></i> Great!',
         confirmButtonAriaLabel: 'Thumbs up, great!',
-        cancelButtonText: '<i class="fa fa-thumbs-down"></i>',
+        cancelButtonText: '<i class="fa-solid fa-thumbs-down"></i>',
         cancelButtonAriaLabel: 'Thumbs down'
       })
     } else if (type == 'rtl-language') {
