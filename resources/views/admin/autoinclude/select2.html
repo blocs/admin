@@ -1,19 +1,22 @@
 <!-- data-include="jquery.html" -->
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" integrity="sha512-nMNlpuaDPrqlEls3IX/Q56H36qvBASwb3ipuo3MxeWbsQB1881ox0cRv7UPTgBlriqoynt35KjEwgGUeUXIPnw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js" integrity="sha512-2ImtlRlf2VVmiGZsjm9bEyhjGW4dU7B6TNwh/hx/iSByxNENtj3WVE6o/9Lj4TJeVXPi4bnOIMXFIJJAeufa0A==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/i18n/ja.min.js" integrity="sha512-F3rumY/Kl8PDQPZarAHVxniZnEz60v6B/RMrZDrwjPCIDWQsJoeFpef/Mzx09CebCWPHvrI097BbQ1GtP+P0SQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script type="text/javascript">
-$(function() {
     new MutationObserver((mutations) => {
-        $('.ai-select2').each(function(){
-            $(this).select2({
-                tags: true
-            });
-        }).removeClass('ai-select2');
+        $(".ai-select2").each(function(){
+            $(this).removeClass("ai-select2");
+            $(this).select2();
+            $(this).on("select2:close", function(){
+                if ($(this).val().length) {
+                    $(this).closest(".input-group").addClass("is-filled");
+                } else {
+                    $(this).closest(".input-group").removeClass("is-filled");
+                }
+            })
+        });
     }).observe(document, {
         childList: true,
         subtree: true
     });
-});
 </script>
