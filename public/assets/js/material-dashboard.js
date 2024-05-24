@@ -666,7 +666,7 @@ window.onload = function() {
   var inputs = document.querySelectorAll('input, textarea, select');
 
   for (var i = 0; i < inputs.length; i++) {
-    if (inputs[i].hasAttribute('value')) {
+    if ((typeof inputs[i].value !== 'undefined' && inputs[i].value) || inputs[i].hasAttribute('value')) {
       inputs[i].parentElement.classList.add('is-filled');
     }
     inputs[i].addEventListener('focus', function(e) {

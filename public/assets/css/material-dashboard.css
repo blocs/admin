@@ -20028,7 +20028,7 @@ body.dark-version {
 }
 .form-check:not(.form-switch) .form-check-input[type=checkbox]:after {
   transition: opacity 0.25s ease-in-out;
-  font-family: "FontAwesome";
+  font-family: "Font Awesome 6 Free";
   content: "\f00c";
   width: 100%;
   height: 100%;
@@ -21777,7 +21777,7 @@ body:not(.dark-version) .sidenav.bg-transparent .collapse .nav-item .nav-link.ac
   font-variant: normal;
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
-  font-family: "Font Awesome 5 Free";
+  font-family: "Font Awesome 6 Free";
   font-weight: 700;
   content: "\f107";
   margin-left: auto;
@@ -34836,4 +34836,77 @@ image, text, .jvm-zoomin, .jvm-zoomout {
 .button-bottom .btn {
   margin-top: 0 !important;
   margin-bottom: 0 !important;
+}
+
+.dropzone .dz-preview .dz-details {
+  cursor: pointer;
+}
+
+.input-group-outline .select2-container .select2-selection--single {
+  height: auto;
+}
+
+.input-group-outline .select2-container .select2-selection--single .select2-selection__rendered {
+  padding: 0;
+}
+
+.input-group-outline .select2-container .select2-selection--single .select2-selection__rendered::after {
+  content: "";
+  display: inline-block;
+}
+
+.input-group-outline .select2-container--default .select2-selection--single {
+  background: none;
+  border: 1px solid #d2d6da;
+  border-radius: 0.375rem;
+  border-top-left-radius: 0.375rem !important;
+  border-bottom-left-radius: 0.375rem !important;
+  padding: 0.625rem 0.625rem !important;
+  line-height: 1.5 !important;
+  font-size: var(--bs-body-font-size);
+}
+
+.input-group-outline.is-filled .select2-container--default .select2-selection--single {
+  border-top-color: transparent !important;
+}
+
+.input-group-outline.is-filled .select2-container--default .select2-selection--single {
+  border-color: var(--bs-primary);
+  box-shadow: inset 1px 0 var(--bs-primary), inset -1px 0 var(--bs-primary), inset 0 -1px var(--bs-primary);
+}
+
+.input-group-outline .select2-container--default .select2-selection--single .select2-selection__rendered {
+  line-height: 1.5 !important;
+}
+
+.input-group-outline .select2-container--default .select2-selection--single .select2-selection__arrow {
+  top: 11px;
+}
+
+.input-group-outline .select2-container .select2-selection--multiple {
+  background: none;
+  border: 1px solid #d2d6da;
+  border-radius: 0.375rem;
+  border-top-left-radius: 0.375rem !important;
+  border-bottom-left-radius: 0.375rem !important;
+  padding: 0.25rem 0 !important;
+  line-height: 1.5 !important;
+  font-size: var(--bs-body-font-size);
+}
+
+.input-group-outline.is-filled .select2-container .select2-selection--multiple {
+  border-top-color: transparent !important;
+}
+
+.input-group-outline.is-filled .select2-container--default .select2-selection--multiple {
+  border-color: var(--bs-primary);
+  box-shadow: inset 1px 0 var(--bs-primary), inset -1px 0 var(--bs-primary), inset 0 -1px var(--bs-primary);
+}
+
+.input-group-outline .select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background-color: #fff;
+}
+
+.input-group-outline .select2-container--default.select2-container--focus .select2-selection--multiple {
+  border-color: #d2d6da;
 }
