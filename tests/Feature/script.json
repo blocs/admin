@@ -103,6 +103,7 @@
         "method": "post",
         "uri": "\/admin\/user\/<id>",
         "query": {
+            "email": "<email>",
             "name": "<fake.name>"
         },
         "assertSee_0": "「<email>」を更新しました。"
@@ -143,6 +144,7 @@
         "method": "post",
         "uri": "\/admin\/profile\/<id>",
         "query": {
+            "email": "<email>",
             "name": "<fake.name>",
             "file": "[{\"filename\": \"<filename>\",\n\"name\": \"<name>\",\n\"size\": \"<size>\",\n\"thumbnail\": \"<thumbnail>\"}]"
         },
@@ -153,6 +155,7 @@
         "method": "post",
         "uri": "\/admin\/profile\/<id>",
         "query": {
+            "email": "<email>",
             "name": "<fake.name>"
         },
         "assertSee_0": "プロフィールを更新しました。"

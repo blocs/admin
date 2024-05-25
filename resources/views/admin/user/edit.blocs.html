@@ -9,7 +9,7 @@
     <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("email") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- data-lang="template:admin_profile_user_id" --></label>
-        <input type="text" name="email" class="form-control" readonly />
+        <input type="text" name="email" class="form-control" required />
     </div>
 
     <div class="row" data-exist=$option_role>
@@ -60,7 +60,10 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc="button_bottom_right" -->
-    <!-- data-include="modal_destroy" -->
+    <!--
+        data-include="modal_destroy"
+        $modalNoValidate=true
+    -->
 <!-- data-endbloc -->
 
 <!-- data-include="../base/entry/footer.blocs.html" -->
