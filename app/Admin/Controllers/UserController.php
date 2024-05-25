@@ -72,8 +72,8 @@ class UserController extends \Blocs\Controllers\Base
         return [
             'email' => $this->request->email,
             'name' => $this->val['name'],
-            'password' => bcrypt($this->request->password),
             'role' => $this->val['role'],
+            'password' => bcrypt($this->request->password),
         ];
     }
 }

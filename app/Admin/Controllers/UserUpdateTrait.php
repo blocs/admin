@@ -32,6 +32,8 @@ trait UserUpdateTrait
     {
         $requestData = [];
 
+        $requestData['email'] = $this->request->email;
+
         // nameの補完
         if ($this->request->has('name')) {
             $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
