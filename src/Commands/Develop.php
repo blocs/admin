@@ -200,8 +200,7 @@ class Develop extends Command
 
             $menuName = explode('.', $replaceItem['MENU_NAME']);
             array_pop($menuName);
-            $replaceItem['EDIT_NAME'] = implode('.', $menuName).'.edit';
-            $replaceItem['SELECT_NAME'] = implode('.', $menuName).'.select';
+            $replaceItem['PREFIX'] = implode('.', $menuName);
         }
 
         if (!empty($developJson['controller']['loopItem'])) {
@@ -212,7 +211,6 @@ class Develop extends Command
         $replaceItem['HEAD_HTML'] = '';
         $replaceItem['BODY_HTML'] = '';
 
-        $noticeItem = $developJson['controller']['noticeItem'] ?? '';
         $formHtml = file_get_contents(__DIR__.'/../../develop/form.blocs.html');
         $replaceItem['FORM_HTML'] = '';
 
@@ -225,7 +223,6 @@ class Develop extends Command
             $replaceItem['BODY_HTML'] .= ' --></td>'."\n";
 
             $form['name'] = $formName;
-            $form['noticeItem'] = ($noticeItem == $formName);
 
             if (!empty($form['option'])) {
                 $form['options'] = [];

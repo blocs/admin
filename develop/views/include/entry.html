@@ -1,25 +1,21 @@
-<!-- data-include='/admin/base/entry.html' -->
+<!-- data-include="/admin/base/entry/header.blocs.html" -->
 
-<!-- data-include='entry_hidden' data-exist -->
+<!-- data-include="entry_hidden" data-exist -->
 
-<table class='tbl1 table table-condensed'>
-    <thead>
-        <tr>
-            <th class='col-xs-4 col-sm-3'><!-- data-lang='template:admin_common_header_item' --></th>
-            <th class='col-xs-8 col-sm-9'><!-- data-lang='template:admin_common_header_form' --></th>
-        </tr>
-    </thead>
-    <tbody>
+<div class="card-body pt-2 d-flex flex-column gap-3">
 <!-- FORM_HTML -->
-    </tbody>
-</table>
+</div>
 
-<!-- data-include='entry_separator' -->
+<!-- data-bloc="button_bottom_left" -->
+    <!--
+        data-include="button_back"
+        $buttonHref=route("<!-- MENU_NAME -->")
+    -->
+    <!-- data-include="entry_left" data-exist -->
+<!-- data-endbloc -->
 
-<!--
-    data-include='button_back'
-    $buttonHref=route('<!-- MENU_NAME -->')
--->
-<!-- data-include='entry_modal' -->
+<!-- data-bloc="button_bottom_right" -->
+    <!-- data-include="entry_right" data-exist -->
+<!-- data-endbloc -->
 
-<!-- data-include='entry_footer' -->
+<!-- data-include="/admin/base/entry/footer.blocs.html" -->

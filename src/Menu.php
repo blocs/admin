@@ -150,7 +150,7 @@ class Menu
 
             $menuNameList = [];
             foreach ($configList[$menuName] as $menu) {
-                $menuNameList[] = $menu['name'];
+                isset($menu['name']) && $menuNameList[] = $menu['name'];
             }
 
             foreach ($config as $menu) {
