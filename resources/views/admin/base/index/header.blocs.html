@@ -43,7 +43,7 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc="sortHref" -->
-    <!-- :href=route("admin.user.index", ["sort[{$sortItem}]" => "asc"]) data-none=$sort[$sortItem] -->
-    <!-- :href=route("admin.user.index", ["sort[{$sortItem}]" => "desc"]) data-if="!empty($sort[$sortItem]) && $sort[$sortItem] === 'asc'" -->
-    <!-- :href=route("admin.user.index", ["sort[{$sortItem}]" => ""]) data-if="!empty($sort[$sortItem]) && $sort[$sortItem] === 'desc'" -->
+    <!-- :href=route(prefix().".index", ["sort[{$sortItem}]" => "asc"]) data-none=$sort[$sortItem] -->
+    <!-- :href=route(prefix().".index", ["sort[{$sortItem}]" => "desc"]) data-if="!empty($sort[$sortItem]) && $sort[$sortItem] === 'asc'" -->
+    <!-- :href=route(prefix().".index", ["sort[{$sortItem}]" => ""]) data-if="!empty($sort[$sortItem]) && $sort[$sortItem] === 'desc'" -->
 <!-- data-endbloc -->

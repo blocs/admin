@@ -80,7 +80,7 @@
                         <td class="d-none d-lg-table-cell">
                             <!-- $user->created_at->toDateString() data-convert="date" -->
                         </td>
-                        <td>
+                        <td class="text-nowrap">
                             <a class="me-3" data-bs-toggle="modal" data-bs-target="#modalActivate" :data-modalaction=route("admin.user.toggle", ["id" => $user->id]) data-exist=$user->disabled_at>
                                 <i class="fa-solid fa-check" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:admin_user_valid_title")></i>
                             </a>
