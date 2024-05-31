@@ -29,8 +29,7 @@
                                 <input type="checkbox" class="form-check-input" />
                             </div>
                         </th>
-<!-- HEAD_HTML -->
-                        <th class="w-1"></th>
+<!-- HEAD_HTML -->                        <th class="w-1"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -40,8 +39,7 @@
                                 <input type="checkbox" name="selectedRows[]" class="form-check-input" :value=$<!-- SINGULAR_ITEM -->->id />
                             </div>
                         </td>
-<!-- BODY_HTML -->
-                        <td>
+<!-- BODY_HTML -->                        <td class="text-nowrap">
                             <a class="me-3" data-bs-toggle="modal" data-bs-target="#modalActivate" :data-modalaction=route("<!-- PREFIX -->.toggle", ["id" => $<!-- SINGULAR_ITEM -->->id]) data-exist=$<!-- SINGULAR_ITEM -->->disabled_at>
                                 <i class="fa-solid fa-check" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:admin_user_valid_title")></i>
                             </a>
