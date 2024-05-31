@@ -2,120 +2,92 @@
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
-        <!-- data-attribute="required" data-exist=$required  -->
-        <input type="text" :id=$name :name=$name class="form-control" value="" />
+        <!-- data-attribute="required" data-exist=$required --><input type="text" :id=$name :name=$name class="form-control" value="" />
 
+        <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
-<!-- data-endif -->
-
-<!-- data-if="'textarea' === $type" -->
+<!-- data-endif --><!-- data-if="'textarea' === $type" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
-        <!-- data-attribute="required" data-exist=$required  -->
-        <textarea :id=$name :name=$name class="form-control" rows="5"></textarea>
+        <!-- data-attribute="required" data-exist=$required --><textarea :id=$name :name=$name class="form-control" rows="5"></textarea>
 
+        <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
-<!-- data-endif -->
-
-<!-- data-if="'select' === $type" -->
+<!-- data-endif --><!-- data-if="'datepicker' === $type" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
-        <!-- data-attribute="required" data-exist=$required  -->
-        <select :id=$name :name=$name class="form-control">
+        <!-- data-attribute="required" data-exist=$required --><input type="text" :id=$name :name=$name class="form-control ai-datepicker" value="" />
+
+        <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
+        @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
+    </div>
+<!-- data-endif --><!-- data-if="'select' === $type" -->
+    <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
+    <div class="input-group input-group-outline">
+        <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
+        <!-- data-attribute="required" data-exist=$required --><select :id=$name :name=$name class="form-control">
             <option value=""></option>
-            <!-- data-attribute="selected" data-if="isset($default) && $default == $value"  -->
-            <option data-loop=$options :value=$value><!-- $label --></option>
+            <!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><option data-loop=$option_ :value=$value><!-- $label --></option>
         </select>
 
+        <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
-<!-- data-endif -->
+<!-- data-endif --><!-- data-if="'select2' === $type" -->
+    <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
+    <div class="input-group input-group-outline">
+        <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
+        <!-- :name=$name data-none=$multiple --><!-- :name=$name."[]" data-exist=$multiple --><!-- data-attribute="required" data-exist=$required --><!-- data-attribute="multiple" data-exist=$multiple --><select :id=$name class="form-control ai-select2">
+            <!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><option data-loop=$option_ :value=$value><!-- $label --></option>
+        </select>
 
-<!-- data-if="'radio' === $type" -->
+        <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
+        @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
+    </div>
+<!-- data-endif --><!-- data-if="'radio' === $type" -->
     <div class="row">
         <label><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
-        <div class="col-auto p-1" data-loop=$options>
+        <div class="col-auto p-1" data-loop=$option_>
             <div class="form-check">
                 <label class="form-check-label">
-                    <!-- data-attribute="checked" data-if="isset($default) && $default == $value"  -->
-                    <input class="form-check-input" type="radio" :name=$name :value=$value /> <!-- $label data-convert="raw" -->
+                    <!-- data-attribute="checked" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><input class="form-check-input" type="radio" :name=$name :value=$value /> <!-- $label data-convert="raw" -->
                 </label>
             </div>
         </div>
 
-        <!-- data-exist=$required -->
-        <#-- !<!-- $name -->="required" -->
-        <!-- data-endexist -->
+        <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
-<!-- data-endif -->
-
-<!-- data-if="'checkbox' === $type" -->
+<!-- data-endif --><!-- data-if="'checkbox' === $type" -->
     <div class="row">
         <label><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
-        <div class="col-auto p-1" data-loop=$options>
+        <div class="col-auto p-1" data-loop=$option_>
             <div class="form-check">
                 <label class="form-check-label">
-                    <!-- :name=$name."[]" -->
-                    <!-- data-attribute="checked" data-if="isset($default) && $default == $value"  -->
-                    <input class="form-check-input" type="checkbox" :name=$name :value=$value /> <!-- $label data-convert="raw" -->
+                    <!-- data-attribute="checked" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><input class="form-check-input" type="checkbox" :name=$name."[]" :value=$value /> <!-- $label data-convert="raw" -->
                 </label>
             </div>
         </div>
 
-        <!-- data-exist=$required -->
-        <#-- !<!-- $name -->="required" -->
-        <!-- data-endexist -->
+        <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
-<!-- data-endif -->
-
-<!-- data-if="'select2' === $type" -->
-    <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
-    <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
-        <!-- :name=$name data-none=$multiple -->
-        <!-- :name=$name."[]" data-exist=$multiple -->
-        <!-- data-attribute="required" data-exist=$required  -->
-        <!-- data-attribute="multiple" data-exist=$multiple  -->
-        <select :id=$name class="form-control ai-select2">
-            <option value=""></option>
-            <!-- data-attribute="selected" data-if="isset($default) && $default == $value"  -->
-            <option data-loop=$options :value=$value><!-- $label --></option>
-        </select>
-
-        @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
-    </div>
-<!-- data-endif -->
-
-<!-- data-if="'datepicker' === $type" -->
-    <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
-    <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
-        <!-- data-attribute="required" data-exist=$required  -->
-        <input type="text" :id=$name :name=$name class="form-control ai-datepicker" value="" />
-
-        @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
-    </div>
-<!-- data-endif -->
-
-<!-- data-if="'upload' === $type" -->
+<!-- data-endif --><!-- data-if="'upload' === $type" -->
     <#-- 
         $uploadMessage=lang("template:admin_profile_upload_message")
         $uploadDelete=lang("template:admin_profile_upload_delete")
     -->
     <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
-    <!-- data-attribute="required" data-exist=$required  -->
-    <!-- data-attribute="multiple" data-exist=$multiple  -->
-    <input type="hidden" :id=$name :name=$name class="ai-upload" />
+    <!-- data-attribute="required" data-exist=$required --><!-- data-attribute="multiple" data-exist=$multiple --><input type="hidden" :id=$name :name=$name class="ai-upload" />
+
     <#-- !<!-- $name -->="mimes:jpg,jpeg,gif,png" data-lang="template:admin_profile_upload_image_only" -->
     <#-- !<!-- $name -->="max:200" data-lang="template:admin_profile_upload_too_large" -->
-
+    <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
     @error("<!-- $name -->") <#-- 
-        $uploadMessage="<span class='text-danger'><i class='fa-solid fa-exclamation-triangle'></i> 必須入力です。</span>"
+        $uploadMessage="<span class='text-danger'><i class='fa-solid fa-exclamation-triangle'></i> {$message}</span>"
     --> @enderror
 <!-- data-endif -->
