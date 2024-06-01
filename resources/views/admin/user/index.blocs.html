@@ -1,3 +1,9 @@
+<!-- $searchPlaceholder=lang("template:admin_user_search") -->
+<!-- data-bloc="searchFilter" -->
+<!-- data-endbloc -->
+
+<!-- $unselectable=0 -->
+
 <!-- data-bloc="button_top_left" -->
     <!-- data-include="button_create" -->
 <!-- data-endbloc -->
@@ -6,15 +12,11 @@
     <!--
         data-include="modal_destroy"
         $modalAction=route("admin.user.select")
-        data-exist=$isLoop
+        data-if="$isLoop && empty($unselectable)"
     -->
 <!-- data-endbloc -->
 
-<!-- $searchPlaceholder=lang("template:admin_user_search") -->
-<!-- data-bloc="searchFilter" -->
-<!-- data-endbloc -->
-
-<!-- data-include="../base/index/header.blocs.html" -->
+<!-- data-include="/admin/base/index/header.blocs.html" -->
 
 <div class="dataTable-wrapper no-footer" data-exist=$isLoop>
     <div class="dataTable-container">
@@ -22,7 +24,7 @@
             <table class="table dataTable-table">
                 <thead class="thead-light">
                     <tr>
-                        <th class="w-1">
+                        <th class="w-1" data-none=$unselectable>
                             <div class="form-check p-0 fs-6">
                                 <input type="checkbox" class="form-check-input" />
                             </div>
@@ -64,7 +66,7 @@
                 </thead>
                 <tbody>
                     <tr data-loop=$users>
-                        <td>
+                        <td data-none=$unselectable>
                             <div class="form-check p-0 fs-6">
                                 <input type="checkbox" name="selectedRows[]" class="form-check-input" :value=$user->id />
                             </div>
@@ -100,7 +102,7 @@
         </div>
     </div>
     <!-- data-exist=$paginate -->
-    {{ $paginate->links(ADMIN_VIEW_PREFIX.".base.index.pagination") }}
+    {{ $paginate->links("admin.base.index.pagination") }}
     <!-- data-endexist -->
 </div>
 
@@ -147,4 +149,4 @@
     data-exist=$isLoop
 -->
 
-<!-- data-include="../base/index/footer.blocs.html" -->
+<!-- data-include="/admin/base/index/footer.blocs.html" -->
