@@ -1,3 +1,9 @@
+<!-- $searchPlaceholder="" -->
+<!-- data-bloc="searchFilter" -->
+<!-- data-endbloc -->
+
+<!-- $unselectable=0 -->
+
 <!-- data-bloc="button_top_left" -->
     <!-- data-include="button_create" -->
 <!-- data-endbloc -->
@@ -6,15 +12,9 @@
     <!--
         data-include="modal_destroy"
         $modalAction=route("<!-- PREFIX -->.select")
-        data-exist=$isLoop
+        data-if="$isLoop && empty($unselectable)"
     -->
 <!-- data-endbloc -->
-
-<!-- $searchPlaceholder="" -->
-<!-- data-bloc="searchFilter" -->
-<!-- data-endbloc -->
-
-<!-- $unselectable=0 -->
 
 <!-- data-include="/admin/base/index/header.blocs.html" -->
 
@@ -24,7 +24,7 @@
             <table class="table dataTable-table">
                 <thead class="thead-light">
                     <tr>
-                        <th class="w-1">
+                        <th class="w-1" data-none=$unselectable>
                             <div class="form-check p-0 fs-6">
                                 <input type="checkbox" class="form-check-input" />
                             </div>
@@ -34,7 +34,7 @@
                 </thead>
                 <tbody>
                     <tr data-loop=$<!-- LOOP_ITEM -->>
-                        <td>
+                        <td data-none=$unselectable>
                             <div class="form-check p-0 fs-6">
                                 <input type="checkbox" name="selectedRows[]" class="form-check-input" :value=$<!-- SINGULAR_ITEM -->->id />
                             </div>
