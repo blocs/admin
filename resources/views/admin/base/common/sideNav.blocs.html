@@ -25,6 +25,7 @@
                 <!-- :class="nav-item active" data-exist=$profileActive -->
                 <li class="nav-item">
                     <!-- :class="nav-link text-white active" data-exist=$profileActive -->
+                    <!-- $auth_id=0 data-none=$auth_id -->
                     <a :href=route("profile.edit", ["id" => $auth_id]) class="nav-link text-white">
                         <i class="fa-solid fa-cog"></i> <span class="sidenav-normal ms-3 ps-1"><!-- data-lang="template:admin_menu_profile" --></span>
                     </a>
