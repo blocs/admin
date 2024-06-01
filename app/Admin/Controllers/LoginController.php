@@ -48,7 +48,7 @@ class LoginController extends Controller
         $this->redirectTo = $GLOBALS['ADMIN_LOGIN_REDIRECT_TO'];
         $this->middleware(RedirectIfAuthenticated::class)->except('logout');
 
-        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.auth';
+        $this->viewPrefix = 'admin.auth';
     }
 
     public function showLoginForm()

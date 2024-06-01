@@ -8,7 +8,7 @@ class UserController extends \Blocs\Controllers\Base
 
     public function __construct()
     {
-        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.user';
+        $this->viewPrefix = 'admin.user';
         $this->mainTable = 'App\Models\Admin\User';
         $this->loopItem = 'users';
         $this->paginateNum = 20;
