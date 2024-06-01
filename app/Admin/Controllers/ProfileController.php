@@ -8,7 +8,7 @@ class ProfileController extends \Blocs\Controllers\Base
 
     public function __construct()
     {
-        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.profile';
+        $this->viewPrefix = 'admin.profile';
         $this->mainTable = 'App\Models\Admin\User';
         $this->noticeItem = 'email';
     }

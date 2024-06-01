@@ -10,7 +10,7 @@ class HomeController extends \Blocs\Controllers\Base
 
     public function __construct()
     {
-        $this->viewPrefix = ADMIN_VIEW_PREFIX.'.home';
+        $this->viewPrefix = 'admin.home';
     }
 
     public function index()
