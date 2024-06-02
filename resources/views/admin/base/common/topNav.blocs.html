@@ -13,12 +13,13 @@
             <div class="ms-md-auto pe-md-3 d-flex align-items-center">
             </div>
             <ul class="navbar-nav justify-content-end align-items-center">
+                @auth
                 <li class="nav-item">
-                    <!-- $auth_id=0 data-none=$auth_id -->
                     <a :href=route("profile.edit", ["id" => $auth_id]) class="nav-link px-2">
                         <i class="fa-solid fa-user-circle"></i>
                     </a>
                 </li>
+                @endauth
                 <li class="nav-item">
                     <a class="nav-link px-2" id="iconNavbarSidenav">
                         <div class="sidenav-toggler sidenav-toggler-inner">
