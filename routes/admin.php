@@ -4,7 +4,7 @@ use App\Admin\Controllers\HomeController;
 use App\Admin\Controllers\LoginController;
 use App\Admin\Controllers\ProfileController;
 use App\Admin\Controllers\UserController;
-use Blocs\Middleware\UserRole;
+use Blocs\Middleware\Role;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['web'])
@@ -33,7 +33,7 @@ Route::middleware(['web', 'auth'])
     }
     );
 
-Route::middleware(['web', 'auth', UserRole::class])
+Route::middleware(['web', 'auth', Role::class])
     ->prefix('admin/user')
     ->name('admin.user.')
     ->group(function () {

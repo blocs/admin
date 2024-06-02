@@ -5,7 +5,7 @@ namespace Blocs\Middleware;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class UserRole
+class Role
 {
     public function handle(Request $request, \Closure $next): Response
     {
