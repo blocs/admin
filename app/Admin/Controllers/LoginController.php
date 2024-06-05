@@ -3,7 +3,6 @@
 namespace App\Admin\Controllers;
 
 use App\Http\Controllers\Controller;
-use Blocs\Middleware\RedirectIfAuthenticated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -46,13 +45,16 @@ class LoginController extends Controller
         // $GLOBALS['ADMIN_LOGOUT_REDIRECT_TO'] = '';
 
         $this->redirectTo = $GLOBALS['ADMIN_LOGIN_REDIRECT_TO'];
-        $this->middleware(RedirectIfAuthenticated::class)->except('logout');
 
         $this->viewPrefix = 'admin.auth';
     }
 
     public function showLoginForm()
     {
+        if ($this->guard()->check()) {
+            return redirect($GLOBALS['ADMIN_LOGIN_REDIRECT_TO']);
+        }
+
         $view = view($this->viewPrefix.'.login');
         unset($this->val, $this->request, $this->tableData);
         doc('テンプレートを読み込んで、HTMLを生成');
