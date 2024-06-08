@@ -30,7 +30,6 @@
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><select :id=$name :name=$name class="form-control">
-            <option value=""></option>
             <!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><option data-loop=$option_ :value=$value><!-- $label --></option>
         </select>
 
