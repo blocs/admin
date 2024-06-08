@@ -1,7 +1,6 @@
 use App\Http\Controllers\CONTROLLER_NAME;
-use Blocs\Middleware\Role;
 
-Route::middleware(['auth', Role::class])
+Route::middleware(['auth', \Blocs\Middleware\Role::class])
     ->prefix('ROUTE_PREFIX')
     ->name('ROUTE_NAME')
     ->group(function () {
