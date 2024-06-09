@@ -8,7 +8,9 @@ $config = [
     ],
     'index' => [
         'description' => '一覧画面表示',
-        'neglect' => [1],
+        'neglect' => [
+            'GETに<検索ワード>があれば、セッションに保存',
+        ],
         'keyword' => [],
         'comment' => [],
     ],
