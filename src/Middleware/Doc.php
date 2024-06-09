@@ -53,8 +53,6 @@ class Doc
                     $contents = str_replace(["\r\n", "\r", "\n"], '', $response->getContent());
                     if (preg_match('/<title>(.*?)<\/title>/i', $contents, $match)) {
                         $steps[$endNo]['out'] = ['HTML' => trim($match[1])];
-                    } else {
-                        $steps[$endNo]['out'] = 'HTML';
                     }
                 }
             }
