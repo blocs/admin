@@ -43,6 +43,12 @@ class Develop extends Command
 
         // ビュー作成
         empty($developJson['controller']['viewPrefix']) || $this->makeView($developJson);
+
+        // テスト作成
+        empty($developJson['controller']['modelName']) || $this->makeTest($developJson);
+
+        // ドキュメント作成
+        empty($developJson['controller']['controllerName']) || $this->makeDoc($developJson);
     }
 
     private function makeController($developJson)
@@ -242,6 +248,81 @@ class Develop extends Command
         }
 
         $this->copyDir(__DIR__.'/../../develop/views', $viewPath, $replaceItem);
+    }
+
+    private function makeTest($developJson)
+    {
+        $modelName = $developJson['controller']['modelName'];
+        $testPath = base_path("tests/Feature/{$modelName}Test.php");
+
+        if (file_exists($testPath)) {
+            return;
+        }
+
+        $tests = file_get_contents(__DIR__.'/../../develop/tests.php');
+
+        $tests = str_replace('TEST_NAME', "{$modelName}Test", $tests);
+
+        foreach ($developJson['controller'] as $key => $value) {
+            // キーを変換
+            $key = strtoupper(Str::snake($key));
+            $tests = str_replace($key, $value, $tests);
+        }
+
+        foreach ($developJson['route'] as $key => $value) {
+            // キーを変換
+            $key = strtoupper(Str::snake($key));
+            $tests = str_replace($key, $value, $tests);
+        }
+
+        $formList = [];
+        foreach ($developJson['entry'] as $formName => $form) {
+            if ('datepicker' == $form['type']) {
+                $formValue = '2024-06-10';
+            } elseif ('select' == $form['type'] || 'select2' == $form['type'] || 'radio' == $form['type'] || 'checkbox' == $form['type']) {
+                $formValue = '0';
+            } elseif ('upload' == $form['type']) {
+                $formValue = '';
+            } else {
+                $formValue = 'test';
+            }
+
+            $formList[] = "{$formName}' => '{$formValue}";
+        }
+        $tests = str_replace('FORM_LIST', $this->getList($formList, ",\n            ", "'"), $tests);
+
+        file_put_contents($testPath, $tests);
+        echo "Make test \"{$testPath}\"\n";
+    }
+
+    private function makeDoc($developJson)
+    {
+        $controllerName = $developJson['controller']['controllerName'];
+        $docsPath = base_path("docs/{$controllerName}.php");
+
+        if (file_exists($docsPath)) {
+            return;
+        }
+
+        $docs = file_get_contents(__DIR__.'/../../develop/docs.php');
+
+        empty($developJson['menu']['lang']) && $developJson['menu']['lang'] = '';
+        $docs = str_replace('MENU_LANG', $developJson['menu']['lang'], $docs);
+
+        foreach ($developJson['controller'] as $key => $value) {
+            // キーを変換
+            $key = strtoupper(Str::snake($key));
+            $docs = str_replace($key, $value, $docs);
+        }
+
+        $formList = [];
+        foreach ($developJson['entry'] as $formName => $form) {
+            $formList[] = "{$formName}' => '".$form['label'];
+        }
+        $docs = str_replace('FORM_LIST', $this->getList($formList, ",\n        ", "'"), $docs);
+
+        file_put_contents($docsPath, $docs);
+        echo "Make doc \"{$docsPath}\"\n";
     }
 
     private function getList($form, $separator, $quote = '')
