@@ -11,7 +11,6 @@ class Doc
 {
     private $keyword;
     private $neglect;
-    private $headline;
     private $comment;
 
     public function handle(Request $request, \Closure $next): Response
@@ -63,7 +62,9 @@ class Doc
 
         foreach ($steps as $stepNo => $step) {
             // 非表示行
-            if (in_array($stepNo, $this->neglect)) {
+            $stepMain = implode('', $step['main']);
+            $stepMain = $this->replaceMain($stepMain);
+            if ($this->checkNeglect($stepMain)) {
                 continue;
             }
 
@@ -113,33 +114,27 @@ class Doc
             $comments = explode("\n", $main);
             $main = array_shift($comments);
 
-            $headline = in_array($line + 1, $this->headline);
-            if (!$headline) {
-                // #から始まると見出し
-                $headline = !strncmp($main, '#', 1);
-                $headline && $main = trim(substr($main, 1));
-            }
+            // #から始まると見出し
+            $headline = !strncmp($main, '#', 1);
+            $headline && $main = trim(substr($main, 1));
 
             $column = $headline ? 'K' : 'L';
+            $main = $this->replaceMain($main);
             if ($headline) {
-                $headlineIndentNo = $headlineNo;
-
                 // 見出し
-                $excel->set(1, $column, $line, $headlineNo.'. '.$this->replaceMain($main));
+                $excel->set(1, $column, $line, $headlineNo.'. '.$main);
                 ++$headlineNo;
                 $indentNo = 1;
             } else {
-                $headlineIndentNo = ($headlineNo - 1).'.'.$indentNo;
-
                 // インデント
-                $excel->set(1, $column, $line, $indentNo.') '.$this->replaceMain($main));
+                $excel->set(1, $column, $line, $indentNo.') '.$main);
                 ++$indentNo;
             }
             ++$line;
 
             // 追加コメントを記述
             $column = $headline ? 'L' : 'M';
-            isset($this->comment[$headlineIndentNo]) && $comments = array_merge($comments, explode("\n", $this->comment[$headlineIndentNo]));
+            ($addComment = $this->checkComment($main)) && $comments = array_merge($comments, explode("\n", $addComment));
 
             // バリデーション
             count($step['validate']) && $comments[] .= '<入力値>: <条件>: <メッセージ>';
@@ -187,7 +182,6 @@ class Doc
         $config = [];
         $keyword = [];
         $neglect = [];
-        $headline = [];
         $comment = [];
 
         if (file_exists(base_path('docs/common.php'))) {
@@ -215,9 +209,6 @@ class Doc
             isset($config['neglect']) && $neglect = array_merge($neglect, $config['neglect']);
             isset($config[$routeMethod]['neglect']) && $neglect = array_merge($neglect, $config[$routeMethod]['neglect']);
 
-            // インデント行を取得
-            isset($config[$routeMethod]['headline']) && $headline = $this->getHeadline($config[$routeMethod]['headline']);
-
             // 追加コメントを取得
             isset($config['comment']) && $comment = $this->mergeArray($comment, $config['comment']);
             isset($config[$routeMethod]['comment']) && $comment = $this->mergeArray($comment, $config[$routeMethod]['comment']);
@@ -225,7 +216,6 @@ class Doc
 
         $this->keyword = $keyword;
         $this->neglect = $neglect;
-        $this->headline = $headline;
         $this->comment = $comment;
     }
 
@@ -258,28 +248,32 @@ class Doc
         return $item;
     }
 
-    private function getHeadline($configHeadlines)
+    private function checkNeglect($item)
     {
-        $headline = [];
-        foreach ($configHeadlines as $configHeadline) {
-            if (preg_match('/^[0-9]+$/', $configHeadline)) {
-                // 行指定
-                $headline[] = $configHeadline;
-            } elseif (preg_match('/^[0-9\-]+$/', $configHeadline)) {
-                // 範囲指定
-                list($start, $end) = explode('-', $configHeadline);
-                $start || $start = 1;
-                if ($start > $end) {
-                    continue;
-                }
+        $item = preg_replace("/\s/", '', $item);
+        foreach ($this->neglect as $neglect) {
+            $neglect = preg_replace("/\s/", '', $neglect);
 
-                while ($start <= $end) {
-                    $headline[] = intval($start);
-                    ++$start;
-                }
+            if (false !== strpos($item, $neglect)) {
+                return true;
             }
         }
 
-        return $headline;
+        return false;
+    }
+
+    private function checkComment($item)
+    {
+        $item = preg_replace("/\s/", '', $item);
+        $commentKeys = array_keys($this->comment);
+        foreach ($commentKeys as $commentKey) {
+            $commentKey = preg_replace("/\s/", '', $commentKey);
+
+            if (false !== strpos($item, $commentKey)) {
+                return $this->comment[$commentKey];
+            }
+        }
+
+        return false;
     }
 }
