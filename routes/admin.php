@@ -32,7 +32,7 @@ Route::middleware(['web', 'auth'])
     }
     );
 
-Route::middleware(['web', 'auth', \Blocs\Middleware\Role::class])
+Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
     ->prefix('admin/user')
     ->name('admin.user.')
     ->group(function () {
