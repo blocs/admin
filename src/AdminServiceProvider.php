@@ -58,17 +58,17 @@ class AdminServiceProvider extends ServiceProvider
 
         $this->commands('command.blocs.admin');
 
-        $this->app->singleton('command.blocs.build', function ($app) {
-            return new Commands\Build('blocs:build {path}', 'Build static contents');
-        });
-
-        $this->commands('command.blocs.build');
-
         $this->app->singleton('command.blocs.develop', function ($app) {
             return new Commands\Develop('blocs:develop {path}', 'Develop application');
         });
 
         $this->commands('command.blocs.develop');
+
+        $this->app->singleton('command.blocs.migrate', function ($app) {
+            return new Commands\Migrate();
+        });
+
+        $this->commands('command.blocs.migrate');
     }
 
     public function registerPublish()

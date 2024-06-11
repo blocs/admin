@@ -15,7 +15,6 @@ return new class() extends Migration {
             $table->timestamp('disabled_at')->nullable();
             $table->text('role')->nullable();
             $table->text('file')->nullable();
-            $table->string('filename', 32)->nullable();
             $table->dropUnique(['email']);
         });
     }
@@ -30,7 +29,6 @@ return new class() extends Migration {
             $table->dropColumn('disabled_at');
             $table->dropColumn('role');
             $table->dropColumn('file');
-            $table->dropColumn('filename');
             $table->unique(['email']);
         });
     }

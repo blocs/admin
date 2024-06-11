@@ -130,7 +130,7 @@ class Develop extends Command
         $loopItem = $developJson['controller']['loopItem'];
         $migrationPath = 'create_'.$loopItem.'_table.php';
 
-        if ($migrations = glob(database_path('migrations').'/*_'.$migrationPath)) {
+        if ($migrations = glob(database_path('migrations/*_'.$migrationPath))) {
             $migrationPath = $migrations[0];
             echo 'Migrate "'.basename($migrationPath).'" ? ';
 
@@ -142,7 +142,7 @@ class Develop extends Command
             return;
         }
 
-        $migrationPath = database_path('migrations').'/'.date('Y_m_d').'_000000_'.$migrationPath;
+        $migrationPath = database_path('migrations/'.date('Y_m_d').'_000000_'.$migrationPath);
 
         // テーブル定義作成
         $migration = file_get_contents(__DIR__.'/../../develop/migration.php');
