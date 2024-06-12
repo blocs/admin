@@ -11,7 +11,7 @@
 <!-- data-bloc="button_top_right" -->
     <!--
         data-include="modal_destroy"
-        $modalAction=route("<!-- PREFIX -->.select")
+        $modalAction=route(prefix().".select")
         data-if="$isLoop && empty($unselectable)"
     -->
 <!-- data-endbloc -->
@@ -40,16 +40,16 @@
                             </div>
                         </td>
 <!-- BODY_HTML -->                        <td class="text-nowrap">
-                            <a class="me-3" data-bs-toggle="modal" data-bs-target="#modalActivate" :data-modalaction=route("<!-- PREFIX -->.toggle", ["id" => $<!-- SINGULAR_ITEM -->->id]) data-exist=$<!-- SINGULAR_ITEM -->->disabled_at>
+                            <a class="me-3" data-bs-toggle="modal" data-bs-target="#modalActivate" :data-modalaction=route(prefix().".toggle", ["id" => $<!-- SINGULAR_ITEM -->->id]) data-exist=$<!-- SINGULAR_ITEM -->->disabled_at>
                                 <i class="fa-solid fa-check" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:admin_user_valid_title")></i>
                             </a>
-                            <a class="me-3" data-bs-toggle="modal" data-bs-target="#modalInactivate" :data-modalaction=route("<!-- PREFIX -->.toggle", ["id" => $<!-- SINGULAR_ITEM -->->id]) data-none=$<!-- SINGULAR_ITEM -->->disabled_at>
+                            <a class="me-3" data-bs-toggle="modal" data-bs-target="#modalInactivate" :data-modalaction=route(prefix().".toggle", ["id" => $<!-- SINGULAR_ITEM -->->id]) data-none=$<!-- SINGULAR_ITEM -->->disabled_at>
                                 <i class="fa-solid fa-ban" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:admin_user_invalid_title")></i>
                             </a>
-                            <a :href=route("<!-- PREFIX -->.edit", ["id" => $<!-- SINGULAR_ITEM -->->id]) class="me-3">
+                            <a :href=route(prefix().".edit", ["id" => $<!-- SINGULAR_ITEM -->->id]) class="me-3">
                                 <i class="fa-solid fa-pen" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:resource_blocs_modal_update_title")></i>
                             </a>
-                            <a class="me-3" data-bs-toggle="modal" data-bs-target="#modalDelete" :data-modalaction=route("<!-- PREFIX -->.destroy", ["id" => $<!-- SINGULAR_ITEM -->->id])>
+                            <a class="me-3" data-bs-toggle="modal" data-bs-target="#modalDelete" :data-modalaction=route(prefix().".destroy", ["id" => $<!-- SINGULAR_ITEM -->->id])>
                                 <i class="fa-solid fa-trash" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:resource_blocs_modal_delete_title")></i>
                             </a>
                         </td>

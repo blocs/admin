@@ -201,14 +201,6 @@ class Develop extends Command
 
         // フォームの追加
         $replaceItem = [];
-        if (!empty($developJson['menu']['name'])) {
-            $replaceItem['MENU_NAME'] = $developJson['menu']['name'];
-
-            $menuName = explode('.', $replaceItem['MENU_NAME']);
-            array_pop($menuName);
-            $replaceItem['PREFIX'] = implode('.', $menuName);
-        }
-
         if (!empty($developJson['controller']['loopItem'])) {
             $replaceItem['LOOP_ITEM'] = $developJson['controller']['loopItem'];
             $replaceItem['SINGULAR_ITEM'] = \Str::singular($developJson['controller']['loopItem']);
