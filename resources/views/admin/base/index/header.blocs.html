@@ -1,5 +1,7 @@
 <!-- data-bloc="form_start" -->
-<form method="post" :action=route(prefix().".search") role="search">
+<!-- :action=route(prefix().".search") data-exist=$searchPlaceholder -->
+<!-- :role="search" data-exist=$searchPlaceholder -->
+<form method="post">
     @csrf
     <!--
         data-include="button"
