@@ -292,7 +292,7 @@ class Develop extends Command
         $controllerName = $developJson['controller']['controllerName'];
         $docsPath = base_path("docs/{$controllerName}.php");
 
-        if (file_exists($docsPath)) {
+        if (!is_dir(base_path('docs')) || file_exists($docsPath)) {
             return;
         }
 
