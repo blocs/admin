@@ -17,7 +17,8 @@
         }
     ],
     "require": {
-        "blocs\/blocs": "*"
+        "blocs\/blocs": "*",
+        "blocs\/docs": "*"
     },
     "extra": {
         "laravel": {
