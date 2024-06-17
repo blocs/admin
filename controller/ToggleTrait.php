@@ -6,7 +6,7 @@ trait ToggleTrait
 {
     public function toggle($id)
     {
-        doc('# データの更新');
+        docs('# データの更新');
 
         $this->getCurrent($id);
         $this->val['id'] = $id;
@@ -21,9 +21,9 @@ trait ToggleTrait
             \DB::rollBack();
             throw $e;
         }
-        doc(['GET' => 'id', 'データベース' => $this->loopItem], "idを指定してデータを更新\nデータ有効ならば無効に、無効ならば有効に変更", ['データベース' => $this->loopItem]);
+        docs(['GET' => 'id', 'データベース' => $this->loopItem], "idを指定してデータを更新\nデータ有効ならば無効に、無効ならば有効に変更", ['データベース' => $this->loopItem]);
 
-        doc('# 画面遷移');
+        docs('# 画面遷移');
 
         return $this->outputToggle();
     }

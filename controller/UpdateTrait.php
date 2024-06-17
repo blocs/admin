@@ -8,7 +8,7 @@ trait UpdateTrait
 {
     public function edit($id)
     {
-        doc(['GET' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
+        docs(['GET' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
@@ -24,7 +24,7 @@ trait UpdateTrait
             $this->val = array_merge($this->val, session($this->viewPrefix.'.confirm'));
         }
 
-        doc('# 画面表示');
+        docs('# 画面表示');
 
         return $this->outputEdit();
     }
@@ -40,7 +40,7 @@ trait UpdateTrait
 
         $view = view($this->viewPrefix.'.edit', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        doc('テンプレートを読み込んで、HTMLを生成');
+        docs('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -49,7 +49,7 @@ trait UpdateTrait
 
     public function show($id)
     {
-        doc(['GET' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
+        docs(['GET' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
@@ -58,7 +58,7 @@ trait UpdateTrait
 
         $this->prepareShow();
 
-        doc('# 画面表示');
+        docs('# 画面表示');
 
         return $this->outputShow();
     }
@@ -73,7 +73,7 @@ trait UpdateTrait
 
         $view = view($this->viewPrefix.'.show', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        doc('テンプレートを読み込んで、HTMLを生成');
+        docs('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -94,7 +94,7 @@ trait UpdateTrait
 
         $this->prepareConfirmUpdate();
 
-        doc('# 画面表示');
+        docs('# 画面表示');
 
         return $this->outputConfirmUpdate();
     }
@@ -109,8 +109,8 @@ trait UpdateTrait
         $labels = $this->getLabel($this->viewPrefix.'.edit');
         $this->request->validate($rules, $messages, $labels);
         $validates = $this->getValidate($rules, $messages, $labels);
-        doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
-        doc(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.edit']);
+        docs(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
+        docs(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.edit']);
     }
 
     protected function prepareConfirmUpdate()
@@ -124,7 +124,7 @@ trait UpdateTrait
 
         $view = view($this->viewPrefix.'.confirmUpdate', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        doc('テンプレートを読み込んで、HTMLを生成');
+        docs('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -139,7 +139,7 @@ trait UpdateTrait
             // 確認画面からの遷移
             $this->request->merge(session($this->viewPrefix.'.confirm'));
         } else {
-            doc('# データの検証');
+            docs('# データの検証');
             if ($redirect = $this->validateUpdate()) {
                 return $redirect;
             }
@@ -149,11 +149,11 @@ trait UpdateTrait
             return $redirect;
         }
 
-        doc('# データの更新');
+        docs('# データの更新');
         $this->executeUpdate($this->prepareUpdate());
         $this->logUpdate();
 
-        doc('# 画面遷移');
+        docs('# 画面遷移');
 
         return $this->outputUpdate();
     }
@@ -166,7 +166,7 @@ trait UpdateTrait
 
         $tableData = $this->tableData->toArray();
 
-        doc('データの衝突チェック');
+        docs('データの衝突チェック');
         if ($this->request->updated_at !== $tableData['updated_at']) {
             return $this->backEdit('error', 'collision_happened');
         }
@@ -191,7 +191,7 @@ trait UpdateTrait
             \DB::rollBack();
             throw $e;
         }
-        doc(['GET' => 'id', 'POST' => '入力値'], '<id>を指定してデータを更新', ['データベース' => $this->loopItem]);
+        docs(['GET' => 'id', 'POST' => '入力値'], '<id>を指定してデータを更新', ['データベース' => $this->loopItem]);
 
         $this->logData = (object) $requestData;
         $this->logData->id = $this->val['id'];

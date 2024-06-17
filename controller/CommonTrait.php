@@ -27,7 +27,7 @@ trait CommonTrait
         // POST
         if (isset($this->request) && $this->request->has($keyItem)) {
             $this->saveItem($keyItem, $this->request->$keyItem, $sessionKey);
-            doc(['POST' => $keyItem], 'POSTに<'.$keyItem.'>があれば、セッションに保存', ['セッション' => $keyItem]);
+            docs(['POST' => $keyItem], 'POSTに<'.$keyItem.'>があれば、セッションに保存', ['セッション' => $keyItem]);
 
             return;
         }
@@ -38,13 +38,13 @@ trait CommonTrait
 
             return;
         }
-        doc(['GET' => $keyItem], 'GETに<'.$keyItem.'>があれば、セッションに保存', ['セッション' => $keyItem]);
+        docs(['GET' => $keyItem], 'GETに<'.$keyItem.'>があれば、セッションに保存', ['セッション' => $keyItem]);
 
         if (session()->has($sessionKey)) {
             // sessionがあれば読み込む
             $this->val[$keyItem] = session($sessionKey);
         }
-        doc(['セッション' => $keyItem], 'セッションに<'.$keyItem.'>があれば、読み込み');
+        docs(['セッション' => $keyItem], 'セッションに<'.$keyItem.'>があれば、読み込み');
     }
 
     private function saveItem($keyItem, $keyValue, $sessionKey)
@@ -96,7 +96,7 @@ trait CommonTrait
         $this->val['menu'] = $menu;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
-        doc(['設定ファイル' => 'config/menu.php'], 'メニュー表示の設定');
+        docs(['設定ファイル' => 'config/menu.php'], 'メニュー表示の設定');
 
         // keepItemで使用
         isset($this->viewPrefix) && session(['viewPrefix' => $this->viewPrefix]);

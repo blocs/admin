@@ -41,7 +41,7 @@ trait FileTrait
         $labels = $this->getLabel($this->viewPrefix.'.create');
         $this->request->validate($rules, $messages, $labels);
         $validates = $this->getValidate($rules, $messages, $labels);
-        doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
+        docs(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
     }
 
     /* download */

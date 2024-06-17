@@ -17,12 +17,12 @@ class HomeController extends \Blocs\Controllers\Base
     {
         $this->val = $this->chart();
 
-        doc('# 画面表示');
+        docs('# 画面表示');
         $this->setupMenu();
 
         $view = view($this->viewPrefix.'.index', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        doc('テンプレートを読み込んで、HTMLを生成');
+        docs('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }

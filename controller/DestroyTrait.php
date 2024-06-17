@@ -22,7 +22,7 @@ trait DestroyTrait
 
         $this->prepareConfirmDestroy();
 
-        doc('# 画面表示');
+        docs('# 画面表示');
 
         return $this->outputConfirmDestroy();
     }
@@ -42,7 +42,7 @@ trait DestroyTrait
 
         $view = view($this->viewPrefix.'.confirmDestroy', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        doc('テンプレートを読み込んで、HTMLを生成');
+        docs('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -62,12 +62,12 @@ trait DestroyTrait
             }
         }
 
-        doc('# データの削除');
+        docs('# データの削除');
         $this->prepareDestroy();
         $this->executeDestroy();
         $this->logDestroy();
 
-        doc('# 画面遷移');
+        docs('# 画面遷移');
 
         return $this->outputDestroy();
     }
@@ -83,7 +83,7 @@ trait DestroyTrait
         } catch (\Throwable $e) {
             throw $e;
         }
-        doc(['GET' => 'id'], '<id>を指定してデータを削除', ['データベース' => $this->loopItem]);
+        docs(['GET' => 'id'], '<id>を指定してデータを削除', ['データベース' => $this->loopItem]);
 
         $this->logData = new \stdClass();
         $this->logData->id = $this->val['id'];
