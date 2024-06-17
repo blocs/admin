@@ -29,7 +29,7 @@ class UserController extends \Blocs\Controllers\Base
                     ->orWhere('role', 'LIKE', '%'.$searchItem.'%');
             });
         }
-        doc([
+        docs([
             '<search>があれば、<'.$this->loopItem.'>のnameを<search>で部分一致検索',
             '<search>があれば、<'.$this->loopItem.'>のemailを<search>で部分一致検索',
             '<search>があれば、<'.$this->loopItem.'>のroleを<search>で部分一致検索',
@@ -49,7 +49,7 @@ class UserController extends \Blocs\Controllers\Base
         foreach (['email', 'role', 'created_at'] as $sortItem) {
             empty($this->val['sort'][$sortItem]) || $mainTable->orderBy($sortItem, $this->val['sort'][$sortItem]);
         }
-        doc('指定された条件でソート');
+        docs('指定された条件でソート');
     }
 
     protected function prepareIndex()
@@ -67,7 +67,7 @@ class UserController extends \Blocs\Controllers\Base
         // nameの補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
         $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);
-        doc('<name>がなければ、<email>を指定する');
+        docs('<name>がなければ、<email>を指定する');
 
         return [
             'email' => $this->request->email,

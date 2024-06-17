@@ -57,7 +57,7 @@ class LoginController extends Controller
 
         $view = view($this->viewPrefix.'.login');
         unset($this->val, $this->request, $this->tableData);
-        doc('テンプレートを読み込んで、HTMLを生成');
+        docs('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
@@ -79,8 +79,8 @@ class LoginController extends Controller
         $labels = $this->getLabel($this->viewPrefix.'.login');
         $request->validate($rules, $messages, $labels);
         $validates = $this->getValidate($rules, $messages, $labels);
-        doc(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
-        doc(null, 'エラーがあれば、ログイン画面に戻る', ['FORWARD' => $this->viewPrefix.'.login']);
+        docs(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
+        docs(null, 'エラーがあれば、ログイン画面に戻る', ['FORWARD' => $this->viewPrefix.'.login']);
     }
 
     protected function credentials(Request $request)

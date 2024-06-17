@@ -11,10 +11,10 @@ trait CopyTrait
         $this->getCurrent($id);
         $this->copyId = $id;
 
-        doc('# データのコピー');
+        docs('# データのコピー');
         $this->executeCopy($this->prepareCopy());
 
-        doc('# 画面遷移');
+        docs('# 画面遷移');
 
         return $this->outputCopy();
     }
@@ -44,7 +44,7 @@ trait CopyTrait
             throw $e;
         }
         $this->val['id'] = $lastInsert->id;
-        doc(null, 'データを追加', ['データベース' => $this->loopItem]);
+        docs(null, 'データを追加', ['データベース' => $this->loopItem]);
 
         $this->logData = (object) $requestData;
         $this->logData->id = $lastInsert->id;
