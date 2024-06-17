@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
-class Doc
+class Docs
 {
     private $keyword;
     private $neglect;
@@ -60,7 +60,7 @@ class Doc
 
         foreach ($steps as $stepNo => $step) {
             // 非表示行
-            $stepMain = implode('', $step['main']);
+            $stepMain = implode('', $step['process']);
             $stepMain = $this->replaceMain($stepMain);
             if ($this->checkNeglect($stepMain)) {
                 continue;
@@ -108,31 +108,31 @@ class Doc
 
     private function writeMain($line, $step, $excel, &$headlineNo, &$indentNo)
     {
-        foreach ($step['main'] as $main) {
-            $comments = explode("\n", $main);
-            $main = array_shift($comments);
+        foreach ($step['process'] as $process) {
+            $comments = explode("\n", $process);
+            $process = array_shift($comments);
 
             // #から始まると見出し
-            $headline = !strncmp($main, '#', 1);
-            $headline && $main = trim(substr($main, 1));
+            $headline = !strncmp($process, '#', 1);
+            $headline && $process = trim(substr($process, 1));
 
             $column = $headline ? 'K' : 'L';
-            $main = $this->replaceMain($main);
+            $process = $this->replaceMain($process);
             if ($headline) {
                 // 見出し
-                $excel->set(1, $column, $line, $headlineNo.'. '.$main);
+                $excel->set(1, $column, $line, $headlineNo.'. '.$process);
                 ++$headlineNo;
                 $indentNo = 1;
             } else {
                 // インデント
-                $excel->set(1, $column, $line, $indentNo.') '.$main);
+                $excel->set(1, $column, $line, $indentNo.') '.$process);
                 ++$indentNo;
             }
             ++$line;
 
             // 追加コメントを記述
             $column = $headline ? 'L' : 'M';
-            ($addComment = $this->checkComment($main)) && $comments = array_merge($comments, explode("\n", $addComment));
+            ($addComment = $this->checkComment($process)) && $comments = array_merge($comments, explode("\n", $addComment));
 
             // バリデーション
             count($step['validate']) && $comments[] .= '<入力値>: <条件>: <メッセージ>';

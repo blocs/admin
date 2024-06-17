@@ -41,7 +41,7 @@ class Base extends Controller
             $this->val = self::mergeTable($this->val, session($this->viewPrefix.'.confirm'));
         }
 
-        doc('# 画面表示');
+        docs('# 画面表示');
 
         return $this->outputIndex();
     }
@@ -55,7 +55,7 @@ class Base extends Controller
 
     protected function prepareIndex()
     {
-        doc('# 検索条件とソート条件の設定');
+        docs('# 検索条件とソート条件の設定');
         $this->keepItem('search');
 
         $this->searchItems = [];
@@ -72,11 +72,11 @@ class Base extends Controller
 
         $this->prepareIndexSearch($mainTable);
 
-        doc('# データの取得');
+        docs('# データの取得');
         if (empty($this->paginateNum)) {
             // ページネーションなし
             $this->val[$this->loopItem] = $mainTable->get();
-            doc(['データベース' => $this->loopItem], '<'.$this->loopItem.'>から全件取得');
+            docs(['データベース' => $this->loopItem], '<'.$this->loopItem.'>から全件取得');
         } else {
             // ページネーションあり
             $this->prepareIndexPaginate($mainTable);
@@ -106,7 +106,7 @@ class Base extends Controller
         } else {
             $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName)->setPageName($this->paginateName)->withPath($pagePath);
         }
-        doc(['データベース' => $this->loopItem], '<'.$this->loopItem.'>から、指定された<'.$this->paginateName.'>の'.$this->paginateNum."件を取得\n<search>を変更すると、<page>は先頭に戻す");
+        docs(['データベース' => $this->loopItem], '<'.$this->loopItem.'>から、指定された<'.$this->paginateName.'>の'.$this->paginateNum."件を取得\n<search>を変更すると、<page>は先頭に戻す");
 
         // 存在しないページ
         if ($this->val['paginate']->lastPage() < $this->val['paginate']->currentPage()) {
@@ -122,7 +122,7 @@ class Base extends Controller
 
         $view = view($this->viewPrefix.'.index', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        doc('テンプレートを読み込んで、HTMLを生成');
+        docs('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
     }
