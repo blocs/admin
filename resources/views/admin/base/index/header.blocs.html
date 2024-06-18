@@ -45,7 +45,10 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc="sortHref" -->
-    <!-- :href=route(prefix().".index", ["sort[{$sortItem}]" => "asc"]) data-none=$sort[$sortItem] -->
-    <!-- :href=route(prefix().".index", ["sort[{$sortItem}]" => "desc"]) data-if="!empty($sort[$sortItem]) && $sort[$sortItem] === 'asc'" -->
-    <!-- :href=route(prefix().".index", ["sort[{$sortItem}]" => ""]) data-if="!empty($sort[$sortItem]) && $sort[$sortItem] === 'desc'" -->
+    <!-- $sortOrder="asc" data-none -->
+    <!-- data-if="'asc' === $sortOrder" --><!-- $sortReverse="desc" --><!-- data-endif -->
+    <!-- data-unless="'asc' === $sortOrder" --><!-- $sortReverse="asc" --><!-- data-endif -->
+    <!-- :href=route(prefix().".index", ["sort[{$sortItem}]" => $sortOrder]) data-none=$sort[$sortItem] -->
+    <!-- :href=route(prefix().".index", ["sort[{$sortItem}]" => $sortReverse]) data-if="!empty($sort[$sortItem]) && $sort[$sortItem] === $sortOrder" -->
+    <!-- :href=route(prefix().".index", ["sort[{$sortItem}]" => ""]) data-if="!empty($sort[$sortItem]) && $sort[$sortItem] === $sortReverse" -->
 <!-- data-endbloc -->
