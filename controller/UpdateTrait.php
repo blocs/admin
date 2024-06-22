@@ -110,7 +110,7 @@ trait UpdateTrait
         $this->request->validate($rules, $messages, $labels);
         $validates = $this->getValidate($rules, $messages, $labels);
         docs(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
-        docs(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => $this->viewPrefix.'.edit']);
+        docs(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => '!'.$this->viewPrefix.'.edit']);
     }
 
     protected function prepareConfirmUpdate()
