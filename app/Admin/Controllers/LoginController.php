@@ -80,7 +80,7 @@ class LoginController extends Controller
         $request->validate($rules, $messages, $labels);
         $validates = $this->getValidate($rules, $messages, $labels);
         docs(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
-        docs(null, 'エラーがあれば、ログイン画面に戻る', ['FORWARD' => $this->viewPrefix.'.login']);
+        docs(null, 'エラーがあれば、ログイン画面に戻る', ['FORWARD' => '!'.$this->viewPrefix.'.login']);
     }
 
     protected function credentials(Request $request)

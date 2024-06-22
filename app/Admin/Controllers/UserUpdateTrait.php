@@ -25,7 +25,7 @@ trait UserUpdateTrait
             return $this->backEdit('', lang('template:admin_profile_password_incorrect'), 'password_old');
         }
         docs(['POST' => 'password_old', 'データベース' => $this->loopItem], '<password_old>があれば、<'.$this->loopItem.'>をチェック');
-        docs(null, "<password_old>が一致しなければ、メッセージをセットして編集画面に戻る\n・".lang('template:admin_profile_password_incorrect'), ['FORWARD' => prefix().'.edit']);
+        docs(null, "<password_old>が一致しなければ、メッセージをセットして編集画面に戻る\n・".lang('template:admin_profile_password_incorrect'), ['FORWARD' => '!'.prefix().'.edit']);
     }
 
     protected function prepareUpdate()
