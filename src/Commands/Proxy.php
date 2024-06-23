@@ -2,7 +2,7 @@
 
 namespace Blocs\Commands;
 
-use Blocs\Middleware\StaticGenerator;
+use App\Http\Middleware\StaticGenerator;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Proxy
