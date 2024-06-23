@@ -17,7 +17,7 @@ class TEST_NAME extends TestCase
         $model = 'App\Models\MODEL_NAME';
 
         $this->withoutMiddleware(\Illuminate\Auth\Middleware\Authenticate::class);
-        $this->withoutMiddleware(\App\Http\Middleware\Role::class);
+        $this->withoutMiddleware(\Blocs\Middleware\Role::class);
 
         // 一覧画面と検索
         $response = $this->get($path.'/');
