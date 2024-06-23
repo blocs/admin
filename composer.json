@@ -35,7 +35,7 @@
             "Tests\\": "tests\/"
         },
         "files": [
-            "app\/Helpers\/helper.php"
+            "helper\/admin.php"
         ]
     }
 }
