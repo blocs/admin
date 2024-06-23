@@ -13,7 +13,7 @@ class Deploy extends Command
 
     public function __construct()
     {
-        $this->baseDir = base_path('vendor');
+        $this->baseDir = base_path('vendor/blocs/admin');
 
         parent::__construct();
     }
