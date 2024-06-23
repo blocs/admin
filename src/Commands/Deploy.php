@@ -11,12 +11,9 @@ class Deploy extends Command
 
     protected $baseDir;
 
-    public function __construct($signature, $description, $filePath)
+    public function __construct()
     {
-        $this->signature = $signature;
-        $this->description = $description;
-
-        $this->baseDir = str_replace(DIRECTORY_SEPARATOR, '/', realpath(dirname($filePath).'/../'));
+        $this->baseDir = base_path('vendor');
 
         parent::__construct();
     }
