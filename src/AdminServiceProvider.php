@@ -4,32 +4,6 @@ namespace Blocs;
 
 use Illuminate\Support\ServiceProvider;
 
-class BlocsAdmin extends Commands\Deploy
-{
-    public function handle()
-    {
-        parent::handle();
-
-        // 空のfaviconがあれば削除
-        $faviconPath = public_path('favicon.ico');
-        file_exists($faviconPath) && !filesize($faviconPath) && unlink($faviconPath);
-
-        // 必要ファイルをpublish
-        \Artisan::call('vendor:publish', ['--provider' => 'Blocs\AdminServiceProvider']);
-
-        // 初期ユーザー登録
-        \Artisan::call('migrate');
-        \Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
-
-        echo "Deploy was completed successfully.\n";
-
-        \Artisan::call('route:cache');
-        echo 'Login URL is '.route('login').".\n";
-        echo "Initial ID/Pass is admin/admin.\n";
-        \Artisan::call('route:clear');
-    }
-}
-
 class AdminServiceProvider extends ServiceProvider
 {
     public function register()
@@ -52,23 +26,11 @@ class AdminServiceProvider extends ServiceProvider
 
     public function registerBlocsCommand()
     {
-        $this->app->singleton('command.blocs.admin', function ($app) {
-            return new BlocsAdmin('blocs:admin', 'Deploy blocs/admin package', __FILE__);
-        });
-
-        $this->commands('command.blocs.admin');
-
         $this->app->singleton('command.blocs.develop', function ($app) {
             return new Commands\Develop('blocs:develop {path}', 'Develop application');
         });
 
         $this->commands('command.blocs.develop');
-
-        $this->app->singleton('command.blocs.migrate', function ($app) {
-            return new Commands\Migrate();
-        });
-
-        $this->commands('command.blocs.migrate');
     }
 
     public function registerPublish()
