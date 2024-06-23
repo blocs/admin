@@ -7,16 +7,8 @@ use Illuminate\Support\Str;
 
 class Develop extends Command
 {
-    protected $signature;
-    protected $description;
-
-    public function __construct($signature, $description)
-    {
-        $this->signature = $signature;
-        $this->description = $description;
-
-        parent::__construct();
-    }
+    protected $signature = 'blocs:develop {path}';
+    protected $description = 'Develop application';
 
     public function handle()
     {
