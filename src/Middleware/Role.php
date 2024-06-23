@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Middleware;
+namespace Blocs\Middleware;
 
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
