@@ -38,7 +38,6 @@ class DeployAdmin extends Deploy
 
         echo "Deploy was completed successfully.\n";
 
-        \Artisan::call('route:cache');
         echo 'Login URL is '.route('login').".\n";
         echo "Initial ID/Pass is admin/admin.\n";
         \Artisan::call('route:clear');
