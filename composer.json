@@ -29,7 +29,6 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\Admin\\": "app\/Admin\/",
             "Blocs\\": "src\/",
             "Blocs\\Controllers\\": "controller\/",
             "Tests\\": "tests\/"
