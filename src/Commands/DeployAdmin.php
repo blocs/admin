@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Blocs\Commands;
 
-class DeployAdmin extends \Blocs\Commands\Deploy
+class DeployAdmin extends Deploy
 {
     /**
      * The name and signature of the console command.
