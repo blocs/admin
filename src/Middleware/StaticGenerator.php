@@ -11,7 +11,7 @@ class StaticGenerator
     {
         $response = $next($request);
 
-        if (200 !== $response->getStatusCode()) {
+        if (200 !== $response->getStatusCode() || !empty(request()->query())) {
             return $response;
         }
 
