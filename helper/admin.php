@@ -47,3 +47,11 @@ if (!function_exists('setOption')) {
         Blocs\Option::set($template, $formName);
     }
 }
+
+if (!function_exists('clearCache')) {
+    function clearCache($routeName)
+    {
+        $staticFile = public_path(route($routeName, [], false).'/index.html');
+        file_exists($staticFile) && unlink($staticFile);
+    }
+}
