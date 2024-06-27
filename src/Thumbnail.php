@@ -2,8 +2,6 @@
 
 namespace Blocs;
 
-use Symfony\Component\Mime\MimeTypes;
-
 class Thumbnail
 {
     public static function create($tmpLoc, $pWidth, $pHeight, $crop = false)
@@ -14,7 +12,7 @@ class Thumbnail
         $thumbLoc = BLOCS_CACHE_DIR.'/'.$thumbName;
 
         // サムネイルファイルの拡張子を取得
-        $thumbExt = self::extension(file_get_contents($tmpLoc));
+        $thumbExt = \File::extension($tmpLoc);
 
         if (is_file($thumbLoc)) {
             // すでにサムネイルファイルが存在している時
@@ -158,18 +156,5 @@ class Thumbnail
 
                 return;
         }
-    }
-
-    // 拡張子を取得
-    public static function extension($content): string
-    {
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime_type = finfo_buffer($finfo, $content);
-        finfo_close($finfo);
-
-        $mimeTypes = new MimeTypes();
-        $extensions = $mimeTypes->getExtensions($mime_type);
-
-        return isset($extensions[0]) ? $extensions[0] : '';
     }
 }
