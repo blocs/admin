@@ -15,7 +15,7 @@ trait FileTrait
         $this->validateUpload(request()->get('name'));
 
         $fileupload = $this->request->file('upload');
-        $filename = md5(file_get_contents($fileupload->getPathname()));
+        $filename = md5(file_get_contents($fileupload->getPathname())).'.'.$fileupload->getClientOriginalExtension();
 
         isset($this->uploadStorage) || $this->uploadStorage = 'upload';
         $fileupload->storeAs($this->uploadStorage, $filename);
@@ -76,7 +76,7 @@ trait FileTrait
         }
 
         // 画像以外のファイル
-        return $storage->download($filename, basename($filename).'.'.\Blocs\Thumbnail::extension($storage->get($filename)));
+        return $storage->response($filename, basename($filename));
     }
 
     protected function checkDownload($filename)
