@@ -53,5 +53,6 @@ if (!function_exists('clearCache')) {
     {
         $staticFile = public_path(route($routeName, $arguments, false).'/index.html');
         file_exists($staticFile) && unlink($staticFile);
+        is_dir(dirname($staticFile)) && !count(glob(dirname($staticFile).'/*')) && rmdir(dirname($staticFile));
     }
 }
