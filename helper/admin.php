@@ -48,8 +48,8 @@ if (!function_exists('setOption')) {
     }
 }
 
-if (!function_exists('clearCache')) {
-    function clearCache($routeName, $arguments = [])
+if (!function_exists('clearStatic')) {
+    function clearStatic($routeName, $arguments = [])
     {
         $staticFile = public_path(route($routeName, $arguments, false).'/index.html');
         file_exists($staticFile) && unlink($staticFile);
