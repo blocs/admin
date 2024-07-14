@@ -1,6 +1,6 @@
 <div class="w-100 mt-2">
     <div class="row">
-        <div class="col-auto p-1 flex-grow-1">
+        <div class="col-auto p-1 flex-grow-1" data-unless="isset($searchField) && false === $searchField">
             <div class="input-group input-group-outline">
                 <label class="form-label"><!-- $searchPlaceholder --></label>
                 <input type="text" name="search" class="form-control" />
