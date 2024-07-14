@@ -16,7 +16,7 @@ class UserController extends \Blocs\Controllers\Base
 
         // 役割をメニューにセット
         $roleList = config('role');
-        empty($roleList) || $this->addOption('role', array_keys($roleList));
+        empty($roleList) || addOption('role', array_keys($roleList));
     }
 
     protected function prepareIndexSearch(&$mainTable)
