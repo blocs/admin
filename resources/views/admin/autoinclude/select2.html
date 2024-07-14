@@ -13,6 +13,8 @@
                 } else {
                     $(this).closest(".input-group").removeClass("is-filled");
                 }
+            }).on("change.select2", function(){
+                $(this).closest("form[role=search]").submit();
             })
         });
     }).observe(document, {
