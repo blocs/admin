@@ -669,8 +669,10 @@ document.addEventListener("DOMContentLoaded", function(){
     }
 
     if (document.querySelectorAll("form[role=search] select").length != 0) {
-        document.querySelector("form[role=search] select").addEventListener("change", function(){
-            document.querySelector("form[role=search]").submit();
+        document.querySelectorAll("form[role=search] select").forEach(function(item, i) {
+            item.addEventListener("change", function(){
+                document.querySelector("form[role=search]").submit();
+            });
         });
     }
 
