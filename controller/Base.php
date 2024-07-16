@@ -90,7 +90,7 @@ class Base extends Controller
     {
     }
 
-    protected function prepareIndexPaginate(&$mainTable)
+    protected function prepareIndexPaginate(&$mainTable, $pagePath = null)
     {
         isset($this->paginateName) || $this->paginateName = 'page';
 
@@ -99,7 +99,7 @@ class Base extends Controller
             $this->keepItem($this->paginateName);
         }
 
-        $pagePath = route(prefix().'.index');
+        empty($pagePath) && $pagePath = route(prefix().'.index');
 
         if (isset($this->val[$this->paginateName])) {
             $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName, $this->val[$this->paginateName])->setPageName($this->paginateName)->withPath($pagePath);
