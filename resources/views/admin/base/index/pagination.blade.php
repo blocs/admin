@@ -1,6 +1,6 @@
 @php
     foreach ([0, 4] as $key) {
-        if (isset($elements[$key]) && is_array($elements[$key]) && 2 === count($elements[$key])) {
+        if (count($elements) >= 3 && isset($elements[$key]) && is_array($elements[$key]) && 2 === count($elements[$key])) {
             unset($elements[$key][array_keys($elements[$key])[($key ? 0 : 1)]]);
         }
     }
