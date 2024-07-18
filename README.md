@@ -1,4 +1,4 @@
-A PHP template engine based on HTML 
+A PHP template engine based on HTML
 -----
 
 BlocsはPHPで動作するテンプレートエンジンです。
