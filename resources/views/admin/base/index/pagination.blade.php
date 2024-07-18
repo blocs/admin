@@ -1,3 +1,11 @@
+@php
+    foreach ([0, 4] as $key) {
+        if (isset($elements[$key]) && is_array($elements[$key]) && 2 === count($elements[$key])) {
+            unset($elements[$key][array_keys($elements[$key])[($key ? 0 : 1)]]);
+        }
+    }
+@endphp
+
 @if ($paginator->hasPages())
 <div class="dataTable-bottom">
     <nav class="dataTable-pagination">

@@ -102,16 +102,19 @@ class Base extends Controller
         empty($pagePath) && $pagePath = route(prefix().'.index');
 
         if (isset($this->val[$this->paginateName])) {
-            $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName, $this->val[$this->paginateName])->setPageName($this->paginateName)->withPath($pagePath);
+            $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName, $this->val[$this->paginateName])->setPageName($this->paginateName);
         } else {
-            $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName)->setPageName($this->paginateName)->withPath($pagePath);
+            $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName)->setPageName($this->paginateName);
         }
         docs(['データベース' => $this->loopItem], '<'.$this->loopItem.'>から、指定された<'.$this->paginateName.'>の'.$this->paginateNum."件を取得\n<search>を変更すると、<page>は先頭に戻す");
 
         // 存在しないページ
         if ($this->val['paginate']->lastPage() < $this->val['paginate']->currentPage()) {
-            $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName, $this->val['paginate']->lastPage())->setPageName($this->paginateName)->withPath($pagePath);
+            $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName, $this->val['paginate']->lastPage())->setPageName($this->paginateName);
         }
+
+        $this->val['paginate'] = $this->val['paginate']->withPath($pagePath);
+        isset($this->paginateEachSide) && $this->val['paginate'] = $this->val['paginate']->onEachSide($this->paginateEachSide);
 
         $this->val[$this->loopItem] = $this->val['paginate'];
     }
