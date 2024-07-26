@@ -22,9 +22,6 @@ class LoginController extends Controller
     use \Blocs\Auth\AuthenticatesUsers;
     use \Blocs\Controllers\CommonTrait;
 
-    protected $val = [];
-    protected $tableData;
-    protected $mainTable;
     protected $viewPrefix;
 
     /**
@@ -41,10 +38,8 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        // $GLOBALS['ADMIN_LOGIN_REDIRECT_TO'] = '';
-        // $GLOBALS['ADMIN_LOGOUT_REDIRECT_TO'] = '';
-
-        $this->redirectTo = $GLOBALS['ADMIN_LOGIN_REDIRECT_TO'];
+        // ログイン後の遷移先
+        $this->redirectTo = '/home';
 
         $this->viewPrefix = 'admin.auth';
     }
@@ -52,11 +47,10 @@ class LoginController extends Controller
     public function showLoginForm()
     {
         if ($this->guard()->check()) {
-            return redirect($GLOBALS['ADMIN_LOGIN_REDIRECT_TO']);
+            return redirect($this->redirectTo);
         }
 
         $view = view($this->viewPrefix.'.login');
-        unset($this->val, $this->request, $this->tableData);
         docs('テンプレートを読み込んで、HTMLを生成');
 
         return $view;
@@ -64,14 +58,13 @@ class LoginController extends Controller
 
     protected function loggedOut(Request $request)
     {
-        unset($this->val, $this->request, $this->tableData);
-
-        return redirect($GLOBALS['ADMIN_LOGOUT_REDIRECT_TO']);
+        // ログアウト後の遷移先
+        return redirect('/login');
     }
 
     protected function validateLogin(Request $request)
     {
-        list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.login');
+        list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.login', $request);
         if (empty($rules)) {
             return;
         }
@@ -79,6 +72,7 @@ class LoginController extends Controller
         $labels = $this->getLabel($this->viewPrefix.'.login');
         $request->validate($rules, $messages, $labels);
         $validates = $this->getValidate($rules, $messages, $labels);
+
         docs(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
         docs(null, 'エラーがあれば、ログイン画面に戻る', ['FORWARD' => '!'.$this->viewPrefix.'.login']);
     }
