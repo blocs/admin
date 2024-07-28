@@ -120,4 +120,21 @@ Route::get('/validate', function () {
 
     return response()->view('validate', ['validates' => $validates])->header('Content-Type', 'text/xml');
 });
+
+Route::get('/database', function () {
+    $databases = [];
+    $tables = \Schema::getTableListing();
+    foreach ($tables as $table) {
+        $columns = \Schema::getColumnListing($table);
+        foreach ($columns as $column) {
+            $databases[] = [
+                'name' => $table,
+                'column' => $column,
+                'type' => \Schema::getColumnType($table, $column),
+            ];
+        }
+    }
+
+    return response()->view('database', ['databases' => $databases])->header('Content-Type', 'text/xml');
+});
 */
