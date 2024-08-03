@@ -18,6 +18,13 @@ class DeployAdmin extends Deploy
      */
     protected $description = 'Deploy blocs/admin package';
 
+    public function __construct()
+    {
+        $this->baseDir = base_path('vendor/blocs/admin');
+
+        parent::__construct();
+    }
+
     /**
      * Execute the console command.
      */
