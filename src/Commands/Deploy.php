@@ -6,17 +6,7 @@ use Illuminate\Console\Command;
 
 class Deploy extends Command
 {
-    protected $signature;
-    protected $description;
-
     protected $baseDir;
-
-    public function __construct()
-    {
-        $this->baseDir = base_path('vendor/blocs/admin');
-
-        parent::__construct();
-    }
 
     public function handle()
     {
