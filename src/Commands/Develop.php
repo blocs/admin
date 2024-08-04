@@ -266,8 +266,10 @@ class Develop extends Command
         foreach ($developJson['entry'] as $formName => $form) {
             if ('datepicker' == $form['type']) {
                 $formValue = '2024-06-10';
-            } elseif ('select' == $form['type'] || 'select2' == $form['type'] || 'radio' == $form['type'] || 'checkbox' == $form['type']) {
-                $formValue = '0';
+            } elseif ('timepicker' == $form['type']) {
+                $formValue = '2024-08-05 12:00';
+            } elseif ('select' == $form['type'] || 'select2' == $form['type'] || 'radio' == $form['type'] || 'checkbox' == $form['type'] || 'number' == $form['type']) {
+                $formValue = '1';
             } elseif ('upload' == $form['type']) {
                 $formValue = '';
             } else {

@@ -98,4 +98,13 @@
     @error("<!-- $name -->") <#-- 
         $uploadMessage="<span class='text-danger'><i class='fa-solid fa-exclamation-triangle'></i> {$message}</span>"
     --> @enderror
+<!-- data-endif --><!-- data-if="'number' === $type" -->
+    <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
+    <div class="input-group input-group-outline">
+        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
+        <!-- data-attribute="required" data-exist=$required --><input type="number" :id=$name :name=$name class="form-control text-right" value="" min="1" />
+
+        <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
+        @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
+    </div>
 <!-- data-endif -->
