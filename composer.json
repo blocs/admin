@@ -4,9 +4,9 @@
     "description": "BLOCS administration package",
     "keywords": [
         "PHP",
-        "Package",
+        "Laravel",
         "BLOCS",
-        "Laravel"
+        "Package"
     ],
     "license": "MIT",
     "authors": [
