@@ -24,6 +24,24 @@ class Develop extends Command
 
         isset($developJson['entry']) || $developJson['entry'] = [];
 
+        if (!empty($developJson['controller']['controllerName'])) {
+            $developJson['controller']['controllerBasename'] = basename($developJson['controller']['controllerName']);
+            $developJson['controller']['controllerDirname'] = dirname($developJson['controller']['controllerName']);
+            if (!empty($developJson['controller']['controllerDirname'])) {
+                $developJson['controller']['controllerDirname'] = str_replace('\/', '\\', $developJson['controller']['controllerDirname']);
+                $developJson['controller']['controllerDirname'] = '\\'.$developJson['controller']['controllerDirname'];
+            }
+        }
+
+        if (!empty($developJson['controller']['modelName'])) {
+            $developJson['controller']['modelBasename'] = basename($developJson['controller']['modelName']);
+            $developJson['controller']['modelDirname'] = dirname($developJson['controller']['modelName']);
+            if (!empty($developJson['controller']['modelDirname'])) {
+                $developJson['controller']['modelDirname'] = str_replace('\/', '\\', $developJson['controller']['modelDirname']);
+                $developJson['controller']['modelDirname'] = '\\'.$developJson['controller']['modelDirname'];
+            }
+        }
+
         // コントローラー作成
         empty($developJson['controller']['controllerName']) || $this->makeController($developJson);
 
@@ -64,13 +82,13 @@ class Develop extends Command
         echo "Make controller \"{$controllerName}\"\n";
 
         // ルート作成
-        isset($developJson['route']) && $this->makeRoute($developJson['route'], $controllerName);
+        isset($developJson['route']) && $this->makeRoute($developJson['route'], $developJson['controller']);
 
         // メニュー作成
         empty($developJson['menu']) || $this->appendMenu($developJson['menu']);
     }
 
-    private function makeRoute($routeJson, $controllerName)
+    private function makeRoute($routeJson, $controllerJson)
     {
         $route = file_get_contents(__DIR__.'/../../develop/route.php');
         foreach ($routeJson as $key => $value) {
@@ -79,7 +97,11 @@ class Develop extends Command
             $route = str_replace($key, $value, $route);
         }
 
-        $route = str_replace('CONTROLLER_NAME', $controllerName, $route);
+        foreach ($controllerJson as $key => $value) {
+            // キーを変換
+            $key = strtoupper(Str::snake($key));
+            $route = str_replace($key, $value, $route);
+        }
 
         file_put_contents(base_path('routes/web.php'), "\n".$route, FILE_APPEND);
     }
@@ -110,8 +132,13 @@ class Develop extends Command
 
         // モデル作成
         $model = file_get_contents(__DIR__.'/../../develop/model.php');
-        $model = str_replace('MODEL_NAME', $modelName, $model);
         $model = str_replace('FORM_LIST', $this->getList(array_keys($developJson['entry']), ",\n        ", "'"), $model);
+
+        foreach ($developJson['controller'] as $key => $value) {
+            // キーを変換
+            $key = strtoupper(Str::snake($key));
+            $model = str_replace($key, $value, $model);
+        }
 
         file_put_contents($modelPath, $model);
         echo "Make model \"{$modelName}\"\n";
@@ -239,7 +266,7 @@ class Develop extends Command
 
     private function makeTest($developJson)
     {
-        $modelName = $developJson['controller']['modelName'];
+        $modelName = $developJson['controller']['modelBasename'];
         $testPath = base_path("tests/Feature/{$modelName}Test.php");
 
         if (file_exists($testPath)) {
@@ -286,7 +313,7 @@ class Develop extends Command
 
     private function makeDoc($developJson)
     {
-        $controllerName = $developJson['controller']['controllerName'];
+        $controllerName = $developJson['controller']['controllerBasename'];
         $docsPath = base_path("docs/{$controllerName}.php");
 
         if (!is_dir(base_path('docs')) || file_exists($docsPath)) {

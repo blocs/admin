@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\ControllersCONTROLLER_DIRNAME;
 
-class CONTROLLER_NAME extends \Blocs\Controllers\Base
+class CONTROLLER_BASENAME extends \Blocs\Controllers\Base
 {
     public function __construct()
     {
         $this->viewPrefix = 'VIEW_PREFIX';
-        $this->mainTable = 'App\Models\MODEL_NAME';
+        $this->mainTable = 'App\ModelsMODEL_DIRNAME\MODEL_BASENAME';
         $this->loopItem = 'LOOP_ITEM';
         $this->paginateNum = PAGINATE_NUM;
         $this->noticeItem = 'NOTICE_ITEM';
