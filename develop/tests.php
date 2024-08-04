@@ -14,7 +14,7 @@ class TEST_NAME extends TestCase
     public function testExample(): void
     {
         $path = 'ROUTE_PREFIX';
-        $model = 'App\Models\MODEL_NAME';
+        $model = 'App\ModelsMODEL_DIRNAME\MODEL_BASENAME';
 
         $this->withoutMiddleware(\Illuminate\Auth\Middleware\Authenticate::class);
         $this->withoutMiddleware(\Blocs\Middleware\Role::class);
