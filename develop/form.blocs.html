@@ -1,7 +1,7 @@
 <!-- data-if="'text' === $type" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
+        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><input type="text" :id=$name :name=$name class="form-control" value="" />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
@@ -10,7 +10,7 @@
 <!-- data-endif --><!-- data-if="'textarea' === $type" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
+        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><textarea :id=$name :name=$name class="form-control" rows="5"></textarea>
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
@@ -19,8 +19,17 @@
 <!-- data-endif --><!-- data-if="'datepicker' === $type" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
+        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><input type="text" :id=$name :name=$name class="form-control ai-datepicker" value="" />
+
+        <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
+        @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
+    </div>
+<!-- data-endif --><!-- data-if="'timepicker' === $type" -->
+    <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
+    <div class="input-group input-group-outline">
+        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
+        <!-- data-attribute="required" data-exist=$required --><input type="text" :id=$name :name=$name class="form-control ai-timepicker" value="" />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -28,7 +37,7 @@
 <!-- data-endif --><!-- data-if="'select' === $type" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
+        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><select :id=$name :name=$name class="form-control">
             <!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><option data-loop=$option_ :value=$value><!-- $label --></option>
         </select>
@@ -39,7 +48,7 @@
 <!-- data-endif --><!-- data-if="'select2' === $type" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
+        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
         <!-- :name=$name data-none=$multiple --><!-- :name=$name."[]" data-exist=$multiple --><!-- data-attribute="required" data-exist=$required --><!-- data-attribute="multiple" data-exist=$multiple --><select :id=$name class="form-control ai-select2">
             <!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><option data-loop=$option_ :value=$value><!-- $label --></option>
         </select>
@@ -49,7 +58,7 @@
     </div>
 <!-- data-endif --><!-- data-if="'radio' === $type" -->
     <div class="row">
-        <label><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
+        <label><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
         <div class="col-auto p-1" data-loop=$option_>
             <div class="form-check">
                 <label class="form-check-label">
@@ -63,7 +72,7 @@
     </div>
 <!-- data-endif --><!-- data-if="'checkbox' === $type" -->
     <div class="row">
-        <label><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
+        <label><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
         <div class="col-auto p-1" data-loop=$option_>
             <div class="form-check">
                 <label class="form-check-label">
@@ -80,7 +89,7 @@
         $uploadMessage=lang("template:admin_profile_upload_message")
         $uploadDelete=lang("template:admin_profile_upload_delete")
     -->
-    <label class="form-label"><!-- $label --> <!-- data-val="*" data-exist=$required --></label>
+    <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
     <!-- data-attribute="required" data-exist=$required --><!-- data-attribute="multiple" data-exist=$multiple --><input type="hidden" :id=$name :name=$name class="ai-upload" />
 
     <#-- !<!-- $name -->="mimes:jpg,jpeg,gif,png" data-lang="template:admin_profile_upload_image_only" -->
