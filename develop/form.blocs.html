@@ -1,4 +1,5 @@
 <!-- data-if="'text' === $type" -->
+<#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
@@ -7,7 +8,9 @@
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
+<#-- data-endbloc -->
 <!-- data-endif --><!-- data-if="'textarea' === $type" -->
+<#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
@@ -16,7 +19,9 @@
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
+<#-- data-endbloc -->
 <!-- data-endif --><!-- data-if="'datepicker' === $type" -->
+<#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
@@ -25,7 +30,9 @@
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
+<#-- data-endbloc -->
 <!-- data-endif --><!-- data-if="'timepicker' === $type" -->
+<#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
@@ -34,7 +41,9 @@
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
+<#-- data-endbloc -->
 <!-- data-endif --><!-- data-if="'select' === $type" -->
+<#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
@@ -45,7 +54,9 @@
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
+<#-- data-endbloc -->
 <!-- data-endif --><!-- data-if="'select2' === $type" -->
+<#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
@@ -56,7 +67,9 @@
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
+<#-- data-endbloc -->
 <!-- data-endif --><!-- data-if="'radio' === $type" -->
+<#-- data-bloc="form_<!-- $name -->" -->
     <div class="row">
         <label><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
         <div class="col-auto p-1" data-loop=$option_>
@@ -70,7 +83,9 @@
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
+<#-- data-endbloc -->
 <!-- data-endif --><!-- data-if="'checkbox' === $type" -->
+<#-- data-bloc="form_<!-- $name -->" -->
     <div class="row">
         <label><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
         <div class="col-auto p-1" data-loop=$option_>
@@ -84,7 +99,9 @@
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
+<#-- data-endbloc -->
 <!-- data-endif --><!-- data-if="'upload' === $type" -->
+<#-- data-bloc="form_<!-- $name -->" -->
     <#-- 
         $uploadMessage=lang("template:admin_profile_upload_message")
         $uploadDelete=lang("template:admin_profile_upload_delete")
@@ -98,7 +115,9 @@
     @error("<!-- $name -->") <#-- 
         $uploadMessage="<span class='text-danger'><i class='fa-solid fa-exclamation-triangle'></i> {$message}</span>"
     --> @enderror
+<#-- data-endbloc -->
 <!-- data-endif --><!-- data-if="'number' === $type" -->
+<#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
@@ -107,4 +126,5 @@
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
+<#-- data-endbloc -->
 <!-- data-endif -->
