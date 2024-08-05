@@ -34,7 +34,7 @@
                 paramName: "upload",
                 maxFiles: (null == item.getAttribute("multiple") ? 1 : null),
                 headers: {
-                    "X-CSRF-TOKEN" : document.querySelector("[name=_token]").value
+                    "X-CSRF-TOKEN" : "{{ csrf_token() }}"
                 },
                 maxfilesexceeded: (file) => {
                     var dropzoneDiv = file.previewElement.closest(".dropzone");
@@ -67,11 +67,17 @@
                 file.previewElement.dataset.aiSize = data.size;
                 file.previewElement.dataset.aiThumbnail = data.thumbnail;
                 aiFileupload.update(dropzoneDiv);
+                if (typeof callbackDZsuccess == 'function') {
+                    callbackDZsuccess(dropzoneDiv);
+                }
             }).on("removedfile", (file) => {
                 var aiTarget = file.previewElement.dataset.aiTarget;
                 if (aiTarget) {
                     var dropzoneDiv = document.querySelector("[name="+aiTarget+"]").nextElementSibling;
                     aiFileupload.update(dropzoneDiv);
+                }
+                if (typeof callbackDZremovedfile == 'function') {
+                    callbackDZremovedfile(dropzoneDiv);
                 }
             });
 
