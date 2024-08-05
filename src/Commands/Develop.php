@@ -228,8 +228,9 @@ class Develop extends Command
         $replaceItem['HEAD_HTML'] = '';
         $replaceItem['BODY_HTML'] = '';
 
-        $formHtml = file_get_contents(__DIR__.'/../../develop/form.blocs.html');
-        $replaceItem['FORM_HTML'] = '';
+        $formBlocsHtml = file_get_contents(__DIR__.'/../../develop/form.blocs.html');
+        $replaceItem['FORM_HTML'] = "\n";
+        $formHtml = '';
 
         $blocsCompiler = new \Blocs\Compiler\BlocsCompiler();
         foreach ($developJson['entry'] as $formName => $form) {
@@ -258,10 +259,14 @@ class Develop extends Command
                 }
             }
 
-            $replaceItem['FORM_HTML'] .= $blocsCompiler->render($formHtml, $form);
+            $replaceItem['FORM_HTML'] .= '    <!-- data-include="form_'.$formName.'" -->'."\n";
+            $formHtml .= $blocsCompiler->render($formBlocsHtml, $form);
         }
 
         $this->copyDir(__DIR__.'/../../develop/views', $viewPath, $replaceItem);
+
+        $formHtml = str_replace('<#-- ', '<!-- ', $formHtml);
+        file_put_contents($viewPath.'/include/form.html', ltrim($formHtml));
     }
 
     private function makeTest($developJson)
@@ -381,8 +386,6 @@ class Develop extends Command
         foreach ($replaceItem as $key => $value) {
             $contents = str_replace('<!-- '.$key.' -->', $value, $contents);
         }
-
-        $contents = str_replace('<#-- ', '<!-- ', $contents);
 
         file_put_contents($viewPath, $contents);
     }
