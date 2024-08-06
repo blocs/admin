@@ -68,7 +68,7 @@
                 file.previewElement.dataset.aiThumbnail = data.thumbnail;
                 aiFileupload.update(dropzoneDiv);
                 if (typeof callbackDZsuccess == 'function') {
-                    callbackDZsuccess(dropzoneDiv);
+                    callbackDZsuccess(dropzoneDiv, file, response);
                 }
             }).on("removedfile", (file) => {
                 var aiTarget = file.previewElement.dataset.aiTarget;
@@ -77,7 +77,7 @@
                     aiFileupload.update(dropzoneDiv);
                 }
                 if (typeof callbackDZremovedfile == 'function') {
-                    callbackDZremovedfile(dropzoneDiv);
+                    callbackDZremovedfile(dropzoneDiv, file);
                 }
             });
 
