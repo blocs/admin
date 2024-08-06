@@ -246,12 +246,9 @@ class Develop extends Command
 
             $form['name'] = $formName;
 
-            $form['option_'] = ('select' === $form['type'] || 'select2' === $form['type'] ? [['value' => '', 'label' => '']] : []);
+            $form['option_'] = [];
             if (!empty($form['option'])) {
                 foreach ($form['option'] as $value => $label) {
-                    // valueの指定がない時
-                    array_values($form['option']) === $form['option'] && ++$value;
-
                     $form['option_'][] = [
                         'value' => $value,
                         'label' => $label,
