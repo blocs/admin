@@ -48,8 +48,8 @@
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><select :id=$name :name=$name class="form-control">
-            <!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><option data-loop=$option_ :value=$value><!-- $label --></option>
-        </select>
+<!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><!-- data-loop=$option_ -->            <option :value=$value><!-- $label --></option>
+<!-- data-endloop -->       </select>
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -61,8 +61,8 @@
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
         <!-- :name=$name data-none=$multiple --><!-- :name=$name."[]" data-exist=$multiple --><!-- data-attribute="required" data-exist=$required --><!-- data-attribute="multiple" data-exist=$multiple --><select :id=$name class="form-control ai-select2">
-            <!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><option data-loop=$option_ :value=$value><!-- $label --></option>
-        </select>
+<!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><!-- data-loop=$option_ -->            <option :value=$value><!-- $label --></option>
+<!-- data-endloop -->       </select>
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
