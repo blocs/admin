@@ -7,6 +7,8 @@ use Illuminate\Support\Str;
 
 class Develop extends Command
 {
+    use DevelopTrait;
+
     protected $signature = 'blocs:develop {path}';
     protected $description = 'Develop application';
 
@@ -59,6 +61,9 @@ class Develop extends Command
 
         // ドキュメント作成
         empty($developJson['controller']['controllerName']) || $this->makeDoc($developJson);
+
+        // ChatGPTでビューをカスタマイズ
+        empty($developJson['controller']['viewPrefix']) || empty(env('OPENAI_API_KEY')) || $this->useOpenAi($developJson, $path);
     }
 
     private function makeController($developJson)
@@ -79,7 +84,7 @@ class Develop extends Command
         }
 
         file_put_contents($controllerPath, $controller);
-        echo "Make controller \"{$controllerName}\"\n";
+        $this->outputMessageMake('controller', $controllerPath);
 
         // ルート作成
         isset($developJson['route']) && $this->makeRoute($developJson['route'], $developJson['controller']);
@@ -104,6 +109,8 @@ class Develop extends Command
         }
 
         file_put_contents(base_path('routes/web.php'), "\n".$route, FILE_APPEND);
+
+        \Artisan::call('route:cache');
     }
 
     private function appendMenu($menuJson)
@@ -141,7 +148,7 @@ class Develop extends Command
         }
 
         file_put_contents($modelPath, $model);
-        echo "Make model \"{$modelName}\"\n";
+        $this->outputMessageMake('model', $modelPath);
     }
 
     private function makeMigration($developJson)
@@ -182,7 +189,7 @@ class Develop extends Command
         $migration = str_replace('/* ITEM_LIST */', $this->getList($itemList, "\n            "), $migration);
 
         file_put_contents($migrationPath, $migration);
-        echo 'Make migration "'.basename($migrationPath)."\"\n";
+        $this->outputMessageMake('migration', $migrationPath);
 
         // テーブル作成
         \Artisan::call('migrate:refresh', ['--path' => 'database/migrations/'.basename($migrationPath)]);
@@ -213,7 +220,7 @@ class Develop extends Command
         echo $database;
     }
 
-    private function makeView($developJson)
+    private function makeView($developJson, $refresh = false)
     {
         $viewPrefix = $developJson['controller']['viewPrefix'];
         $viewPath = resource_path('views/'.str_replace('.', '/', $viewPrefix));
@@ -260,10 +267,20 @@ class Develop extends Command
             $formHtml .= $blocsCompiler->render($formBlocsHtml, $form);
         }
 
+        if ($refresh) {
+            foreach ([$viewPath.'/include/entry.html', $viewPath.'/include/form.html'] as $file) {
+                unlink($file);
+            }
+        }
+
         $this->copyDir(__DIR__.'/../../develop/views', $viewPath, $replaceItem);
 
-        $formHtml = str_replace('<#-- ', '<!-- ', $formHtml);
-        file_put_contents($viewPath.'/include/form.html', ltrim($formHtml));
+        if (!file_exists($viewPath.'/include/form.html')) {
+            $formHtml = str_replace('<#-- ', '<!-- ', $formHtml);
+
+            file_put_contents($viewPath.'/include/form.html', ltrim($formHtml));
+            $this->outputMessageMake('view', $viewPath.'/include/form.html');
+        }
     }
 
     private function makeTest($developJson)
@@ -310,7 +327,7 @@ class Develop extends Command
         $tests = str_replace('FORM_LIST', $this->getList($formList, ",\n            ", "'"), $tests);
 
         file_put_contents($testPath, $tests);
-        echo "Make test \"{$testPath}\"\n";
+        $this->outputMessageMake('test', $testPath);
     }
 
     private function makeDoc($developJson)
@@ -340,7 +357,7 @@ class Develop extends Command
         $docs = str_replace('FORM_LIST', $this->getList($formList, ",\n        ", "'"), $docs);
 
         file_put_contents($docsPath, $docs);
-        echo "Make doc \"{$docsPath}\"\n";
+        $this->outputMessageMake('doc', $docsPath);
     }
 
     private function getList($form, $separator, $quote = '')
@@ -370,8 +387,6 @@ class Develop extends Command
             if (!file_exists($targetDir.'/'.$file)) {
                 copy($orgDir.'/'.$file, $targetDir.'/'.$file);
                 $this->replaceViewItem($targetDir.'/'.$file, $replaceItem);
-
-                echo "Make view \"{$targetDir}/{$file}\"\n";
             }
         }
     }
@@ -385,5 +400,13 @@ class Develop extends Command
         }
 
         file_put_contents($viewPath, $contents);
+        $this->outputMessageMake('view', $viewPath);
+    }
+
+    private function outputMessageMake($type, $path)
+    {
+        $path = str_replace(base_path(), '', $path);
+
+        echo "Make {$type} \"{$path}\"\n";
     }
 }
