@@ -58,14 +58,17 @@
                     }
                 }
             }).on("success", (file, response) => {
-                var data = JSON.parse(response);
+                var json = response;
+                if ("object" != typeof response) {
+                    json = JSON.parse(response);
+                }
                 delete file.previewElement.querySelector(".dz-details").dataset.dzRemove;
                 var dropzoneDiv = file.previewElement.closest(".dropzone");
                 file.previewElement.dataset.aiTarget = dropzoneDiv.previousElementSibling.name;
-                file.previewElement.dataset.aiFilename = data.filename;
-                file.previewElement.dataset.aiName = data.name;
-                file.previewElement.dataset.aiSize = data.size;
-                file.previewElement.dataset.aiThumbnail = data.thumbnail;
+                file.previewElement.dataset.aiFilename = json.filename;
+                file.previewElement.dataset.aiName = json.name;
+                file.previewElement.dataset.aiSize = json.size;
+                file.previewElement.dataset.aiThumbnail = json.thumbnail;
                 aiFileupload.update(dropzoneDiv);
                 if (typeof callbackDZsuccess == 'function') {
                     callbackDZsuccess(dropzoneDiv, file, response);
