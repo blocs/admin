@@ -34,9 +34,7 @@ trait DevelopTrait
 
         do {
             if (empty($this->item)) {
-                // 対象項目の入力
-                echo 'Item > ';
-                $stdin = trim(fgets(STDIN));
+                $stdin = $this->ask('項目を入力');
 
                 if (empty($stdin) || $this->undoDevelop($entryJson, $developJson, $path, $stdin)) {
                     // 入力なしかundo
@@ -51,8 +49,7 @@ trait DevelopTrait
                 $this->item = str_replace(',', 'と', $stdin);
             }
 
-            echo $this->item.' > ';
-            $stdin = trim(fgets(STDIN));
+            $stdin = $this->ask($this->item.'項目のアクション');
 
             if (empty($stdin)) {
                 // 入力なし
@@ -79,11 +76,9 @@ trait DevelopTrait
 
             if (!empty($actions)) {
                 foreach ($actions as $action) {
-                    echo '- '.$action."\n";
+                    $this->comment($action);
                 }
-
-                echo $this->item.' > ';
-                $stdin = trim(fgets(STDIN));
+                $stdin = $this->anticipate($this->item.'項目のアクション', $actions);
 
                 if (empty($stdin)) {
                     // 入力なし
@@ -146,7 +141,7 @@ trait DevelopTrait
 
             $this->updateJson($developJson, $path);
         } else {
-            echo "Can not undo\n";
+            $this->error('undoできません');
         }
 
         return true;
@@ -155,7 +150,7 @@ trait DevelopTrait
     private function askOpenAi($path, $stdin)
     {
         $this->prompt = $stdin;
-        echo $stdin."\n";
+        $this->info($stdin);
 
         // クエリを作成
         $content = file_get_contents($path).'に、'.$stdin.'、JSON形式で出力';
@@ -175,14 +170,14 @@ trait DevelopTrait
         $result = str_replace('```', '', $result);
         $result = trim(str_replace('```', '', $result));
         if (!json_validate($result)) {
-            echo "Can not update\n";
+            $this->error('うまくできませんでした');
 
             return false;
         }
 
         $newJson = json_decode($result, true);
         if (empty($newJson['entry'])) {
-            echo "Can not update\n";
+            $this->error('うまくできませんでした');
 
             return false;
         }
