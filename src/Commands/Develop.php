@@ -19,29 +19,9 @@ class Develop extends Command
             return;
         }
 
-        $developJson = json_decode(file_get_contents($path), true);
+        $developJson = $this->refreshDevelopJson($path);
         if (empty($developJson['controller'])) {
             return;
-        }
-
-        isset($developJson['entry']) || $developJson['entry'] = [];
-
-        if (!empty($developJson['controller']['controllerName'])) {
-            $developJson['controller']['controllerBasename'] = basename($developJson['controller']['controllerName']);
-            $developJson['controller']['controllerDirname'] = dirname($developJson['controller']['controllerName']);
-            if (!empty($developJson['controller']['controllerDirname'])) {
-                $developJson['controller']['controllerDirname'] = str_replace('\/', '\\', $developJson['controller']['controllerDirname']);
-                $developJson['controller']['controllerDirname'] = '\\'.$developJson['controller']['controllerDirname'];
-            }
-        }
-
-        if (!empty($developJson['controller']['modelName'])) {
-            $developJson['controller']['modelBasename'] = basename($developJson['controller']['modelName']);
-            $developJson['controller']['modelDirname'] = dirname($developJson['controller']['modelName']);
-            if (!empty($developJson['controller']['modelDirname'])) {
-                $developJson['controller']['modelDirname'] = str_replace('\/', '\\', $developJson['controller']['modelDirname']);
-                $developJson['controller']['modelDirname'] = '\\'.$developJson['controller']['modelDirname'];
-            }
         }
 
         // コントローラー作成
@@ -158,9 +138,7 @@ class Develop extends Command
 
         if ($migrations = glob(database_path('migrations/*_'.$migrationPath))) {
             $migrationPath = $migrations[0];
-            echo 'Migrate "'.basename($migrationPath).'" ? ';
-
-            if ('y' === trim(strtolower(fgets(STDIN)))) {
+            if ($this->confirm('Migrate "'.basename($migrationPath).'" ?')) {
                 // テーブル再作成
                 \Artisan::call('migrate:refresh', ['--path' => 'database/migrations/'.basename($migrationPath)]);
             }
@@ -168,7 +146,7 @@ class Develop extends Command
             return;
         }
 
-        $migrationPath = database_path('migrations/'.date('Y_m_d').'_000000_'.$migrationPath);
+        $migrationPath = database_path('migrations/'.date('Y_m_d').'_'.sprintf('%06d', rand(0, 9999)).'_'.$migrationPath);
 
         // テーブル定義作成
         $migration = file_get_contents(__DIR__.'/../../develop/migration.php');
@@ -407,6 +385,33 @@ class Develop extends Command
     {
         $path = str_replace(base_path(), '', $path);
 
-        echo "Make {$type} \"{$path}\"\n";
+        $this->info("Make {$type} \"{$path}\"");
+    }
+
+    private function refreshDevelopJson($path)
+    {
+        $developJson = json_decode(file_get_contents($path), true);
+
+        if (!empty($developJson['controller']['controllerName'])) {
+            $developJson['controller']['controllerBasename'] = basename($developJson['controller']['controllerName']);
+            $developJson['controller']['controllerDirname'] = dirname($developJson['controller']['controllerName']);
+            if (!empty($developJson['controller']['controllerDirname'])) {
+                $developJson['controller']['controllerDirname'] = str_replace('\/', '\\', $developJson['controller']['controllerDirname']);
+                $developJson['controller']['controllerDirname'] = '\\'.$developJson['controller']['controllerDirname'];
+            }
+        }
+
+        if (!empty($developJson['controller']['modelName'])) {
+            $developJson['controller']['modelBasename'] = basename($developJson['controller']['modelName']);
+            $developJson['controller']['modelDirname'] = dirname($developJson['controller']['modelName']);
+            if (!empty($developJson['controller']['modelDirname'])) {
+                $developJson['controller']['modelDirname'] = str_replace('\/', '\\', $developJson['controller']['modelDirname']);
+                $developJson['controller']['modelDirname'] = '\\'.$developJson['controller']['modelDirname'];
+            }
+        }
+
+        isset($developJson['entry']) || $developJson['entry'] = [];
+
+        return $developJson;
     }
 }

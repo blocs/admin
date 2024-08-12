@@ -8,11 +8,11 @@ trait DevelopTrait
 {
     private $item;
     private $actions;
-    private $prompt;
 
     private function useOpenAi($developJson, $path)
     {
         $entryJson = [];
+        $lastAction = '';
 
         $this->actions = [];
         $promptPath = base_path('docs/develop/prompt.txt');
@@ -34,7 +34,9 @@ trait DevelopTrait
 
         do {
             if (empty($this->item)) {
-                $stdin = $this->ask('項目を入力');
+                $actions = array_keys($developJson['entry']);
+                array_unshift($actions, 'exit');
+                $stdin = $this->anticipate('項目を入力', array_reverse($actions));
 
                 if (empty($stdin) || $this->undoDevelop($entryJson, $developJson, $path, $stdin)) {
                     // 入力なしかundo
@@ -42,14 +44,12 @@ trait DevelopTrait
                 }
                 $this->exitDevelop($stdin);
 
-                if ('re' === strtolower($stdin)) {
-                    empty($this->prompt) || $this->tryDevelop($entryJson, $developJson, $path, $this->prompt);
-                    continue;
-                }
                 $this->item = str_replace(',', 'と', $stdin);
             }
 
-            $stdin = $this->ask($this->item.'項目のアクション');
+            $actions = ['undo', 'exit', 'refresh', 'migrate'];
+            empty($lastAction) || array_unshift($actions, $lastAction);
+            $stdin = $this->anticipate($this->item.'項目のアクション', array_reverse($actions));
 
             if (empty($stdin)) {
                 // 入力なし
@@ -62,11 +62,6 @@ trait DevelopTrait
             }
             $this->exitDevelop($stdin);
 
-            if ('re' === strtolower($stdin)) {
-                empty($this->prompt) || $this->tryDevelop($entryJson, $developJson, $path, $this->prompt);
-                continue;
-            }
-
             $actions = [];
             foreach ($this->actions as $action) {
                 // 履歴から探索
@@ -78,7 +73,7 @@ trait DevelopTrait
                 foreach ($actions as $action) {
                     $this->comment($action);
                 }
-                $stdin = $this->anticipate($this->item.'項目のアクション', $actions);
+                $stdin = $this->anticipate($this->item.'項目のアクション', array_reverse($actions));
 
                 if (empty($stdin)) {
                     // 入力なし
@@ -90,13 +85,9 @@ trait DevelopTrait
                     continue;
                 }
                 $this->exitDevelop($stdin);
-
-                if ('re' === strtolower($stdin)) {
-                    empty($this->prompt) || $this->tryDevelop($entryJson, $developJson, $path, $this->prompt);
-                    continue;
-                }
             }
 
+            $lastAction = $stdin;
             $this->tryDevelop($entryJson, $developJson, $path, $this->item.$stdin);
         } while (1);
     }
@@ -126,8 +117,34 @@ trait DevelopTrait
     {
         if ('undo' !== strtolower($stdin)) {
             if ('refresh' === strtolower($stdin)) {
-                $developJson = json_decode(file_get_contents($path), true);
+                $developJson = $this->refreshDevelopJson($path);
                 $this->makeView($developJson, true);
+
+                return true;
+            }
+
+            if ('migrate' === strtolower($stdin)) {
+                $developJson = $this->refreshDevelopJson($path);
+
+                $loopItem = $developJson['controller']['loopItem'];
+                $migrationPath = 'create_'.$loopItem.'_table.php';
+
+                if ($migrations = glob(database_path('migrations/*_'.$migrationPath))) {
+                    $migrationPath = $migrations[0];
+                    if ($this->confirm('Migrate "'.basename($migrationPath).'" ?')) {
+                        unlink($migrationPath);
+
+                        // テーブル再作成
+                        $this->makeMigration($developJson);
+
+                        $modelName = $developJson['controller']['modelName'];
+                        $modelPath = app_path("Models/{$modelName}.php");
+                        unlink($modelPath);
+
+                        // モデル再作成
+                        $this->makeModel($developJson);
+                    }
+                }
 
                 return true;
             }
@@ -149,7 +166,6 @@ trait DevelopTrait
 
     private function askOpenAi($path, $stdin)
     {
-        $this->prompt = $stdin;
         $this->info($stdin);
 
         // クエリを作成
