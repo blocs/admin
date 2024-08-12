@@ -181,10 +181,13 @@ trait DevelopTrait
             ],
         ]);
 
+        // 結果のjsonを取得
         $result = $result->choices[0]->message->content;
-        $result = str_replace('```json', '', $result);
-        $result = str_replace('```', '', $result);
-        $result = trim(str_replace('```', '', $result));
+        $result = explode('```json', $result);
+        $result = array_pop($result);
+        list($result) = explode('```', $result);
+        $result = trim($result);
+
         if (!json_validate($result)) {
             $this->error('うまくできませんでした');
 
