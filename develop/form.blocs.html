@@ -75,7 +75,7 @@
         <div class="col-auto p-1" data-loop=$option_>
             <div class="form-check">
                 <label class="form-check-label">
-                    <!-- data-attribute="checked" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><input class="form-check-input" type="radio" :name=$name :value=$value /> <!-- $label data-convert="raw" -->
+                    <!-- data-attribute="required" data-exist=$required --><!-- data-attribute="checked" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><input class="form-check-input" type="radio" :name=$name :value=$value /> <!-- $label data-convert="raw" -->
                 </label>
             </div>
         </div>
@@ -91,7 +91,7 @@
         <div class="col-auto p-1" data-loop=$option_>
             <div class="form-check">
                 <label class="form-check-label">
-                    <!-- data-attribute="checked" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><input class="form-check-input" type="checkbox" :name=$name."[]" :value=$value /> <!-- $label data-convert="raw" -->
+                    <!-- data-attribute="required" data-exist=$required --><!-- data-attribute="checked" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><input class="form-check-input" type="checkbox" :name=$name."[]" :value=$value /> <!-- $label data-convert="raw" -->
                 </label>
             </div>
         </div>
