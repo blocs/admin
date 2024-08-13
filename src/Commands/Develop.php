@@ -63,6 +63,7 @@ class Develop extends Command
             $controller = str_replace($key, $value, $controller);
         }
 
+        is_dir(dirname($controllerPath)) || mkdir(dirname($controllerPath), 0777, true);
         file_put_contents($controllerPath, $controller);
         $this->outputMessageMake('controller', $controllerPath);
 
@@ -127,6 +128,7 @@ class Develop extends Command
             $model = str_replace($key, $value, $model);
         }
 
+        is_dir(dirname($modelPath)) || mkdir(dirname($modelPath), 0777, true);
         file_put_contents($modelPath, $model);
         $this->outputMessageMake('model', $modelPath);
     }
@@ -396,7 +398,7 @@ class Develop extends Command
             $developJson['controller']['controllerBasename'] = basename($developJson['controller']['controllerName']);
             $developJson['controller']['controllerDirname'] = dirname($developJson['controller']['controllerName']);
             if (!empty($developJson['controller']['controllerDirname'])) {
-                $developJson['controller']['controllerDirname'] = str_replace('\/', '\\', $developJson['controller']['controllerDirname']);
+                $developJson['controller']['controllerDirname'] = str_replace('/', '\\', $developJson['controller']['controllerDirname']);
                 $developJson['controller']['controllerDirname'] = '\\'.$developJson['controller']['controllerDirname'];
             }
         }
@@ -405,7 +407,7 @@ class Develop extends Command
             $developJson['controller']['modelBasename'] = basename($developJson['controller']['modelName']);
             $developJson['controller']['modelDirname'] = dirname($developJson['controller']['modelName']);
             if (!empty($developJson['controller']['modelDirname'])) {
-                $developJson['controller']['modelDirname'] = str_replace('\/', '\\', $developJson['controller']['modelDirname']);
+                $developJson['controller']['modelDirname'] = str_replace('/', '\\', $developJson['controller']['modelDirname']);
                 $developJson['controller']['modelDirname'] = '\\'.$developJson['controller']['modelDirname'];
             }
         }
