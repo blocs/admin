@@ -22,7 +22,7 @@ class Blocs
         defined('BLOCS_OPTION_SEPARATOR') || define('BLOCS_OPTION_SEPARATOR', ', ');
 
         // includeの上限設定
-        defined('BLOCS_INCLUDE_MAX') || define('BLOCS_INCLUDE_MAX', 20);
+        defined('BLOCS_INCLUDE_MAX') || define('BLOCS_INCLUDE_MAX', 50);
 
         // サムネイルの品質
         defined('ADMIN_IMAGE_JPEG_QUALITY') || define('ADMIN_IMAGE_JPEG_QUALITY', -1);
