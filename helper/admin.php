@@ -1,9 +1,9 @@
 <?php
 
 if (!function_exists('lang')) {
-    function lang($message)
+    function lang(...$messages)
     {
-        return Blocs\Lang::get($message);
+        return Blocs\Lang::get(implode(':', $messages));
     }
 }
 
