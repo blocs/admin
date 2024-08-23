@@ -129,4 +129,22 @@ class Base extends Controller
 
         return $view;
     }
+
+    private function prepareRequest()
+    {
+        $requestData = $this->request->all();
+
+        foreach ($requestData as $key => $value) {
+            if (is_array($value) && array_values($value) === $value) {
+                if (count($value) && is_array($value[0])) {
+                    continue;
+                }
+
+                // option項目
+                $requestData[$key] = implode("\t", $value);
+            }
+        }
+
+        return $requestData;
+    }
 }
