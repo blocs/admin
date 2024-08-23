@@ -115,7 +115,7 @@ trait UpdateTrait
 
     protected function prepareConfirmUpdate()
     {
-        $this->val = array_merge($this->request->all(), $this->val);
+        $this->val = array_merge($this->prepareRequest(), $this->val);
     }
 
     protected function outputConfirmUpdate()

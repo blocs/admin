@@ -33,7 +33,7 @@ trait DestroyTrait
 
     protected function prepareConfirmDestroy()
     {
-        $this->val = array_merge($this->request->all(), $this->val);
+        $this->val = array_merge($this->prepareRequest(), $this->val);
     }
 
     protected function outputConfirmDestroy()
