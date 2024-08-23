@@ -70,7 +70,7 @@ trait StoreTrait
 
     protected function prepareConfirmStore()
     {
-        $this->val = array_merge($this->request->all(), $this->val);
+        $this->val = array_merge($this->prepareRequest(), $this->val);
     }
 
     protected function outputConfirmStore()
@@ -109,20 +109,7 @@ trait StoreTrait
 
     protected function prepareStore()
     {
-        $requestData = $this->request->all();
-
-        foreach ($requestData as $key => $value) {
-            if (is_array($value) && array_values($value) === $value) {
-                if (count($value) && is_array($value[0])) {
-                    continue;
-                }
-
-                // option項目
-                $requestData[$key] = implode("\t", $value);
-            }
-        }
-
-        return $requestData;
+        return $this->prepareRequest();
     }
 
     protected function executeStore($requestData = [])
