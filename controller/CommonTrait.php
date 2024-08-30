@@ -22,6 +22,15 @@ trait CommonTrait
         // viewPrefixが変わるとクリア
         if (($lastSessionKey = session('viewPrefix').'.'.$keyItem) !== $sessionKey) {
             session()->forget($sessionKey);
+
+            return;
+        }
+
+        // 検索条件をclear
+        if (isset($this->request) && $this->request->has('clear')) {
+            session()->forget($sessionKey);
+
+            return;
         }
 
         // POST
