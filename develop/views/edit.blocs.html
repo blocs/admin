@@ -1,15 +1,25 @@
 <!-- $subTitle=lang("template:resource_blocs_button_edit") -->
 
-<!-- data-bloc="entry_hidden" -->
+<!-- data-bloc="entryHidden" -->
     <input type="hidden" name="updated_at" />
 <!-- data-endbloc -->
 
-<!-- data-bloc="entry_left" -->
-    <!-- data-include="modal_update" -->
+<!-- data-bloc="entryLeft" -->
+    <!--
+        data-include="button_back"
+        $buttonHref=route(prefix().".index")
+    -->
 <!-- data-endbloc -->
 
-<!-- data-bloc="entry_right" -->
-    <!-- data-include="modal_destroy" -->
+<!-- data-bloc="entryCenter" -->
+    <!--
+        data-include="modal_destroy"
+        $modalNoValidate=true
+    -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="entryRight" -->
+    <!-- data-include="modal_update" -->
 <!-- data-endbloc -->
 
 <!-- data-include="include/entry.html" -->
