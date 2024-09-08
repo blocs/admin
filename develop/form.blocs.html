@@ -2,7 +2,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><input type="text" :id=$name :name=$name class="form-control" value="" />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
@@ -13,7 +13,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><textarea :id=$name :name=$name class="form-control" rows="5"></textarea>
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
@@ -24,7 +24,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><input type="text" :id=$name :name=$name class="form-control ai-datepicker" value="" />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
@@ -35,7 +35,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><input type="text" :id=$name :name=$name class="form-control ai-timepicker" value="" />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
@@ -46,7 +46,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><select :id=$name :name=$name class="form-control">
 <!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><!-- data-loop=$option_ -->            <option :value=$value><!-- $label --></option>
 <!-- data-endloop -->       </select>
@@ -59,7 +59,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- :name=$name data-none=$multiple --><!-- :name=$name."[]" data-exist=$multiple --><!-- data-attribute="required" data-exist=$required --><!-- data-attribute="multiple" data-exist=$multiple --><select :id=$name class="form-control ai-select2">
 <!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><!-- data-loop=$option_ -->            <option :value=$value><!-- $label --></option>
 <!-- data-endloop -->       </select>
@@ -71,7 +71,7 @@
 <!-- data-endif --><!-- data-if="'radio' === $type" -->
 <#-- data-bloc="form_<!-- $name -->" -->
     <div class="row">
-        <label><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
+        <label><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <div class="col-auto p-1" data-loop=$option_>
             <div class="form-check">
                 <label class="form-check-label">
@@ -87,7 +87,7 @@
 <!-- data-endif --><!-- data-if="'checkbox' === $type" -->
 <#-- data-bloc="form_<!-- $name -->" -->
     <div class="row">
-        <label><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
+        <label><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <div class="col-auto p-1" data-loop=$option_>
             <div class="form-check">
                 <label class="form-check-label">
@@ -106,7 +106,7 @@
         $uploadMessage=lang("template:admin_profile_upload_message")
         $uploadDelete=lang("template:admin_profile_upload_delete")
     -->
-    <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
+    <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
     <!-- data-attribute="required" data-exist=$required --><!-- data-attribute="multiple" data-exist=$multiple --><input type="hidden" :id=$name :name=$name class="ai-upload" />
 
     <#-- !<!-- $name -->="mimes:jpg,jpeg,gif,png" data-lang="template:admin_profile_upload_image_only" -->
@@ -120,7 +120,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><input type="number" :id=$name :name=$name class="form-control text-right" value="" min="1" />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
