@@ -221,13 +221,13 @@ class Develop extends Command
 
         $blocsCompiler = new \Blocs\Compiler\BlocsCompiler();
         foreach ($developJson['entry'] as $formName => $form) {
-            $replaceItem['HEAD_HTML'] .= '                        <!-- data-include="sortHeader" $sortItem="'.$formName.'" -->'."\n";
-            $replaceItem['HEAD_HTML'] .= '                        <th>'."\n";
-            $replaceItem['HEAD_HTML'] .= '                            <!-- data-include="sortHref" -->'."\n";
-            $replaceItem['HEAD_HTML'] .= '                            <a class="dataTable-sorter">'.$form['label']."</a>\n";
-            $replaceItem['HEAD_HTML'] .= '                        </th>'."\n";
+            $replaceItem['HEAD_HTML'] .= '                            <!-- data-include="sortHeader" $sortItem="'.$formName.'" -->'."\n";
+            $replaceItem['HEAD_HTML'] .= '                            <th>'."\n";
+            $replaceItem['HEAD_HTML'] .= '                                <!-- data-include="sortHref" -->'."\n";
+            $replaceItem['HEAD_HTML'] .= '                                <a class="dataTable-sorter">'.$form['label']."</a>\n";
+            $replaceItem['HEAD_HTML'] .= '                            </th>'."\n";
 
-            $replaceItem['BODY_HTML'] .= '                        <td class=""><!-- $'.$replaceItem['SINGULAR_ITEM'].'->'.$formName;
+            $replaceItem['BODY_HTML'] .= '                            <td class=""><!-- $'.$replaceItem['SINGULAR_ITEM'].'->'.$formName;
             'upload' === $form['type'] && $replaceItem['BODY_HTML'] .= ' data-convert="raw_download"';
             $replaceItem['BODY_HTML'] .= ' --></td>'."\n";
 
@@ -243,7 +243,7 @@ class Develop extends Command
                 }
             }
 
-            $replaceItem['FORM_HTML'] .= '    <!-- data-include="form_'.$formName.'" -->'."\n";
+            $replaceItem['FORM_HTML'] .= '        <!-- data-include="form_'.$formName.'" -->'."\n";
             $formHtml .= $blocsCompiler->render($formBlocsHtml, $form);
         }
 

@@ -1,20 +1,23 @@
 <!-- data-include="/admin/base/entry/header.blocs.html" -->
 <!-- data-include="form.html" -->
 
-<!-- data-include="entry_hidden" data-exist -->
+<!-- data-include="entryHidden" data-exist -->
 
-<div class="card-body pt-2 d-flex flex-column gap-3"><!-- FORM_HTML --></div>
+<div class="card">
+    <!-- data-include="cardHeader" -->
+    <div class="card-body pt-2 d-flex flex-column gap-3"><!-- FORM_HTML -->    </div>
+</div>
 
-<!-- data-bloc="button_bottom_left" -->
-    <!--
-        data-include="button_back"
-        $buttonHref=route(prefix().".index")
-    -->
-    <!-- data-include="entry_left" data-exist -->
+<!-- data-bloc="buttonBottomLeft" -->
+    <!-- data-include="entryLeft" data-exist -->
 <!-- data-endbloc -->
 
-<!-- data-bloc="button_bottom_right" -->
-    <!-- data-include="entry_right" data-exist -->
+<!-- data-bloc="buttonBottomCenter" -->
+    <!-- data-include="entryCenter" data-exist -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="buttonBottomRight" -->
+    <!-- data-include="entryRight" data-exist -->
 <!-- data-endbloc -->
 
 <!-- data-include="/admin/base/entry/footer.blocs.html" -->
