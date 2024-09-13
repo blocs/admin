@@ -3,7 +3,7 @@
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
-        <!-- data-attribute="required" data-exist=$required --><input type="text" :id=$name :name=$name class="form-control" value="" />
+        <!-- data-attribute="required" data-exist=$required --><!-- :placeholder=$placeholder data-exist=$placeholder --><!-- data-attribute="disabled" data-exist=$disabled --><!-- data-attribute="readonly" data-exist=$readonly --><input :type=$inputType :id=$name :name=$name class="form-control" :value=$value />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -14,7 +14,7 @@
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
-        <!-- data-attribute="required" data-exist=$required --><textarea :id=$name :name=$name class="form-control" rows="5"></textarea>
+        <!-- data-attribute="required" data-exist=$required --><!-- :placeholder=$placeholder data-exist=$placeholder --><!-- data-attribute="disabled" data-exist=$disabled --><!-- data-attribute="readonly" data-exist=$readonly --><textarea :id=$name :name=$name class="form-control" rows="5"><!-- $value --></textarea>
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -25,7 +25,7 @@
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
-        <!-- data-attribute="required" data-exist=$required --><input type="text" :id=$name :name=$name class="form-control ai-datepicker" value="" />
+        <!-- data-attribute="required" data-exist=$required --><!-- :placeholder=$placeholder data-exist=$placeholder --><!-- data-attribute="disabled" data-exist=$disabled --><!-- data-attribute="readonly" data-exist=$readonly --><input type="text" :id=$name :name=$name class="form-control ai-datepicker" :value=$value />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -36,7 +36,7 @@
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
-        <!-- data-attribute="required" data-exist=$required --><input type="text" :id=$name :name=$name class="form-control ai-timepicker" value="" />
+        <!-- data-attribute="required" data-exist=$required --><!-- :placeholder=$placeholder data-exist=$placeholder --><!-- data-attribute="disabled" data-exist=$disabled --><!-- data-attribute="readonly" data-exist=$readonly --><input type="text" :id=$name :name=$name class="form-control ai-timepicker" :value=$value />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -121,7 +121,7 @@
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
         <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
-        <!-- data-attribute="required" data-exist=$required --><input type="number" :id=$name :name=$name class="form-control text-right" value="" min="1" />
+        <!-- data-attribute="required" data-exist=$required --><!-- :placeholder=$placeholder data-exist=$placeholder --><!-- data-attribute="disabled" data-exist=$disabled --><!-- data-attribute="readonly" data-exist=$readonly --><input type="number" :id=$name :name=$name class="form-control text-right" :value=$value min="1" />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
         @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror

@@ -221,6 +221,9 @@ class Develop extends Command
 
         $blocsCompiler = new \Blocs\Compiler\BlocsCompiler();
         foreach ($developJson['entry'] as $formName => $form) {
+            $form['name'] = $formName;
+            isset($form['label']) || $form['label'] = '';
+
             $replaceItem['HEAD_HTML'] .= '                            <!-- data-include="sortHeader" $sortItem="'.$formName.'" -->'."\n";
             $replaceItem['HEAD_HTML'] .= '                            <th>'."\n";
             $replaceItem['HEAD_HTML'] .= '                                <!-- data-include="sortHref" -->'."\n";
@@ -231,7 +234,10 @@ class Develop extends Command
             'upload' === $form['type'] && $replaceItem['BODY_HTML'] .= ' data-convert="raw_download"';
             $replaceItem['BODY_HTML'] .= ' --></td>'."\n";
 
-            $form['name'] = $formName;
+            if (!in_array($form['type'], ['textarea', 'datepicker', 'timepicker', 'select', 'select2', 'radio', 'checkbox', 'upload', 'number'])) {
+                $form['inputType'] = $form['type'];
+                $form['type'] = 'text';
+            }
 
             $form['option_'] = [];
             if (!empty($form['option'])) {
@@ -332,7 +338,7 @@ class Develop extends Command
 
         $formList = [];
         foreach ($developJson['entry'] as $formName => $form) {
-            $formList[] = "{$formName}' => '".$form['label'];
+            isset($form['label']) && $formList[] = "{$formName}' => '".$form['label'];
         }
         $docs = str_replace('FORM_LIST', $this->getList($formList, ",\n        ", "'"), $docs);
 
