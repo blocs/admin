@@ -1,0 +1,42 @@
+<!-- data-bloc="formStart" -->
+    <!-- data-assign=$searchPlaceholder data-val=true data-if="!isset($searchPlaceholder) && isset($searchField)" -->
+    <!-- :action=route(prefix().".search") data-exist=$searchPlaceholder -->
+    <!-- :role="search" data-exist=$searchPlaceholder -->
+    <form method="post">
+        @csrf
+        <!--
+            data-include="button"
+            $buttonType="submit"
+            $buttonClass="d-none"
+            $buttonLabel="Search"
+        -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="formSearch" -->
+    <!-- data-include="search.html" data-exist=$searchPlaceholder -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="formEnd" -->
+    </form>
+<!-- data-endbloc -->
+
+<!-- data-include="/admin/base/common/header.html" -->
+
+<div class="row">
+    <div class="col-12">
+
+<!-- data-bloc="sortHeader" -->
+    <!-- $sortClass="" data-none -->
+    <!-- :class=$sortClass data-none=$sort[$sortItem] -->
+    <!-- :class="{$sortClass} asc" data-if="!empty($sort[$sortItem]) && $sort[$sortItem] === 'asc'" -->
+    <!-- :class="{$sortClass} desc" data-if="!empty($sort[$sortItem]) && $sort[$sortItem] === 'desc'" -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="sortHref" -->
+    <!-- $sortOrder="asc" data-none -->
+    <!-- data-if="'asc' === $sortOrder" --><!-- $sortReverse="desc" --><!-- data-endif -->
+    <!-- data-unless="'asc' === $sortOrder" --><!-- $sortReverse="asc" --><!-- data-endif -->
+    <!-- :href=route(prefix().".index", ["sort[{$sortItem}]" => $sortOrder]) data-none=$sort[$sortItem] -->
+    <!-- :href=route(prefix().".index", ["sort[{$sortItem}]" => $sortReverse]) data-if="!empty($sort[$sortItem]) && $sort[$sortItem] === $sortOrder" -->
+    <!-- :href=route(prefix().".index", ["sort[{$sortItem}]" => ""]) data-if="!empty($sort[$sortItem]) && $sort[$sortItem] === $sortReverse" -->
+<!-- data-endbloc -->

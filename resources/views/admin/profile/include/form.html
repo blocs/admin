@@ -1,0 +1,79 @@
+<!-- data-bloc="form_email" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("email") -->
+    <div class="input-group input-group-outline">
+        <label class="form-label"><!-- data-lang='template:admin_profile_user_id' --> *</label>
+        <input type="text" class="form-control" value="" required id="email" name="email" />
+
+        <!-- !email="required" data-lang="validate:required:email" -->
+        <!-- !email="softUnique:users" data-lang="template:admin_user_id_unique" -->
+        @error("email") <div class="invalid-feedback">{{ $message }}</div> @enderror
+    </div>
+<!-- data-endbloc -->
+
+<!-- data-bloc="form_role" -->
+    <div class="row">
+        <label><!-- data-lang='template:admin_user_role' --></label>
+        <div class="col-auto p-1" data-loop=$option_role>
+            <div class="form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox" name="role[]" :value=$value /> <!-- $label -->
+                </label>
+            </div>
+        </div>
+
+        @error("role") <div class="invalid-feedback">{{ $message }}</div> @enderror
+    </div>
+<!-- data-endbloc -->
+
+<!-- data-bloc="form_name" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("name") -->
+    <div class="input-group input-group-outline">
+        <label class="form-label"><!-- data-lang='template:admin_profile_name' --></label>
+        <input type="text" class="form-control" value=""  id="name" name="name" />
+
+        @error("name") <div class="invalid-feedback">{{ $message }}</div> @enderror
+    </div>
+<!-- data-endbloc -->
+
+<!-- data-bloc="form_password_old" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("password_old") -->
+    <div class="input-group input-group-outline">
+        <label class="form-label"><!-- data-lang='template:admin_profile_password_old' --></label>
+        <input type="password" class="form-control" value=""  id="password_old" name="password_old" />
+
+        @error("password_old") <div class="invalid-feedback">{{ $message }}</div> @enderror
+    </div>
+<!-- data-endbloc -->
+
+<!-- data-bloc="form_password_new" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("password_new") -->
+    <div class="input-group input-group-outline">
+        <label class="form-label"><!-- data-lang='template:admin_profile_new_password' --></label>
+        <input type="password" class="form-control" value=""  id="password_new" name="password_new" />
+
+        @error("password_new") <div class="invalid-feedback">{{ $message }}</div> @enderror
+    </div>
+<!-- data-endbloc -->
+
+<!-- data-bloc="form_repassword_new" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("repassword_new") -->
+    <div class="input-group input-group-outline">
+        <label class="form-label"><!-- data-lang='template:admin_profile_new_password_check' --></label>
+        <input type="password" class="form-control" value=""  id="repassword_new" name="repassword_new" />
+
+        <!-- !repassword_new="same:password_new" data-lang="template:admin_profile_password_incorrect" -->
+        @error("repassword_new") <div class="invalid-feedback">{{ $message }}</div> @enderror
+    </div>
+<!-- data-endbloc -->
+
+<!-- data-bloc="form_avatar" -->
+    <!--
+        $uploadMessage=lang("template:admin_profile_upload_message")
+        $uploadDelete=lang("template:admin_profile_upload_delete")
+    -->
+    <label class="form-label"><!-- data-lang="template:admin_profile_avatar" --></label>
+    <input type="hidden" name="file" class="ai-upload" />
+
+    <!-- !file="mimes:jpg,jpeg,gif,png" data-lang="template:admin_profile_upload_image_only" -->
+    <!-- !file="max:200" data-lang="template:admin_profile_upload_too_large" -->
+<!-- data-endbloc -->

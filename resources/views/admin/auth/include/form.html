@@ -1,0 +1,26 @@
+<!-- data-bloc="form_email" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("email") -->
+    <div class="input-group input-group-outline">
+        <label class="form-label"><!-- data-lang='template:admin_login_user_id' --></label>
+        <input type="text" class="form-control" value="" required id="email" name="email" />
+
+        @error("email") <div class="invalid-feedback">{{ $message }}</div> @enderror
+    </div>
+<!-- data-endbloc -->
+
+<!-- data-bloc="form_password" -->
+    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("password") -->
+    <div class="input-group input-group-outline">
+        <label class="form-label"><!-- data-lang='template:admin_login_password' --></label>
+        <input type="password" class="form-control" value="" required id="password" name="password" />
+
+        @error("password") <div class="invalid-feedback">{{ $message }}</div> @enderror
+    </div>
+<!-- data-endbloc -->
+
+<!-- data-bloc="form_remember" -->
+    <div class="form-check form-switch d-flex align-items-center">
+        <input class="form-check-input" type="checkbox" id="remember" name="remember" value="1" checked />
+        <label class="form-check-label mb-0 ms-3" for="remember"><!-- data-lang="template:admin_login_save_info" --></label>
+    </div>
+<!-- data-endbloc -->

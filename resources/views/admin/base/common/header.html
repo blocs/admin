@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title><!-- data-val=$headline["label"] data-postfix=" | " -->BLOCS</title>
+        <!-- data-include="/admin/base/common/css.html" -->
+    </head>
+    <body class="g-sidenav-show bg-gray-200">
+        <!-- data-include="/admin/base/common/sideNav.html" -->
+        <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+            <!-- data-include="/admin/base/common/topNav.html" -->
+            <!-- data-include="formStart" data-exist -->
+            <div class="container-fluid py-0 d-flex flex-column gap-2">
+                <!-- data-include="message.html" -->
+                <!-- $buttonTopLeft=true data-exist="buttonTopLeft" -->
+                <!-- $buttonTopCenter=true data-exist="buttonTopCenter" -->
+                <!-- $buttonTopRight=true data-exist="buttonTopRight" -->
+                <div class="d-flex flex-wrap justify-content-between" data-if="isset($buttonTopLeft) || isset($buttonTopCenter) || isset($buttonTopRight)">
+                    <div>
+                        <!-- data-include="buttonTopLeft" data-exist -->
+                    </div>
+                    <div>
+                        <!-- data-include="buttonTopCenter" data-exist -->
+                    </div>
+                    <div>
+                        <!-- data-include="buttonTopRight" data-exist -->
+                    </div>
+                </div>
+
+<!-- data-bloc="cardHeader" -->
+    <div class="card-header pt-2 pb-0">
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <h5 class="m-0 py-2">
+                    <i :class="fa-solid {$headline["icon"]}" data-exist=$headline["icon"]></i>
+                    <!-- $headline["label"] -->
+                </h5>
+                <p class="text-sm ms-3 mb-0" data-exist=$headline["menu"]>|
+                    <!-- $headline["menu"] -->
+                </p>
+            </div>
+            <div class="mx-n2">
+                <!-- data-none=$search -->
+                    <a class="me-3 summary-search" data-exist=$searchPlaceholder>
+                        <i class="fa-solid fa-search" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:admin_user_button_search")></i>
+                    </a>
+                <!-- data-endnone -->
+                <!-- data-include="buttonCardHeader" data-exist -->
+            </div>
+        </div>
+        <p class="text-sm" data-exist=$subTitle><!-- $subTitle --></p>
+        <!-- data-include="formSearch" data-exist -->
+    </div>
+<!-- data-endbloc -->

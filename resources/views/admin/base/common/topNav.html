@@ -1,4 +1,4 @@
-<nav class="navbar navbar-main navbar-expand-lg position-sticky mt-4 mb-1 top-1 px-0 mx-4 shadow-none border-radius-xl z-index-sticky" id="navbarBlur" data-scroll="true">
+<nav class="navbar navbar-main navbar-expand-lg position-sticky mt-2 mb-1 top-1 px-0 mx-2 shadow-none border-radius-xl z-index-sticky" id="navbarBlur" data-scroll="true">
     <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
@@ -15,13 +15,13 @@
             <ul class="navbar-nav justify-content-end align-items-center">
                 @auth
                 <li class="nav-item">
-                    <a :href=route("profile.edit", ["id" => $auth_id]) class="nav-link px-2">
+                    <a :href=route("profile.edit", ["id" => $auth_id]) class="nav-link py-0">
                         <i class="fa-solid fa-user-circle"></i>
                     </a>
                 </li>
                 @endauth
                 <li class="nav-item">
-                    <a class="nav-link px-2" id="iconNavbarSidenav">
+                    <a class="nav-link py-0" id="iconNavbarSidenav">
                         <div class="sidenav-toggler sidenav-toggler-inner">
                             <i class="sidenav-toggler-line"></i>
                             <i class="sidenav-toggler-line"></i>
@@ -30,7 +30,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link px-2" data-bs-toggle="modal" data-bs-target="#modalLogout">
+                    <a href="#" class="nav-link py-0" data-bs-toggle="modal" data-bs-target="#modalLogout">
                         <i class="fa-solid fa-sign-out-alt"></i>
                     </a>
                 </li>
