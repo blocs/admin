@@ -1,17 +1,17 @@
 <!--
     data-include="/admin/base/entry/header.html"
-    $subTitle=lang("template:resource_blocs_modal_new_title")
+    $subTitle=lang("template:resource_blocs_modal_delete_title")
 -->
-<!-- data-include="include/form.html" -->
+<!-- data-include="include/show.html" -->
+
+<input type="hidden" name="updated_at" />
 
 <div class="card">
     <!-- data-include="cardHeader" -->
     <div class="card-body pt-2 d-flex flex-column gap-3">
-        <!-- data-include="form_email" -->
-        <!-- data-include="form_role" -->
-        <!-- data-include="form_name" -->
-        <!-- data-include="form_password" -->
-        <!-- data-include="form_repassword" -->
+        <!-- data-include="show_email" -->
+        <!-- data-include="show_role" -->
+        <!-- data-include="show_name" -->
     </div>
 </div>
 
@@ -23,7 +23,10 @@
 <!-- data-endbloc -->
 
 <!-- data-bloc="buttonBottomRight" -->
-    <!-- data-include="modal_store" -->
+    <!--
+        data-include="modal_destroy"
+        $modalNoValidate=true
+    -->
 <!-- data-endbloc -->
 
 <!-- data-include="/admin/base/entry/footer.html" -->

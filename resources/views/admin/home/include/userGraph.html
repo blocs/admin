@@ -1,0 +1,42 @@
+<!--
+    data-include="chartjs_2bar1line"
+    $graphId="graphUser"
+    $chartjsColor="Blues3"
+    $graphLegendBar1=lang("template:admin_top_user_legend_registered")
+    $graphLegendBar2=lang("template:admin_top_user_legend_deleted")
+    $graphLegendLine1=lang("template:admin_top_user_legend_accumulated")
+-->
+
+<div class="card">
+    <div class="card-header pb-0 p-3">
+        <h5 class="mb-0">
+            <i class="fa-solid fa-users" aria-hidden="true"></i>
+            <!-- data-lang="template:admin_top_user_title" -->
+        </h5>
+        <div class="d-flex align-items-center">
+            <span class="badge badge-md badge-dot me-4">
+                <i style="background-color: #deebf7;"></i>
+                <span class="text-dark text-xs">
+                    <!-- data-lang="template:admin_top_user_legend_registered" -->
+                </span>
+            </span>
+            <span class="badge badge-md badge-dot me-4">
+                <i style="background-color: #9ecae1;"></i>
+                <span class="text-dark text-xs">
+                    <!-- data-lang="template:admin_top_user_legend_deleted" -->
+                </span>
+            </span>
+            <span class="badge badge-md badge-dot me-4">
+                <i style="background-color: #3182bd;"></i>
+                <span class="text-dark text-xs">
+                    <!-- data-lang="template:admin_top_user_legend_accumulated" -->
+                </span>
+            </span>
+        </div>
+    </div>
+    <div class="card-body p-3">
+        <div class="chart">
+            <canvas :id=$graphId class="chart-canvas" height="300"></canvas>
+        </div>
+    </div>
+</div>
