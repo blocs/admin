@@ -215,9 +215,13 @@ class Develop extends Command
         $replaceItem['HEAD_HTML'] = '';
         $replaceItem['BODY_HTML'] = '';
 
-        $formBlocsHtml = file_get_contents(__DIR__.'/../../develop/form.blocs.html');
+        $formBlocsHtml = file_get_contents(__DIR__.'/../../develop/form.html');
         $replaceItem['FORM_HTML'] = "\n";
         $formHtml = '';
+
+        $showBlocsHtml = file_get_contents(__DIR__.'/../../develop/show.html');
+        $replaceItem['SHOW_HTML'] = "\n";
+        $showHtml = '';
 
         $blocsCompiler = new \Blocs\Compiler\BlocsCompiler();
         foreach ($developJson['entry'] as $formName => $form) {
@@ -251,10 +255,13 @@ class Develop extends Command
 
             $replaceItem['FORM_HTML'] .= '        <!-- data-include="form_'.$formName.'" -->'."\n";
             $formHtml .= $blocsCompiler->render($formBlocsHtml, $form);
+
+            $replaceItem['SHOW_HTML'] .= '        <!-- data-include="show_'.$formName.'" -->'."\n";
+            $showHtml .= $blocsCompiler->render($showBlocsHtml, $form);
         }
 
         if ($refresh) {
-            foreach ([$viewPath.'/include/entry.html', $viewPath.'/include/form.html'] as $file) {
+            foreach ([$viewPath.'/include/entry.html', $viewPath.'/include/form.html', $viewPath.'/include/show.html', $viewPath.'/show.blocs.html'] as $file) {
                 unlink($file);
             }
         }
@@ -264,8 +271,15 @@ class Develop extends Command
         if (!file_exists($viewPath.'/include/form.html')) {
             $formHtml = str_replace('<#-- ', '<!-- ', $formHtml);
 
-            file_put_contents($viewPath.'/include/form.html', ltrim($formHtml));
+            file_put_contents($viewPath.'/include/form.html', trim($formHtml)."\n");
             $this->outputMessageMake('view', $viewPath.'/include/form.html');
+        }
+
+        if (!file_exists($viewPath.'/include/show.html')) {
+            $showHtml = str_replace('<#-- ', '<!-- ', $showHtml);
+
+            file_put_contents($viewPath.'/include/show.html', trim($showHtml)."\n");
+            $this->outputMessageMake('view', $viewPath.'/include/show.html');
         }
     }
 
