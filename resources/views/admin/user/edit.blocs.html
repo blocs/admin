@@ -1,69 +1,32 @@
 <!--
-    data-include="/admin/base/entry/header.blocs.html"
-    $subTitle=lang("template:resource_blocs_button_edit")
+    data-include="/admin/base/entry/header.html"
+    $subTitle=lang("template:resource_blocs_modal_update_title")
 -->
+<!-- data-include="include/form.html" -->
 
 <input type="hidden" name="updated_at" />
 
-<div class="card-body pt-2 d-flex flex-column gap-3">
-    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("email") -->
-    <div class="input-group input-group-outline">
-        <label class="form-label"><!-- data-lang="template:admin_profile_user_id" --></label>
-        <input type="text" name="email" class="form-control" required />
-    </div>
-
-    <div class="row" data-exist=$option_role>
-        <label><!-- data-lang="template:admin_user_role" --></label>
-        <div class="col-auto p-1" data-loop=$option_role>
-            <div class="form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" type="checkbox" name="role[]" :value=$value /> <!-- $label -->
-                </label>
-            </div>
-        </div>
-    </div>
-
-    <div class="input-group input-group-outline">
-        <label class="form-label"><!-- data-lang="template:admin_profile_name" --></label>
-        <input type="text" name="name" class="form-control" />
-    </div>
-
-    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("password_old") -->
-    <div class="input-group input-group-outline">
-        <label class="form-label"><!-- data-lang="template:admin_profile_password_old" --></label>
-        <input type="password" name="password_old" class="form-control" />
-
-        @error("password_old") <div class="invalid-feedback">{{ $message }}</div> @enderror
-    </div>
-
-    <div class="input-group input-group-outline">
-        <label class="form-label"><!-- data-lang="template:admin_profile_new_password" --></label>
-        <input type="password" name="password_new" class="form-control" />
-    </div>
-
-    <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("repassword_new") -->
-    <div class="input-group input-group-outline">
-        <label class="form-label"><!-- data-lang="template:admin_profile_new_password_check" --></label>
-        <input type="password" name="repassword_new" class="form-control" />
-
-        <!-- !repassword_new="same:password_new" data-lang="template:admin_profile_password_incorrect" -->
-        @error("repassword_new") <div class="invalid-feedback">{{ $message }}</div> @enderror
+<div class="card">
+    <!-- data-include="cardHeader" -->
+    <div class="card-body pt-2 d-flex flex-column gap-3">
+        <!-- data-include="form_email" -->
+        <!-- data-include="form_role" -->
+        <!-- data-include="form_name" -->
+        <!-- data-include="form_password_old" -->
+        <!-- data-include="form_password_new" -->
+        <!-- data-include="form_repassword_new" -->
     </div>
 </div>
 
-<!-- data-bloc="button_bottom_left" -->
+<!-- data-bloc="buttonBottomLeft" -->
     <!--
         data-include="button_back"
         $buttonHref=route(prefix().".index")
     -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="buttonBottomRight" -->
     <!-- data-include="modal_update" -->
 <!-- data-endbloc -->
 
-<!-- data-bloc="button_bottom_right" -->
-    <!--
-        data-include="modal_destroy"
-        $modalNoValidate=true
-    -->
-<!-- data-endbloc -->
-
-<!-- data-include="/admin/base/entry/footer.blocs.html" -->
+<!-- data-include="/admin/base/entry/footer.html" -->

@@ -1,8 +1,8 @@
-<!-- data-bloc="button_back_modal" -->
+<!-- data-bloc="buttonBackModal" -->
     <!-- :data-bs-dismiss="modal" -->
     <!--
         data-include="button"
-        $buttonModalBackClass="btn btn-secondary"
+        $buttonModalBackClass="btn btn-outline-secondary"
         $buttonClass=$buttonModalBackClass
         $buttonModalBackIcon="fa-solid fa-arrow-left"
         $buttonIcon=$buttonModalBackIcon
@@ -13,7 +13,7 @@
     <!-- $buttonModalBackClass="" $buttonModalBackIcon="" $buttonModalBackLabel="" -->
 <!-- data-endbloc -->
 
-<!-- data-bloc="button_modal" -->
+<!-- data-bloc="buttonModal" -->
     <!-- :formaction=$modalAction data-exist=$modalAction -->
     <!--
         data-include="button"
@@ -26,45 +26,45 @@
     <!-- $buttonModalClass="" $buttonModalIcon="" $buttonModalLabel="" -->
 <!-- data-endbloc -->
 
-<!-- data-bloc="button_primary_modal" -->
+<!-- data-bloc="buttonPrimaryModal" -->
     <!--
-        data-include="button_modal"
+        data-include="buttonModal"
         $buttonModalClass="btn btn-primary"
         $buttonModalIcon="fa-solid fa-arrow-right"
         $buttonModalLabel=lang("template:resource_blocs_button_submit")
     -->
 <!-- data-endbloc -->
 
-<!-- data-bloc="button_info_modal" -->
+<!-- data-bloc="buttonInfoModal" -->
     <!--
-        data-include="button_modal"
+        data-include="buttonModal"
         $buttonModalClass="btn btn-info"
         $buttonModalIcon="fa-solid fa-info-circle"
         $buttonModalLabel=lang("template:resource_blocs_button_submit")
     -->
 <!-- data-endbloc -->
 
-<!-- data-bloc="button_success_modal" -->
+<!-- data-bloc="buttonSuccessModal" -->
     <!--
-        data-include="button_modal"
+        data-include="buttonModal"
         $buttonModalClass="btn btn-success"
         $buttonModalIcon="fa-solid fa-check"
         $buttonModalLabel=lang("template:resource_blocs_button_submit")
     -->
 <!-- data-endbloc -->
 
-<!-- data-bloc="button_danger_modal" -->
+<!-- data-bloc="buttonDangerModal" -->
     <!--
-        data-include="button_modal"
+        data-include="buttonModal"
         $buttonModalClass="btn btn-danger"
         $buttonModalIcon="fa-solid fa-trash"
         $buttonModalLabel=lang("template:resource_blocs_button_delete")
     -->
 <!-- data-endbloc -->
 
-<!-- data-bloc="button_warning_modal" -->
+<!-- data-bloc="buttonWarningModal" -->
     <!--
-        data-include="button_modal"
+        data-include="buttonModal"
         $buttonModalClass="btn btn-warning"
         $buttonModalIcon="fa-solid fa-exclamation-triangle"
         $buttonModalLabel=lang("template:resource_blocs_button_warning")
@@ -76,12 +76,12 @@
     <!-- $modalName="modalLogout" data-none -->
 
     <!-- モーダル設定 -->
-    <!-- data-bloc="modal_button" -->
+    <!-- data-bloc="modalFooter" -->
         <form method="post">
             @csrf
-            <!-- data-include="button_back_modal" -->
+            <!-- data-include="buttonBackModal" -->
             <!--
-                data-include="button_primary_modal"
+                data-include="buttonPrimaryModal"
                 $modalAction=route("logout")
                 $buttonModalIcon="fa-solid fa-sign-out-alt"
                 $buttonModalLabel=lang("template:resource_blocs_logout_button")
@@ -105,10 +105,9 @@
     <!-- data-include="button_primary" -->
 
     <!-- モーダル設定 -->
-    <!-- data-bloc="modal_button" -->
-        <!-- data-include="button_back_modal" -->
+    <!-- data-bloc="modalFooterRight" -->
         <!--
-            data-include="button_primary_modal"
+            data-include="buttonPrimaryModal"
             $modalAction=route(prefix().".store")
         -->
     <!-- data-endbloc -->
@@ -129,10 +128,9 @@
     <!-- data-include="button_primary" -->
 
     <!-- モーダル設定 -->
-    <!-- data-bloc="modal_button" -->
-        <!-- data-include="button_back_modal" -->
+    <!-- data-bloc="modalFooterRight" -->
         <!--
-            data-include="button_primary_modal"
+            data-include="buttonPrimaryModal"
             $modalAction=route(prefix().".update", ["id" => $id])
             $buttonModalLabel=lang("template:resource_blocs_modal_update_button")
         -->
@@ -154,10 +152,9 @@
     <!-- data-include="button_danger" -->
 
     <!-- モーダル設定 -->
-    <!-- data-bloc="modal_button" -->
-        <!-- data-include="button_back_modal" -->
+    <!-- data-bloc="modalFooterRight" -->
         <!--
-            data-include="button_danger_modal"
+            data-include="buttonDangerModal"
             $modalAction=route(prefix().".destroy", ["id" => $id])
         -->
     <!-- data-endbloc -->
@@ -180,16 +177,30 @@
                 </div>
                 <div class="modal-body">
                     <p><!-- $modalMessage --></p>
-                    <!-- data-include="modal_body" data-exist -->
+                    <!-- data-include="modalBody" data-exist -->
                 </div>
                 <div class="modal-footer">
-                    <!-- data-include="modal_button" -->
+                    <!-- data-include="modalFooter" -->
                 </div>
             </div>
         </div>
     </div>
 
     <!-- $modalName="" $modalAction="" $modalClass="" $modalTitle="" $modalMessage="" $formAction="" $modalNoValidate="" -->
-    <!-- data-bloc="modal_body" --><!-- data-endbloc -->
-    <!-- data-bloc="modal_button" --><!-- data-endbloc -->
+    <!-- data-bloc="modalBody" --><!-- data-endbloc -->
+    <!-- data-bloc="modalFooterLeft" -->
+        <!-- data-include="buttonBackModal" -->
+    <!-- data-endbloc -->
+    <!-- data-bloc="modalFooterRight" -->
+    <!-- data-endbloc -->
+    <!-- data-bloc="modalFooter" -->
+    <div class="w-100 d-flex flex-wrap justify-content-between">
+        <div>
+            <!-- data-include="modalFooterLeft" -->
+        </div>
+        <div>
+            <!-- data-include="modalFooterRight" -->
+        </div>
+    </div>
+    <!-- data-endbloc -->
 <!-- data-endbloc -->

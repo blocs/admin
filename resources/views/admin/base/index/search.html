@@ -1,4 +1,6 @@
-<div class="w-100 mt-2">
+<!-- data-attribute="open" data-exist=$search -->
+<details role="search" class="w-100">
+    <summary></summary>
     <div class="row">
         <div class="col-auto p-1 flex-grow-1" data-unless="isset($searchField) && false === $searchField">
             <div class="input-group input-group-outline">
@@ -15,12 +17,14 @@
                 $buttonIcon="fa-solid fa-search"
                 $buttonLabel=lang("template:admin_user_button_search")
             -->
+            <!-- :formaction=route(prefix().".search", ['clear']) -->
             <!--
                 data-include="button"
+                $buttonType="submit"
                 $buttonClass="btn btn-outline-secondary m-0 clear"
                 $buttonIcon="fa-solid fa-times"
                 $buttonLabel=lang("template:admin_user_button_clear")
             -->
         </div>
     </div>
-</div>
+</details>

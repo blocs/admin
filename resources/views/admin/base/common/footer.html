@@ -1,9 +1,15 @@
-                <div class="button-bottom d-flex flex-wrap justify-content-between">
+                <!-- $buttonBottomLeft=true data-exist="buttonBottomLeft" -->
+                <!-- $buttonBottomCenter=true data-exist="buttonBottomCenter" -->
+                <!-- $buttonBottomRight=true data-exist="buttonBottomRight" -->
+                <div class="d-flex flex-wrap justify-content-between" data-if="isset($buttonBottomLeft) || isset($buttonBottomCenter) || isset($buttonBottomRight)">
                     <div>
-                        <!-- data-include="button_bottom_left" data-exist -->
+                        <!-- data-include="buttonBottomLeft" data-exist -->
                     </div>
                     <div>
-                        <!-- data-include="button_bottom_right" data-exist -->
+                        <!-- data-include="buttonBottomCenter" data-exist -->
+                    </div>
+                    <div>
+                        <!-- data-include="buttonBottomRight" data-exist -->
                     </div>
                 </div>
                 <footer class="footer py-4">
@@ -18,7 +24,7 @@
                     </div>
                 </footer>
             </div>
-            <!-- data-include="form_end" data-exist -->
+            <!-- data-include="formEnd" data-exist -->
         </main>
         <!-- data-include="/admin/base/common/script.html" -->
         <!-- data-include="auto" -->
