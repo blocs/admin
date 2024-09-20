@@ -668,6 +668,14 @@ document.addEventListener("DOMContentLoaded", function(){
         });
     }
 
+    if (document.querySelectorAll(".summary-search").length != 0) {
+        document.querySelector(".summary-search").addEventListener("click", function(e){
+            document.querySelector("details[role=search] summary").click();
+            bootstrap.Tooltip.getInstance(".summary-search i").dispose();
+            this.remove();
+        });
+    }
+
     if (document.querySelectorAll("form[role=search] select").length != 0) {
         document.querySelectorAll("form[role=search] select").forEach(function(item, i) {
             item.addEventListener("change", function(){
