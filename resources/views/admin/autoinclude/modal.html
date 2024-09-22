@@ -76,10 +76,9 @@
     <!-- $modalName="modalLogout" data-none -->
 
     <!-- モーダル設定 -->
-    <!-- data-bloc="modalFooter" -->
+    <!-- data-bloc="modalFooterRight" -->
         <form method="post">
             @csrf
-            <!-- data-include="buttonBackModal" -->
             <!--
                 data-include="buttonPrimaryModal"
                 $modalAction=route("logout")
@@ -167,6 +166,23 @@
     -->
 <!-- data-endbloc -->
 
+<!-- data-bloc="modalFooterLeft" -->
+    <!-- data-include="buttonBackModal" -->
+<!-- data-endbloc -->
+
+<!-- data-bloc="modalFooter" -->
+    <div class="modal-footer">
+        <div class="w-100 d-flex flex-wrap justify-content-between">
+            <div>
+                <!-- data-include="modalFooterLeft" -->
+            </div>
+            <div>
+                <!-- data-include="modalFooterRight" -->
+            </div>
+        </div>
+    </div>
+<!-- data-endbloc -->
+
 <!-- data-bloc="modal" -->
     <div :id=$modalName class="modal fade" tabindex="-1" aria-hidden="true">
         <!-- :class=$modalClass data-exist=$modalClass -->
@@ -179,28 +195,12 @@
                     <p><!-- $modalMessage --></p>
                     <!-- data-include="modalBody" data-exist -->
                 </div>
-                <div class="modal-footer">
-                    <!-- data-include="modalFooter" -->
-                </div>
+                <!-- data-include="modalFooter" data-exist -->
             </div>
         </div>
     </div>
 
     <!-- $modalName="" $modalAction="" $modalClass="" $modalTitle="" $modalMessage="" $formAction="" $modalNoValidate="" -->
     <!-- data-bloc="modalBody" --><!-- data-endbloc -->
-    <!-- data-bloc="modalFooterLeft" -->
-        <!-- data-include="buttonBackModal" -->
-    <!-- data-endbloc -->
-    <!-- data-bloc="modalFooterRight" -->
-    <!-- data-endbloc -->
-    <!-- data-bloc="modalFooter" -->
-    <div class="w-100 d-flex flex-wrap justify-content-between">
-        <div>
-            <!-- data-include="modalFooterLeft" -->
-        </div>
-        <div>
-            <!-- data-include="modalFooterRight" -->
-        </div>
-    </div>
-    <!-- data-endbloc -->
+    <!-- data-bloc="modalFooterRight" --><!-- data-endbloc -->
 <!-- data-endbloc -->
