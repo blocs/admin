@@ -118,14 +118,10 @@ trait StoreTrait
             return;
         }
 
-        \DB::beginTransaction();
-        try {
+        \DB::transaction(function () use ($requestData, &$lastInsert) {
             $lastInsert = $this->mainTable::create($requestData);
-            \DB::commit();
-        } catch (\Throwable $e) {
-            \DB::rollBack();
-            throw $e;
-        }
+        }, 10);
+
         $this->val['id'] = $lastInsert->id;
         docs(null, 'データを追加', ['データベース' => $this->loopItem]);
 
