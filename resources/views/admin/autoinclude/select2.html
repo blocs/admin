@@ -6,7 +6,10 @@
     new MutationObserver((mutations) => {
         $(".ai-select2").each(function(){
             $(this).removeClass("ai-select2");
-            $(this).select2();
+            $(this).css("width", "100%");
+            $(this).select2({
+                width: "resolve"
+            });
             $(this).on("select2:close", function(){
                 if ($(this).val().length) {
                     $(this).closest(".input-group").addClass("is-filled");
