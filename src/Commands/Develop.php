@@ -416,8 +416,11 @@ class Develop extends Command
 
         if (!empty($developJson['controller']['controllerName'])) {
             $developJson['controller']['controllerBasename'] = basename($developJson['controller']['controllerName']);
-            $developJson['controller']['controllerDirname'] = dirname($developJson['controller']['controllerName']);
-            if (!empty($developJson['controller']['controllerDirname'])) {
+
+            if ($developJson['controller']['controllerBasename'] == $developJson['controller']['controllerName']) {
+                $developJson['controller']['controllerDirname'] = '';
+            } else {
+                $developJson['controller']['controllerDirname'] = dirname($developJson['controller']['controllerName']);
                 $developJson['controller']['controllerDirname'] = str_replace('/', '\\', $developJson['controller']['controllerDirname']);
                 $developJson['controller']['controllerDirname'] = '\\'.$developJson['controller']['controllerDirname'];
             }
@@ -425,8 +428,11 @@ class Develop extends Command
 
         if (!empty($developJson['controller']['modelName'])) {
             $developJson['controller']['modelBasename'] = basename($developJson['controller']['modelName']);
-            $developJson['controller']['modelDirname'] = dirname($developJson['controller']['modelName']);
-            if (!empty($developJson['controller']['modelDirname'])) {
+
+            if ($developJson['controller']['modelBasename'] == $developJson['controller']['modelName']) {
+                $developJson['controller']['modelDirname'] = '';
+            } else {
+                $developJson['controller']['modelDirname'] = dirname($developJson['controller']['modelName']);
                 $developJson['controller']['modelDirname'] = str_replace('/', '\\', $developJson['controller']['modelDirname']);
                 $developJson['controller']['modelDirname'] = '\\'.$developJson['controller']['modelDirname'];
             }
