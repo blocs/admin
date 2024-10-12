@@ -40,6 +40,24 @@ class Thumbnail
             return false;
         }
 
+        // HEICが横になる問題に対応
+        $exif = @exif_read_data($tmpLoc);
+        if (!empty($exif['Orientation'])) {
+            switch ($exif['Orientation']) {
+                case 8:
+                    $oImage = imagerotate($oImage, 90, 0);
+                    list($width, $height, $oWidth, $oHeight) = self::getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
+                    break;
+                case 3:
+                    $oImage = imagerotate($oImage, 180, 0);
+                    break;
+                case 6:
+                    $oImage = imagerotate($oImage, -90, 0);
+                    list($width, $height, $oWidth, $oHeight) = self::getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
+                    break;
+            }
+        }
+
         if ($crop) {
             $image = imagecreatetruecolor($pWidth, $pHeight);
 
@@ -67,9 +85,12 @@ class Thumbnail
         return $thumbLoc;
     }
 
-    private static function getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop)
+    private static function getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop, $oWidth = null, $oHeight = null)
     {
-        list($width, $height) = list($oWidth, $oHeight) = getimagesize($tmpLoc);
+        if (!isset($oWidth) || !isset($oHeight)) {
+            list($oWidth, $oHeight) = getimagesize($tmpLoc);
+        }
+        list($width, $height) = [$oWidth, $oHeight];
 
         if ($crop) {
             // 指定サイズを覆う大きさ
