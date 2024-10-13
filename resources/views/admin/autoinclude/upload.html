@@ -76,7 +76,7 @@
             }).on("removedfile", (file) => {
                 var aiTarget = file.previewElement.dataset.aiTarget;
                 if (aiTarget) {
-                    var dropzoneDiv = document.querySelector("[name="+aiTarget+"]").nextElementSibling;
+                    var dropzoneDiv = document.querySelector("[name="+CSS.escape(aiTarget)+"]").nextElementSibling;
                     aiFileupload.update(dropzoneDiv);
                 }
                 if (typeof callbackDZremovedfile == 'function') {
