@@ -668,6 +668,18 @@ document.addEventListener("DOMContentLoaded", function(){
         });
     }
 
+    if (document.querySelectorAll("details[role=search]").length != 0) {
+        var closed = true;
+        var details = document.querySelector("details[role=search]");
+        details.querySelectorAll("input[type=text], select").forEach(function(inputItem, i) {
+            if (inputItem.value.length) { closed = false; }
+        });
+        if (!closed) {
+            details.setAttribute("open", true);
+            document.querySelectorAll(".summary-search").length != 0 && document.querySelector(".summary-search").remove();
+        }
+    }
+
     if (document.querySelectorAll(".summary-search").length != 0) {
         document.querySelector(".summary-search").addEventListener("click", function(e){
             document.querySelector("details[role=search] summary").click();
