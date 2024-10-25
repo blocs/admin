@@ -24,4 +24,13 @@
         childList: true,
         subtree: true
     });
+
+    $(() => {
+        $('.select2-hidden-accessible[multiple]').each(function () {
+            const $select = $(this)
+            if ($select.children('option:selected').length > 0) {
+                $select.parents('.input-group').addClass('is-filled')
+            }
+        })
+    })
 </script>
