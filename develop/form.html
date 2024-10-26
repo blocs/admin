@@ -109,14 +109,13 @@
         $uploadDelete=lang("template:admin_profile_upload_delete")
     -->
     <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
+    <#-- :class="ai-upload is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <!-- data-attribute="required" data-exist=$required --><!-- data-attribute="multiple" data-exist=$multiple --><input type="hidden" :id=$name :name=$name class="ai-upload" />
 
     <#-- !<!-- $name -->="mimes:jpg,jpeg,gif,png" data-lang="template:admin_profile_upload_image_only" -->
     <#-- !<!-- $name -->="max:200" data-lang="template:admin_profile_upload_too_large" -->
     <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
-    @error("<!-- $name -->") <#-- 
-        $uploadMessage="<span class='text-danger'><i class='fa-solid fa-exclamation-triangle'></i> {$message}</span>"
-    --> @enderror
+    @error("<!-- $name -->") <div class="invalid-feedback">{{ $message }}</div> @enderror
 <#-- data-endbloc -->
 <!-- data-endif --><!-- data-if="'number' === $type" -->
 <#-- data-bloc="form_<!-- $name -->" -->
