@@ -6,11 +6,11 @@ trait BackTrait
 {
     protected function backIndex($category = null, $message = null)
     {
-        $resirectIndex = redirect()->route(prefix().'.index');
+        $redirectIndex = redirect()->route(prefix().'.index');
         unset($this->val, $this->request, $this->tableData);
 
         if (!$category) {
-            return $resirectIndex;
+            return $redirectIndex;
         }
 
         // langからメッセージを取得
@@ -19,7 +19,7 @@ trait BackTrait
         docs("メッセージをセット\n・".$message);
         docs(null, '一覧画面に戻る', ['FORWARD' => '!'.prefix().'.index']);
 
-        return $resirectIndex->with([
+        return $redirectIndex->with([
             'category' => $category,
             'message' => $message,
         ]);
@@ -27,22 +27,22 @@ trait BackTrait
 
     protected function backCreate($category = null, $message = null, $noticeForm = null, ...$msgArgList)
     {
-        $resirectCreate = redirect()->route(prefix().'.create', $this->val)->withInput();
+        $redirectCreate = redirect()->route(prefix().'.create', $this->val)->withInput();
         unset($this->val, $this->request, $this->tableData);
         docs("メッセージをセット\n・".$message);
         docs(null, '新規作成画面に戻る', ['FORWARD' => '!'.prefix().'.create']);
 
-        return $this->backCreateEdit($resirectCreate, $category, $message, $noticeForm, $msgArgList);
+        return $this->backCreateEdit($redirectCreate, $category, $message, $noticeForm, $msgArgList);
     }
 
     protected function backEdit($category = null, $message = null, $noticeForm = null, ...$msgArgList)
     {
-        $resirectEdit = redirect()->route(prefix().'.edit', $this->val)->withInput();
+        $redirectEdit = redirect()->route(prefix().'.edit', $this->val)->withInput();
         unset($this->val, $this->request, $this->tableData);
         docs("メッセージをセット\n・".$message);
         docs(null, '編集画面に戻る', ['FORWARD' => '!'.prefix().'.edit']);
 
-        return $this->backCreateEdit($resirectEdit, $category, $message, $noticeForm, $msgArgList);
+        return $this->backCreateEdit($redirectEdit, $category, $message, $noticeForm, $msgArgList);
     }
 
     private function getMessage($code)
@@ -56,10 +56,10 @@ trait BackTrait
         return $langMessage;
     }
 
-    private function backCreateEdit($resirect, $category, $message, $noticeForm, $msgArgList)
+    private function backCreateEdit($redirect, $category, $message, $noticeForm, $msgArgList)
     {
         if (!$category && !$noticeForm) {
-            return $resirect;
+            return $redirect;
         }
 
         // langからメッセージを取得
@@ -72,13 +72,13 @@ trait BackTrait
         ($langMessage = $this->getMessage($code)) != false && $message = $langMessage;
 
         if ($category) {
-            return $resirect->with([
+            return $redirect->with([
                 'category' => $category,
                 'message' => $message,
             ]);
         }
 
-        return $resirect->withErrors([
+        return $redirect->withErrors([
             $noticeForm => $message,
         ]);
     }
