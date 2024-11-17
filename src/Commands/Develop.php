@@ -42,8 +42,8 @@ class Develop extends Command
         // ドキュメント作成
         empty($developJson['controller']['controllerName']) || $this->makeDoc($developJson);
 
-        // ChatGPTでビューをカスタマイズ
-        empty($developJson['controller']['viewPrefix']) || empty(env('OPENAI_API_KEY')) || $this->useOpenAi($developJson, $path);
+        // 修正
+        empty($developJson['controller']['viewPrefix']) || $this->refreshView($path);
     }
 
     private function makeController($developJson)
