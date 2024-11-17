@@ -1,4 +1,4 @@
-    Class "CLASS_NAME" as LOOP_ITEM <<M,AAFFAA)>> {
+    Class "CLASS_NAME" as LOOP_ITEM {
         MENU_LANG
         ---
        +id [PK]
