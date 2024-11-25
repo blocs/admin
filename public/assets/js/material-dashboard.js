@@ -695,35 +695,4 @@ document.addEventListener("DOMContentLoaded", function(){
             });
         });
     }
-
-    if (document.querySelectorAll("[data-modalaction]").length != 0) {
-        document.querySelectorAll('[data-modalaction]').forEach(function(item, i) {
-            item.addEventListener("click", function(){
-                document.querySelector(this.dataset.bsTarget + " button[type=submit]").setAttribute("formaction", this.dataset.modalaction);
-            });
-        });
-    }
 });
-
-new MutationObserver((mutations) => {
-    document.querySelectorAll("[data-bs-toggle=modal]").forEach(function(item, i) {
-        delete item.dataset.bsToggle;
-        item.addEventListener("click", function(event){
-            if (item.closest("form")) {
-                if (item.dataset.novalidate) {
-                    item.closest("form").setAttribute("novalidate", true);
-                } else {
-                    item.closest("form").removeAttribute("novalidate");
-                    if (!item.closest("form").reportValidity()) {
-                        return;
-                    }
-                }
-            }
-            new bootstrap.Modal(document.querySelector(item.dataset.bsTarget)).show();
-        }, true);
-    });
-}).observe(document, {
-    childList: true,
-    subtree: true
-});
-
