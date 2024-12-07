@@ -46,7 +46,7 @@ trait FileTrait
 
     /* download */
 
-    public function download($filename, $size = null)
+    public function download($filename, $size = null, $headers = null)
     {
         if ($redirect = $this->checkDownload($filename)) {
             return $redirect;
@@ -76,7 +76,11 @@ trait FileTrait
         }
 
         // 画像以外のファイル
-        return $storage->response($filename, basename($filename));
+        if (empty($headers)) {
+            return $storage->response($filename, basename($filename));
+        }
+
+        return $storage->response($filename, basename($filename), $headers);
     }
 
     protected function checkDownload($filename)
