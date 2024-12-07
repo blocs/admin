@@ -46,7 +46,7 @@ trait FileTrait
 
     /* download */
 
-    public function download($filename, $size = null, $headers = null)
+    public function download($filename, $size = null)
     {
         if ($redirect = $this->checkDownload($filename)) {
             return $redirect;
@@ -75,6 +75,8 @@ trait FileTrait
             return response($storage->get($filename))->header('Content-Type', $mimeType);
         }
 
+        $headers = $this->getHeaders($filename);
+
         // 画像以外のファイル
         if (empty($headers)) {
             return $storage->response($filename, basename($filename));
@@ -86,6 +88,11 @@ trait FileTrait
     protected function checkDownload($filename)
     {
         // abort(404);
+    }
+
+    protected function getHeaders($filename)
+    {
+        return;
     }
 
     protected function getSize($size)
