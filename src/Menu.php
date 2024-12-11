@@ -43,6 +43,11 @@ class Menu
             }
             $config['child'] = $maxChild;
 
+            // sub が空配列の場合表示しない
+            if (isset($config['sub']) && empty($config['sub'])) {
+                continue;
+            }
+
             // メニューかサブメニューがactive
             if ((isset($config['name']) && self::checkActive($config)) || $isSubActive) {
                 $config['active'] = true;
