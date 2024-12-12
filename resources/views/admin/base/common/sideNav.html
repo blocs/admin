@@ -41,28 +41,28 @@
 
 <!-- data-bloc="navSub" -->
     <!-- data-loop=$menu -->
-    <!-- data-exist=$sub -->
     <hr class="horizontal light mt-0 mb-2" data-exist=$line />
 
     <li class="nav-item mt-2" data-exist=$index>
         <h6 class="ps-4 ms-2 text-xs font-weight-bolder text-white"><!-- $index --></h6>
     </li>
-    <!-- data-endexist -->
 
     <li class="nav-item mt-0 mb-2">
-        <!-- data-include="navLink" $depth=2 data-unless="isset($sub)" -->
-        <!-- data-include="navItem" $depth=2 data-exist=$sub -->
+        <!-- data-include="navLink" $depth=2 data-none=$sub -->
+        <!-- data-exist=$sub -->
+            <!-- data-include="navItem" $depth=2 -->
 
-        <!-- :class="collapse show" data-exist=$active -->
-        <div :id="Menu2.{$loopIndex}Nav" class="collapse" data-exist=$sub>
-            <ul class="nav">
-                <!-- :class="nav-item active" data-if="$active && 1 == $child" -->
-                <li class="nav-item" data-loop=$sub data-assign=$subMenu>
-                    <!-- data-include="navLink" $depth=3 data-unless="isset($subMenu["sub"])" -->
-                    <!-- data-include="navSub2" data-exist=$subMenu["sub"] -->
-                </li>
-            </ul>
-        </div>
+            <!-- :class="collapse show" data-exist=$active -->
+            <div :id="Menu2.{$loopIndex}Nav" class="collapse">
+                <ul class="nav">
+                    <!-- :class="nav-item active" data-if="$active && 1 == $child" -->
+                    <li class="nav-item" data-loop=$sub data-assign=$subMenu>
+                        <!-- data-include="navLink" $depth=3 data-none=$subMenu["sub"] -->
+                        <!-- data-include="navSub2" data-exist=$subMenu["sub"] -->
+                    </li>
+                </ul>
+            </div>
+        <!-- data-endexist -->
     </li>
     <!-- data-endloop -->
 <!-- data-endbloc -->
