@@ -37,16 +37,17 @@ class Menu
             // $maxChild: サブメニューの最大の深さ
             if (isset($config['sub'])) {
                 list($config['sub'], $buff, $buff, $isSubActive, $child) = self::get($config['sub'], $maxChild);
+
+                // sub が空配列の場合表示しない
+                if (empty($config['sub'])) {
+                    continue;
+                }
+
                 $child > $maxChild && $maxChild = $child;
             } else {
                 $isSubActive = false;
             }
             $config['child'] = $maxChild;
-
-            // sub が空配列の場合表示しない
-            if (isset($config['sub']) && empty($config['sub'])) {
-                continue;
-            }
 
             // メニューかサブメニューがactive
             if ((isset($config['name']) && self::checkActive($config)) || $isSubActive) {
