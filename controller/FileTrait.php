@@ -56,6 +56,10 @@ trait FileTrait
         $filename = $this->uploadStorage.'/'.$filename;
 
         $storage = \Storage::disk();
+        if (!$storage->exists($filename)) {
+            // ファイルが存在しない
+            abort(404);
+        }
         $mimeType = $storage->mimeType($filename);
 
         if (isset($size)) {
