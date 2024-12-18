@@ -102,6 +102,7 @@ class Base extends Controller
         empty($pagePath) && $pagePath = route(prefix().'.index');
 
         if (isset($this->val[$this->paginateName])) {
+            $this->val[$this->paginateName] = intval($this->val[$this->paginateName]);
             $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName, $this->val[$this->paginateName])->setPageName($this->paginateName);
         } else {
             $this->val['paginate'] = $mainTable->paginate($this->paginateNum, ['*'], $this->paginateName)->setPageName($this->paginateName);
