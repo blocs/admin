@@ -2,7 +2,7 @@
 <!-- data-bloc="searchFilter" -->
 <!-- data-endbloc -->
 
-<!-- $unselectable=0 -->
+<!-- $selectable=true -->
 
 <!-- data-bloc="buttonCardHeader" -->
     <a :href=route(prefix().".create") class="me-3">
@@ -23,7 +23,7 @@
                 <table class="table dataTable-table">
                     <thead class="thead-light">
                         <tr>
-                            <th class="w-1" data-none=$unselectable>
+                            <th class="w-1" data-exist=$selectable>
                                 <div class="form-check p-0 fs-6">
                                     <input type="checkbox" class="form-check-input" />
                                 </div>
@@ -48,7 +48,7 @@
                     </thead>
                     <tbody>
                         <tr data-loop=$users>
-                            <td data-none=$unselectable>
+                            <td data-exist=$selectable>
                                 <div class="form-check p-0 fs-6">
                                     <input type="checkbox" name="selectedRows[]" class="form-check-input" :value=$user->id />
                                 </div>
@@ -119,7 +119,7 @@
         data-include="modal_destroy"
         $buttonClass="btn btn-outline-danger"
         $modalAction=route(prefix().".select")
-        data-if="$isLoop && empty($unselectable)"
+        data-if="$isLoop && !empty($selectable)"
     -->
 <!-- data-endbloc -->
 
