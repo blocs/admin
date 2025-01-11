@@ -40,9 +40,9 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
         Route::post('/search', [UserController::class, 'search'])->name('search');
         Route::get('/create', [UserController::class, 'create'])->name('create');
         Route::post('/', [UserController::class, 'store'])->name('store');
+        Route::get('/{id}', [UserController::class, 'show'])->where('id', '[0-9]+')->name('show');
         Route::get('/{id}/edit', [UserController::class, 'edit'])->where('id', '[0-9]+')->name('edit');
         Route::post('/{id}', [UserController::class, 'update'])->where('id', '[0-9]+')->name('update');
-        Route::get('/{id}/show', [UserController::class, 'show'])->where('id', '[0-9]+')->name('show');
         Route::post('/{id}/destroy', [UserController::class, 'destroy'])->where('id', '[0-9]+')->name('destroy');
         Route::post('/select', [UserController::class, 'select'])->name('select');
         Route::post('/{id}/toggle', [UserController::class, 'toggle'])->where('id', '[0-9]+')->name('toggle');
