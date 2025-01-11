@@ -120,7 +120,7 @@ class Develop extends Command
 
         // モデル作成
         $model = file_get_contents(__DIR__.'/../../develop/model.php');
-        $model = str_replace('FORM_LIST', $this->getList(array_keys($developJson['entry']), ",\n        ", "'"), $model);
+        $model = str_replace('FORM_LIST', $this->getList(array_keys($developJson['form']), ",\n        ", "'"), $model);
 
         foreach ($developJson['controller'] as $key => $value) {
             // キーを変換
@@ -155,7 +155,7 @@ class Develop extends Command
         $migration = str_replace('LOOP_ITEM', $loopItem, $migration);
 
         $itemList = [];
-        foreach ($developJson['entry'] as $formName => $form) {
+        foreach ($developJson['form'] as $formName => $form) {
             if ('textarea' == $form['type'] || 'upload' == $form['type']) {
                 $type = 'text';
             } else {
@@ -192,7 +192,7 @@ class Develop extends Command
         }
         $database = str_replace('CLASS_NAME', $className, $database);
         $database = str_replace('LOOP_ITEM', $loopItem, $database);
-        $database = str_replace('FORM_LIST', $this->getList(array_keys($developJson['entry']), "\n        "), $database);
+        $database = str_replace('FORM_LIST', $this->getList(array_keys($developJson['form']), "\n        "), $database);
 
         empty($developJson['menu']['lang']) && $developJson['menu']['lang'] = '';
         $database = str_replace('MENU_LANG', $developJson['menu']['lang'], $database);
@@ -224,7 +224,7 @@ class Develop extends Command
         $showHtml = '';
 
         $blocsCompiler = new \Blocs\Compiler\BlocsCompiler();
-        foreach ($developJson['entry'] as $formName => $form) {
+        foreach ($developJson['form'] as $formName => $form) {
             $form['name'] = $formName;
             isset($form['label']) || $form['label'] = '';
 
@@ -309,7 +309,7 @@ class Develop extends Command
         }
 
         $formList = [];
-        foreach ($developJson['entry'] as $formName => $form) {
+        foreach ($developJson['form'] as $formName => $form) {
             if ('datepicker' == $form['type']) {
                 $formValue = '2024-06-10';
             } elseif ('timepicker' == $form['type']) {
@@ -351,7 +351,7 @@ class Develop extends Command
         }
 
         $formList = [];
-        foreach ($developJson['entry'] as $formName => $form) {
+        foreach ($developJson['form'] as $formName => $form) {
             isset($form['label']) && $formList[] = "{$formName}' => '".$form['label'];
         }
         $docs = str_replace('FORM_LIST', $this->getList($formList, ",\n        ", "'"), $docs);
@@ -438,7 +438,7 @@ class Develop extends Command
             }
         }
 
-        isset($developJson['entry']) || $developJson['entry'] = [];
+        isset($developJson['form']) || $developJson['form'] = [];
 
         return $developJson;
     }
