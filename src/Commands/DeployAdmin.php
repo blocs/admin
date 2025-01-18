@@ -9,7 +9,7 @@ class DeployAdmin extends Deploy
      *
      * @var string
      */
-    protected $signature = 'blocs:admin';
+    protected $signature = 'blocs:install';
 
     /**
      * The console command description.
