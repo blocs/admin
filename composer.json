@@ -1,7 +1,7 @@
 {
     "name": "blocs\/admin",
     "type": "library",
-    "description": "BLOCS administration package",
+    "description": "Laravel BLOCS admin panel package",
     "keywords": [
         "PHP",
         "Laravel",
