@@ -36,9 +36,6 @@ class Develop extends Command
         // ビュー作成
         empty($developJson['controller']['viewPrefix']) || $this->makeView($developJson);
 
-        // テスト作成
-        empty($developJson['controller']['modelName']) || $this->makeTest($developJson);
-
         // ドキュメント作成
         empty($developJson['controller']['controllerName']) || $this->makeDoc($developJson);
 
@@ -281,53 +278,6 @@ class Develop extends Command
             file_put_contents($viewPath.'/include/show.html', trim($showHtml)."\n");
             $this->outputMessageMake('view', $viewPath.'/include/show.html');
         }
-    }
-
-    private function makeTest($developJson)
-    {
-        $modelName = $developJson['controller']['modelBasename'];
-        $testPath = base_path("tests/Feature/{$modelName}Test.php");
-
-        if (file_exists($testPath)) {
-            return;
-        }
-
-        $tests = file_get_contents(__DIR__.'/../../develop/tests.php');
-
-        $tests = str_replace('TEST_NAME', "{$modelName}Test", $tests);
-
-        foreach ($developJson['controller'] as $key => $value) {
-            // キーを変換
-            $key = strtoupper(Str::snake($key));
-            $tests = str_replace($key, $value, $tests);
-        }
-
-        foreach ($developJson['route'] as $key => $value) {
-            // キーを変換
-            $key = strtoupper(Str::snake($key));
-            $tests = str_replace($key, $value, $tests);
-        }
-
-        $formList = [];
-        foreach ($developJson['form'] as $formName => $form) {
-            if ('datepicker' == $form['type']) {
-                $formValue = '2024-06-10';
-            } elseif ('timepicker' == $form['type']) {
-                $formValue = '2024-08-05 12:00';
-            } elseif ('select' == $form['type'] || 'select2' == $form['type'] || 'radio' == $form['type'] || 'checkbox' == $form['type'] || 'number' == $form['type']) {
-                $formValue = '1';
-            } elseif ('upload' == $form['type']) {
-                $formValue = '';
-            } else {
-                $formValue = 'test';
-            }
-
-            $formList[] = "{$formName}' => '{$formValue}";
-        }
-        $tests = str_replace('FORM_LIST', $this->getList($formList, ",\n            ", "'"), $tests);
-
-        file_put_contents($testPath, $tests);
-        $this->outputMessageMake('test', $testPath);
     }
 
     private function makeDoc($developJson)
