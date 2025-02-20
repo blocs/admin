@@ -7,7 +7,7 @@ trait DevelopTrait
     private function refreshView($path)
     {
         do {
-            $actions = ['refresh', 'migrate', 'exit'];
+            $actions = ['refresh', 'migrate', 'quit'];
             $stdin = $this->anticipate('アクション', array_reverse($actions));
 
             if (empty($stdin)) {
@@ -67,13 +67,13 @@ trait DevelopTrait
         return true;
     }
 
-    private function exit($stdin)
+    private function exit($action)
     {
-        if ('exit' !== strtolower($stdin) && 'bye' !== strtolower($stdin)) {
-            return false;
+        // quit
+        if ('quit' === strtolower($action) || 'exit' === strtolower($action) || 'bye' === strtolower($action)) {
+            exit;
         }
 
-        // 終了
-        exit;
+        return false;
     }
 }
