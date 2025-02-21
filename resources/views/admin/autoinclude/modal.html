@@ -206,7 +206,7 @@
 <!-- data-endbloc -->
 
 <script>
-document.addEventListener("DOMContentLoaded", function(){
+new MutationObserver((mutations) => {
     if (document.querySelectorAll("[data-modalaction]").length != 0) {
         document.querySelectorAll('[data-modalaction]').forEach(function(item, i) {
             item.addEventListener("click", function(){
@@ -214,40 +214,39 @@ document.addEventListener("DOMContentLoaded", function(){
             });
         });
     }
-});
-
-new MutationObserver((mutations) => {
-    document.querySelectorAll("[data-bs-toggle=modal]").forEach(function(item, i) {
-        delete item.dataset.bsToggle;
-        document.querySelector(item.dataset.bsTarget).querySelectorAll("button").forEach(el => setAttributes(el, {
-            "disabled": "disabled"
-        }));
-        const modal = new bootstrap.Modal(document.querySelector(item.dataset.bsTarget))
-        const modalElement = document.querySelector(item.dataset.bsTarget)
-        modalElement.addEventListener("show.bs.modal", event => {
-            modalElement.querySelectorAll("button").forEach(function(item, i) {
-                item.removeAttribute("disabled")
-            });
-        });
-        modalElement.addEventListener("hide.bs.modal", event => {
-            modalElement.querySelectorAll("button").forEach(el => setAttributes(el, {
+    if (document.querySelectorAll("[data-bs-toggle=modal]").length != 0) {
+        document.querySelectorAll("[data-bs-toggle=modal]").forEach(function(item, i) {
+            delete item.dataset.bsToggle;
+            document.querySelector(item.dataset.bsTarget).querySelectorAll("button").forEach(el => setAttributes(el, {
                 "disabled": "disabled"
             }));
-        });
-        item.addEventListener("click", function(event){
-            if (item.closest("form")) {
-                if (item.dataset.novalidate) {
-                    item.closest("form").setAttribute("novalidate", true);
-                } else {
-                    item.closest("form").removeAttribute("novalidate");
-                    if (!item.closest("form").reportValidity()) {
-                        return;
+            const modal = bootstrap.Modal.getOrCreateInstance(item.dataset.bsTarget);
+            const modalElement = document.querySelector(item.dataset.bsTarget)
+            modalElement.addEventListener("show.bs.modal", event => {
+                modalElement.querySelectorAll("button").forEach(function(item, i) {
+                    item.removeAttribute("disabled")
+                });
+            });
+            modalElement.addEventListener("hide.bs.modal", event => {
+                modalElement.querySelectorAll("button").forEach(el => setAttributes(el, {
+                    "disabled": "disabled"
+                }));
+            });
+            item.addEventListener("click", function(event){
+                if (item.closest("form")) {
+                    if (item.dataset.novalidate) {
+                        item.closest("form").setAttribute("novalidate", true);
+                    } else {
+                        item.closest("form").removeAttribute("novalidate");
+                        if (!item.closest("form").reportValidity()) {
+                            return;
+                        }
                     }
                 }
-            }
-            modal.show()
-        }, true);
-    });
+                modal.show()
+            }, true);
+        });
+    }
 }).observe(document, {
     childList: true,
     subtree: true
