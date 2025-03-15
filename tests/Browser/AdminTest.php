@@ -89,7 +89,7 @@ class AdminTest extends DuskTestCase
 
         // サイドメニューのログアウトリンクをクリックして、モーダル内のログアウトボタンをクリック
         $browser->clickLink('ログアウト')
-            ->screenshot('waitFor')->waitFor('#modalLogout')
+            ->waitFor('#modalLogout')
             ->press('#modalLogout .btn-primary')
             ->pause(1000);
     }
@@ -127,7 +127,7 @@ class AdminTest extends DuskTestCase
 
         // 確認ボタンをクリックする、モーダル内の新規登録ボタンをクリックする
         $browser->click('button[data-bs-target="#modalStore"]')
-            ->screenshot('waitFor')->waitFor('#modalStore')
+            ->waitFor('#modalStore')
             ->press('#modalStore .btn-primary')
             ->pause(1000);
     }
@@ -146,7 +146,7 @@ class AdminTest extends DuskTestCase
         // 名前を $name 入力して、確認ボタンをクリックする、モーダル内の更新ボタンをクリックする
         $browser->type('input[name="name"]', $name)
             ->press('確認')
-            ->screenshot('waitFor')->waitFor('#modalUpdate')
+            ->waitFor('#modalUpdate')
             ->press('#modalUpdate .btn-primary');
 
         // クリアボタンをクリックする
@@ -171,7 +171,7 @@ class AdminTest extends DuskTestCase
 
         // 確認ボタンをクリックする、モーダル内の更新ボタンをクリックする
         $browser->press('確認')
-            ->screenshot('waitFor')->waitFor('#modalUpdate')
+            ->waitFor('#modalUpdate')
             ->press('#modalUpdate .btn-primary');
     }
 
@@ -208,7 +208,7 @@ class AdminTest extends DuskTestCase
 
         // テーブルの下の削除ボタンをクリックする、モーダル内の削除ボタンをクリックする
         $browser->click('.btn-outline-danger')
-            ->screenshot('waitFor')->waitFor('#modalDestroy')
+            ->waitFor('#modalDestroy')
             ->press('#modalDestroy .btn-danger');
 
         // クリアボタンをクリックする
@@ -228,7 +228,7 @@ class AdminTest extends DuskTestCase
 
         // 左下の削除ボタンをクリックする、モーダル内の削除ボタンをクリックする
         $browser->click('.btn-danger')  // 左下の削除ボタンをクリック
-            ->screenshot('waitFor')->waitFor('#modalDestroy')
+            ->waitFor('#modalDestroy')
             ->press('#modalDestroy .btn-danger')  // モーダル内の削除ボタンをクリック
             ->pause(1000);
 
@@ -247,7 +247,7 @@ class AdminTest extends DuskTestCase
         // 検索結果の一行目のユーザーの凍結リンクをクリックして、モーダル内の凍結ボタンをクリックする
         $browser->scrollIntoView('a.me-3[data-bs-target="#modalInactivate"]')
             ->click('a.me-3[data-bs-target="#modalInactivate"]')
-            ->screenshot('waitFor')->waitFor('#modalInactivate')
+            ->waitFor('#modalInactivate')
             ->press('button.btn-warning')
             ->pause(1000);
 
@@ -266,7 +266,7 @@ class AdminTest extends DuskTestCase
         // 検索結果の一行目のユーザーの凍結リンクをクリックして、モーダル内の凍結ボタンをクリックする
         $browser->scrollIntoView('a.me-3[data-bs-target="#modalActivate"]')
             ->click('a.me-3[data-bs-target="#modalActivate"]')
-            ->screenshot('waitFor')->waitFor('#modalActivate')
+            ->waitFor('#modalActivate')
             ->press('button.btn-success')
             ->pause(1000);
 
