@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>BLOCS</title>
+        <!-- data-include="/admin/base/common/css.html" -->
+    </head>
+
+    <body class="bg-gray-200">
+        <main class="main-content mt-0">
+            <div class="page-header align-items-start min-height-300 m-3 border-radius-xl" style="height: 40vh;background-image: url('/assets/img/bg-ai.jpg');">
+                <span class="mask bg-dark opacity-1"></span>
+            </div>
+            <div class="cover-all place-content-center">
+                <div class="container vw-100 px-5">
+                    <div class="col-xl-4 col-lg-5 col-md-7 mx-auto">
+                        <form method="post" :action=route("operator") role="form" class="text-start">
+                            @csrf
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    <img src="/assets/img/logos/blocs.svg" style="width: 40%;" />
+                                </div>
+                                <div class="card-body d-flex flex-column gap-3">
+                                    <div class="alert alert-primary" role="alert" data-exist=$message><!-- $message --></div>
+                                    <div class="input-group input-group-outline">
+                                        <input type="hidden" name="requests" />
+                                        <input type="hidden" name="template" />
+                                        <input type="hidden" name="secret" value="1" data-exist=$secret />
+    
+                                        <input type="text" class="form-control" id="request" name="request" autofocus data-none=$type />
+                                        <input type="{{ $type }}" class="form-control" id="request" name="request" autofocus data-exist=$type />
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <footer class="footer position-absolute bottom-2 py-2 w-100">
+                <div class="container">
+                    <div class="row align-items-center justify-content-lg-between">
+                        <div class="col-12 col-lg-6 my-auto">
+                            <div class="copyright text-center text-sm text-lg-start">
+                                <!-- data-include="/admin/base/common/copyright.txt" -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </main>
+    </body>
+
+    <!-- data-include="/admin/base/common/script.html" -->
+</html>
