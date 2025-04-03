@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Admin;
 
 trait OperatorToolsTrait
 {
-    use \Blocs\Auth\AuthenticatesUsers;
-
     private function tryLogin($request)
     {
         if (\Auth::id()) {
