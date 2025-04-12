@@ -1,0 +1,11 @@
+[
+    {
+        "name": "Profile",
+        "description": "プロフィール設定画面に移動するための計算処理",
+        "route": "profile.edit",
+        "argument": {
+            "id": 0
+        },
+        "login": true
+    }
+]
