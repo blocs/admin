@@ -1,0 +1,8 @@
+[
+    {
+        "name": "Home",
+        "description": "ホーム画面に移動するための計算処理",
+        "route": "home",
+        "login": true
+    }
+]

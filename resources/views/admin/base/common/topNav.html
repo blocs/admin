@@ -1,4 +1,4 @@
-<form method="post" action="{{ route('operator') }}" data-exist=env("OPENAI_API_KEY")>
+<form method="post" action="{{ route('agent') }}" data-exist=env("OPENAI_API_KEY")>
     @csrf
     <div class="input-group input-group-outline">
         <input type="hidden" name="title" :value=$headline["label"] />

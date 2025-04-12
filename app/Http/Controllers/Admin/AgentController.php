@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class OperatorController extends Controller
+class AgentController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | Operator Controller
+    | Agent Controller
     |--------------------------------------------------------------------------
     |
     | This controller handles authenticating users for the application and
@@ -21,8 +21,8 @@ class OperatorController extends Controller
 
     use \Blocs\Auth\AuthenticatesUsers;
     use \Blocs\Controllers\CommonTrait;
-    use OperatorTrait;
-    use OperatorToolsTrait;
+    use \Blocs\Agent\AgentTrait;
+    use AgentToolsTrait;
 
     protected $viewPrefix;
 
@@ -47,16 +47,16 @@ class OperatorController extends Controller
         $this->viewPrefix = 'admin.auth';
     }
 
-    public function showOperatorForm()
+    public function showAgentForm()
     {
         if (!$this->getError()) {
-            $response = $this->findTool();
+            $response = $this->guessTool();
             if (is_object($response)) {
                 return $response;
             }
         }
 
-        $view = view($this->viewPrefix.'.operator', $this->val);
+        $view = view($this->viewPrefix.'.agent', $this->val);
 
         return $view;
     }
@@ -69,17 +69,17 @@ class OperatorController extends Controller
 
     protected function validateLogin(Request $request)
     {
-        list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.operator', $request);
+        list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.agent', $request);
         if (empty($rules)) {
             return;
         }
 
-        $labels = $this->getLabel($this->viewPrefix.'.operator');
+        $labels = $this->getLabel($this->viewPrefix.'.agent');
         $request->validate($rules, $messages, $labels);
         $validates = $this->getValidate($rules, $messages, $labels);
 
         docs(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
-        docs(null, 'エラーがあれば、ログイン画面に戻る', ['FORWARD' => '!'.$this->viewPrefix.'.operator']);
+        docs(null, 'エラーがあれば、ログイン画面に戻る', ['FORWARD' => '!'.$this->viewPrefix.'.agent']);
     }
 
     protected function credentials(Request $request)
