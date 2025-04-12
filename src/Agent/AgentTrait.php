@@ -378,7 +378,7 @@ trait AgentTrait
         $jsonData = file_get_contents($jsonFile);
         if (config('openai.replace_words')) {
             foreach (config('openai.replace_words') as $key => $value) {
-                $jsonData = str_replace("{$key}", $value, $jsonData);
+                $jsonData = str_replace('{'.$key.'}', $value, $jsonData);
             }
         }
 
