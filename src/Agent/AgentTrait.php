@@ -242,7 +242,7 @@ trait AgentTrait
     private function getJsonAll($type)
     {
         $jsonData = $this->getJson(resource_path('agent/'.$type.'.json'));
-        if ($jsonFiles = glob(resource_path('agent/'.$type.'/*.json'))) {
+        if ($jsonFiles = glob(resource_path('agent/*/'.$type.'.json'))) {
             foreach ($jsonFiles as $jsonFile) {
                 $jsonData = array_merge($jsonData, $this->getJson($jsonFile));
             }
@@ -266,10 +266,10 @@ trait AgentTrait
         }
 
         // ナレッジを取得
-        $this->categories = $this->guessCatetory($request);
+        $this->categories = $this->guessCategory($request);
         $assistant = '';
         foreach ($this->categories as $category) {
-            $assistant .= $this->replaceWords(resource_path('agent/assistant/'.$category.'.md'));
+            $assistant .= $this->replaceWords(resource_path('agent/'.$category.'/assistant.md'));
         }
         $assistant .= "\n".$this->replaceWords(resource_path('agent/assistant.md'));
 
@@ -317,19 +317,19 @@ trait AgentTrait
 
         // 入力処理を取得
         foreach ($this->categories as $category) {
-            $functions = $this->addRedirects($functions, resource_path('agent/ask/'.$category.'.json'), 'ask');
+            $functions = $this->addRedirects($functions, resource_path('agent/'.$category.'/ask.json'), 'ask');
         }
         $functions = $this->addRedirects($functions, resource_path('agent/ask.json'), 'ask');
 
         // リダイレクト処理を取得
         foreach ($this->categories as $category) {
-            $functions = $this->addRedirects($functions, resource_path('agent/redirect/'.$category.'.json'), 'redirect');
+            $functions = $this->addRedirects($functions, resource_path('agent/'.$category.'/redirect.json'), 'redirect');
         }
         $functions = $this->addRedirects($functions, resource_path('agent/redirect.json'), 'redirect');
 
         // 計算処理を取得
         foreach ($this->categories as $category) {
-            $functions = array_merge($functions, $this->getJson(resource_path('agent/function/'.$category.'.json')));
+            $functions = array_merge($functions, $this->getJson(resource_path('agent/'.$category.'/function.json')));
         }
         $functions = array_merge($functions, $this->getJson(resource_path('agent/function.json')));
 
@@ -372,7 +372,7 @@ trait AgentTrait
     private function replaceWords($jsonFile): string
     {
         if (!file_exists($jsonFile)) {
-            return '[]';
+            return '';
         }
 
         $jsonData = file_get_contents($jsonFile);
@@ -391,17 +391,21 @@ trait AgentTrait
             return [];
         }
 
-        return json_decode($this->replaceWords($jsonFile), true);
+        $jsonData = $this->replaceWords($jsonFile);
+        strlen($jsonData) || $jsonData = '[]';
+
+        return json_decode($jsonData, true);
     }
 
-    private function guessCatetory($request)
+    private function guessCategory($request)
     {
         $categoryMd = resource_path('agent/category.md');
         if (!file_exists($categoryMd)) {
             return '';
         }
 
-        $assistant = "\n".$this->replaceWords($categoryMd);
+        $assistant = $this->replaceWords($categoryMd);
+        $assistant .= "\n".$this->replaceWords(resource_path('agent/assistant.md'));
 
         $userContent = [];
         $userContent[] = [
@@ -425,7 +429,7 @@ trait AgentTrait
                     ],
                     [
                         'type' => 'text',
-                        'text' => 'カテゴリーが特定できた時は、カテゴリー名だけをタブ区切りで返してください',
+                        'text' => 'カテゴリーが特定できた時は、英数字のカテゴリー名だけをタブ区切りで返してください',
                     ],
                     [
                         'type' => 'text',
