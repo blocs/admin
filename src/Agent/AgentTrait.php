@@ -74,7 +74,21 @@ trait AgentTrait
             ];
         } else {
             $request = $this->val['requests'];
-            $chatMessage = $this->guessFunction($request);
+            $state = request()->input('state');
+            $chatMessage = $this->guessFunction($request, $state);
+
+            // ログを出力
+            if ($chatMessage->toolCalls && file_exists(resource_path('agent/latest.log'))) {
+                $log = implode("\t", [
+                    str_replace("\n", '{LF}', $request),
+                    str_replace("\n", '{LF}', $state),
+                    implode(',', $this->categories),
+                    $chatMessage->toolCalls[0]->function->name,
+                    $chatMessage->toolCalls[0]->function->arguments,
+                ]);
+
+                file_put_contents(resource_path('agent/latest.log'), $log."\n", FILE_APPEND);
+            }
         }
 
         if ($chatMessage->toolCalls) {
@@ -251,49 +265,65 @@ trait AgentTrait
         return $jsonData;
     }
 
-    private function guessFunction($request)
+    private function guessFunction($request, $state)
     {
         $userContent = [];
+        $stateMessage = '';
         $userContent[] = [
             'type' => 'text',
             'text' => "# リクエスト\n".trim($request),
         ];
-        if (request()->input('title')) {
+        if ($state) {
             $userContent[] = [
                 'type' => 'text',
-                'text' => "# 現在の画面\n".request()->input('title'),
+                'text' => "# 状況\n".$state,
             ];
+            $stateMessage = '状況で';
         }
 
+        $systemContent = [];
+        $system = $this->replaceWords(resource_path('agent/system.md'));
+        $system && $systemContent[] = [
+            'type' => 'text',
+            'text' => trim($system),
+        ];
+        $systemContent[] = [
+            'type' => 'text',
+            'text' => '与えられた'.$stateMessage.'リクエストにマッチする計算処理を呼び出してください',
+        ];
+        $systemContent[] = [
+            'type' => 'text',
+            'text' => '呼び出す計算処理が特定できない時は、追加質問をしてください',
+        ];
+        $systemContent[] = [
+            'type' => 'text',
+            'text' => '計算処理に必要なデータがあれば、簡潔に入力を指示してください',
+        ];
+
         // ナレッジを取得
-        $this->categories = $this->guessCategory($request);
-        $assistant = '';
+        $this->categories = $this->guessCategory($userContent, $stateMessage);
+
+        $assistantContent = [];
         foreach ($this->categories as $category) {
-            $assistant .= $this->replaceWords(resource_path('agent/'.$category.'/assistant.md'));
+            $assistantContent[] = [
+                'type' => 'text',
+                'text' => $this->replaceWords(resource_path('agent/'.$category.'/assistant.md')),
+            ];
         }
-        $assistant .= "\n".$this->replaceWords(resource_path('agent/assistant.md'));
+        $assistant = $this->replaceWords(resource_path('agent/assistant.md'));
+        $assistant && $assistantContent[] = [
+            'type' => 'text',
+            'text' => $assistant,
+        ];
 
         $message = [
             [
                 'role' => 'system',
-                'content' => [
-                    [
-                        'type' => 'text',
-                        'text' => '現在の画面と与えられたリクエストにマッチする、計算処理を呼び出してください',
-                    ],
-                    [
-                        'type' => 'text',
-                        'text' => '呼び出す計算処理が特定できない時は、追加の質問をしてください',
-                    ],
-                    [
-                        'type' => 'text',
-                        'text' => '計算処理に必要なデータがあれば、簡潔に入力を指示してください',
-                    ],
-                ],
+                'content' => $systemContent,
             ],
             [
                 'role' => 'assistant',
-                'content' => $assistant,
+                'content' => $assistantContent,
             ],
             [
                 'role' => 'user',
@@ -305,7 +335,8 @@ trait AgentTrait
             'model' => 'gpt-4o-mini',
             'messages' => $message,
             'tools' => $this->getTools($request),
-            'temperature' => 0,
+            'top_p' => 0.0,
+            'temperature' => 0.0,
         ]);
 
         return $result->choices[0]->message;
@@ -397,49 +428,51 @@ trait AgentTrait
         return json_decode($jsonData, true);
     }
 
-    private function guessCategory($request)
+    private function guessCategory($userContent, $stateMessage)
     {
         $categoryMd = resource_path('agent/category.md');
         if (!file_exists($categoryMd)) {
             return '';
         }
 
-        $assistant = $this->replaceWords($categoryMd);
-        $assistant .= "\n".$this->replaceWords(resource_path('agent/assistant.md'));
-
-        $userContent = [];
-        $userContent[] = [
+        $systemContent = [];
+        $system = $this->replaceWords(resource_path('agent/system.md'));
+        $system && $systemContent[] = [
             'type' => 'text',
-            'text' => "# リクエスト\n".trim($request),
+            'text' => trim($system),
         ];
-        if (request()->input('title')) {
-            $userContent[] = [
-                'type' => 'text',
-                'text' => "# 現在の画面\n".request()->input('title'),
-            ];
-        }
+        $systemContent[] = [
+            'type' => 'text',
+            'text' => '与えられた'.$stateMessage.'リクエストにマッチするカテゴリーを特定してください',
+        ];
+        $systemContent[] = [
+            'type' => 'text',
+            'text' => 'カテゴリーを特定できた時は、英数字のカテゴリー名だけをタブ区切りで返してください',
+        ];
+        $systemContent[] = [
+            'type' => 'text',
+            'text' => 'カテゴリーを特定できない時は、noneを返してください',
+        ];
+
+        $assistantContent = [];
+        $assistantContent[] = [
+            'type' => 'text',
+            'text' => "# カテゴリー\n".$this->replaceWords($categoryMd),
+        ];
+        $assistant = $this->replaceWords(resource_path('agent/assistant.md'));
+        $assistant && $assistantContent[] = [
+            'type' => 'text',
+            'text' => $assistant,
+        ];
 
         $message = [
             [
                 'role' => 'system',
-                'content' => [
-                    [
-                        'type' => 'text',
-                        'text' => '現在の画面と与えられたリクエストにマッチするカテゴリーを特定してください',
-                    ],
-                    [
-                        'type' => 'text',
-                        'text' => 'カテゴリーが特定できた時は、英数字のカテゴリー名だけをタブ区切りで返してください',
-                    ],
-                    [
-                        'type' => 'text',
-                        'text' => 'カテゴリーが特定できない時は、空白を返してください',
-                    ],
-                ],
+                'content' => $systemContent,
             ],
             [
                 'role' => 'assistant',
-                'content' => $assistant,
+                'content' => $assistantContent,
             ],
             [
                 'role' => 'user',
@@ -450,8 +483,9 @@ trait AgentTrait
         $result = OpenAI::chat()->create([
             'model' => 'gpt-4o-mini',
             'messages' => $message,
-            'temperature' => 0,
-            'max_tokens' => 1,
+            'top_p' => 0.0,
+            'temperature' => 0.0,
+            'max_tokens' => 5,
         ]);
 
         return explode("\t", trim($result->choices[0]->message->content));

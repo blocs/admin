@@ -1,7 +1,7 @@
 [
     {
         "name": "redirectUser",
-        "description": "ユーザー管理画面に移動するための計算処理",
+        "description": "ユーザー管理画面に移動する計算処理",
         "parameters": {
             "type": "object",
             "properties": {
@@ -15,7 +15,7 @@
     },
     {
         "name": "redirectUserCreate",
-        "description": "ユーザーの新規登録画面に移動するための計算処理",
+        "description": "メールアドレスありでーユーザーを登録する計算処理",
         "parameters": {
             "type": "object",
             "properties": {
@@ -29,7 +29,7 @@
     },
     {
         "name": "redirectUserDestroy",
-        "description": "ユーザーの削除画面に移動するための計算処理",
+        "description": "ユーザーを削除する計算処理",
         "parameters": {
             "type": "object",
             "properties": {

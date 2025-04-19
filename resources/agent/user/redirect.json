@@ -1,11 +1,23 @@
 [
     {
         "name": "Profile",
-        "description": "プロフィール設定画面に移動するための計算処理",
+        "description": "プロフィールを設定する計算処理",
         "route": "profile.edit",
         "argument": {
             "id": 0
         },
         "login": true
+    },
+    {
+        "name": "UserCreateNew",
+        "description": "メールアドレスなしでユーザーを登録する計算処理",
+        "route": "admin.user.create",
+        "argument": {
+            "id": 0
+        },
+        "login": true,
+        "role": [
+            "admin"
+        ]
     }
 ]
