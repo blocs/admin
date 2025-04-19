@@ -1,7 +1,7 @@
 [
     {
         "name": "tryLogin",
-        "description": "ユーザーがログイン、サインインするための計算処理",
+        "description": "ユーザーがログイン、サインインする計算処理",
         "parameters": {
             "type": "object",
             "properties": {
@@ -23,7 +23,7 @@
     },
     {
         "name": "tryLogout",
-        "description": "ユーザーがログアウト、サインアウトするための計算処理",
+        "description": "ユーザーがログアウト、サインアウトする計算処理",
         "parameters": {
             "type": "object",
             "properties": [],
