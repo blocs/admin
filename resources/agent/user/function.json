@@ -15,7 +15,7 @@
     },
     {
         "name": "redirectUserCreate",
-        "description": "メールアドレスありでーユーザーを登録する計算処理",
+        "description": "メールアドレスありでユーザーを登録する計算処理",
         "parameters": {
             "type": "object",
             "properties": {

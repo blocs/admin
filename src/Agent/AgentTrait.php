@@ -447,7 +447,11 @@ trait AgentTrait
         ];
         $systemContent[] = [
             'type' => 'text',
-            'text' => 'カテゴリーを特定できた時は、英数字のカテゴリー名だけをタブ区切りで返してください',
+            'text' => 'カテゴリーを特定できた時は、英数字のカテゴリー名だけ返してください',
+        ];
+        $systemContent[] = [
+            'type' => 'text',
+            'text' => 'カテゴリーが複数ある時は、英数字のカテゴリー名だけをタブ区切りで返してください',
         ];
         $systemContent[] = [
             'type' => 'text',

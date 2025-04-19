@@ -117,8 +117,13 @@ trait AgentToolsTrait
             return $responseRole;
         }
 
+        if (!strlen($email)) {
+            return $this->askText('UserCreateEmail');
+        }
+
         // 初期値をセット
-        isset($email) && session()->flash('_old_input', ['email' => $email]);
+        ($sessionValue = session($email)) && $email = $sessionValue;
+        session()->flash('_old_input', ['email' => $email]);
 
         return redirect()->route('admin.user.create');
     }
