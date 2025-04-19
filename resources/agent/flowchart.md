@@ -1,6 +1,6 @@
 ```mermaid
 flowchart LR
-    start --> Home([redirectHome])
+    start(start) --> Home([redirectHome])
     start --> auth(auth)
         auth --> TextLoginEmail([askTextLoginEmail])
         auth --> TextLoginPassword([askTextLoginPassword])
