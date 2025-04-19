@@ -11,9 +11,9 @@
 {LF}ユーザーadmin@linear-jp.bizを追加	現在の表示している画面: ユーザー管理	user	redirectUserCreate	{"email":"admin@linear-jp.biz"}
 {LF}ユーザーadmin@linear-jp.bizを追加		user	redirectUserCreate	{"email":"admin@linear-jp.biz"}
 {LF}admin@linear-jp.bizを追加	現在の表示している画面: ユーザー管理	user	redirectUserCreate	{"email":"admin@linear-jp.biz"}
-{LF}ユーザーを追加	現在の表示している画面: ユーザー管理	user	redirectUserCreateNew	{}
-{LF}ユーザーを追加		user	redirectUserCreateNew	{}
-{LF}ユーザー追加		user	redirectUserCreateNew	{}
+{LF}ユーザーを追加	現在の表示している画面: ユーザー管理	user	askTextUserCreateEmail,redirectUserCreate	{}
+{LF}ユーザーを追加		user	askTextUserCreateEmail,redirectUserCreate	{}
+{LF}ユーザー追加		user	askTextUserCreateEmail,redirectUserCreate	{}
 {LF}ユーザー管理		user	redirectUser	{}
 {LF}ユーザー管理	現在の表示している画面: プロフィール	user	redirectUser	{}
 {LF}ユーザー管理	現在の表示している画面: ホーム	user	redirectUser	{}
