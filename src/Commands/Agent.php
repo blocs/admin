@@ -6,17 +6,24 @@ use Illuminate\Console\Command;
 
 class Agent extends Command
 {
-    use \Blocs\Agent\AgentTrait;
+    use \Blocs\Agent\CommonTrait;
 
-    protected $signature = 'blocs:agent';
+    protected $signature = 'blocs:agent {agent?}';
     protected $description = 'Agent regression test';
+
+    private $errorLineNum = [];
 
     public function handle()
     {
-        file_put_contents(resource_path('agent/latest.log'), '');
+        $this->agent = $this->argument('agent') ?? 'agent';
+
+        file_put_contents(resource_path($this->agent.'/latest.log'), '');
 
         do {
-            $actions = ['test', 'add', 'clear', 'quit'];
+            $actions = ['test', 'add'];
+            count($this->errorLineNum) && $actions[] = 'retest('.count($this->errorLineNum).')';
+            $actions = array_merge($actions, ['clear', 'quit']);
+
             $stdin = $this->anticipate('アクション', array_reverse($actions));
 
             if (empty($stdin)) {
@@ -26,6 +33,10 @@ class Agent extends Command
 
             if ($this->test($stdin)) {
                 continue;
+            }
+
+            if ('retest' === substr(strtolower($stdin), 0, 6)) {
+                $this->test('test', $this->errorLineNum);
             }
 
             if ($this->add($stdin)) {
@@ -40,17 +51,30 @@ class Agent extends Command
         } while (1);
     }
 
-    private function test($stdin)
+    private function test($stdin, $errorLineNum = null)
     {
         if ('test' !== strtolower($stdin)) {
             return false;
         }
 
-        $testLogs = file_get_contents(resource_path('agent/test.log'));
+        $testLogs = file_get_contents(resource_path($this->agent.'/test.log'));
         $testLogs = explode("\n", $testLogs);
+
+        if (isset($errorLineNum)) {
+            // retest
+            $totalNum = count($errorLineNum);
+            $this->errorLineNum = [];
+        } else {
+            $totalNum = $this->getTotalNum($testLogs);
+        }
+        $progressBar = $this->output->createProgressBar($totalNum);
+
+        // 開始
+        $progressBar->start();
 
         $lineNum = 0;
         $successNum = 0;
+        $errors = [];
         foreach ($testLogs as $testLog) {
             ++$lineNum;
             $testLog = explode("\t", $testLog);
@@ -58,25 +82,64 @@ class Agent extends Command
                 continue;
             }
 
+            if (isset($errorLineNum) && !in_array($lineNum, $errorLineNum)) {
+                // retestではskip
+                continue;
+            }
+
+            // プログレスバーを進める
+            $progressBar->advance();
+
             $request = str_replace('{LF}', "\n", $testLog[0]);
             $state = str_replace('{LF}', "\n", $testLog[1]);
             $methods = explode(',', $testLog[3]);
 
             $chatMessage = $this->guessFunction($request, $state);
-            $categories = implode(',', $this->categories);
+            $indexes = implode(',', $this->indexes);
             if (!$chatMessage->toolCalls
                 || !in_array($chatMessage->toolCalls[0]->function->name, $methods)
                 || $testLog[4] !== $chatMessage->toolCalls[0]->function->arguments) {
-                $this->error("Line{$lineNum}: ".trim($request));
-                dump($categories, $chatMessage);
+                $errors[] = [
+                    'lineNum' => $lineNum,
+                    'request' => $request,
+                    'indexes' => $indexes,
+                    'chatMessage' => $chatMessage,
+                ];
+
+                $this->errorLineNum[] = $lineNum;
             } else {
-                $this->info("Line{$lineNum}");
                 ++$successNum;
             }
         }
-        $this->info($successNum.'ケース成功しました');
+
+        // 終了
+        $progressBar->finish();
+        $this->info("\n".$successNum.'ケース成功しました');
+
+        foreach ($errors as $error) {
+            $this->error("\n".$this->echoRequest($error['lineNum'], $error['request']));
+            dump($error['indexes'], $error['chatMessage']);
+        }
 
         return true;
+    }
+
+    private function getTotalNum($testLogs)
+    {
+        $totalNum = 0;
+        foreach ($testLogs as $testLog) {
+            $testLog = explode("\t", $testLog);
+            5 === count($testLog) && ++$totalNum;
+        }
+
+        return $totalNum;
+    }
+
+    private function echoRequest($lineNum, $request)
+    {
+        $request = str_replace(["\r\n", "\r", "\n"], ' ', $request);
+
+        return $lineNum.': '.substr(trim($request), 0, 50);
     }
 
     private function add($stdin)
@@ -85,12 +148,12 @@ class Agent extends Command
             return false;
         }
 
-        $latestLog = file_get_contents(resource_path('agent/latest.log'));
+        $latestLog = file_get_contents(resource_path($this->agent.'/latest.log'));
         if ($latestLog) {
-            file_put_contents(resource_path('agent/test.log'), $latestLog, FILE_APPEND);
+            file_put_contents(resource_path($this->agent.'/test.log'), $latestLog, FILE_APPEND);
         }
 
-        file_put_contents(resource_path('agent/latest.log'), '');
+        file_put_contents(resource_path($this->agent.'/latest.log'), '');
 
         return true;
     }
@@ -101,16 +164,15 @@ class Agent extends Command
             return false;
         }
 
-        file_put_contents(resource_path('agent/latest.log'), '');
+        file_put_contents(resource_path($this->agent.'/latest.log'), '');
 
         return true;
     }
 
     private function quit($action)
     {
-        // quit
         if ('quit' === strtolower($action) || 'exit' === strtolower($action) || 'bye' === strtolower($action)) {
-            unlink(resource_path('agent/latest.log'));
+            unlink(resource_path($this->agent.'/latest.log'));
             exit;
         }
 
