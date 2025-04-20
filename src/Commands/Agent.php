@@ -60,10 +60,10 @@ class Agent extends Command
         $testLogs = file_get_contents(resource_path($this->agent.'/test.log'));
         $testLogs = explode("\n", $testLogs);
 
+        $this->errorLineNum = [];
         if (isset($errorLineNum)) {
             // retest
             $totalNum = count($errorLineNum);
-            $this->errorLineNum = [];
         } else {
             $totalNum = $this->getTotalNum($testLogs);
         }
@@ -93,17 +93,19 @@ class Agent extends Command
             $request = str_replace('{LF}', "\n", $testLog[0]);
             $state = str_replace('{LF}', "\n", $testLog[1]);
             $methods = explode(',', $testLog[3]);
+            $arguments = str_replace(' ', '', $testLog[4]);
 
             $chatMessage = $this->guessFunction($request, $state);
             $indexes = implode(',', $this->indexes);
             if (!$chatMessage->toolCalls
                 || !in_array($chatMessage->toolCalls[0]->function->name, $methods)
-                || $testLog[4] !== $chatMessage->toolCalls[0]->function->arguments) {
+                || $arguments !== str_replace(' ', '', $chatMessage->toolCalls[0]->function->arguments)) {
                 $errors[] = [
                     'lineNum' => $lineNum,
                     'request' => $request,
                     'indexes' => $indexes,
-                    'chatMessage' => $chatMessage,
+                    'testLog' => $testLog,
+                    'chatFunction' => $chatMessage->toolCalls[0]->function,
                 ];
 
                 $this->errorLineNum[] = $lineNum;
@@ -118,7 +120,7 @@ class Agent extends Command
 
         foreach ($errors as $error) {
             $this->error("\n".$this->echoRequest($error['lineNum'], $error['request']));
-            dump($error['indexes'], $error['chatMessage']);
+            dump($error['indexes'], $error['testLog'][3], $error['chatFunction']->name, $error['testLog'][4], $error['chatFunction']->arguments);
         }
 
         return true;
@@ -139,7 +141,7 @@ class Agent extends Command
     {
         $request = str_replace(["\r\n", "\r", "\n"], ' ', $request);
 
-        return $lineNum.': '.substr(trim($request), 0, 50);
+        return $lineNum.': '.mb_substr(trim($request), 0, 50);
     }
 
     private function add($stdin)
