@@ -1,16 +1,16 @@
 [
     {
         "name": "TextLoginEmail",
-        "description": "ログインで使うメールアドレスを入力する計算処理",
+        "description": "メールアドレスを入力する計算処理",
         "message": "ログインするので、メールアドレスを入力してください。",
-        "template": "ログインで使うメールアドレスは{request}です。",
+        "template": "メールアドレスは{request}です。",
         "secret": true
     },
     {
         "name": "TextLoginPassword",
-        "description": "ログインで使うパスワードを入力する計算処理",
+        "description": "パスワードを入力する計算処理",
         "message": "ログインするので、パスワードを入力してください。",
-        "template": "ログインで使うパスワードは{request}です。",
+        "template": "パスワードは{request}です。",
         "type": "password",
         "secret": true
     }
