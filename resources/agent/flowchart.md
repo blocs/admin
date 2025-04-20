@@ -5,18 +5,18 @@ flowchart LR
     request --> auth(auth)
         auth --> TextLoginEmail([askTextLoginEmail])
         auth --> TextLoginPassword([askTextLoginPassword])
-        auth --> Login[[tyrLogin
+        auth --> Login[[authLogin
         $email,$password]]
         TextLoginEmail --> Login
         TextLoginPassword --> Login
-        auth --> Logout[[tyrLogout]]
+        auth --> Logout[[authLogout]]
     request --> user(user)
-        user --> User[[redirectUser
+        user --> User[[userIndex
         $query]]
         user --> TextUserCreateEmail([askTextUserCreateEmail])
-        user --> UserCreate[[redirectUserCreate
+        user --> UserCreate[[userCreate
         $email]]
         TextUserCreateEmail --> UserCreate
-        user --> UserDestroy[[redirectUserDestroy
+        user --> UserDestroy[[userDestroy
         $query]]
 ```

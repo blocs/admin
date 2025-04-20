@@ -11,29 +11,21 @@ trait CommonTrait
 
     private function guessFunction($request, $state = null)
     {
-        $userContent = [];
-        $stateMessage = '';
-        $userContent[] = [
-            'type' => 'text',
-            'text' => "# リクエスト\n".trim($request),
-        ];
-        if ($state) {
-            $userContent[] = [
-                'type' => 'text',
-                'text' => "# 状況\n".$state,
-            ];
-            $stateMessage = '状況で';
-        }
-
         $systemContent = [];
         $system = $this->replaceWords(resource_path($this->agent.'system.md'));
         $system && $systemContent[] = [
             'type' => 'text',
             'text' => trim($system),
         ];
+
+        $state && $systemContent[] = [
+            'type' => 'text',
+            'text' => $state,
+        ];
+
         $systemContent[] = [
             'type' => 'text',
-            'text' => '与えられた'.$stateMessage.'リクエストにマッチする計算処理を呼び出してください',
+            'text' => '与えられたリクエストにマッチする計算処理を呼び出してください',
         ];
         $systemContent[] = [
             'type' => 'text',
@@ -44,8 +36,14 @@ trait CommonTrait
             'text' => '計算処理に必要なデータがあれば、簡潔に入力を指示してください',
         ];
 
+        $userContent = [];
+        $userContent[] = [
+            'type' => 'text',
+            'text' => "# リクエスト\n".trim($request),
+        ];
+
         // ナレッジを取得
-        $this->indexes = $this->guessIndex($userContent, $stateMessage);
+        $this->indexes = $this->guessIndex($userContent, $state);
 
         $assistantContent = [];
         foreach ($this->indexes as $index) {
@@ -86,7 +84,7 @@ trait CommonTrait
         return $result->choices[0]->message;
     }
 
-    private function guessIndex($userContent, $stateMessage)
+    private function guessIndex($userContent, $state)
     {
         $indexMd = resource_path($this->agent.'/index.md');
         if (!file_exists($indexMd)) {
@@ -99,9 +97,15 @@ trait CommonTrait
             'type' => 'text',
             'text' => trim($system),
         ];
+
+        $state && $systemContent[] = [
+            'type' => 'text',
+            'text' => $state,
+        ];
+
         $systemContent[] = [
             'type' => 'text',
-            'text' => '与えられた'.$stateMessage.'リクエストにマッチするカテゴリーを特定してください',
+            'text' => '与えられたリクエストにマッチするカテゴリーを特定してください',
         ];
         $systemContent[] = [
             'type' => 'text',

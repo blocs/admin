@@ -3,7 +3,7 @@
         "name": "TextUserCreateEmail",
         "description": "追加するユーザーのメールアドレスを入力する計算処理",
         "message": "追加するユーザーのメールアドレスを入力してください。",
-        "function": "redirectUserCreate",
+        "function": "userCreate",
         "argument": "email",
         "secret": true
     }
