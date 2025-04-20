@@ -1,7 +1,7 @@
 // ログイン、ログアウト
 {LF}サインアウト	現在の表示している画面: ユーザー管理	auth	tryLogout	{}
 {LF}adminでログイン		auth	askTextLoginEmail	{}
-ログインで使うメールアドレスは8eb0e428ddです。{LF}adminでログイン		auth	tryLogin	{"email": "8eb0e428dd", "password": "admin"}
+メールアドレスは8eb0e428ddです。{LF}adminでログイン		auth	tryLogin	{"email": "8eb0e428dd", "password": "admin"}
 ----------
 //ホーム画面
 {LF}ホーム画面	現在の表示している画面: プロフィール	空	redirectHome	{}

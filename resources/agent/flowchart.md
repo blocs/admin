@@ -1,8 +1,8 @@
 ```mermaid
 flowchart LR
-    request(request) --> auth(auth)
-        auth --> Home1([redirectHome])
-        auth --> Profile1([redirectProfile])
+    request(request) --> Home([redirectHome])
+        request --> Profile([redirectProfile])
+    request --> auth(auth)
         auth --> TextLoginEmail([askTextLoginEmail])
         auth --> TextLoginPassword([askTextLoginPassword])
         auth --> Login[[tyrLogin
@@ -11,8 +11,6 @@ flowchart LR
         TextLoginPassword --> Login
         auth --> Logout[[tyrLogout]]
     request --> user(user)
-        user --> Home2([redirectHome])
-        user --> Profile2([redirectProfile])
         user --> User[[redirectUser
         $query]]
         user --> TextUserCreateEmail([askTextUserCreateEmail])
