@@ -17,8 +17,7 @@
             "required": [
                 "email",
                 "password"
-            ],
-            "strict": true
+            ]
         }
     },
     {
