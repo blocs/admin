@@ -1,27 +1,27 @@
 // ログイン、ログアウト
-{LF}サインアウト	現在の表示している画面: ユーザー管理	auth	tryLogout	{}
+{LF}サインアウト	現在の表示している画面: ユーザー管理	auth	authLogout	{}
 {LF}adminでログイン		auth	askTextLoginEmail	{}
-メールアドレスは8eb0e428ddです。{LF}adminでログイン		auth	tryLogin	{"email": "8eb0e428dd", "password": "admin"}
+メールアドレスは8eb0e428ddです。{LF}adminでログイン		auth	authLogin	{"email": "8eb0e428dd", "password": "admin"}
 ----------
 //ホーム画面
 {LF}ホーム画面	現在の表示している画面: プロフィール	空	redirectHome	{}
 {LF}ホーム画面	現在の表示している画面: ホーム		redirectHome	{}
 ----------
 // ユーザー管理
-{LF}ユーザーadmin@linear-jp.bizを追加	現在の表示している画面: ユーザー管理	user	redirectUserCreate	{"email":"admin@linear-jp.biz"}
-{LF}ユーザーadmin@linear-jp.bizを追加		user	redirectUserCreate	{"email":"admin@linear-jp.biz"}
-{LF}admin@linear-jp.bizを追加	現在の表示している画面: ユーザー管理	user	redirectUserCreate	{"email":"admin@linear-jp.biz"}
-{LF}ユーザーを追加	現在の表示している画面: ユーザー管理	user	askTextUserCreateEmail,redirectUserCreate	{}
-{LF}ユーザーを追加		user	askTextUserCreateEmail,redirectUserCreate	{}
-{LF}ユーザー追加		user	askTextUserCreateEmail,redirectUserCreate	{}
-{LF}ユーザー管理		user	redirectUser	{}
-{LF}ユーザー管理	現在の表示している画面: プロフィール	user	redirectUser	{}
-{LF}ユーザー管理	現在の表示している画面: ホーム	user	redirectUser	{}
-{LF}ユーザーtestのパスワードを変更		user	redirectUser	{"query":"test"}
-{LF}brown84@hotmail.comのパスワード変更	現在の表示している画面: ユーザー管理	user	redirectUser	{"query":"brown84@hotmail.com"}
+{LF}ユーザーadmin@linear-jp.bizを追加	現在の表示している画面: ユーザー管理	user	userCreate	{"email":"admin@linear-jp.biz"}
+{LF}ユーザーadmin@linear-jp.bizを追加		user	userCreate	{"email":"admin@linear-jp.biz"}
+{LF}admin@linear-jp.bizを追加	現在の表示している画面: ユーザー管理	user	userCreate	{"email":"admin@linear-jp.biz"}
+{LF}ユーザーを追加	現在の表示している画面: ユーザー管理	user	askTextUserCreateEmail,userCreate	{}
+{LF}ユーザーを追加		user	askTextUserCreateEmail,userCreate	{}
+{LF}ユーザー追加		user	askTextUserCreateEmail,userCreate	{}
+{LF}ユーザー管理		user	userIndex	{}
+{LF}ユーザー管理	現在の表示している画面: プロフィール	user	userIndex	{}
+{LF}ユーザー管理	現在の表示している画面: ホーム	user	userIndex	{}
+{LF}ユーザーtestのパスワードを変更		user	userIndex	{"query":"test"}
+{LF}brown84@hotmail.comのパスワード変更	現在の表示している画面: ユーザー管理	user	userIndex	{"query":"brown84@hotmail.com"}
 ----------
 // プロフィール管理
-{LF}パスワード変更	現在の表示している画面: ユーザー管理	user	redirectUser,redirectProfile	{}
+{LF}パスワード変更	現在の表示している画面: ユーザー管理	user	userIndex,redirectProfile	{}
 {LF}パスワード変更	現在の表示している画面: プロフィール	user	redirectProfile	{}
 {LF}パスワード変更	現在の表示している画面: ホーム	user	redirectProfile	{}
 {LF}画像変更	現在の表示している画面: プロフィール	user	redirectProfile	{}

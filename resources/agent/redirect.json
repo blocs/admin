@@ -7,7 +7,7 @@
     },
     {
         "name": "Profile",
-        "description": "プロフィールを設定する計算処理",
+        "description": "自分のプロフィールを設定する計算処理",
         "route": "profile.edit",
         "argument": {
             "id": 0
