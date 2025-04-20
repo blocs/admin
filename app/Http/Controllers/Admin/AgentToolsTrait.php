@@ -54,11 +54,11 @@ trait AgentToolsTrait
             ];
         }
 
-        if (!strlen($email)) {
+        if (!$email) {
             return $this->askText('LoginEmail');
         }
 
-        if (!strlen($password)) {
+        if (!$password) {
             return $this->askText('LoginPassword');
         }
 
@@ -117,7 +117,7 @@ trait AgentToolsTrait
             return $checkRole;
         }
 
-        if (!strlen($email)) {
+        if (!$email) {
             return $this->askText('UserCreateEmail');
         }
 
