@@ -21,6 +21,7 @@ class AgentController extends Controller
 
     use \Blocs\Auth\AuthenticatesUsers;
     use \Blocs\Controllers\CommonTrait;
+    use \Blocs\Agent\CommonTrait;
     use \Blocs\Agent\AgentTrait;
     use AgentToolsTrait;
 
@@ -45,6 +46,7 @@ class AgentController extends Controller
         $this->redirectTo = '/';
 
         $this->viewPrefix = 'admin.auth';
+        $this->agent = 'agent';
     }
 
     public function showAgentForm()

@@ -58,16 +58,16 @@ trait AgentToolsTrait
             return $this->askText('LoginEmail');
         }
 
-        ($sessionValue = session($email)) && $email = $sessionValue;
-        request()->merge([
-            'email' => $email,
-        ]);
-
         if (!strlen($password)) {
             return $this->askText('LoginPassword');
         }
 
-        ($sessionValue = session($password)) && $password = $sessionValue;
+        $email = $this->getSecret($email);
+        request()->merge([
+            'email' => $email,
+        ]);
+
+        $password = $this->getSecret($password);
         request()->merge([
             'password' => $password,
         ]);
@@ -88,12 +88,12 @@ trait AgentToolsTrait
 
     private function redirectUser($query = null)
     {
-        if (true !== ($responseLogin = $this->checkLogin())) {
-            return $responseLogin;
+        if (true !== ($checkLogin = $this->checkLogin())) {
+            return $checkLogin;
         }
 
-        if (true !== ($responseRole = $this->checkRole(['admin']))) {
-            return $responseRole;
+        if (true !== ($checkRole = $this->checkRole(['admin']))) {
+            return $checkRole;
         }
 
         if (!$query) {
@@ -109,12 +109,12 @@ trait AgentToolsTrait
 
     private function redirectUserCreate($email = null)
     {
-        if (true !== ($responseLogin = $this->checkLogin())) {
-            return $responseLogin;
+        if (true !== ($checkLogin = $this->checkLogin())) {
+            return $checkLogin;
         }
 
-        if (true !== ($responseRole = $this->checkRole(['admin']))) {
-            return $responseRole;
+        if (true !== ($checkRole = $this->checkRole(['admin']))) {
+            return $checkRole;
         }
 
         if (!strlen($email)) {
@@ -122,20 +122,20 @@ trait AgentToolsTrait
         }
 
         // 初期値をセット
-        ($sessionValue = session($email)) && $email = $sessionValue;
-        session()->flash('_old_input', ['email' => $email]);
+        $email = $this->getSecret($email);
+        session()->flashInput(['email' => $email]);
 
         return redirect()->route('admin.user.create');
     }
 
     private function redirectUserDestroy($query = null)
     {
-        if (true !== ($responseLogin = $this->checkLogin())) {
-            return $responseLogin;
+        if (true !== ($checkLogin = $this->checkLogin())) {
+            return $checkLogin;
         }
 
-        if (true !== ($responseRole = $this->checkRole(['admin']))) {
-            return $responseRole;
+        if (true !== ($checkRole = $this->checkRole(['admin']))) {
+            return $checkRole;
         }
 
         if (!$query) {
