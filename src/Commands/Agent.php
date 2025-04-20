@@ -105,7 +105,7 @@ class Agent extends Command
                     'request' => $request,
                     'indexes' => $indexes,
                     'testLog' => $testLog,
-                    'chatFunction' => $chatMessage->toolCalls[0]->function,
+                    'chatMessage' => $chatMessage,
                 ];
 
                 $this->errorLineNum[] = $lineNum;
@@ -120,7 +120,7 @@ class Agent extends Command
 
         foreach ($errors as $error) {
             $this->error("\n".$this->echoRequest($error['lineNum'], $error['request']));
-            dump($error['indexes'], $error['testLog'][3], $error['chatFunction']->name, $error['testLog'][4], $error['chatFunction']->arguments);
+            dump($error['indexes'], $error['testLog'], $error['chatMessage']);
         }
 
         return true;

@@ -74,7 +74,7 @@ trait CommonTrait
         ];
 
         $result = OpenAI::chat()->create([
-            'model' => 'gpt-4o-mini',
+            'model' => 'gpt-4.1-mini',
             'messages' => $message,
             'tools' => $this->getTools($request),
             'top_p' => 0.0,
@@ -142,7 +142,7 @@ trait CommonTrait
         ];
 
         $result = OpenAI::chat()->create([
-            'model' => 'gpt-4o-mini',
+            'model' => 'gpt-4.1-mini',
             'messages' => $message,
             'top_p' => 0.0,
             'temperature' => 0.0,
