@@ -34,7 +34,7 @@ trait AgentTrait
 
         if (request()->input('secret')) {
             // 生成AIに渡したくない情報は、セッションに保存
-            $request = $this->putSecret(request()->input('request'));
+            $request = $this->putSecret(request()->input('request'), request()->input('secret'));
             request()->merge([
                 'request' => $request,
             ]);
@@ -46,11 +46,8 @@ trait AgentTrait
             request()->merge([
                 'request' => $request,
             ]);
-
-            $this->setRequests(request()->input('request')."\n".request()->input('requests'));
-        } else {
-            $this->setRequests(request()->input('requests')."\n".request()->input('request'));
         }
+        $this->setRequests(request()->input('requests')."\n".request()->input('request'));
 
         if (request()->input('function') && request()->input('request')) {
             // メソッドを指定して実行
@@ -76,8 +73,8 @@ trait AgentTrait
             // ログを出力
             if ($chatMessage->toolCalls && file_exists(resource_path($this->agent.'/latest.log'))) {
                 $log = implode("\t", [
-                    str_replace("\n", '{LF}', $request),
-                    str_replace("\n", '{LF}', $state),
+                    str_replace(["\r\n", "\r", "\n"], '{LF}', $request),
+                    str_replace(["\r\n", "\r", "\n"], '{LF}', $state),
                     implode(',', $this->indexes),
                     $chatMessage->toolCalls[0]->function->name,
                     $chatMessage->toolCalls[0]->function->arguments,
@@ -130,10 +127,13 @@ trait AgentTrait
         }
     }
 
-    private function putSecret($value): string
+    private function putSecret($value, $format): string
     {
         // 10桁のランダムな文字列を生成
         $randomString = bin2hex(random_bytes(5));
+        if (false !== strpos($format, '*')) {
+            $randomString = str_replace('*', $randomString, $format);
+        }
         session([$randomString => $value]);
 
         return $randomString;
