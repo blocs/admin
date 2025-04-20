@@ -4,5 +4,14 @@
         "description": "ホーム画面に移動する計算処理",
         "route": "home",
         "login": true
+    },
+    {
+        "name": "Profile",
+        "description": "プロフィールを設定する計算処理",
+        "route": "profile.edit",
+        "argument": {
+            "id": 0
+        },
+        "login": true
     }
 ]

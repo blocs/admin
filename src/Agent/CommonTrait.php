@@ -121,11 +121,6 @@ trait CommonTrait
             'type' => 'text',
             'text' => "# カテゴリー\n".$this->replaceWords($indexMd),
         ];
-        $assistant = $this->replaceWords(resource_path($this->agent.'/assistant.md'));
-        $assistant && $assistantContent[] = [
-            'type' => 'text',
-            'text' => $assistant,
-        ];
 
         $message = [
             [
