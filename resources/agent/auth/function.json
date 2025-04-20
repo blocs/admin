@@ -1,7 +1,7 @@
 [
     {
-        "name": "tryLogin",
-        "description": "ユーザーがログイン、サインインする計算処理",
+        "name": "authLogin",
+        "description": "ログイン、サインインする計算処理",
         "parameters": {
             "type": "object",
             "properties": {
@@ -22,8 +22,8 @@
         }
     },
     {
-        "name": "tryLogout",
-        "description": "ユーザーがログアウト、サインアウトする計算処理",
+        "name": "authLogout",
+        "description": "ログアウト、サインアウトする計算処理",
         "parameters": {
             "type": "object",
             "properties": [],

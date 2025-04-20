@@ -28,7 +28,7 @@ trait AgentToolsTrait
         session(['requests' => [$this->val['requests']]]);
         $this->setRequests('ログインする');
 
-        return $this->tryLogin();
+        return $this->authLogin();
     }
 
     private function checkRole($roles)
@@ -46,7 +46,7 @@ trait AgentToolsTrait
         ];
     }
 
-    private function tryLogin($email = null, $password = null)
+    private function authLogin($email = null, $password = null)
     {
         if (\Auth::id()) {
             return [
@@ -75,7 +75,7 @@ trait AgentToolsTrait
         return $this->login(request());
     }
 
-    private function tryLogout()
+    private function authLogout()
     {
         if (!\Auth::id()) {
             return [
@@ -86,7 +86,7 @@ trait AgentToolsTrait
         return $this->logout(request());
     }
 
-    private function redirectUser($query = null)
+    private function userIndex($query = null)
     {
         if (true !== ($checkLogin = $this->checkLogin())) {
             return $checkLogin;
@@ -107,7 +107,7 @@ trait AgentToolsTrait
         return redirect()->route('admin.user.index', ['search' => $query]);
     }
 
-    private function redirectUserCreate($email = null)
+    private function userCreate($email = null)
     {
         if (true !== ($checkLogin = $this->checkLogin())) {
             return $checkLogin;
@@ -128,7 +128,7 @@ trait AgentToolsTrait
         return redirect()->route('admin.user.create');
     }
 
-    private function redirectUserDestroy($query = null)
+    private function userDestroy($query = null)
     {
         if (true !== ($checkLogin = $this->checkLogin())) {
             return $checkLogin;

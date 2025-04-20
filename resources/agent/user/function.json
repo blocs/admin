@@ -1,6 +1,6 @@
 [
     {
-        "name": "redirectUser",
+        "name": "userIndex",
         "description": "ユーザー管理画面に移動する計算処理",
         "parameters": {
             "type": "object",
@@ -14,7 +14,7 @@
         }
     },
     {
-        "name": "redirectUserCreate",
+        "name": "userCreate",
         "description": "ユーザーを追加する計算処理",
         "parameters": {
             "type": "object",
@@ -28,7 +28,7 @@
         }
     },
     {
-        "name": "redirectUserDestroy",
+        "name": "userDestroy",
         "description": "ユーザーを削除する計算処理",
         "parameters": {
             "type": "object",
