@@ -28,11 +28,11 @@ trait CommonTrait
         ];
         $systemContent[] = [
             'type' => 'text',
-            'text' => '呼び出す計算処理が特定できない時は、追加質問をしてください',
+            'text' => '呼び出す計算処理を特定した時は、追加質問を禁止します',
         ];
         $systemContent[] = [
             'type' => 'text',
-            'text' => '計算処理に必要なデータがあれば、簡潔に入力を指示してください',
+            'text' => '呼び出す計算処理を特定できない時は、追加質問をしてください',
         ];
 
         $userContent = [];
@@ -107,7 +107,7 @@ trait CommonTrait
         ];
         $systemContent[] = [
             'type' => 'text',
-            'text' => 'カテゴリーを特定できた時は、英数字のカテゴリー名だけ返してください',
+            'text' => 'カテゴリーを特定した時は、英数字のカテゴリー名だけ返してください',
         ];
         $systemContent[] = [
             'type' => 'text',
@@ -159,12 +159,6 @@ trait CommonTrait
             $functions = array_merge($functions, $this->getJson(resource_path($this->agent.'/'.$index.'/function.json')));
         }
         $functions = array_merge($functions, $this->getJson(resource_path($this->agent.'/function.json')));
-
-        // 入力処理を取得
-        foreach ($this->indexes as $index) {
-            $functions = $this->addRedirects($functions, resource_path($this->agent.'/'.$index.'/ask.json'), 'ask');
-        }
-        $functions = $this->addRedirects($functions, resource_path($this->agent.'/ask.json'), 'ask');
 
         // リダイレクト処理を取得
         foreach ($this->indexes as $index) {
