@@ -174,7 +174,7 @@ class Agent extends Command
     private function quit($action)
     {
         if ('quit' === strtolower($action) || 'exit' === strtolower($action) || 'bye' === strtolower($action)) {
-            unlink(resource_path($this->agent.'/latest.log'));
+            file_exists(resource_path($this->agent.'/latest.log')) && unlink(resource_path($this->agent.'/latest.log'));
             exit;
         }
 
