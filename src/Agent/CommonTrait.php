@@ -12,20 +12,19 @@ trait CommonTrait
     private function guessFunction($request, $state = null)
     {
         $systemContent = [];
-        $system = $this->replaceWords(resource_path($this->agent.'system.md'));
+        $system = $this->replaceWords(resource_path($this->agent.'/system.md'));
         $system && $systemContent[] = [
             'type' => 'text',
             'text' => trim($system),
         ];
 
-        $state && $systemContent[] = [
-            'type' => 'text',
-            'text' => $state,
-        ];
-
         $systemContent[] = [
             'type' => 'text',
             'text' => '与えられたリクエストにマッチする計算処理を呼び出してください',
+        ];
+        $state && $systemContent[] = [
+            'type' => 'text',
+            'text' => $state,
         ];
         $systemContent[] = [
             'type' => 'text',
@@ -98,14 +97,13 @@ trait CommonTrait
             'text' => trim($system),
         ];
 
-        $state && $systemContent[] = [
-            'type' => 'text',
-            'text' => $state,
-        ];
-
         $systemContent[] = [
             'type' => 'text',
             'text' => '与えられたリクエストにマッチするカテゴリーを特定してください',
+        ];
+        $state && $systemContent[] = [
+            'type' => 'text',
+            'text' => $state,
         ];
         $systemContent[] = [
             'type' => 'text',
@@ -156,6 +154,12 @@ trait CommonTrait
     {
         $functions = [];
 
+        // 計算処理を取得
+        foreach ($this->indexes as $index) {
+            $functions = array_merge($functions, $this->getJson(resource_path($this->agent.'/'.$index.'/function.json')));
+        }
+        $functions = array_merge($functions, $this->getJson(resource_path($this->agent.'/function.json')));
+
         // 入力処理を取得
         foreach ($this->indexes as $index) {
             $functions = $this->addRedirects($functions, resource_path($this->agent.'/'.$index.'/ask.json'), 'ask');
@@ -167,12 +171,6 @@ trait CommonTrait
             $functions = $this->addRedirects($functions, resource_path($this->agent.'/'.$index.'/redirect.json'), 'redirect');
         }
         $functions = $this->addRedirects($functions, resource_path($this->agent.'/redirect.json'), 'redirect');
-
-        // 計算処理を取得
-        foreach ($this->indexes as $index) {
-            $functions = array_merge($functions, $this->getJson(resource_path($this->agent.'/'.$index.'/function.json')));
-        }
-        $functions = array_merge($functions, $this->getJson(resource_path($this->agent.'/function.json')));
 
         $tools = array_map(function ($function) {
             // propertiesをobjectに変換
