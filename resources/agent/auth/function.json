@@ -14,10 +14,7 @@
                     "description": "パスワード"
                 }
             },
-            "required": [
-                "email",
-                "password"
-            ]
+            "required": []
         }
     },
     {
