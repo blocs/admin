@@ -14,9 +14,7 @@ trait AgentToolsTrait
             $defaultMessage = '何かリクエストを入力してください。';
         }
 
-        $this->val = array_merge($this->val, [
-            'message' => $defaultMessage,
-        ]);
+        $this->val = array_merge($this->val, ['message' => $defaultMessage]);
     }
 
     private function checkLogin()
@@ -63,14 +61,10 @@ trait AgentToolsTrait
         }
 
         $email = $this->getSecret($email);
-        request()->merge([
-            'email' => $email,
-        ]);
+        request()->merge(['email' => $email]);
 
         $password = $this->getSecret($password);
-        request()->merge([
-            'password' => $password,
-        ]);
+        request()->merge(['password' => $password]);
 
         return $this->login(request());
     }
