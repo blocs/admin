@@ -5,6 +5,7 @@
     new MutationObserver((mutations) => {
         document.querySelectorAll(".ai-datepicker").forEach(function(item, i) {
             flatpickr(item, {
+                disableMobile: true,
                 locale: "ja"
             });
             item.classList.remove("ai-datepicker");
