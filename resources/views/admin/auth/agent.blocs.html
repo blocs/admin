@@ -32,13 +32,13 @@
                                     <div class="alert alert-primary" role="alert" data-exist=$message><!-- $message --></div>
                                     <div class="input-group input-group-outline" data-none=$options>
                                         <input type="text" class="form-control" id="request" name="request" autofocus data-none=$type />
-                                        <input type="{{ $type }}" class="form-control" id="request" name="request" autofocus data-exist=$type />
+                                        <input :type=$type class="form-control" id="request" name="request" autofocus data-exist=$type />
                                     </div>
 
                                     <div class="input-group input-group-outline" data-exist=$select>
                                         <select class="form-control" name="request" data-exist=$options>
                                             <option value="">選択してください。</option>
-                                            <option value="{{ $value }}" data-loop=$options>{{ $label }}</option>
+                                            <option :value=$value data-loop=$options>{{ $label }}</option>
                                         </select>
                                     </div>
 
@@ -47,7 +47,7 @@
                                             <label class="form-check-label">
                                                 <!-- $name="request" -->
                                                 <!-- data-none=$loop->index data-attribute="checked" -->
-                                                <input type="radio" class="form-check-input" :name=$name value="{{ $value }}" />
+                                                <input type="radio" class="form-check-input" :name=$name :value=$value />
                                                 {{ $label }}
                                             </label>
                                         </div>
