@@ -563,29 +563,34 @@ window.onload = function() {
   var inputs = document.querySelectorAll('input, textarea, select');
 
   for (var i = 0; i < inputs.length; i++) {
-    if (typeof inputs[i].value !== 'undefined' && inputs[i].value.length) {
-      inputs[i].parentElement.classList.add('is-filled');
-    }
-    inputs[i].addEventListener('focus', function(e) {
-      this.parentElement.classList.add('is-focused');
-    }, false);
-
-    inputs[i].addEventListener('input', function(e) {
-      if (this.value != "") {
-        this.parentElement.classList.add('is-filled');
-      } else {
-        this.parentElement.classList.remove('is-filled');
-      }
-    }, false);
-
-    inputs[i].addEventListener('focusout', function(e) {
-      if (this.value != "") {
-        this.parentElement.classList.add('is-filled');
-      }
-      this.parentElement.classList.remove('is-focused');
-    }, false);
+    setFilled(inputs[i]);
   }
 };
+
+// Material Design Input function
+function setFilled(input) {
+  if (typeof input.value !== 'undefined' && input.value.length) {
+    input.parentElement.classList.add('is-filled');
+  }
+  input.addEventListener('focus', function(e) {
+    this.parentElement.classList.add('is-focused');
+  }, false);
+
+  input.addEventListener('input', function(e) {
+    if (this.value != "") {
+      this.parentElement.classList.add('is-filled');
+    } else {
+      this.parentElement.classList.remove('is-filled');
+    }
+  }, false);
+
+  input.addEventListener('focusout', function(e) {
+    if (this.value != "") {
+      this.parentElement.classList.add('is-filled');
+    }
+    this.parentElement.classList.remove('is-focused');
+  }, false);
+}
 
 //Show input error messages
 function showError(input, message) {
