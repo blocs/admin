@@ -5,6 +5,7 @@
     new MutationObserver((mutations) => {
         document.querySelectorAll(".ai-timepicker").forEach(function(item, i) {
             flatpickr(item, {
+                disableMobile: true,
                 enableTime: true,
                 locale: "ja"
             });
