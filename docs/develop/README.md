@@ -73,10 +73,10 @@
         "pattern": {
             "label": "パターン",
             "type": "select",
-            "option": [
-                "パターンA",
-                "パターンB"
-            ],
+            "option": {
+                "1": "パターンA",
+                "2": "パターンB"
+            },
             "required": true
         }
     },
