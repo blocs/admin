@@ -59,30 +59,28 @@ class Deploy extends Command
             return;
         }
 
-        $configJson = [];
-        $laravelMenuPath = config_path('menu.json');
-        if (file_exists($laravelMenuPath)) {
-            $configJson = json_decode(file_get_contents($laravelMenuPath), true);
-        }
-        empty($configJson) && $configJson = [];
+        $configList = config('menu');
+        empty($configList) && $configList = [];
 
         // メニュー設定をマージ
         foreach ($blocsJson as $menuName => $config) {
-            if (empty($configJson[$menuName])) {
-                $configJson[$menuName] = $config;
+            if (empty($configList[$menuName])) {
+                $configList[$menuName] = $config;
                 continue;
             }
 
             $menuNameList = [];
-            foreach ($configJson[$menuName] as $menu) {
+            foreach ($configList[$menuName] as $menu) {
                 $menuNameList[] = $menu['name'];
             }
 
             foreach ($config as $menu) {
-                in_array($menu['name'], $menuNameList) || $configJson[$menuName][] = $menu;
+                in_array($menu['name'], $menuNameList) || $configList[$menuName][] = $menu;
             }
         }
 
-        file_put_contents($laravelMenuPath, json_encode($configJson, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n") && chmod($laravelMenuPath, 0666);
+        $laravelMenuPath = config_path('menu.php');
+        $code = "<?php\n\nreturn ".var_export($configList, true).";\n";
+        file_put_contents($laravelMenuPath, $code) && chmod($laravelMenuPath, 0666);
     }
 }
