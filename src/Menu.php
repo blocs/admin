@@ -10,7 +10,7 @@ class Menu
     public static function get($name = 'root', $maxChild = 1)
     {
         // 設定読み込み
-        $configList = self::getJson(config('menu'));
+        $configList = config('menu');
 
         if (!isset($configList[$name])) {
             return [[], [], []];
@@ -138,33 +138,6 @@ class Menu
         }
 
         return false;
-    }
-
-    private static function getJson($configList)
-    {
-        if (!file_exists(config_path('menu.json'))) {
-            return $configList;
-        }
-
-        $configJson = json_decode(file_get_contents(config_path('menu.json')), true);
-
-        foreach ($configJson as $menuName => $config) {
-            if (empty($configList[$menuName])) {
-                $configList[$menuName] = $config;
-                continue;
-            }
-
-            $menuNameList = [];
-            foreach ($configList[$menuName] as $menu) {
-                isset($menu['name']) && $menuNameList[] = $menu['name'];
-            }
-
-            foreach ($config as $menu) {
-                in_array($menu['name'], $menuNameList) || $configList[$menuName][] = $menu;
-            }
-        }
-
-        return $configList;
     }
 
     private static function checkActive($config)
