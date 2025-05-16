@@ -93,17 +93,15 @@ class Develop extends Command
 
     private function appendMenu($menuJson)
     {
-        $configJson = [];
-        $laravelMenuPath = config_path('menu.json');
-        if (file_exists($laravelMenuPath)) {
-            $configJson = json_decode(file_get_contents($laravelMenuPath), true);
-        }
-        empty($configJson) && $configJson = [];
+        $configList = config('menu');
+        empty($configList) && $configList = [];
 
         // メニュー設定をマージ
-        $configJson['root'][] = $menuJson;
+        $configList['root'][] = $menuJson;
 
-        file_put_contents($laravelMenuPath, json_encode($configJson, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n");
+        $laravelMenuPath = config_path('menu.php');
+        $code = "<?php\n\nreturn ".var_export($configList, true).";\n";
+        file_put_contents($laravelMenuPath, $code) && chmod($laravelMenuPath, 0666);
     }
 
     private function makeModel($developJson)
