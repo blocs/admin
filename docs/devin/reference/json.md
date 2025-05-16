@@ -1,6 +1,6 @@
-# JSON作成
-- JSONファイルは、controller, form, menu, routeの4つの大項目があります
-- JSONファイルの作り方は、Example を参考にしてください
+# JSONファイル作成
+- JSONファイルには、controller, form, menu, routeの4つの大項目があります
+- JSONファイルの作成方法は、Example を参考にしてください
 
 ## controller	コントローラー設定
 - [項目定義]	[説明]	[Example]
@@ -73,10 +73,10 @@
         "pattern": {
             "label": "パターン",
             "type": "select",
-            "option": {
-                "1": "パターンA",
-                "2": "パターンB"
-            },
+            "option": [
+                "パターンA",
+                "パターンB"
+            ],
             "required": true
         }
     },
