@@ -1,6 +1,6 @@
 # JSONファイル作成
 - JSONファイルには、controller, form, menu, routeの4つの大項目があります
-- JSONファイルの作成方法は、Example を参考にしてください
+- 作成方法は、Example を参考にしてください
 
 ## controller	コントローラー設定
 - [項目定義]	[説明]	[Example]
