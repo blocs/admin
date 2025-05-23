@@ -20,7 +20,7 @@ trait CommonTrait
         $sessionKey = $this->viewPrefix.'.'.$keyItem;
 
         // 検索条件をclear
-        if (isset($this->request) && $this->request->has('clear')) {
+        if (request()->has('clear')) {
             session()->forget($sessionKey);
 
             return;
@@ -32,8 +32,8 @@ trait CommonTrait
         }
 
         // POST
-        if (isset($this->request) && $this->request->has($keyItem)) {
-            $this->saveItem($keyItem, $this->request->$keyItem, $sessionKey);
+        if (request()->has($keyItem)) {
+            $this->saveItem($keyItem, request()->$keyItem, $sessionKey);
             docs(['POST' => $keyItem], 'POSTに<'.$keyItem.'>があれば、セッションに保存', ['セッション' => $keyItem]);
 
             return;
