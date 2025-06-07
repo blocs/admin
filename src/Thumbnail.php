@@ -88,7 +88,7 @@ class Thumbnail
     private static function getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop, $oWidth = null, $oHeight = null)
     {
         if (!isset($oWidth) || !isset($oHeight)) {
-            list($oWidth, $oHeight) = getimagesize($tmpLoc);
+            list($oWidth, $oHeight) = @getimagesize($tmpLoc);
         }
         list($width, $height) = [$oWidth, $oHeight];
 
