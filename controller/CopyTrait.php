@@ -40,7 +40,7 @@ trait CopyTrait
         }, 10);
 
         $this->val['id'] = $lastInsert->id;
-        docs(null, 'データを追加', ['データベース' => $this->loopItem]);
+        docs(null, 'データをコピー', ['データベース' => $this->loopItem]);
 
         $this->logData = (object) $requestData;
         $this->logData->id = $lastInsert->id;
