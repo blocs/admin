@@ -8,7 +8,6 @@ trait UpdateTrait
 {
     public function edit($id)
     {
-        docs(['GET' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
@@ -49,7 +48,6 @@ trait UpdateTrait
 
     public function show($id)
     {
-        docs(['GET' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
