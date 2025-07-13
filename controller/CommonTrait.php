@@ -76,6 +76,7 @@ trait CommonTrait
 
     protected function getCurrent($id)
     {
+        docs(['GET' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
         $this->tableData = $this->mainTable::findOrFail($id);
     }
 
