@@ -4,7 +4,7 @@ namespace Blocs\Controllers;
 
 trait BackTrait
 {
-    protected function backIndex($category = null, $message = null)
+    protected function backIndex($category = null, $message = null, ...$msgArgList)
     {
         $redirectIndex = redirect()->route(prefix().'.index');
         unset($this->val, $this->request, $this->tableData);
@@ -14,8 +14,8 @@ trait BackTrait
         }
 
         // langからメッセージを取得
-        $code = implode(':', func_get_args());
-        ($langMessage = $this->getMessage($code)) != false && $message = $langMessage;
+        $code = $this->generateCode($category, $message, $msgArgList);
+        ($langMessage = $this->getMessage($code)) != false && $message = $this->replaceArg($langMessage, $msgArgList);
         docs("メッセージをセット\n・".$message);
         docs(null, '一覧画面に戻る', ['FORWARD' => '!'.prefix().'.index']);
 
@@ -63,13 +63,8 @@ trait BackTrait
         }
 
         // langからメッセージを取得
-        if ($category) {
-            $msgArgList = array_merge([$category, $message], $msgArgList);
-        } else {
-            $msgArgList = array_merge([$message], $msgArgList);
-        }
-        $code = implode(':', $msgArgList);
-        ($langMessage = $this->getMessage($code)) != false && $message = $langMessage;
+        $code = $this->generateCode($category, $message, $msgArgList);
+        ($langMessage = $this->getMessage($code)) != false && $message = $this->replaceArg($langMessage, $msgArgList);
 
         if ($category) {
             return $redirect->with([
@@ -81,5 +76,29 @@ trait BackTrait
         return $redirect->withErrors([
             $noticeForm => $message,
         ]);
+    }
+
+    private function generateCode($category, $message, $msgArgList)
+    {
+        foreach ($msgArgList as $num => $value) {
+            $msgArgList[$num] = '{{'.$num.'}}';
+        }
+
+        if ($category) {
+            $msgArgList = array_merge([$category, $message], $msgArgList);
+        } else {
+            $msgArgList = array_merge([$message], $msgArgList);
+        }
+
+        return implode(':', $msgArgList);
+    }
+
+    private function replaceArg($message, $msgArgList)
+    {
+        foreach ($msgArgList as $num => $value) {
+            $message = str_replace('{{'.$num.'}}', $value, $message);
+        }
+
+        return $message;
     }
 }
