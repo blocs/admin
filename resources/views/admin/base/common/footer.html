@@ -1,14 +1,14 @@
                 <!-- $buttonBottomLeft=true data-exist="buttonBottomLeft" -->
                 <!-- $buttonBottomCenter=true data-exist="buttonBottomCenter" -->
                 <!-- $buttonBottomRight=true data-exist="buttonBottomRight" -->
-                <div class="d-flex flex-wrap justify-content-between" data-if="isset($buttonBottomLeft) || isset($buttonBottomCenter) || isset($buttonBottomRight)">
+                <div class="button-bottom-container" data-if="isset($buttonBottomLeft) || isset($buttonBottomCenter) || isset($buttonBottomRight)">
                     <div>
                         <!-- data-include="buttonBottomLeft" data-exist -->
                     </div>
                     <div>
                         <!-- data-include="buttonBottomCenter" data-exist -->
                     </div>
-                    <div>
+                    <div class="text-end">
                         <!-- data-include="buttonBottomRight" data-exist -->
                     </div>
                 </div>
