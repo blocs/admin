@@ -17,7 +17,7 @@ trait CommonTrait
             return;
         }
 
-        $sessionKey = $this->viewPrefix.'.'.$keyItem;
+        $sessionKey = $this->viewPrefix.'_'.$keyItem;
 
         // 検索条件をclear
         if (request()->has('clear')) {
@@ -27,7 +27,7 @@ trait CommonTrait
         }
 
         // viewPrefixが変わるとクリア
-        if (($lastSessionKey = session('viewPrefix').'.'.$keyItem) !== $sessionKey) {
+        if (session('viewPrefix') !== $this->viewPrefix) {
             session()->forget($sessionKey);
         }
 
