@@ -6,6 +6,7 @@ class Menu
 {
     private static $headline;
     private static $breadcrumbList = [];
+    private static $activePrefix;
 
     public static function get($name = 'root', $maxChild = 1)
     {
@@ -25,7 +26,7 @@ class Menu
             isset($config['label']) || $config['label'] = lang($config['lang']);
 
             // リンク先
-            if (!isset($config['url']) && empty($config['breadcrumb']) && isset($config['name'])) {
+            if (!isset($config['url']) && isset($config['name'])) {
                 if (empty($config['argv'])) {
                     $config['url'] = route($config['name']);
                 } else {
@@ -69,11 +70,6 @@ class Menu
                 $config['active'] = false;
             }
 
-            // パンクズリストはメニューには表示しない
-            if (!empty($config['breadcrumb'])) {
-                continue;
-            }
-
             // 権限があるかチェック
             if (empty($config['role']) && isset($config['name']) && !self::checkRole($config['name'])) {
                 continue;
@@ -83,32 +79,27 @@ class Menu
                 continue;
             }
 
-            // パンくずには、headlineにメニュー表示
-            if (!empty(self::$headline) && !empty(self::$headline['breadcrumb']) && $config['active']) {
-                empty(self::$headline['menu']) && self::$headline['menu'] = $config['label'];
-            }
-
             $subMenuList[] = $config;
         }
 
         return [$subMenuList, self::$headline, self::$breadcrumbList, $isActive, $maxChild + 1];
     }
 
-    public static function headline($icon, $lang)
+    public static function headline($icon, $lang, $activePrefix = null, $menu = null)
     {
         // 指定されたheadlineを設定
         self::$headline = [
             'icon' => $icon,
             'label' => lang($lang),
+            'menu' => $menu ?? '',
         ];
-    }
 
-    public static function breadcrumb($lang)
-    {
         // 指定されたbreadcrumbを設定
         self::$breadcrumbList[] = [
             'label' => lang($lang),
         ];
+
+        isset($activePrefix) && self::$activePrefix = $activePrefix;
     }
 
     public static function checkRole($currentName = null)
@@ -142,20 +133,13 @@ class Menu
 
     private static function checkActive($config)
     {
-        if (!empty($config['breadcrumb'])) {
-            // パンくずは完全一致
-            $currentName = \Route::currentRouteName();
-
-            return $config['name'] === $currentName;
-        }
-
         // メニューはメソッド以外一致
-        $currentPrefix = prefix();
+        $activetPrefix = self::$activePrefix ?? prefix();
 
         $configNameList = explode('.', $config['name']);
         array_pop($configNameList);
         $configPrefix = implode('.', $configNameList);
 
-        return $configPrefix === $currentPrefix;
+        return $configPrefix === $activetPrefix;
     }
 }

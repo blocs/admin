@@ -11,6 +11,9 @@ class ProfileController extends \Blocs\Controllers\Base
         $this->viewPrefix = 'admin.profile';
         $this->mainTable = 'App\Models\Admin\User';
         $this->noticeItem = 'email';
+
+        \Blocs\Menu::headline('fa-cog', lang('template:admin_menu_profile'));
+        $this->val['profileActive'] = true;
     }
 
     public function edit($id)
