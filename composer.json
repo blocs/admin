@@ -32,7 +32,7 @@
             "Blocs\\": "src\/",
             "Blocs\\Controllers\\": "controllers\/",
             "Tests\\": "tests\/",
-            "App\\Console\\Commands": "commands\/"
+            "App\\Console\\Commands\\": "commands\/"
         },
         "files": [
             "helper\/admin.php"
