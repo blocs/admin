@@ -30,9 +30,9 @@
     "autoload": {
         "psr-4": {
             "Blocs\\": "src\/",
-            "Blocs\\Controllers\\": "controllers\/",
             "Blocs\\Commands\\": "commands\/",
-            "Tests\\": "tests\/",
+            "Blocs\\Controllers\\": "controllers\/",
+            "Tests\\": "tests\/"
         },
         "files": [
             "helper\/admin.php"
