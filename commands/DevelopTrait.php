@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Blocs\Commands;
 
 trait DevelopTrait
 {

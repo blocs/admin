@@ -1,7 +1,7 @@
 {
     "name": "blocs\/admin",
     "type": "library",
-    "description": "Laravel BLOCS admin panel package",
+    "description": "Laravel BLOCS admin package",
     "keywords": [
         "PHP",
         "Laravel",
@@ -31,8 +31,8 @@
         "psr-4": {
             "Blocs\\": "src\/",
             "Blocs\\Controllers\\": "controllers\/",
+            "Blocs\\Commands\\": "commands\/",
             "Tests\\": "tests\/",
-            "App\\Console\\Commands\\": "commands\/"
         },
         "files": [
             "helper\/admin.php"
