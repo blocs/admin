@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Blocs\Commands;
 
 use Illuminate\Console\Command;
 
-class Deploy extends Command
+class Install extends Command
 {
     protected $baseDir;
 

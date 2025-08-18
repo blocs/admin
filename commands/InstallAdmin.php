@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Blocs\Commands;
 
-class DeployAdmin extends Deploy
+class InstallAdmin extends Install
 {
     /**
      * The name and signature of the console command.
@@ -16,7 +16,7 @@ class DeployAdmin extends Deploy
      *
      * @var string
      */
-    protected $description = 'Deploy blocs/admin package';
+    protected $description = 'Install blocs/admin package';
 
     public function __construct()
     {
@@ -45,7 +45,7 @@ class DeployAdmin extends Deploy
 
         \Artisan::call('route:cache');
 
-        echo "Deploy was completed successfully.\n";
+        echo "Admin has been installed successfully.\n";
         echo 'Login URL is '.route('login').".\n";
         echo "Initial ID/Pass is admin/admin.\n";
     }
