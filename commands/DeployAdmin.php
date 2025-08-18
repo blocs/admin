@@ -1,6 +1,6 @@
 <?php
 
-namespace Blocs\Commands;
+namespace App\Console\Commands;
 
 class DeployAdmin extends Deploy
 {

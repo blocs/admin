@@ -6,12 +6,6 @@ use Illuminate\Support\ServiceProvider;
 
 class AdminServiceProvider extends ServiceProvider
 {
-    public function register()
-    {
-        // コマンドの登録
-        $this->app->runningInConsole() && $this->registerBlocsCommand();
-    }
-
     public function boot()
     {
         // 定数の読み込み
@@ -22,27 +16,6 @@ class AdminServiceProvider extends ServiceProvider
 
         // 必要ファイルを登録
         $this->app->runningInConsole() && $this->registerPublish();
-    }
-
-    public function registerBlocsCommand()
-    {
-        $this->app->singleton('command.blocs.admin', function ($app) {
-            return new Commands\DeployAdmin();
-        });
-
-        $this->commands('command.blocs.admin');
-
-        $this->app->singleton('command.blocs.develop', function ($app) {
-            return new Commands\Develop();
-        });
-
-        $this->commands('command.blocs.develop');
-
-        $this->app->singleton('command.blocs.agent', function ($app) {
-            return new Commands\Agent();
-        });
-
-        $this->commands('command.blocs.agent');
     }
 
     public function registerPublish()
