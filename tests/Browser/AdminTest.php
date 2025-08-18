@@ -172,7 +172,8 @@ class AdminTest extends DuskTestCase
         // 確認ボタンをクリックする、モーダル内の更新ボタンをクリックする
         $browser->press('確認')
             ->waitFor('#modalUpdate')
-            ->press('#modalUpdate .btn-primary');
+            ->press('#modalUpdate .btn-primary')
+            ->pause(1000);
     }
 
     private function searchUser($browser, $email): void
