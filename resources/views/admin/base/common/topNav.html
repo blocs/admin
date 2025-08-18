@@ -1,11 +1,3 @@
-<form method="post" :action=route('agent') data-exist=env("OPENAI_API_KEY")>
-    @csrf
-    <div class="input-group input-group-outline">
-        <input type="hidden" name="state" :value="現在の表示している画面: {$headline["label"]}" />
-        <input type="text" class="form-control" name="request" autofocus placeholder="何かリクエストを入力してください。" />
-    </div>    
-</form>
-
 <nav class="navbar navbar-main navbar-expand-lg position-sticky mt-2 mb-1 top-1 px-0 mx-2 shadow-none border-radius-xl z-index-sticky" id="navbarBlur" data-scroll="true">
     <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
