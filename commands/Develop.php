@@ -1,6 +1,6 @@
 <?php
 
-namespace Blocs\Commands;
+namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -9,9 +9,23 @@ class Develop extends Command
 {
     use DevelopTrait;
 
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
     protected $signature = 'blocs:develop {path}';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
     protected $description = 'Develop application';
 
+    /**
+     * Execute the console command.
+     */
     public function handle()
     {
         $path = $this->argument('path');
