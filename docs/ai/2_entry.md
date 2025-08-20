@@ -1,15 +1,9 @@
-こんにちは @Devin
-blocs/test-devin repo にアクセスしてください
-リクエストに従って仕事をしてください
-
 # リクエスト
 - 要件に従って対象ファイルを修正してください
 - 参照ファイルを参考にしてください
-- 実装追加した変更で PR を作ってください
-- PRのタイトルとサマリは日本語にしてください
 
 ## 参考ファイル
-- docs/devin/reference/entry.md
+- docs/ai/reference/entry.md
 
 # 要件
 - form_code と form_name と form_type の長さを調整して、横に並べてください

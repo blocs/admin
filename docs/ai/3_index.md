@@ -1,16 +1,10 @@
-こんにちは @Devin
-blocs/test-devin repo にアクセスしてください
-リクエストに従って仕事をしてください
-
 # リクエスト
 - 要件に従って対象ファイルを修正してください
 - 参照ファイルを参考にしてください
-- 実装追加した変更で PR を作ってください
-- PRのタイトルとサマリは日本語にしてください
 
 ## 参考ファイル
-- docs/devin/reference/index.md
-- docs/devin/reference/button.md
+- docs/ai/reference/index.md
+- docs/ai/reference/button.md
 
 # 要件
 - 会社タイプは表示しない
