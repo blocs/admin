@@ -7,7 +7,9 @@ use Tests\DuskTestCase;
 
 class AdminTest extends DuskTestCase
 {
-    use AdminTestTrait;
+    use LoginTestTrait;
+    use ProfileTestTrait;
+    use UserTestTrait;
 
     public function testAdmin(): void
     {
