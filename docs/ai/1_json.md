@@ -1,15 +1,9 @@
-こんにちは @Devin
-blocs/test-devin repo にアクセスしてください
-リクエストに従って仕事をしてください
-
 # リクエスト
 - 要件に従って対象ファイルを作成してください
 - 参考ファイルを参考にしてください
-- 実装追加した変更で PR を作ってください
-- PRのタイトルとサマリは日本語にしてください
 
 ## 参考ファイル
-- docs/devin/reference/json.md
+- docs/ai/reference/json.md
 
 # 要件
 
