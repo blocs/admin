@@ -44,28 +44,28 @@ class AdminServiceProvider extends ServiceProvider
         $publishList = [];
 
         // appをpublish
-        $publishList[__DIR__.'/../app'] = app_path();
+        $publishList[base_path('vendor/blocs/admin/app')] = app_path();
 
         // configをpublish
-        $publishList[__DIR__.'/../config'] = config_path();
+        $publishList[base_path('vendor/blocs/admin/config')] = config_path();
 
         // databaseをpublish
-        $publishList[__DIR__.'/../database'] = database_path();
+        $publishList[base_path('vendor/blocs/admin/database')] = database_path();
 
         // publicをpublish
-        $publishList[__DIR__.'/../public'] = public_path();
+        $publishList[base_path('vendor/blocs/admin/public')] = public_path();
 
         // resourceをpublish
-        $publishList[__DIR__.'/../resources'] = resource_path();
+        $publishList[base_path('vendor/blocs/admin/resources')] = resource_path();
 
         // routesをpublish
-        $publishList[__DIR__.'/../routes'] = base_path('routes');
+        $publishList[base_path('vendor/blocs/admin/routes')] = base_path('routes');
 
         // docsをpublish
-        $publishList[__DIR__.'/../docs'] = base_path('docs');
+        $publishList[base_path('vendor/blocs/admin/docs')] = base_path('docs');
 
         // testsをpublish
-        $publishList[__DIR__.'/../tests'] = base_path('tests');
+        $publishList[base_path('vendor/blocs/admin/tests')] = base_path('tests');
 
         $this->publishes($publishList);
     }

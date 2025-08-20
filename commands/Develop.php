@@ -67,7 +67,7 @@ class Develop extends Command
         }
 
         // コントローラー作成
-        $controller = file_get_contents(__DIR__.'/../../develop/controller.php');
+        $controller = file_get_contents(base_path('vendor/blocs/admin/develop/controller.php'));
         foreach ($developJson['controller'] as $key => $value) {
             // キーを変換
             $key = strtoupper(Str::snake($key));
@@ -87,7 +87,7 @@ class Develop extends Command
 
     private function makeRoute($routeJson, $controllerJson)
     {
-        $route = file_get_contents(__DIR__.'/../../develop/route.php');
+        $route = file_get_contents(base_path('vendor/blocs/admin/develop/route.php'));
         foreach ($routeJson as $key => $value) {
             // キーを変換
             $key = strtoupper(Str::snake($key));
@@ -128,7 +128,7 @@ class Develop extends Command
         }
 
         // モデル作成
-        $model = file_get_contents(__DIR__.'/../../develop/model.php');
+        $model = file_get_contents(base_path('vendor/blocs/admin/develop/model.php'));
         $model = str_replace('FORM_LIST', $this->getList(array_keys($developJson['form']), ",\n        ", "'"), $model);
 
         foreach ($developJson['controller'] as $key => $value) {
@@ -160,7 +160,7 @@ class Develop extends Command
         $migrationPath = database_path('migrations/'.date('Y_m_d').'_'.sprintf('%06d', rand(0, 9999)).'_'.$migrationPath);
 
         // テーブル定義作成
-        $migration = file_get_contents(__DIR__.'/../../develop/migration.php');
+        $migration = file_get_contents(base_path('vendor/blocs/admin/develop/migration.php'));
         $migration = str_replace('LOOP_ITEM', $loopItem, $migration);
 
         $itemList = [];
@@ -192,7 +192,7 @@ class Develop extends Command
         $loopItem = $developJson['controller']['loopItem'];
 
         // テープル定義表示
-        $database = file_get_contents(__DIR__.'/../../develop/database.pu');
+        $database = file_get_contents(base_path('vendor/blocs/admin/develop/database.pu'));
 
         if (empty($developJson['controller']['modelName'])) {
             $className = $loopItem;
@@ -224,11 +224,11 @@ class Develop extends Command
         $replaceItem['HEAD_HTML'] = '';
         $replaceItem['BODY_HTML'] = '';
 
-        $formBlocsHtml = file_get_contents(__DIR__.'/../../develop/form.html');
+        $formBlocsHtml = file_get_contents(base_path('vendor/blocs/admin/develop/form.html'));
         $replaceItem['FORM_HTML'] = "\n";
         $formHtml = '';
 
-        $showBlocsHtml = file_get_contents(__DIR__.'/../../develop/show.html');
+        $showBlocsHtml = file_get_contents(base_path('vendor/blocs/admin/develop/show.html'));
         $replaceItem['SHOW_HTML'] = "\n";
         $showHtml = '';
 
@@ -275,7 +275,7 @@ class Develop extends Command
             }
         }
 
-        $this->copyDir(__DIR__.'/../../develop/views', $viewPath, $replaceItem);
+        $this->copyDir(base_path('vendor/blocs/admin/develop/views'), $viewPath, $replaceItem);
 
         if (!file_exists($viewPath.'/include/form.html')) {
             $formHtml = str_replace('<#-- ', '<!-- ', $formHtml);
@@ -301,7 +301,7 @@ class Develop extends Command
             return;
         }
 
-        $docs = file_get_contents(__DIR__.'/../../develop/docs.php');
+        $docs = file_get_contents(base_path('vendor/blocs/admin/develop/docs.php'));
 
         empty($developJson['menu']['lang']) && $developJson['menu']['lang'] = '';
         $docs = str_replace('MENU_LANG', $developJson['menu']['lang'], $docs);
