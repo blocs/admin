@@ -64,6 +64,9 @@ class AdminServiceProvider extends ServiceProvider
         // docsをpublish
         $publishList[__DIR__.'/../docs'] = base_path('docs');
 
+        // testsをpublish
+        $publishList[__DIR__.'/../tests'] = base_path('tests');
+
         $this->publishes($publishList);
     }
 }

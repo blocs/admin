@@ -2,45 +2,8 @@
 
 namespace Tests\Browser;
 
-trait AdminTestTrait
+trait UserTestTrait
 {
-    private function login($browser, $email, $password): void
-    {
-        /*
-            $email = 'admin';
-            $password = 'admin';
-        */
-
-        // http://localhost/login に移動する
-        $browser->visit('http://localhost/login')->pause(500);
-
-        // ユーザーID $email, パスワード $password を入力して、ログインする
-        $browser->type('email', $email)
-                ->type('password', $password)
-                ->click('button[type="submit"]')
-                ->pause(500);
-    }
-
-    private function logout($browser, $name): void
-    {
-        /*
-            $name = 'admin';
-        */
-
-        // サイドメニューのログアウトが非表示の時は、サイドメニューの $name のリンクをクリックする
-        try {
-            $browser->click('a[data-bs-target="#modalLogout"]')->pause(500);
-        } catch (\Throwable $e) {
-            $browser->clickLink($name)->pause(500);
-        }
-
-        // サイドメニューのログアウトリンクをクリックして、モーダル内のログアウトボタンをクリックする
-        $browser->click('#sidenav-main a[data-bs-target="#modalLogout"]')->pause(500)
-            ->whenAvailable('#modalLogout', function ($modal) {
-                $modal->click('button[formaction="http://localhost/logout"]')->pause(500);
-            });
-    }
-
     private function gotoUser($browser): void
     {
         // サイドメニューにユーザー管理が非表示の時は、サイドメニューの管理トップをクリックする
@@ -103,7 +66,6 @@ trait AdminTestTrait
     private function updateUser($browser, $email, $name): void
     {
         /*
-            $email = fake()->email();
             $name = fake()->name();
         */
 
@@ -193,40 +155,5 @@ trait AdminTestTrait
 
         // クリアボタンをクリックする
         $browser->click('button.clear')->pause(500);
-    }
-
-    private function updateAvator($browser, $name): void
-    {
-        /*
-            $name = 'admin';
-        */
-
-        // サイドメニューのプロフィールが非表示の時は、サイドメニューの $name のリンクをクリックする
-        try {
-            $browser->clickLink('プロフィール')->pause(500);
-        } catch (\Throwable $e) {
-            $browser->clickLink($name)->pause(500)->clickLink('プロフィール')->pause(500);
-        }
-
-        // Dropzone に logo.png アップロードする
-        $browser->scrollIntoView('.dropzone')->pause(500)->attach('input.dz-hidden-input', \base_path('tests/Browser/logo.png'));
-
-        // 確認ボタンをクリックする、モーダル内の更新ボタンをクリックする
-        $browser->click('button[data-bs-target="#modalUpdate"]')->pause(500)
-            ->whenAvailable('#modalUpdate', function ($modal) {
-                $modal->click('button[type="submit"].btn.btn-primary')->pause(500);
-            });
-    }
-
-    private function assertDuplicateUserIdError($browser): void
-    {
-        // 重複登録エラーのメッセージを確認する
-        $browser->assertSee('このユーザーIDはすでに登録されています。')->pause(500);
-    }
-
-    private function assertLoginFailed($browser): void
-    {
-        // ログイン失敗メッセージを確認する
-        $browser->assertSee('ログインに失敗しました。')->pause(500);
     }
 }
