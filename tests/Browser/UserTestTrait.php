@@ -6,13 +6,11 @@ trait UserTestTrait
 {
     private function gotoUser($browser): void
     {
-        // サイドメニューにユーザー管理が非表示の時は、サイドメニューの管理トップをクリックする
-        // ユーザー管理をクリックする
+        // サイドメニューにユーザー管理が非表示の時は、管理トップをクリックした後に、ユーザー管理をクリックする
         try {
             $browser->clickLink('ユーザー管理')->pause(500);
         } catch (\Throwable $e) {
-            $browser->clickLink('管理トップ')->pause(500)
-                    ->clickLink('ユーザー管理')->pause(500);
+            $browser->clickLink('管理トップ')->pause(500)->clickLink('ユーザー管理')->pause(500);
         }
     }
 
@@ -34,13 +32,13 @@ trait UserTestTrait
             ->type('repassword', $password);
 
         // 名前に適当な名前を入力して、admin のチェックボックスをチェックする
-        $browser->type('name', \fake()->name())
-                ->click('input.form-check-input[name="role[]"][value="admin"]')->pause(500);
+        $browser->type('input[name="name"]', fake()->name())
+            ->check('input[type="checkbox"][name="role[]"][value="admin"]');
 
-        // 確認ボタンをクリックする、モーダル内の新規登録ボタンをクリックする
+        // 確認ボタンをクリックして、モーダル内の新規登録ボタンをクリックする
         $browser->click('button[data-bs-target="#modalStore"]')->pause(500)
             ->whenAvailable('#modalStore', function ($modal) {
-                $modal->click('button[formaction="http://localhost/admin/user"]')->pause(500);
+                $modal->click('button.btn.btn-primary')->pause(500);
             });
     }
 
@@ -52,15 +50,16 @@ trait UserTestTrait
 
         $this->gotoUser($browser);
 
-        // テーブルの上に虫眼鏡のアイコンがある時は、虫眼鏡アイコンをクリックする
+        // テーブルの上に虫眼鏡アイコンがある時は、虫眼鏡アイコンをクリックする
         try {
             $browser->click('.summary-search')->pause(500);
         } catch (\Throwable $e) {
         }
 
         // 検索フィールドに $email を入力して、検索ボタンをクリックする
-        $browser->type('search', $email)
-                ->press('検索')->pause(500);
+        $browser->type('input[name="search"]', $email)
+            ->click('button.btn.btn-outline-secondary.m-0')
+            ->pause(500);
     }
 
     private function updateUser($browser, $email, $name): void
@@ -73,13 +72,13 @@ trait UserTestTrait
         $this->searchUser($browser, $email);
 
         // 検索結果の一行目の編集アイコンをクリックする
-        $browser->click('table.dataTable-table tbody tr:first-child a[href*="/admin/user/"][href$="/edit"]')->pause(500);
+        $browser->click('table.dataTable-table tbody tr:first-child td.text-nowrap a[href$="/edit"]')->pause(500);
 
-        // 名前を $name 入力して、確認ボタンをクリックする、モーダル内の更新ボタンをクリックする
-        $browser->type('name', $name)
+        // 名前に $name を入力して、確認ボタンをクリックして、モーダル内の更新ボタンをクリックする
+        $browser->type('input[name="name"]', $name)
             ->click('button[data-bs-target="#modalUpdate"]')->pause(500)
             ->whenAvailable('#modalUpdate', function ($modal) {
-                $modal->click('button[type="submit"]')->pause(500);
+                $modal->press('更新')->pause(500);
             });
 
         // クリアボタンをクリックする
@@ -91,14 +90,13 @@ trait UserTestTrait
         $this->gotoUser($browser);
         $this->searchUser($browser, $email);
 
-        // 検索結果の一行目の trash アイコンをクリックする
-        $browser->click('table.dataTable-table tbody tr:first-child td.text-nowrap a:nth-of-type(3)')->pause(500);
+        // 検索結果の一行目の削除アイコンをクリックする
+        $browser->click('tbody tr:first-child td:last-child a:last-child')->pause(500);
 
-        // 左下の削除ボタンをクリックする、モーダル内の削除ボタンをクリックする
-        $browser
-            ->click('button[data-bs-target="#modalDestroy"]')->pause(500)
+        // 左下の削除ボタンをクリックして、モーダル内の削除ボタンをクリックする
+        $browser->click('button[data-bs-target="#modalDestroy"]')->pause(500)
             ->whenAvailable('#modalDestroy', function ($modal) {
-                $modal->click('button[type="submit"]')->pause(500);
+                $modal->click('button[type="submit"].btn-danger')->pause(500);
             });
 
         // クリアボタンをクリックする
@@ -111,12 +109,14 @@ trait UserTestTrait
         $this->searchUser($browser, $email);
 
         // 検索結果の一行目のチェックボックスをクリックする
-        $browser->click('tbody tr:first-child input.form-check-input')->pause(500);
+        $browser->click('table.dataTable-table tbody tr:first-child input.form-check-input')->pause(500);
 
         // テーブルの下の削除ボタンをクリックする、モーダル内の削除ボタンをクリックする
-        $browser->click('button[data-bs-target="#modalDestroy"]')->pause(500)
+        $browser->click('button[data-bs-target="#modalDestroy"]')
+            ->pause(500)
             ->whenAvailable('#modalDestroy', function ($modal) {
-                $modal->click('button[formaction="http://localhost/admin/user/select"]')->pause(500);
+                $modal->click('button.btn-danger')
+                    ->pause(500);
             });
 
         // クリアボタンをクリックする
@@ -128,13 +128,14 @@ trait UserTestTrait
         $this->gotoUser($browser);
         $this->searchUser($browser, $email);
 
-        // 検索結果の一行目のユーザーの凍結リンクをクリックして、モーダル内の凍結ボタンをクリックする
+        // 検索結果の一行目の凍結リンクをクリックして、モーダル内の凍結ボタンをクリックする
         $browser
-            ->click('table.dataTable-table tbody tr:first-child a[data-bs-target="#modalInactivate"]')
+            ->click('tbody tr:first-child a[data-bs-target="#modalInactivate"]')
             ->pause(500)
-            ->waitFor('#modalInactivate.show')
-            ->within('#modalInactivate', function ($modal) {
-                $modal->press('凍結')->pause(500);
+            ->whenAvailable('#modalInactivate', function ($modal) {
+                $modal->waitFor('button.btn.btn-warning:not([disabled])')
+                      ->click('button.btn.btn-warning')
+                      ->pause(500);
             });
 
         // クリアボタンをクリックする
@@ -146,11 +147,11 @@ trait UserTestTrait
         $this->gotoUser($browser);
         $this->searchUser($browser, $email);
 
-        // 検索結果の一行目のユーザーの凍結解除リンクをクリックして、モーダル内の凍結解除ボタンをクリックする
-        $browser->click('table tbody tr:first-child a[data-bs-target="#modalActivate"]')
+        // 検索結果の一行目の凍結解除リンクをクリックして、モーダル内の凍結解除ボタンをクリックする
+        $browser->click('.dataTable-table tbody tr:first-child a[data-bs-target="#modalActivate"]')
             ->pause(500)
             ->whenAvailable('#modalActivate', function ($modal) {
-                $modal->press('凍結解除')->pause(500);
+                $modal->click('button.btn-success')->pause(500);
             });
 
         // クリアボタンをクリックする
