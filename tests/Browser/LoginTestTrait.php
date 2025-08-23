@@ -17,8 +17,7 @@ trait LoginTestTrait
         // ユーザーID $email, パスワード $password を入力して、ログインする
         $browser->type('email', $email)
             ->type('password', $password)
-            ->press('ログイン')
-            ->pause(500);
+            ->click('button[type="submit"]')->pause(500);
     }
 
     private function logout($browser, $name): void
@@ -31,13 +30,12 @@ trait LoginTestTrait
         try {
             $browser->clickLink('ログアウト')->pause(500);
         } catch (\Throwable $e) {
-            $browser->clickLink($name)->pause(500)
-                ->clickLink('ログアウト')->pause(500);
+            $browser->clickLink($name)->pause(500)->clickLink('ログアウト')->pause(500);
         }
 
         // モーダル内のログアウトボタンをクリックする
         $browser->whenAvailable('#modalLogout', function ($modal) {
-            $modal->click('button[formaction="http://localhost/logout"]')->pause(500);
+            $modal->click('button.btn.btn-primary')->pause(500);
         });
     }
 }
