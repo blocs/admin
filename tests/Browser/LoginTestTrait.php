@@ -16,9 +16,9 @@ trait LoginTestTrait
 
         // ユーザーID $email, パスワード $password を入力して、ログインする
         $browser->type('email', $email)
-                ->type('password', $password)
-                ->click('button[type="submit"]')
-                ->pause(500);
+            ->type('password', $password)
+            ->press('ログイン')
+            ->pause(500);
     }
 
     private function logout($browser, $name): void
@@ -27,17 +27,17 @@ trait LoginTestTrait
             $name = 'admin';
         */
 
-        // サイドメニューのログアウトが非表示の時は、サイドメニューの $name のリンクをクリックする
+        // サイドメニューのログアウトが非表示の時は、$name リンクをクリックした後に、ログアウトリンクをクリックする
         try {
-            $browser->click('a[data-bs-target="#modalLogout"]')->pause(500);
+            $browser->clickLink('ログアウト')->pause(500);
         } catch (\Throwable $e) {
-            $browser->clickLink($name)->pause(500);
+            $browser->clickLink($name)->pause(500)
+                ->clickLink('ログアウト')->pause(500);
         }
 
-        // サイドメニューのログアウトリンクをクリックして、モーダル内のログアウトボタンをクリックする
-        $browser->click('#sidenav-main a[data-bs-target="#modalLogout"]')->pause(500)
-            ->whenAvailable('#modalLogout', function ($modal) {
-                $modal->click('button[formaction="http://localhost/logout"]')->pause(500);
-            });
+        // モーダル内のログアウトボタンをクリックする
+        $browser->whenAvailable('#modalLogout', function ($modal) {
+            $modal->click('button[formaction="http://localhost/logout"]')->pause(500);
+        });
     }
 }
