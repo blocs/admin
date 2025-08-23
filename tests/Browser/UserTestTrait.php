@@ -8,9 +8,10 @@ trait UserTestTrait
     {
         // サイドメニューにユーザー管理が非表示の時は、管理トップをクリックした後に、ユーザー管理をクリックする
         try {
-            $browser->clickLink('ユーザー管理')->pause(500);
+            $browser->click('a[href="http://localhost/admin/user"]')->pause(500);
         } catch (\Throwable $e) {
-            $browser->clickLink('管理トップ')->pause(500)->clickLink('ユーザー管理')->pause(500);
+            $browser->clickLink('管理トップ')->pause(500)
+                ->click('a[href="http://localhost/admin/user"]')->pause(500);
         }
     }
 
@@ -32,8 +33,8 @@ trait UserTestTrait
             ->type('repassword', $password);
 
         // 名前に適当な名前を入力して、admin のチェックボックスをチェックする
-        $browser->type('input[name="name"]', fake()->name())
-            ->check('input[type="checkbox"][name="role[]"][value="admin"]');
+        $browser->type('name', fake()->name())
+                ->click('input.form-check-input[name="role[]"][value="admin"]')->pause(500);
 
         // 確認ボタンをクリックして、モーダル内の新規登録ボタンをクリックする
         $browser->click('button[data-bs-target="#modalStore"]')->pause(500)
@@ -52,8 +53,12 @@ trait UserTestTrait
 
         // テーブルの上に虫眼鏡アイコンがある時は、虫眼鏡アイコンをクリックする
         try {
-            $browser->click('.summary-search')->pause(500);
-        } catch (\Throwable $e) {
+            $browser->click('a.summary-search')->pause(500);
+        } catch (\Throwable $e1) {
+            try {
+                $browser->click('i.fa-search')->pause(500);
+            } catch (\Throwable $e2) {
+            }
         }
 
         // 検索フィールドに $email を入力して、検索ボタンをクリックする
@@ -72,13 +77,13 @@ trait UserTestTrait
         $this->searchUser($browser, $email);
 
         // 検索結果の一行目の編集アイコンをクリックする
-        $browser->click('table.dataTable-table tbody tr:first-child td.text-nowrap a[href$="/edit"]')->pause(500);
+        $browser->click('table.dataTable-table tbody tr:first-child a[href$="/edit"]')->pause(500);
 
         // 名前に $name を入力して、確認ボタンをクリックして、モーダル内の更新ボタンをクリックする
-        $browser->type('input[name="name"]', $name)
+        $browser->type('name', $name)
             ->click('button[data-bs-target="#modalUpdate"]')->pause(500)
             ->whenAvailable('#modalUpdate', function ($modal) {
-                $modal->press('更新')->pause(500);
+                $modal->click('button.btn.btn-primary')->pause(500);
             });
 
         // クリアボタンをクリックする
@@ -91,12 +96,12 @@ trait UserTestTrait
         $this->searchUser($browser, $email);
 
         // 検索結果の一行目の削除アイコンをクリックする
-        $browser->click('tbody tr:first-child td:last-child a:last-child')->pause(500);
+        $browser->click('table.dataTable-table tbody tr:first-child td.text-nowrap a:nth-of-type(3)')->pause(500);
 
         // 左下の削除ボタンをクリックして、モーダル内の削除ボタンをクリックする
         $browser->click('button[data-bs-target="#modalDestroy"]')->pause(500)
             ->whenAvailable('#modalDestroy', function ($modal) {
-                $modal->click('button[type="submit"].btn-danger')->pause(500);
+                $modal->click('button.btn.btn-danger')->pause(500);
             });
 
         // クリアボタンをクリックする
@@ -109,14 +114,12 @@ trait UserTestTrait
         $this->searchUser($browser, $email);
 
         // 検索結果の一行目のチェックボックスをクリックする
-        $browser->click('table.dataTable-table tbody tr:first-child input.form-check-input')->pause(500);
+        $browser->click('input[name="users[0][selectedRows][]"]')->pause(500);
 
         // テーブルの下の削除ボタンをクリックする、モーダル内の削除ボタンをクリックする
-        $browser->click('button[data-bs-target="#modalDestroy"]')
-            ->pause(500)
+        $browser->click('button[data-bs-target="#modalDestroy"]')->pause(500)
             ->whenAvailable('#modalDestroy', function ($modal) {
-                $modal->click('button.btn-danger')
-                    ->pause(500);
+                $modal->click('button.btn.btn-danger')->pause(500);
             });
 
         // クリアボタンをクリックする
@@ -129,13 +132,9 @@ trait UserTestTrait
         $this->searchUser($browser, $email);
 
         // 検索結果の一行目の凍結リンクをクリックして、モーダル内の凍結ボタンをクリックする
-        $browser
-            ->click('tbody tr:first-child a[data-bs-target="#modalInactivate"]')
-            ->pause(500)
+        $browser->click('table.dataTable-table tbody tr:first-child a[data-bs-target="#modalInactivate"]')->pause(500)
             ->whenAvailable('#modalInactivate', function ($modal) {
-                $modal->waitFor('button.btn.btn-warning:not([disabled])')
-                      ->click('button.btn.btn-warning')
-                      ->pause(500);
+                $modal->click('button.btn.btn-warning')->pause(500);
             });
 
         // クリアボタンをクリックする
@@ -148,8 +147,7 @@ trait UserTestTrait
         $this->searchUser($browser, $email);
 
         // 検索結果の一行目の凍結解除リンクをクリックして、モーダル内の凍結解除ボタンをクリックする
-        $browser->click('.dataTable-table tbody tr:first-child a[data-bs-target="#modalActivate"]')
-            ->pause(500)
+        $browser->click('table.dataTable-table tbody tr:first-child a[data-bs-target="#modalActivate"]')->pause(500)
             ->whenAvailable('#modalActivate', function ($modal) {
                 $modal->click('button.btn-success')->pause(500);
             });
