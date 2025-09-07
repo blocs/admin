@@ -6,17 +6,17 @@ use Illuminate\Support\Facades\Process;
 
 trait VectorStoreTrait
 {
-    private function updateDocument($targetData, $name)
+    private static function updateDocument($targetData, $name)
     {
         Process::input(json_encode([$targetData], JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/update.py'), database_path(), $name]);
     }
 
-    private function updateChunkDocument($targetData, $name, $chunkItem)
+    private static function updateChunkDocument($targetData, $name, $chunkItem)
     {
         Process::input(json_encode(self::chunkDocument([$targetData], $chunkItem), JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/update.py'), database_path(), $name]);
     }
 
-    private function deleteDocument($targetId, $name)
+    private static function deleteDocument($targetId, $name)
     {
         Process::input(json_encode([$targetId]))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/delete.py'), database_path(), $name]);
     }
