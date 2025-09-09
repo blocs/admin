@@ -47,3 +47,10 @@ if (!function_exists('setOption')) {
         Blocs\Option::set($template, $formName);
     }
 }
+
+if (!function_exists('path')) {
+    function path($name, $parameters = [])
+    {
+        return route($name, $parameters, false);
+    }
+}
