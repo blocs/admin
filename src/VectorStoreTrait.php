@@ -11,9 +11,9 @@ trait VectorStoreTrait
         Process::input(json_encode([$targetData], JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/update.py'), database_path(), $name]);
     }
 
-    private static function updateChunkDocument($targetData, $name, $chunkItem)
+    private static function updateChunkDocument($targetData, $name, $chunkItem, $chunkSize = 1000, $chunkOverlap = 0)
     {
-        Process::input(json_encode(self::chunkDocument([$targetData], $chunkItem), JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/update.py'), database_path(), $name]);
+        Process::input(json_encode(self::chunkDocument([$targetData], $chunkItem, $chunkSize, $chunkOverlap), JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/update.py'), database_path(), $name]);
     }
 
     private static function deleteDocument($targetId, $name)
@@ -43,14 +43,14 @@ trait VectorStoreTrait
         return $result;
     }
 
-    private static function chunkDocument($targetData, $key, $chunkSize = 1000, $chunkOverlap = 0)
+    private static function chunkDocument($targetData, $chunkItem, $chunkSize = 1000, $chunkOverlap = 0)
     {
         $chunkedDocuments = [];
         foreach ($targetData as $data) {
             // チャンクして追加
-            $contents = self::chunkString($data[$key], $chunkSize, $chunkOverlap);
+            $contents = self::chunkString($data[$chunkItem], $chunkSize, $chunkOverlap);
             foreach ($contents as $content) {
-                $data[$key] = $content;
+                $data[$chunkItem] = $content;
                 $chunkedDocuments[] = $data;
             }
         }
