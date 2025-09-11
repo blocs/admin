@@ -43,12 +43,12 @@ trait VectorStoreTrait
         return $result;
     }
 
-    private static function chunkDocument($targetData, $key)
+    private static function chunkDocument($targetData, $key, $chunkSize = 1000, $chunkOverlap = 0)
     {
         $chunkedDocuments = [];
         foreach ($targetData as $data) {
             // チャンクして追加
-            $contents = self::chunkString($data[$key]);
+            $contents = self::chunkString($data[$key], $chunkSize, $chunkOverlap);
             foreach ($contents as $content) {
                 $data[$key] = $content;
                 $chunkedDocuments[] = $data;
@@ -58,9 +58,9 @@ trait VectorStoreTrait
         return $chunkedDocuments;
     }
 
-    private static function chunkString($string)
+    private static function chunkString($string, $chunkSize = 1000, $chunkOverlap = 0)
     {
-        $process = Process::input(json_encode($string, JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/chunk.py')]);
+        $process = Process::input(json_encode($string, JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/chunk.py'), $chunkSize, $chunkOverlap]);
         $jsonContent = $process->output();
 
         $data = json_decode($jsonContent, true);
