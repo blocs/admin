@@ -16,12 +16,17 @@ trait VectorStoreTrait
         Process::input(json_encode(self::chunkDocument([$targetData], $chunkItem, $chunkSize, $chunkOverlap), JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/update.py'), database_path(), $name]);
     }
 
-    private static function deleteDocument($targetId, $name)
+    private static function deleteDocument($targetIds, $name)
     {
-        Process::input(json_encode([$targetId]))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/delete.py'), database_path(), $name]);
+        is_array($targetIds) || $targetIds = [$targetIds];
+
+        // 全て削除
+        empty($targetIds) && $targetIds = [];
+
+        Process::input(json_encode($targetIds))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/delete.py'), database_path(), $name])->output();
     }
 
-    private function similarDocument($targetData, $name, $scoreThreshold = 0.6, $docsLimit = 5)
+    private function similarDocument($targetData, $name, $docsLimit = 5, $scoreThreshold = 0.6)
     {
         $process = Process::input(json_encode($targetData, JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/similar.py'), database_path(), $name, $scoreThreshold, $docsLimit]);
         $jsonContent = $process->output();
