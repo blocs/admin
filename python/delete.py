@@ -25,18 +25,25 @@ vectorStore = Chroma(
 
 # JSONファイルの読み込み
 stdin = json.loads(input().strip())
-for doc_id in stdin:
-    # 既存のドキュメントをIDで検索
-    existing_docs = vectorStore.get(
-        where={"id": doc_id}
-    )
 
-    # 既存のドキュメントを削除
-    if existing_docs and existing_docs['documents']:
-        # 既存のドキュメントがある場合は削除してから追加（更新）
-        vectorStore.delete(
+if len(stdin):
+    for doc_id in stdin:
+        # 既存のドキュメントをIDで検索
+        existing_docs = vectorStore.get(
             where={"id": doc_id}
         )
+
+        # 既存のドキュメントを削除
+        if existing_docs and existing_docs['documents']:
+            # 既存のドキュメントがある場合は削除してから追加（更新）
+            vectorStore.delete(
+                where={"id": doc_id}
+            )
+else:
+    # 空の入力の場合、vectorStoreの全ドキュメントを削除
+    all_docs = vectorStore.get()
+    if all_docs and all_docs['ids']:
+        vectorStore.delete(ids=all_docs['ids'])
 
 # 永続化を確実に実行
 vectorStore.persist()
