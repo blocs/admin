@@ -2,6 +2,7 @@
 
 import sys
 import os
+import json
 from langchain_chroma import Chroma
 from langchain_openai import OpenAIEmbeddings
 
@@ -24,15 +25,14 @@ vectorStore = Chroma(
 # ドキュメントを検索
 score_threshold = float(sys.argv[3])
 docs_limit = int(sys.argv[4])
-retriever = vectorStore.as_retriever(
-    search_type="similarity_score_threshold",
-    search_kwargs={
-        "score_threshold": score_threshold,
-        "k": docs_limit,
-    },
+results = vectorStore.similarity_search_with_relevance_scores(
+    query=input().strip(),
+    k=docs_limit,
+    score_threshold=score_threshold,
 )
-documents = retriever.invoke(input().strip())
 
-# documentsのすべての要素のpage_contentを取得
-for i in range(len(documents)):
-    print(documents[i].page_content)
+# documentsのすべての要素のpage_contentを取得し、similarity_scoreを追加
+for document, score in results:
+    content = json.loads(document.page_content)
+    content['similarity_score'] = score
+    print(json.dumps(content, ensure_ascii=False))
