@@ -52,16 +52,6 @@ class UserController extends \Blocs\Controllers\Base
         docs('指定された条件でソート');
     }
 
-    protected function prepareIndex()
-    {
-        parent::prepareIndex();
-
-        foreach ($this->val[$this->loopItem] as $loopKey => $loopValue) {
-            $roleList = explode("\t", $loopValue['role']);
-            $this->val[$this->loopItem][$loopKey]['roles'] = $roleList;
-        }
-    }
-
     protected function prepareStore()
     {
         // nameの補完
