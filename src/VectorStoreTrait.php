@@ -6,29 +6,29 @@ use Illuminate\Support\Facades\Process;
 
 trait VectorStoreTrait
 {
-    private static function updateDocument($targetData, $name)
+    private static function updateDocument($collectionName, $targetData)
     {
-        Process::input(json_encode([$targetData], JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/update.py'), database_path(), $name]);
+        Process::input(json_encode([$targetData], JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/update.py'), database_path(), $collectionName]);
     }
 
-    private static function updateChunkDocument($targetData, $name, $chunkItem, $chunkSize = 1000, $chunkOverlap = 0)
+    private static function updateChunkDocument($collectionName, $targetData, $chunkItem, $chunkSize = 1000, $chunkOverlap = 0)
     {
-        Process::input(json_encode(self::chunkDocument([$targetData], $chunkItem, $chunkSize, $chunkOverlap), JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/update.py'), database_path(), $name]);
+        Process::input(json_encode(self::chunkDocument([$targetData], $chunkItem, $chunkSize, $chunkOverlap), JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/update.py'), database_path(), $collectionName]);
     }
 
-    private static function deleteDocument($targetIds, $name)
+    private static function deleteDocument($collectionName, $targetIds = [])
     {
-        is_array($targetIds) || $targetIds = [$targetIds];
-
         // 全て削除
         empty($targetIds) && $targetIds = [];
 
-        Process::input(json_encode($targetIds))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/delete.py'), database_path(), $name])->output();
+        is_array($targetIds) || $targetIds = [$targetIds];
+
+        Process::input(json_encode($targetIds))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/delete.py'), database_path(), $collectionName])->output();
     }
 
-    private function similarDocument($targetData, $name, $docsLimit = 5, $scoreThreshold = 0.6)
+    private function similarDocument($collectionName, $targetData, $docsLimit = 5, $scoreThreshold = 0.6)
     {
-        $process = Process::input(json_encode($targetData, JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/similar.py'), database_path(), $name, $scoreThreshold, $docsLimit]);
+        $process = Process::input(json_encode($targetData, JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/similar.py'), database_path(), $collectionName, $scoreThreshold, $docsLimit]);
         $jsonContent = $process->output();
 
         if (empty(trim($jsonContent))) {
