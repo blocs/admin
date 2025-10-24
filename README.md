@@ -1,102 +1,33 @@
-A PHP template engine based on HTML
------
+<div align="center"><img src="logo.svg" width="400" /></div>
 
-BLOCSはPHPで動作するテンプレートエンジンです。
-テンプレートエンジンとは、プログラムで作成されたデータとデザインのためのテンプレート（ビュー）を紐つけてHTMLを生成するライブラリです。テンプレートエンジンを使うことで、プログラムとテンプレートを分離することができます。
+# Laravel Admin Package
+Laravel で管理画面を簡単に作れる支援ツール
 
-ロジック（プログラム）とデザイン（HTML/CSS）を分離して疎な関係にすることで、プログラマーとコーダーのお互いのソース変更や開発の遅れなどの影響を最小限にし、効率的な開発、維持を行うことができます。
+[![Latest stable version](https://img.shields.io/packagist/v/blocs/admin)](https://packagist.org/packages/blocs/admin)
+[![Total downloads](https://img.shields.io/packagist/dt/blocs/admin)](https://packagist.org/packages/blocs/admin)
+[![GitHub code size](https://img.shields.io/github/languages/code-size/blocs/admin)](https://github.com/blocs/admin)
+[![GitHub license](https://img.shields.io/github/license/blocs/admin)](https://github.com/blocs/admin)
+[![Laravel awesome](https://img.shields.io/badge/Awesome-Laravel-green)](https://github.com/blocs/admin)
+[![Laravel version](https://img.shields.io/badge/laravel-%3E%3D10-green)](https://github.com/blocs/admin)
+[![PHP version](https://img.shields.io/badge/php-%3E%3D8.3-blue)](https://github.com/blocs/admin)
 
-## 理念
-- HTMLと同様にあつかえる（HTMLとの親和性）
-- 直感的でシンプルに記述できる
-- 入力フォームと一緒にバリデーションが設定できる
+[**Website**](https://blocs.jp/)
+| [**iknow**](https://linear.iknow.dev/?category=2)
 
-## HTMLとの親和性
-BLOCSは、データとテンプレートの紐つけにデータ属性を使用します。
-データ属性は特別なタグなどではなく、通常のタグに属性を追加するだけですので、普通のHTMLと同様に扱うことができます。
-すなわち、オーサリングツールで作成したHTMLをそのままテンプレートとして使用でき、またオーサリングツールを使ってテンプレートを変更できるということです。
-
-BLOCSでの記述例:
-```html
-<html>
-<div data-val=$message>メッセージ</div>
-</html>
+## 導入方法
+1. PHP と Composer をセットアップ
+2. Composer で Laravel をインストール
+```sh
+composer create-project laravel/laravel laravel-admin
+cd laravel-admin
 ```
 
-## 直感的でシンプルな記述
-タグにデータ属性を追加することで、プログラムより渡されたデータを表示したり、条件にしたがって表示/非表示を制御することができます。
-データ属性を組み合わせることで、非常にシンプルにデータとテンプレートの紐つけができます。
-
-また、データ属性は4種類しかありません。
-学習コストが小さいので、プログラムがわからないデザイナーやコーダーでもテンプレートの作成、変更ができます。
-デザインに変更が入るたびにプログラマーにテンプレートの変更を依頼しなくてもよくなります。
-
-代表的なテンプレートエンジンでの記述例:
-```html
-<html>
-<ul>
-    {foreach from=$list item=data}
-    <li>
-        <div>{$data.name}</div>
-        <div>{$data.age}</div>
-    </li>
-    {/foreach}
-</ul>
-</html>
+3. Composer で Admin Package をインストール
+```sh
+laravel-admin % composer require blocs/admin    
 ```
 
-BLOCSでの記述例:
-```html
-<html>
-<ul>
-    <li data-repeat=$list>
-        <div data-val=$name>田中太郎</div>
-        <div data-val=$age>19</div>
-    </li>
-</ul>
-</html>
-```
-
-## バリデーション
-BLOCSなら面倒な入力値のチェック処理（バリデーション）も簡単です。データ属性でチェック条件と、エラーメッセージが設定できます。また、BLOCSはjQuery Validation Engineと連携して、JavaScriptによるリアルタイムでのバリデーションもできます。ユーザーを待たせず画面遷移なしで、入力画面で即時に入力データをチェックできます。
-
-さらに、BLOCSはメニュー項目の入力値チェックをします。メニュー項目にない値が入力された時にはエラーを表示されますので、不正なデータ入力を防げます。そして、正しいデータはメニューのラベルを自動で取得して変換しますので、入力データの確認画面などで面倒な値の変換処理を作る必要はありません。
-
-テンプレート（メニュー入力画面）:
-```
-<html>
-
-<span data-val=$type>メニュー項目</span>
-
-<form action='./' method='post'>
-<select id="type" name="type">
-<option value="company">法人のお客様</option>
-<option value="private">個人のお客様</option>
-<option value="other">その他</option>
-</select>
-<div class="input_error" data-form="type" data-validate="required">必須入力です</div>
-<input type='submit' />
-</form>
-
-</html>
-```
-
-表示結果:  
-3行目: メニュー項目のラベル（個人のお客様）を表示
-```html
-<html>
-
-<span>個人のお客様</span>
-
-<form action='./' method='post'>
-<select id="type" name="type">
-<option value="company" >法人のお客様</option>
-<option value="private" selected>個人のお客様</option>
-<option value="other" >その他</option>
-</select>
-
-<input type='submit' />
-</form>
-
-</html>
+4. Laravel に BLOCS をインストール
+```sh
+laravel-admin % php artisan blocs:install  
 ```
