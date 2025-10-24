@@ -1,11 +1,11 @@
 {
     "name": "blocs\/admin",
     "type": "library",
-    "description": "Laravel BLOCS admin package",
+    "description": "Laravel Admin Package",
     "keywords": [
         "PHP",
         "Laravel",
-        "BLOCS",
+        "Admin",
         "Package"
     ],
     "license": "MIT",
