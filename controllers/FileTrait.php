@@ -33,7 +33,7 @@ trait FileTrait
 
     protected function validateUpload($paramname)
     {
-        list($rules, $messages) = \Blocs\Validate::upload($this->viewPrefix, $paramname);
+        [$rules, $messages] = \Blocs\Validate::upload($this->viewPrefix, $paramname);
         if (empty($rules)) {
             return;
         }
@@ -56,7 +56,7 @@ trait FileTrait
         $filename = $this->uploadStorage.'/'.$filename;
 
         $storage = \Storage::disk();
-        if (!$storage->exists($filename)) {
+        if (! $storage->exists($filename)) {
             // ファイルが存在しない
             abort(404);
         }
@@ -94,10 +94,7 @@ trait FileTrait
         // abort(404);
     }
 
-    protected function getHeaders($filename)
-    {
-        return;
-    }
+    protected function getHeaders($filename) {}
 
     protected function getSize($size)
     {
@@ -119,7 +116,7 @@ trait FileTrait
     {
         // ストレージからサムネイルファイル作成
         $path = \Storage::path($filename);
-        list($width, $height, $crop) = $this->getSize($size);
+        [$width, $height, $crop] = $this->getSize($size);
         $thumbnail = \Blocs\Thumbnail::create($path, $width, $height, $crop);
 
         return $thumbnail;

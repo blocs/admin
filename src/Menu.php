@@ -5,7 +5,9 @@ namespace Blocs;
 class Menu
 {
     private static $headline;
+
     private static $breadcrumbList = [];
+
     private static $activePrefix;
 
     public static function get($name = 'root', $maxChild = 1)
@@ -13,7 +15,7 @@ class Menu
         // 設定読み込み
         $configList = config('menu');
 
-        if (!isset($configList[$name])) {
+        if (! isset($configList[$name])) {
             return [[], [], []];
         }
         $configList = $configList[$name];
@@ -26,7 +28,7 @@ class Menu
             isset($config['label']) || $config['label'] = lang($config['lang']);
 
             // リンク先
-            if (!isset($config['url']) && isset($config['name'])) {
+            if (! isset($config['url']) && isset($config['name'])) {
                 if (empty($config['argv'])) {
                     $config['url'] = route($config['name']);
                 } else {
@@ -37,7 +39,7 @@ class Menu
             // サブメニュー
             // $maxChild: サブメニューの最大の深さ
             if (isset($config['sub'])) {
-                list($config['sub'], $buff, $buff, $isSubActive, $child) = self::get($config['sub'], $maxChild);
+                [$config['sub'], $buff, $buff, $isSubActive, $child] = self::get($config['sub'], $maxChild);
 
                 // sub が空配列の場合表示しない
                 if (empty($config['sub'])) {
@@ -71,11 +73,11 @@ class Menu
             }
 
             // 権限があるかチェック
-            if (empty($config['role']) && isset($config['name']) && !self::checkRole($config['name'])) {
+            if (empty($config['role']) && isset($config['name']) && ! self::checkRole($config['name'])) {
                 continue;
             }
 
-            if (isset($config['guard']) && !\Auth::guard($config['guard'])->check()) {
+            if (isset($config['guard']) && ! \Auth::guard($config['guard'])->check()) {
                 continue;
             }
 

@@ -14,7 +14,7 @@ class AdminSeeder extends Seeder
     {
         $initUser = 'admin';
 
-        if (!User::withTrashed()->where('email', $initUser)->exists()) {
+        if (! User::withTrashed()->where('email', $initUser)->exists()) {
             User::create([
                 'email' => $initUser,
                 'name' => $initUser,

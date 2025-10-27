@@ -61,9 +61,7 @@ trait UpdateTrait
         return $this->outputShow();
     }
 
-    protected function prepareShow()
-    {
-    }
+    protected function prepareShow() {}
 
     protected function outputShow()
     {
@@ -99,7 +97,7 @@ trait UpdateTrait
 
     protected function validateUpdate()
     {
-        list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.edit', $this->request);
+        [$rules, $messages] = \Blocs\Validate::get($this->viewPrefix.'.edit', $this->request);
         if (empty($rules)) {
             return;
         }

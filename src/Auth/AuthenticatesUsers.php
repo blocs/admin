@@ -119,9 +119,7 @@ trait AuthenticatesUsers
     /**
      * The user has been authenticated.
      */
-    protected function authenticated(Request $request, $user)
-    {
-    }
+    protected function authenticated(Request $request, $user) {}
 
     /**
      * Get the failed login response instance.
@@ -170,9 +168,7 @@ trait AuthenticatesUsers
     /**
      * The user has logged out of the application.
      */
-    protected function loggedOut(Request $request)
-    {
-    }
+    protected function loggedOut(Request $request) {}
 
     /**
      * Get the guard to be used during authentication.
