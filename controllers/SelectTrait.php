@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 trait SelectTrait
 {
     protected $selectedIdList = [];
+
     protected $deletedNum = 0;
 
     public function confirmSelect(Request $request)
@@ -42,9 +43,7 @@ trait SelectTrait
         docs(['POST' => '選択したデータのid'], "データが選択されていなければ、メッセージをセットして一覧画面に戻る\n・".lang('error:data_not_selected'), ['FORWARD' => '!'.$this->viewPrefix.'.index']);
     }
 
-    protected function prepareConfirmSelect()
-    {
-    }
+    protected function prepareConfirmSelect() {}
 
     protected function outputConfirmSelect()
     {
@@ -85,9 +84,7 @@ trait SelectTrait
         return $this->outputSelect();
     }
 
-    protected function prepareSelect()
-    {
-    }
+    protected function prepareSelect() {}
 
     protected function executeSelect()
     {
@@ -102,7 +99,7 @@ trait SelectTrait
         }
         docs(['POST' => '選択したデータのid'], '<id>を指定してデータを一括削除', ['データベース' => $this->loopItem]);
 
-        $this->logData = new \stdClass();
+        $this->logData = new \stdClass;
         $this->logData->id = $this->selectedIdList;
     }
 

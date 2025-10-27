@@ -9,7 +9,7 @@ trait BackTrait
         $redirectIndex = redirect()->route(prefix().'.index');
         unset($this->val, $this->request, $this->tableData);
 
-        if (!$category) {
+        if (! $category) {
             return $redirectIndex;
         }
 
@@ -58,7 +58,7 @@ trait BackTrait
 
     private function backCreateEdit($redirect, $category, $message, $noticeForm, $msgArgList)
     {
-        if (!$category && !$noticeForm) {
+        if (! $category && ! $noticeForm) {
             return $redirect;
         }
 

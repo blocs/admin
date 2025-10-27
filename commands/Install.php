@@ -19,7 +19,7 @@ class Install extends Command
 
     private function appendLang($blocsLangDir)
     {
-        if (!is_dir($blocsLangDir)) {
+        if (! is_dir($blocsLangDir)) {
             return;
         }
 
@@ -28,14 +28,15 @@ class Install extends Command
 
         $blocsLangFileList = scandir($blocsLangDir);
         foreach ($blocsLangFileList as $file) {
-            if ('.' == substr($file, 0, 1) && '.gitkeep' != $file && '.htaccess' != $file) {
+            if (substr($file, 0, 1) == '.' && $file != '.gitkeep' && $file != '.htaccess') {
                 continue;
             }
 
             $targetFile = $laravelLangDir.'/'.$file;
-            if (!is_file($targetFile)) {
+            if (! is_file($targetFile)) {
                 // ファイルがないのでコピー
                 copy($blocsLangDir.'/'.$file, $targetFile) && chmod($targetFile, 0666);
+
                 continue;
             }
 
@@ -50,7 +51,7 @@ class Install extends Command
 
     private function appendMenu($blocsMenuPath)
     {
-        if (!file_exists($blocsMenuPath)) {
+        if (! file_exists($blocsMenuPath)) {
             return;
         }
 
@@ -66,6 +67,7 @@ class Install extends Command
         foreach ($blocsJson as $menuName => $config) {
             if (empty($configList[$menuName])) {
                 $configList[$menuName] = $config;
+
                 continue;
             }
 

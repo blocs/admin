@@ -8,7 +8,9 @@ use Illuminate\Contracts\Validation\ValidationRule;
 class softUnique implements DataAwareRule, ValidationRule
 {
     private $tableName;
+
     private $message;
+
     private $data;
 
     public function __construct(string $tableName, string $message)
@@ -27,11 +29,11 @@ class softUnique implements DataAwareRule, ValidationRule
     /**
      * Run the validation rule.
      *
-     * @param \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString $fail
+     * @param  \Closure(string): \Illuminate\Translation\PotentiallyTranslatedString  $fail
      */
     public function validate(string $attribute, mixed $value, \Closure $fail): void
     {
-        if (!strlen($value)) {
+        if (! strlen($value)) {
             return;
         }
 

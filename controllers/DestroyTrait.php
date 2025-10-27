@@ -27,9 +27,7 @@ trait DestroyTrait
         return $this->outputConfirmDestroy();
     }
 
-    protected function validateDestroy()
-    {
-    }
+    protected function validateDestroy() {}
 
     protected function prepareConfirmDestroy()
     {
@@ -72,9 +70,7 @@ trait DestroyTrait
         return $this->outputDestroy();
     }
 
-    protected function prepareDestroy()
-    {
-    }
+    protected function prepareDestroy() {}
 
     protected function executeDestroy()
     {
@@ -85,7 +81,7 @@ trait DestroyTrait
         }
         docs(['GET' => 'id'], '<id>を指定してデータを削除', ['データベース' => $this->loopItem]);
 
-        $this->logData = new \stdClass();
+        $this->logData = new \stdClass;
         $this->logData->id = $this->val['id'];
     }
 

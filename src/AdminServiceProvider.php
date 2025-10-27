@@ -27,13 +27,13 @@ class AdminServiceProvider extends ServiceProvider
     public function registerBlocsCommand()
     {
         $this->app->singleton('command.blocs.install', function ($app) {
-            return new Commands\InstallAdmin();
+            return new Commands\InstallAdmin;
         });
 
         $this->commands('command.blocs.install');
 
         $this->app->singleton('command.blocs.develop', function ($app) {
-            return new Commands\Develop();
+            return new Commands\Develop;
         });
 
         $this->commands('command.blocs.develop');

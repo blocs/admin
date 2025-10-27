@@ -29,7 +29,7 @@ class Develop extends Command
     public function handle()
     {
         $path = $this->argument('path');
-        if (!file_exists($path)) {
+        if (! file_exists($path)) {
             return;
         }
 
@@ -165,7 +165,7 @@ class Develop extends Command
 
         $itemList = [];
         foreach ($developJson['form'] as $formName => $form) {
-            if ('textarea' == $form['type'] || 'upload' == $form['type']) {
+            if ($form['type'] == 'textarea' || $form['type'] == 'upload') {
                 $type = 'text';
             } else {
                 $type = 'string';
@@ -216,7 +216,7 @@ class Develop extends Command
 
         // フォームの追加
         $replaceItem = [];
-        if (!empty($developJson['controller']['loopItem'])) {
+        if (! empty($developJson['controller']['loopItem'])) {
             $replaceItem['LOOP_ITEM'] = $developJson['controller']['loopItem'];
             $replaceItem['SINGULAR_ITEM'] = \Str::singular($developJson['controller']['loopItem']);
         }
@@ -232,7 +232,7 @@ class Develop extends Command
         $replaceItem['SHOW_HTML'] = "\n";
         $showHtml = '';
 
-        $blocsCompiler = new \Blocs\Compiler\BlocsCompiler();
+        $blocsCompiler = new \Blocs\Compiler\BlocsCompiler;
         foreach ($developJson['form'] as $formName => $form) {
             $form['name'] = $formName;
             isset($form['label']) || $form['label'] = '';
@@ -244,16 +244,16 @@ class Develop extends Command
             $replaceItem['HEAD_HTML'] .= '                            </th>'."\n";
 
             $replaceItem['BODY_HTML'] .= '                            <td class=""><!-- $'.$replaceItem['SINGULAR_ITEM'].'->'.$formName;
-            'upload' === $form['type'] && $replaceItem['BODY_HTML'] .= ' data-convert="raw_download"';
+            $form['type'] === 'upload' && $replaceItem['BODY_HTML'] .= ' data-convert="raw_download"';
             $replaceItem['BODY_HTML'] .= ' --></td>'."\n";
 
-            if (!in_array($form['type'], ['textarea', 'datepicker', 'timepicker', 'select', 'select2', 'radio', 'checkbox', 'upload', 'number'])) {
+            if (! in_array($form['type'], ['textarea', 'datepicker', 'timepicker', 'select', 'select2', 'radio', 'checkbox', 'upload', 'number'])) {
                 $form['inputType'] = $form['type'];
                 $form['type'] = 'text';
             }
 
             $form['option_'] = [];
-            if (!empty($form['option'])) {
+            if (! empty($form['option'])) {
                 foreach ($form['option'] as $value => $label) {
                     $form['option_'][] = [
                         'value' => $value,
@@ -277,14 +277,14 @@ class Develop extends Command
 
         $this->copyDir(base_path('vendor/blocs/admin/develop/views'), $viewPath, $replaceItem);
 
-        if (!file_exists($viewPath.'/include/form.html')) {
+        if (! file_exists($viewPath.'/include/form.html')) {
             $formHtml = str_replace('<#-- ', '<!-- ', $formHtml);
 
             file_put_contents($viewPath.'/include/form.html', trim($formHtml)."\n");
             $this->outputMessageMake('view', $viewPath.'/include/form.html');
         }
 
-        if (!file_exists($viewPath.'/include/show.html')) {
+        if (! file_exists($viewPath.'/include/show.html')) {
             $showHtml = str_replace('<#-- ', '<!-- ', $showHtml);
 
             file_put_contents($viewPath.'/include/show.html', trim($showHtml)."\n");
@@ -297,7 +297,7 @@ class Develop extends Command
         $controllerName = $developJson['controller']['controllerBasename'];
         $docsPath = base_path("docs/{$controllerName}.php");
 
-        if (!is_dir(base_path('docs')) || file_exists($docsPath)) {
+        if (! is_dir(base_path('docs')) || file_exists($docsPath)) {
             return;
         }
 
@@ -324,7 +324,7 @@ class Develop extends Command
 
     private function getList($form, $separator, $quote = '')
     {
-        if (!count($form)) {
+        if (! count($form)) {
             return '';
         }
 
@@ -337,16 +337,17 @@ class Develop extends Command
 
         $fileList = scandir($orgDir);
         foreach ($fileList as $file) {
-            if ('.' == substr($file, 0, 1) && '.gitkeep' != $file) {
+            if (substr($file, 0, 1) == '.' && $file != '.gitkeep') {
                 continue;
             }
 
             if (is_dir($orgDir.'/'.$file)) {
                 $this->copyDir($orgDir.'/'.$file, $targetDir.'/'.$file, $replaceItem);
+
                 continue;
             }
 
-            if (!file_exists($targetDir.'/'.$file)) {
+            if (! file_exists($targetDir.'/'.$file)) {
                 copy($orgDir.'/'.$file, $targetDir.'/'.$file);
                 $this->replaceViewItem($targetDir.'/'.$file, $replaceItem);
             }
@@ -376,7 +377,7 @@ class Develop extends Command
     {
         $developJson = json_decode(file_get_contents($path), true);
 
-        if (!empty($developJson['controller']['controllerName'])) {
+        if (! empty($developJson['controller']['controllerName'])) {
             $developJson['controller']['controllerBasename'] = basename($developJson['controller']['controllerName']);
 
             if ($developJson['controller']['controllerBasename'] == $developJson['controller']['controllerName']) {
@@ -388,7 +389,7 @@ class Develop extends Command
             }
         }
 
-        if (!empty($developJson['controller']['modelName'])) {
+        if (! empty($developJson['controller']['modelName'])) {
             $developJson['controller']['modelBasename'] = basename($developJson['controller']['modelName']);
 
             if ($developJson['controller']['modelBasename'] == $developJson['controller']['modelName']) {

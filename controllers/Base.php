@@ -19,15 +19,23 @@ class Base extends Controller
     use UpdateTrait;
 
     protected $val = [];
+
     protected $request;
+
     protected $tableData;
 
     protected $viewPrefix;
+
     protected $mainTable;
+
     protected $loopItem;
+
     protected $paginateNum;
+
     protected $paginateName;
+
     protected $noticeItem;
+
     protected $searchItems;
 
     /* index */
@@ -59,7 +67,7 @@ class Base extends Controller
         $this->keepItem('search');
 
         $this->searchItems = [];
-        if (!empty($this->val['search'])) {
+        if (! empty($this->val['search'])) {
             mb_regex_encoding('utf-8');
             $this->searchItems = mb_split("[\s,　]+", $this->val['search']);
 
@@ -83,18 +91,16 @@ class Base extends Controller
         }
 
         // データの有無
-        $this->val['isLoop'] = !$this->val[$this->loopItem]->isEmpty();
+        $this->val['isLoop'] = ! $this->val[$this->loopItem]->isEmpty();
     }
 
-    protected function prepareIndexSearch(&$mainTable)
-    {
-    }
+    protected function prepareIndexSearch(&$mainTable) {}
 
     protected function prepareIndexPaginate(&$mainTable, $pagePath = null)
     {
         isset($this->paginateName) || $this->paginateName = 'page';
 
-        if (!isset($this->request) || !$this->request->has('search')) {
+        if (! isset($this->request) || ! $this->request->has('search')) {
             // 検索条件の指定がない時はページをキープ
             $this->keepItem($this->paginateName);
         }
