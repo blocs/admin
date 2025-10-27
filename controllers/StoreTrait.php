@@ -20,9 +20,7 @@ trait StoreTrait
         return $this->outputCreate();
     }
 
-    protected function prepareCreate()
-    {
-    }
+    protected function prepareCreate() {}
 
     protected function outputCreate()
     {
@@ -56,7 +54,7 @@ trait StoreTrait
 
     protected function validateStore()
     {
-        list($rules, $messages) = \Blocs\Validate::get($this->viewPrefix.'.create', $this->request);
+        [$rules, $messages] = \Blocs\Validate::get($this->viewPrefix.'.create', $this->request);
         if (empty($rules)) {
             return;
         }

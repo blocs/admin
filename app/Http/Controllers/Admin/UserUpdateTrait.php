@@ -12,7 +12,7 @@ trait UserUpdateTrait
             return;
         }
 
-        if ('' === $this->tableData->password) {
+        if ($this->tableData->password === '') {
             return;
         }
 
@@ -21,7 +21,7 @@ trait UserUpdateTrait
             return $this->backEdit('', lang('template:admin_profile_password_incorrect'), 'password_old');
         }
 
-        if (!password_verify($this->request->password_old, $this->tableData->password)) {
+        if (! password_verify($this->request->password_old, $this->tableData->password)) {
             return $this->backEdit('', lang('template:admin_profile_password_incorrect'), 'password_old');
         }
         docs(['POST' => 'password_old', 'データベース' => $this->loopItem], '<password_old>があれば、<'.$this->loopItem.'>をチェック');
@@ -53,7 +53,5 @@ trait UserUpdateTrait
         return $requestData;
     }
 
-    protected function prepareUpdateTrait(&$requestData)
-    {
-    }
+    protected function prepareUpdateTrait(&$requestData) {}
 }

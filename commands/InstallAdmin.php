@@ -34,7 +34,7 @@ class InstallAdmin extends Install
 
         // 空のfaviconがあれば削除
         $faviconPath = public_path('favicon.ico');
-        file_exists($faviconPath) && !filesize($faviconPath) && unlink($faviconPath);
+        file_exists($faviconPath) && ! filesize($faviconPath) && unlink($faviconPath);
 
         // 必要ファイルをpublish
         \Artisan::call('vendor:publish', ['--provider' => 'Blocs\AdminServiceProvider']);

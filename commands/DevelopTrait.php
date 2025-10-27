@@ -26,7 +26,7 @@ trait DevelopTrait
 
     private function refresh($path, $stdin)
     {
-        if ('refresh' !== strtolower($stdin)) {
+        if (strtolower($stdin) !== 'refresh') {
             return false;
         }
 
@@ -38,7 +38,7 @@ trait DevelopTrait
 
     private function migrate($path, $stdin)
     {
-        if ('migrate' !== strtolower($stdin)) {
+        if (strtolower($stdin) !== 'migrate') {
             return false;
         }
 
@@ -70,7 +70,7 @@ trait DevelopTrait
     private function exit($action)
     {
         // quit
-        if ('quit' === strtolower($action) || 'exit' === strtolower($action) || 'bye' === strtolower($action)) {
+        if (strtolower($action) === 'quit' || strtolower($action) === 'exit' || strtolower($action) === 'bye') {
             exit;
         }
 

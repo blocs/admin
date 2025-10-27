@@ -11,7 +11,7 @@ class AdminTest extends DuskTestCase
     use ProfileTestTrait;
     use UserTestTrait;
 
-    public function testAdmin(): void
+    public function test_admin(): void
     {
         $this->browse(function (Browser $browser) {
             // ユーザーID：admin、パスワード:adminでログインする

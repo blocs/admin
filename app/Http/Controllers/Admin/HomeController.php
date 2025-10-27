@@ -33,12 +33,12 @@ class HomeController extends \Blocs\Controllers\Base
 
         $dateAtom = date(DATE_ATOM);
         $xaxis = [substr($dateAtom, 0, 7)];
-        list($year, $month) = explode('-', $xaxis[0], 2);
-        for ($x = 0; $x < $this->adminTopUserMonth - 1; ++$x) {
-            --$month;
-            if (!$month) {
+        [$year, $month] = explode('-', $xaxis[0], 2);
+        for ($x = 0; $x < $this->adminTopUserMonth - 1; $x++) {
+            $month--;
+            if (! $month) {
                 $month = 12;
-                --$year;
+                $year--;
             }
             $xaxis[] = sprintf('%d-%02d', $year, $month);
         }
@@ -58,7 +58,7 @@ class HomeController extends \Blocs\Controllers\Base
         foreach ($recordList as $record) {
             $month = substr($record['created_at'], 0, 7);
             isset($createList[$month]) || $createList[$month] = 0;
-            ++$createList[$month];
+            $createList[$month]++;
 
             if (empty($record['deleted_at'])) {
                 continue;
@@ -66,7 +66,7 @@ class HomeController extends \Blocs\Controllers\Base
 
             $month = substr($record['deleted_at'], 0, 7);
             isset($deleteList[$month]) || $deleteList[$month] = 0;
-            ++$deleteList[$month];
+            $deleteList[$month]++;
         }
 
         $line1 = [];

@@ -6,19 +6,11 @@ trait LogTrait
 {
     protected $logData;
 
-    protected function logStore()
-    {
-    }
+    protected function logStore() {}
 
-    protected function logUpdate()
-    {
-    }
+    protected function logUpdate() {}
 
-    protected function logDestroy()
-    {
-    }
+    protected function logDestroy() {}
 
-    protected function logSelect()
-    {
-    }
+    protected function logSelect() {}
 }

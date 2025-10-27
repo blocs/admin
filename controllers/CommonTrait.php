@@ -83,7 +83,7 @@ trait CommonTrait
     // テーブルのデータと入力値をマージ
     protected static function mergeTable($table, $request)
     {
-        if (!is_array($table) || !is_array($request)) {
+        if (! is_array($table) || ! is_array($request)) {
             return $table;
         }
 
@@ -100,7 +100,7 @@ trait CommonTrait
 
     protected function setupMenu()
     {
-        list($menu, $headline, $breadcrumb) = \Blocs\Menu::get();
+        [$menu, $headline, $breadcrumb] = \Blocs\Menu::get();
         $this->val['menu'] = $menu;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
@@ -116,7 +116,7 @@ trait CommonTrait
 
         $accessor = [];
         foreach ($methods as $method) {
-            if (!strncmp($method, 'get', 3) && 'Attribute' === substr($method, -9) && $columnName = substr($method, 3, -9)) {
+            if (! strncmp($method, 'get', 3) && substr($method, -9) === 'Attribute' && $columnName = substr($method, 3, -9)) {
                 $columnName = Str::snake($columnName);
                 $accessor[$columnName] = $model->$columnName;
             }
@@ -132,15 +132,15 @@ trait CommonTrait
         $config = \Blocs\Common::readConfig($path);
 
         $labels = [];
-        if (!isset($config['label'][$path])) {
+        if (! isset($config['label'][$path])) {
             return $labels;
         }
 
         foreach ($config['label'][$path] as $formName => $label) {
-            if (false === strpos($label, 'data-')) {
+            if (strpos($label, 'data-') === false) {
                 $labels[$formName] = $label;
             } else {
-                isset($blocsCompiler) || $blocsCompiler = new \Blocs\Compiler\BlocsCompiler();
+                isset($blocsCompiler) || $blocsCompiler = new \Blocs\Compiler\BlocsCompiler;
                 $labels[$formName] = $blocsCompiler->render($label);
             }
         }
@@ -153,12 +153,12 @@ trait CommonTrait
         $validates = [];
         foreach ($rules as $formName => $formValidates) {
             foreach ($formValidates as $formValidate) {
-                if (!is_string($formValidate)) {
+                if (! is_string($formValidate)) {
                     $formValidate = explode('\\', get_class($formValidate));
                     $formValidate = array_pop($formValidate);
                 }
 
-                list($messageKey) = explode(':', $formValidate, 2);
+                [$messageKey] = explode(':', $formValidate, 2);
                 $messageKey = $formName.'.'.$messageKey;
                 $validates[] = [
                     'name' => $labels[$formName] ?? $formName,

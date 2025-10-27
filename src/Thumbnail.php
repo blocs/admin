@@ -19,41 +19,41 @@ class Thumbnail
             return $thumbLoc;
         }
 
-        if (!filesize($tmpLoc)) {
+        if (! filesize($tmpLoc)) {
             // ファイルサイズが0の時
             return false;
         }
 
-        list($width, $height, $oWidth, $oHeight) = self::getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop);
+        [$width, $height, $oWidth, $oHeight] = self::getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop);
         if ($width === $oWidth && $height === $oHeight) {
             copy($tmpLoc, $thumbLoc) && chmod($thumbLoc, 0666);
 
             return $thumbLoc;
         }
 
-        if (!function_exists('imagecreatetruecolor')) {
+        if (! function_exists('imagecreatetruecolor')) {
             return false;
         }
 
         $oImage = self::imageCreate($tmpLoc, $thumbExt);
-        if (!$oImage) {
+        if (! $oImage) {
             return false;
         }
 
         // HEICが横になる問題に対応
         $exif = @exif_read_data($tmpLoc);
-        if (!empty($exif['Orientation'])) {
+        if (! empty($exif['Orientation'])) {
             switch ($exif['Orientation']) {
                 case 8:
                     $oImage = imagerotate($oImage, 90, 0);
-                    list($width, $height, $oWidth, $oHeight) = self::getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
+                    [$width, $height, $oWidth, $oHeight] = self::getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
                     break;
                 case 3:
                     $oImage = imagerotate($oImage, 180, 0);
                     break;
                 case 6:
                     $oImage = imagerotate($oImage, -90, 0);
-                    list($width, $height, $oWidth, $oHeight) = self::getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
+                    [$width, $height, $oWidth, $oHeight] = self::getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
                     break;
             }
         }
@@ -87,10 +87,10 @@ class Thumbnail
 
     private static function getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop, $oWidth = null, $oHeight = null)
     {
-        if (!isset($oWidth) || !isset($oHeight)) {
-            list($oWidth, $oHeight) = @getimagesize($tmpLoc);
+        if (! isset($oWidth) || ! isset($oHeight)) {
+            [$oWidth, $oHeight] = @getimagesize($tmpLoc);
         }
-        list($width, $height) = [$oWidth, $oHeight];
+        [$width, $height] = [$oWidth, $oHeight];
 
         if ($crop) {
             // 指定サイズを覆う大きさ

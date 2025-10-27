@@ -39,7 +39,7 @@ class UserController extends \Blocs\Controllers\Base
         $this->keepItem('sort');
 
         // デフォルトのソート条件
-        if (empty($this->val['sort']) || !is_array($this->val['sort'])) {
+        if (empty($this->val['sort']) || ! is_array($this->val['sort'])) {
             $this->val['sort'] = [];
         } else {
             $this->val['sort'] = array_filter($this->val['sort'], 'strlen');

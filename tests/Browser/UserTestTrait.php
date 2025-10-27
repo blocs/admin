@@ -34,7 +34,7 @@ trait UserTestTrait
 
         // 名前に適当な名前を入力して、admin のチェックボックスをチェックする
         $browser->type('name', fake()->name())
-                ->click('input.form-check-input[name="role[]"][value="admin"]')->pause(500);
+            ->click('input.form-check-input[name="role[]"][value="admin"]')->pause(500);
 
         // 確認ボタンをクリックして、モーダル内の新規登録ボタンをクリックする
         $browser->click('button[data-bs-target="#modalStore"]')->pause(500)
