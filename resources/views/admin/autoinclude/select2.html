@@ -8,7 +8,12 @@
             $(this).removeClass("ai-select2");
             $(this).css("width", "100%");
             $(this).select2({
-                width: "resolve"
+                width: "resolve",
+                language: {
+                    noResults: function() {
+                        return "<!-- data-lang="template:resource_blocs_multiselect_no_candidate" -->";
+                    }
+                }
             });
             $(this).on("select2:close", function(){
                 if ($(this).val().length) {
