@@ -1,6 +1,6 @@
 ---
 description: 使いやすい入力インターフェースの実装方法（Auto Include）
-globs: *.blocs.html, *.html
+globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # 使いやすい入力インターフェースの実装方法（Auto Include）

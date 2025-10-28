@@ -1,6 +1,6 @@
 ---
 description: HTMLタグの特定の属性値を置き換える方法
-globs: *.blocs.html, *.html
+globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # HTMLタグの特定の属性値を置き換える方法

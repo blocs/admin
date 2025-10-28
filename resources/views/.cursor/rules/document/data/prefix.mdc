@@ -1,6 +1,6 @@
 ---
 description: 表示する変数に文字列を追加する方法
-globs: *.blocs.html, *.html
+globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # 表示する変数に文字列を追加する方法

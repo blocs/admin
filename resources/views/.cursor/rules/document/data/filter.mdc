@@ -1,6 +1,6 @@
 ---
 description: バリデーション前に入力値を整形する方法
-globs: *.blocs.html, *.html
+globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # バリデーション前に入力値を整形する方法
