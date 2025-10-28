@@ -1,6 +1,6 @@
 ---
 description: 動的にメニュー項目を追加する方法
-globs: *.blocs.html, *.html
+globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # 動的にメニュー項目を追加する方法

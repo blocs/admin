@@ -1,6 +1,6 @@
 ---
 description: BLOCSの概要
-globs: *.blocs.html, *.html
+globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # 概要

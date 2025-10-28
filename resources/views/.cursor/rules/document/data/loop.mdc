@@ -1,6 +1,6 @@
 ---
 description: 配列の要素数に応じてHTMLタグを繰り返す方法
-globs: *.blocs.html, *.html
+globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # 配列の要素数に応じてHTMLタグを繰り返す方法

@@ -1,6 +1,6 @@
 ---
 description: 入力値に対してバリデーション条件を指定する方法
-globs: *.blocs.html, *.html
+globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # 入力値に対してバリデーション条件を指定する方法

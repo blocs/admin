@@ -1,6 +1,6 @@
 ---
 description: 再利用できるようにテンプレート部品（ブロック）を定義する方法
-globs: *.blocs.html, *.html
+globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # 再利用できるようにテンプレート部品（ブロック）を定義する方法
