@@ -1,6 +1,6 @@
 ---
 description: 言語対応のため言語ごとの表示を切り替える方法
-globs: *.blocs.html, *.html
+globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # 言語対応のため言語ごとの表示を切り替える方法

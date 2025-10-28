@@ -1,6 +1,6 @@
 ---
 description: 指定した条件で HTML タグを動的に制御する方法
-globs: *.blocs.html, *.html
+globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # 指定した条件で HTML タグを動的に制御する方法

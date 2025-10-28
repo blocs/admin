@@ -1,6 +1,6 @@
 ---
 description: オリジナルのバリデーションルールを作成する方法
-globs: *.blocs.html, *.html
+globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # オリジナルのバリデーションルールを作成する方法
