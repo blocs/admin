@@ -26,7 +26,7 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
     ->group(function () {
         Route::post('/upload', [UserController::class, 'upload'])->name('upload');
         Route::get('/{filename}/download', [UserController::class, 'download'])->name('download');
-        Route::get('/{filename}/{size}/download', [UserController::class, 'download'])->name('thumbnail');
+        Route::get('/{filename}/{size}/thumbnail', [UserController::class, 'thumbnail'])->name('thumbnail');
     }
     );
 ```

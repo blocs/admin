@@ -38,8 +38,6 @@ class Base extends Controller
 
     protected $searchItems;
 
-    /* index */
-
     public function index()
     {
         $this->prepareIndex();

@@ -44,8 +44,6 @@ trait FileTrait
         docs(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
     }
 
-    /* download */
-
     public function download($filename, $size = null)
     {
         if ($redirect = $this->checkDownload($filename)) {
@@ -87,6 +85,32 @@ trait FileTrait
         }
 
         return $storage->response($filename, basename($filename), $headers);
+    }
+
+    public function thumbnail($filename, $size)
+    {
+        if ($redirect = $this->checkDownload($filename)) {
+            return $redirect;
+        }
+
+        isset($this->uploadStorage) || $this->uploadStorage = 'upload';
+        $filename = $this->uploadStorage.'/'.$filename;
+
+        $storage = \Storage::disk();
+        if (! $storage->exists($filename)) {
+            // ファイルが存在しない
+            abort(404);
+        }
+        $mimeType = $storage->mimeType($filename);
+
+        // 画像ファイル
+        $thumbnail = $this->createThumbnail($filename, $size);
+        if ($thumbnail) {
+            return response(\File::get($thumbnail))->header('Content-Type', $mimeType);
+        }
+
+        // 画像以外のファイル
+        return response(base64_decode('R0lGODlhAQABAGAAACH5BAEKAP8ALAAAAAABAAEAAAgEAP8FBAA7'), 200)->header('Content-Type', 'image/gif');
     }
 
     protected function checkDownload($filename)

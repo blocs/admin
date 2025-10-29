@@ -44,8 +44,6 @@ trait UpdateTrait
         return $view;
     }
 
-    /* show */
-
     public function show($id)
     {
         $this->getCurrent($id);
@@ -73,8 +71,6 @@ trait UpdateTrait
 
         return $view;
     }
-
-    /* update */
 
     public function confirmUpdate($id, Request $request)
     {
