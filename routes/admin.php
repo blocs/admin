@@ -28,7 +28,7 @@ Route::middleware(['web', 'auth'])
         Route::post('/{id}', [ProfileController::class, 'update'])->where('id', '[0-9]+')->name('update');
         Route::post('/upload', [ProfileController::class, 'upload'])->name('upload');
         Route::get('/{filename}/download', [ProfileController::class, 'download'])->name('download');
-        Route::get('/{filename}/{size}/download', [ProfileController::class, 'download'])->name('thumbnail');
+        Route::get('/{filename}/{size}/thumbnail', [ProfileController::class, 'thumbnail'])->name('thumbnail');
     }
     );
 

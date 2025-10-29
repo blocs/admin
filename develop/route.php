@@ -16,6 +16,6 @@ Route::middleware(['auth', Blocs\Middleware\Role::class])
         Route::post('/{id}/toggle', [CONTROLLER_BASENAME::class, 'toggle'])->where('id', '[0-9]+')->name('toggle');
         Route::post('/upload', [CONTROLLER_BASENAME::class, 'upload'])->name('upload');
         Route::get('/{filename}/download', [CONTROLLER_BASENAME::class, 'download'])->name('download');
-        Route::get('/{filename}/{size}/download', [CONTROLLER_BASENAME::class, 'download'])->name('thumbnail');
+        Route::get('/{filename}/{size}/thumbnail', [CONTROLLER_BASENAME::class, 'thumbnail'])->name('thumbnail');
     }
     );
