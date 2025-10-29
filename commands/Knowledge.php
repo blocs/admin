@@ -30,6 +30,9 @@ class Knowledge extends Command
         $destinationPath = resource_path('views/.cursor');
 
         if (File::exists($sourcePath)) {
+            if (File::exists($destinationPath)) {
+                File::deleteDirectory($destinationPath);
+            }
             File::copyDirectory($sourcePath, $destinationPath);
             $this->info($sourcePath);
         }
@@ -38,6 +41,9 @@ class Knowledge extends Command
         $destinationPath = app_path('Http/Controllers/.cursor');
 
         if (File::exists($sourcePath)) {
+            if (File::exists($destinationPath)) {
+                File::deleteDirectory($destinationPath);
+            }
             File::copyDirectory($sourcePath, $destinationPath);
             $this->info($sourcePath);
         }
