@@ -37,6 +37,12 @@ class AdminServiceProvider extends ServiceProvider
         });
 
         $this->commands('command.blocs.develop');
+
+        $this->app->singleton('command.blocs.knowledge', function ($app) {
+            return new Commands\Knowledge;
+        });
+
+        $this->commands('command.blocs.knowledge');
     }
 
     public function registerPublish()
