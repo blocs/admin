@@ -1,0 +1,134 @@
+---
+description: Laravel Admin Packageの概要
+globs: **/*.php
+alwaysApply: false
+---
+# 概要
+**Laravel Admin Package（blocs/admin）** は、Laravelで管理画面を効率的に構築できる開発支援ツールです。LaravelはMVC（Model-View-Controller）アーキテクチャを採用したPHPフレームワークであり、本パッケージはその構造に沿って、管理画面の開発を簡素化・標準化します。
+
+## Laravel Admin Package（blocs/admin） の特徴
+- 管理画面の処理フロー（一覧・作成・編集など）を **ベースコントローラー** により定型化
+- **開発支援ツール（developツール）** を使って、定義ファイルから画面を自動生成
+- 入力項目の追加や画面のカスタマイズは、テンプレート編集のみで対応可能
+
+## 初期パッケージに含まれる画面
+以下の画面はパッケージに標準で含まれており、すぐに利用できます。
+- ホーム画面
+- ログイン画面
+- ユーザー管理画面
+- プロフィール設定画面
+
+## MVC構成の利用方法
+- Model
+  - Laravel標準の Eloquent ORM をそのまま使用
+- View
+  - Laravel標準の Bladeテンプレート に加え、**BLOCS** テンプレート も併用可能
+- Controller
+  - 管理画面用の基本機能を備えた **ベースコントローラー** を継承して開発
+  - 必要な機能のみを差分として個別に追加することで、効率的な開発が可能
+
+## ベースコントローラーに含まれる基本メソッド
+|メソッド|処理内容|
+|:-----------|:-----------|
+|index|一覧画面の表示|
+|create|新規作成画面の表示|
+|edit|編集画面の表示|
+|show|削除確認画面の表示|
+
+このパッケージを活用することで、Laravelでの管理画面開発が高速・効率的・柔軟に行えます。さらに、開発支援ツールとテンプレートの組み合わせにより、保守性の高い管理機能の追加が可能です。
+
+# 開発支援ツール（developツール）
+**developツール** は、JSON形式の定義ファイルをもとに、Laravelの管理画面を自動生成する開発支援機能です。このツールを使うことで、コントローラー・ビュー・ルーティングなどを一括で生成でき、管理機能の追加が非常に簡単になります。
+
+## 特徴
+- 定義ファイルに必要な情報を記述するだけで、管理画面を自動生成
+- 入力項目の追加や画面のカスタマイズは、テンプレート編集のみで対応可能
+- 開発効率と保守性が大幅に向上
+
+## 定義ファイルの作成方法
+管理画面の構成情報を、JSON形式の定義ファイルとして記述します。作成した定義ファイルは、`docs/develop/` に保存してください（`docs/develop/sample.json` など）。
+
+## 管理画面の自動生成方法
+以下の Artisan コマンドを実行することで、定義ファイルに基づいた管理画面が自動生成されます。このコマンドにより、コントローラー・ビュー・ルーティングなどが一括で生成され、開発効率が大幅に向上します。
+```sh
+php artisan blocs:develop docs/develop/sample.json
+```
+
+# 管理画面
+## ルーティング
+・ベースコントローラーの説明
+
+### ベースコントローラーのメソッド一覧
+
+## 一覧画面
+・base/common、base/index、index.blocs.html
+・一覧画面のレイアウト（data-bloc）
+・検索とソートと選択（テンプレートとコントローラー）
+・行ごとの操作
+・\Blocs\Menu::headline　ヘッドラインを強制指定
+
+## 新規作成画面
+・base/common、base/entry、create.blocs.html、include/form.html
+
+## 編集画面
+・base/common、base/entry、edit.blocs.html、include/form.html
+
+## 表示画面（削除確認画面）
+・base/common、base/entry、show.blocs.html、include/show.html
+
+## ログイン画面（認証、認可機能）
+・認証、マルチ認証
+・認可機能 Role、config/role.php
+・サイドメニューの設定項目 config/menu.php
+
+# Auto Include 機能
+## ボタンの表示方法
+テンプレート内で Auto Include 機能を使うことで、ボタンを簡単に表示できます。さらに、`data-include` 属性に 引数（変数） を追加することで、ボタンのリンク先やデザイン、アイコン、ラベルなどを自由にカスタマイズできます。
+```html
+<!--
+    data-include="button_href"
+    $buttonHref=route("admin.user.create")
+    $buttonClass="btn btn-primary"
+    $buttonIcon="fa-solid fa-plus"
+    $buttonLabel="新規作成"
+-->
+```
+
+## 確認用モーダルの表示方法
+テンプレートで Auto Include 機能を使えば、データ登録前などに確認用のモーダルを簡単に表示できます。また、`data-include` 属性に **引数（変数）** を追加することで、ボタンのアイコンやラベルなどを自由に変更できます。以下のように、モーダルの表示内容を柔軟に調整することができます。他にも、タイトルやメッセージ、ボタンの色などを変更する方法もあります
+```html
+<!--
+    data-include="modal_update"
+    $buttonIcon="fa-solid fa-file"
+    $buttonLabel="ボタンのラベル"
+-->
+```
+
+## グラフの表示方法
+・chartjsの使い方
+
+# テーブルタイプの入力画面の作り方: table.mdc
+
+# ヘルパー関数
+・ヘルパー関数全般（lang、prefix、convert、getOption、addOption、setOption、path: 相対パス）
+
+# 一覧情報の出力方法
+・ルート一覧、バリデート一覧、データベース一覧の出し方
+
+# 回答例
+- **user**
+jQueryを使いたい。
+- **assistant**
+テンプレート内で以下のように記述することで、Auto Include により jQuery が読み込まれ、使用可能になります。
+```html
+<!-- data-include="jquery" -->
+```
+---
+- **user**
+JavaScriptの読み込むを、HTMLの一番最後にしたい。
+- **assistant**
+JavaScriptをページの最後（`</body>` の直前）で読み込みたい場合は、以下のように `data-bloc="script"` を指定します。
+```html
+<script data-bloc="script"></script>
+```
+---
