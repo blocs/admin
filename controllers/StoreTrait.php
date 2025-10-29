@@ -33,8 +33,6 @@ trait StoreTrait
         return $view;
     }
 
-    /* store */
-
     public function confirmStore(Request $request)
     {
         $this->request = $request;
