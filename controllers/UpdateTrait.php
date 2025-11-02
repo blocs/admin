@@ -12,7 +12,6 @@ trait UpdateTrait
         $this->val['id'] = $id;
 
         if (empty(old())) {
-            $this->val = array_merge($this->getAccessor($this->tableData), $this->val);
             $this->val = array_merge($this->tableData->toArray(), $this->val);
         }
 
@@ -49,7 +48,6 @@ trait UpdateTrait
         $this->getCurrent($id);
         $this->val['id'] = $id;
 
-        $this->val = array_merge($this->getAccessor($this->tableData), $this->val);
         $this->val = array_merge($this->tableData->toArray(), $this->val);
 
         $this->prepareShow();

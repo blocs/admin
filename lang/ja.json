@@ -21,7 +21,7 @@
     "template:admin_menu_home": "ホーム",
     "template:admin_menu_logout": "ログアウト",
     "template:admin_menu_profile": "プロフィール",
-    "template:admin_menu_top": "管理トップ",
+    "template:admin_menu_top": "管理メニュー",
     "template:admin_menu_user": "ユーザー管理",
     "template:admin_profile_avatar": "画像",
     "template:admin_profile_name": "名前",

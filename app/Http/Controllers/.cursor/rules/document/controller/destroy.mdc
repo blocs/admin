@@ -1,0 +1,29 @@
+---
+description: 2.4 削除機能のカスタマイズ
+globs: **/*.php, **/*.blocs.html, **/*.html
+alwaysApply: false
+---
+# 2.4 削除機能のカスタマイズ
+## テンプレートの一覧
+
+|テンプレート名|用途|
+|:-----------|:-----------|
+|include/show.html|削除対象の項目を表示するパーツテンプレート|
+|show.blocs.html|削除確認画面のメインテンプレート|
+
+## ベースコントローラーの削除機能に含まれる基本機能
+削除機能は、ベースコントローラーに定義された複数のメソッドによって構成されています。以下は、主なメソッドとその役割です。
+
+|メソッド（ルート名）|メソッド（ルート名）|処理内容|
+|:-----------|:-----------|:-----------|
+|public|show|削除確認画面を表示|
+|protected|prepareShow|出力のためのデータ処理|
+|protected|outputShow|ビューの出力処理|
+|public|confirmDestroy|確認画面を表示|
+|protected|validateDestroy|削除前のバリデーション処理|
+|protected|prepareConfirmDestroy|出力のためのデータ処理|
+|protected|outputConfirmDestroy|ビューの出力処理|
+|public|destroy|削除処理を実行|
+|protected|prepareDestroy|出力のためのデータ処理|
+|protected|executeDestroy|データの削除処理|
+|protected|outputDestroy|ビューの出力処理|

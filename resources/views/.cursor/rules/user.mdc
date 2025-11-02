@@ -6,7 +6,7 @@ alwaysApply: false
 # 概要
 BLOCSは、PHPで使えるテンプレートエンジンです。テンプレートエンジンとは、コントローラーで設定した変数とテンプレートを組み合わせて、HTMLを自動生成する仕組みのことです。
 
-## 主な特徴
+## BLOCS（blocs/blocs） の特徴
 ### データ属性（`data-*` 属性）を活用した動的HTML生成
 BLOCSは、HTMLの **data-\*** 属性を使って、条件分岐や他のテンプレートの読み込みなどを実現します。これにより、HTMLの表示を柔軟にコントロールできます。テンプレートでデータ属性を書く方法には、タグ記法とコメント記法の2種類があります。
 
@@ -122,13 +122,52 @@ BLOCSを使うと、以下のようにシンプルな記述で動的なHTMLを�
 |data-attribute="href" data-val=$url|:href=$url|href 属性に $url の値を設定します。|
 |data-form="name" data-validate="required"|!name="required"|name フィールドに「必須入力」のバリデーションを設定します。|
 
-# 使いやすい入力インターフェースの実装（Auto Include）
-入力フォームに **ai-\*** クラスを指定することで、フォームの機能を自動的に拡張できます。この仕組みを利用することで、ユーザーにとって使いやすい入力インターフェースを簡単に実装でき、テンプレートの記述もシンプルになります。
+# Auto Include 機能
+## 使いやすい入力インターフェースの実装
+入力フォームに **ai-\*** クラス（Auto Include クラス）を指定することで、フォームの機能を自動的に拡張できます。この仕組みを利用することで、ユーザーにとって使いやすい入力インターフェースを簡単に実装でき、テンプレートの記述もシンプルになります。
 
-## 日付選択フォームのサンプルコード
+### 日付選択フォームのサンプルコード
 以下のように、class 属性に `ai-datepicker` を指定すると、カレンダー付きの日付入力フォームが自動的に読み込まれます
 ```html
 <input type="text" id="date" name="date" class="form-control ai-datepicker" />
+```
+
+## テンプレートの自動読み込み
+`data-include` で指定したブロック名に対応するテンプレートファイルを自動で読み込みます。
+
+### ボタンの表示方法
+テンプレート内で Auto Include 機能を使うことで、ボタンを簡単に表示できます。さらに、`data-include` 属性に **引数（変数）** を追加することで、ボタンのリンク先やデザイン、アイコン、ラベルなどを自由にカスタマイズできます。
+```html
+<!--
+    data-include="button_href"
+    $buttonHref=route("admin.user.create")
+    $buttonClass="btn btn-primary"
+    $buttonIcon="fa-solid fa-plus"
+    $buttonLabel="新規作成"
+-->
+```
+
+### 確認用モーダルの表示方法
+テンプレート内で Auto Include 機能を使うことで、データ登録前などに確認用のモーダルを簡単に表示できます。また、`data-include` 属性に **引数（変数）** を追加することで、モーダルの表示内容を自由にカスタマイズできます。他にも、タイトルやメッセージ、ボタンの色などを変更する方法もあります。
+```html
+<!--
+    data-include="modal_update"
+    $buttonIcon="fa-solid fa-file"
+    $buttonLabel="ボタンのラベル"
+-->
+```
+
+### グラフの表示方法
+テンプレート内で Auto Include 機能 を使うと、グラフを簡単に表示できます。さらに、`data-include` 属性に **引数（変数）** を指定することで、グラフの色や凡例（ラベル）などを自由にカスタマイズできます。
+```html
+<!--
+    data-include="chartjs_1line"
+    $graphId="graphUser"
+    $chartjsColor="Blues3"
+    $graphLegendLine1="登録"
+-->
+
+<canvas :id=$graphId class="chart-canvas" height="300"></canvas>
 ```
 
 # 回答例
@@ -148,5 +187,21 @@ BLOCSを使うと、以下のようにシンプルな記述で動的なHTMLを�
 <input type="text" name="name" />
 <!-- !name="required" data-lang="必須入力です。" -->
 @error("name") <div class="invalid-feedback">{{ $message }}</div> @enderror
+```
+---
+- **user**
+jQueryを使いたい。
+- **assistant**
+テンプレート内で以下のように記述することで、Auto Include により jQuery が読み込まれ、使用可能になります。
+```html
+<!-- data-include="jquery" -->
+```
+---
+- **user**
+JavaScriptの読み込むを、HTMLの一番最後にしたい。
+- **assistant**
+JavaScriptをページの最後（`</body>` の直前）で読み込みたい場合は、以下のように `data-bloc="script"` を指定します。
+```html
+<script data-bloc="script"></script>
 ```
 ---

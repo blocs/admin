@@ -1,6 +1,0 @@
-    Class "CLASS_NAME" as LOOP_ITEM {
-        MENU_LANG
-        ---
-       +id [PK]
-        FORM_LIST
-    }

@@ -4,7 +4,7 @@ globs: **/*.blocs.html, **/*.html
 alwaysApply: false
 ---
 # 確認用モーダルの表示方法
-## 定義済みの確認用モーダル
+## 定義済みの確認用モーダルのブロック
 データ登録前に確認を促すモーダルを表示したい場合は、Auto Include 機能を使うことで簡単に実装できます。以下のような確認用モーダルがあらかじめ定義されています。
 
 |ブロック名|用途|
@@ -121,3 +121,13 @@ alwaysApply: false
 |buttonSuccessModal|緑色の成功ボタン|
 |buttonDangerModal|赤色の警告ボタン|
 |buttonWarningModal|黄色の注意ボタン|
+
+## 独自モーダルの呼び出し方法
+モーダルを動的に表示したい場合は、`data-modalaction` 属性を使用します。これにより、モーダルの遷移先（アクション）を、状況に応じて変更することができます。例えば、一覧画面で各行の `id` に応じたページをモーダルで表示する場合に便利です。
+
+### サンプルコード
+```html
+<a data-bs-toggle="modal" data-bs-target="#modalImport" :data-modalaction=route(prefix().".import", ["id" => $user->id])>
+    モーダル呼び出し
+</a>
+```

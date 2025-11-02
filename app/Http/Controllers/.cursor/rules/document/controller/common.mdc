@@ -1,0 +1,75 @@
+---
+description: 2.1 共通機能のカスタマイズ
+globs: **/*.php, **/*.blocs.html, **/*.html
+alwaysApply: false
+---
+# 2.1 共通機能のカスタマイズ
+## テンプレートの一覧
+共通テンプレートは `resources/views/admin/base/common` に格納されています。画面の各パーツを構成するテンプレートは以下の通りです。
+
+|テンプレート名|用途|
+|:-----------|:-----------|
+|header.html|画面上部のヘッダー|
+|footer.html|画面下部のフッター|
+|message.html|エラーメッセージの表示|
+|css.html|CSSの読み込み|
+|script.html|JavaScriptの読み込み|
+|sideNav.html|サイドメニュー|
+|topNav.html|画面上部のナビゲーション|
+|copyright.txt|画面下部のコピーライト表示|
+
+## ベースコントローラーで使用できる主な変数
+|変数名|説明|
+|:-----------|:-----------|
+|$this->val|ビューに渡す変数|
+|$this->mainTable|メインで使用するモデルのオブジェクト|
+|$this->viewPrefix|テンプレートのパスプレフィックス|
+|$this->noticeItem|操作完了時のメッセージに使う項目名（例：登録名など）|
+
+## ボタンを追加する方法
+管理画面にボタンを配置するには、テンプレートに以下の ブロック名 を使って `data-bloc` 属性で指定します。 
+
+|ブロック名|配置場所|
+|:-----------|:-----------|
+|buttonTopLeft|画面上部 左側|
+|buttonTopCenter|画面上部 中央|
+|buttonTopRight|画面上部 右側|
+|buttonBottomLeft|画面下部 左側|
+|buttonBottomCenter|画面下部 中央|
+|buttonBottomRight|画面下部 右側|
+
+### サンプルコード（テンプレート）
+戻るボタンを画面下部左側に配置する。
+```html
+<!-- data-bloc="buttonBottomLeft" -->
+    <!--
+        data-include="button_back"
+        $buttonHref=route(prefix().".index")
+    -->
+<!-- data-endbloc -->
+```
+## 画面上部のナビゲーションのヘッドラインの変更方法
+管理画面の最上部に表示される「ヘッドライン」は、`config/menu.php` の設定によって表示されます。このヘッドラインを動的に変更したい場合は、以下のメソッド`\Blocs\Menu::headline($icon, $lang, $activePrefix = null, $menu = null)` を使用します。
+
+### 引数の説明
+|引数名|内容|
+|:-----------|:-----------|
+|$icon|Font Awesomeのアイコン名（例：fa-cogs）|
+|$lang|表示するラベル名（翻訳キーを指定）|
+|$activePrefix|アクティブ状態にするルートのプレフィックス（例：admin.user）|
+|$menu|ヘッドラインの右側に表示する補足メニュー名（例：ユーザー管理）|
+
+### サンプルコード（コントローラー）
+このコードをコントローラー内で使用することで、管理画面のヘッドラインに「歯車アイコン」「ヘッドライン」というラベル、「ユーザー管理」という補足メニューが表示され、`admin.user` ルートがアクティブ状態になります。
+```php
+\Blocs\Menu::headline('fa-cogs', 'ヘッドライン', 'admin.user', 'ユーザー管理');
+```
+
+## サイドメニューの表示
+サイドメニューのデータは、コントローラーから `$this->setupMenu()` でテンプレートに渡します。テンプレート側では、以下のように `sideNav.html` を読み込みます。
+```html
+<!-- data-include="/admin/base/common/sideNav.html" -->
+```
+
+## ページ遷移時にデータを引き継ぐ方法
+ページ間でデータを保持したい場合は、コントローラーで、`$this->keepItem($keyItem)` を使用します。
