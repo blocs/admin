@@ -2,8 +2,6 @@
 
 namespace Blocs\Controllers;
 
-use Illuminate\Support\Str;
-
 trait CommonTrait
 {
     protected function addOption($formName, $optionList)
@@ -108,21 +106,6 @@ trait CommonTrait
 
         // keepItemで使用
         isset($this->viewPrefix) && session(['viewPrefix' => $this->viewPrefix]);
-    }
-
-    protected function getAccessor($model)
-    {
-        $methods = get_class_methods($model);
-
-        $accessor = [];
-        foreach ($methods as $method) {
-            if (! strncmp($method, 'get', 3) && substr($method, -9) === 'Attribute' && $columnName = substr($method, 3, -9)) {
-                $columnName = Str::snake($columnName);
-                $accessor[$columnName] = $model->$columnName;
-            }
-        }
-
-        return $accessor;
     }
 
     protected function getLabel($template)

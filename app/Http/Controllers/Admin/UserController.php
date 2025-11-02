@@ -38,16 +38,24 @@ class UserController extends \Blocs\Controllers\Base
         // ソート
         $this->keepItem('sort');
 
-        // デフォルトのソート条件
+        // ソート条件の初期化とバリデーション
         if (empty($this->val['sort']) || ! is_array($this->val['sort'])) {
             $this->val['sort'] = [];
         } else {
             $this->val['sort'] = array_filter($this->val['sort'], 'strlen');
         }
-        count($this->val['sort']) || $this->val['sort'] = ['email' => 'asc'];
 
-        foreach (['email', 'role', 'created_at'] as $sortItem) {
-            empty($this->val['sort'][$sortItem]) || $mainTable->orderBy($sortItem, $this->val['sort'][$sortItem]);
+        // ソート条件が空の場合、デフォルト値を設定
+        if (empty($this->val['sort'])) {
+            $this->val['sort'] = ['email' => 'asc'];
+        }
+
+        // 指定された条件でソート
+        $allowedSortItems = ['email', 'role', 'created_at'];
+        foreach ($allowedSortItems as $sortItem) {
+            if (! empty($this->val['sort'][$sortItem])) {
+                $mainTable->orderBy($sortItem, $this->val['sort'][$sortItem]);
+            }
         }
         docs('指定された条件でソート');
     }

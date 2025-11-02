@@ -5,7 +5,7 @@
             <method>{{ $route['method'] }}</method>
             <controller>{{ $route['controller'] }}</controller>
             <name>{{ $route['name'] }}</name>
-            <middlewares>{{ implode(', ', $route['middlewares']) }}</middlewares>
+            <middlewares>{{ is_array($route['middlewares']) ? implode(', ', $route['middlewares']) : $route['middlewares'] }}</middlewares>
         </url>
     @endforeach
 </route>

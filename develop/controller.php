@@ -31,17 +31,24 @@ class CONTROLLER_BASENAME extends \Blocs\Controllers\Base
         // ソート
         $this->keepItem('sort');
 
-        // デフォルトのソート条件
+        // ソート条件の初期化とバリデーション
         if (empty($this->val['sort']) || ! is_array($this->val['sort'])) {
             $this->val['sort'] = [];
         } else {
             $this->val['sort'] = array_filter($this->val['sort'], 'strlen');
         }
-        count($this->val['sort']) || $this->val['sort'] = ['item1' => 'asc'];
+
+        // ソート条件が空の場合、デフォルト値を設定
+        if (empty($this->val['sort'])) {
+            $this->val['sort'] = ['item1' => 'asc'];
+        }
 
         // 指定された条件でソート
-        foreach (['item1', 'item2', 'item3'] as $sortItem) {
-            empty($this->val['sort'][$sortItem]) || $mainTable->orderBy($sortItem, $this->val['sort'][$sortItem]);
+        $allowedSortItems = ['item1', 'item2', 'item3'];
+        foreach ($allowedSortItems as $sortItem) {
+            if (! empty($this->val['sort'][$sortItem])) {
+                $mainTable->orderBy($sortItem, $this->val['sort'][$sortItem]);
+            }
         }
         docs('指定された条件でソート');
     }

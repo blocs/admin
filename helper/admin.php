@@ -7,15 +7,8 @@ if (! function_exists('lang')) {
     }
 }
 
-if (! function_exists('prefix')) {
-    function prefix()
-    {
-        return Blocs\Common::routePrefix();
-    }
-}
-
-if (! function_exists('convert')) {
-    function convert($str, $formName = null, $template = null)
+if (! function_exists('val')) {
+    function val($str, $formName = null, $template = null)
     {
         isset($template) && Blocs\Option::set($template, $formName);
 
@@ -24,6 +17,20 @@ if (! function_exists('convert')) {
         }
 
         return Blocs\Common::convertDefault($str);
+    }
+}
+
+if (! function_exists('prefix')) {
+    function prefix()
+    {
+        return Blocs\Common::routePrefix();
+    }
+}
+
+if (! function_exists('path')) {
+    function path($name, $parameters = [])
+    {
+        return route($name, $parameters, false);
     }
 }
 
@@ -45,12 +52,5 @@ if (! function_exists('setOption')) {
     function setOption($formName, $template)
     {
         Blocs\Option::set($template, $formName);
-    }
-}
-
-if (! function_exists('path')) {
-    function path($name, $parameters = [])
-    {
-        return route($name, $parameters, false);
     }
 }
