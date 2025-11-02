@@ -1,0 +1,57 @@
+---
+description: ログイン画面を追加する方法
+globs: **/*.php
+alwaysApply: false
+---
+# ログイン画面を追加する方法
+## 新しいログイン画面の作成手順
+1. 新しい **Guard** を作成する
+   - Laravel の config/auth.php に Guard を追加します。Guard はユーザーの種類（例：管理者、メンバーなど）に応じた認証を行うための設定です。
+2. ログイン用コントローラーを作成する
+   - 既存の `app/Http/Controllers/Admin/LoginController.php` をコピーして、新しいコントローラー（例：Login2Controller）を作成します。
+3. ログイン後・ログアウト後の遷移先を変更する
+```php
+// ログイン後の遷移先
+$this->redirectTo = '/home2';
+
+// ログアウト後の遷移先
+return redirect('/login2');
+```
+
+4. Guard を指定する
+   - 新しい Guard を使うように、コントローラー内で `Auth::guard()` を指定します。
+```php
+protected function guard()
+{
+  return Auth::guard('member');
+}
+```
+
+5. ルーティングを設定する
+   - 新しいログイン画面用のルートを追加します。
+```php
+Route::middleware(['web'])
+    ->group(function () {
+        Route::get('/login2', [Login2Controller::class, 'showLoginForm'])->name('login2');
+        Route::post('/login2', [Login2Controller::class, 'login2']);
+        Route::match(['get', 'post'], '/logout2', [Login2Controller::class, 'logout2'])->name('logout');
+    }
+    );
+```
+
+## 新しいログイン画面の認証設定
+1. Guard による認証をルートに追加する
+   - 認証が必要なルートに、対象の Guard を指定します。
+```php
+Route::middleware(['web', 'auth:member'])
+```
+ 
+2. 認証失敗時のリダイレクト先を設定する
+   - `bootstrap/app.php` に以下のような設定を追加し、Guard による認証失敗時の遷移先を制御します。
+```php
+->withMiddleware(function (Middleware $middleware): void {
+  Authenticate::redirectUsing(function (Request $request): ?string {
+    return $request->is('home2') ? '/login2' : null;
+  });
+})
+```

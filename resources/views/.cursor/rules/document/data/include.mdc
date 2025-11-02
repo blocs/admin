@@ -34,7 +34,7 @@ alwaysApply: false
 -->
 ```
 
-## テンプレートの自動読み込み（Auto Include）
+## Auto Include: テンプレートの自動読み込み
 `data-include` で指定したブロック名に対応するテンプレートファイルが、`resources/views/admin/autoinclude` フォルダに存在する場合、明示的に `data-include` を記述しなくても自動で読み込まれます。
 
 以下のように指定すると、`button_href` の `_` より前の部分（この場合は `button`） に `.html` を付けたファイル名、つまり `button.html` が `resources/views/admin/autoinclude` に存在する場合、自動で読み込まれます。

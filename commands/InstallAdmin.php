@@ -43,8 +43,6 @@ class InstallAdmin extends Install
         \Artisan::call('migrate');
         \Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
 
-        \Artisan::call('route:cache');
-
         echo "Admin has been installed successfully.\n";
         echo 'Login URL is '.route('login').".\n";
         echo "Initial ID/Pass is admin/admin.\n";

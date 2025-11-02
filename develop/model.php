@@ -14,4 +14,14 @@ class MODEL_BASENAME extends Model
     protected $fillable = [
         FORM_LIST,
     ];
+
+    public function getDisabledAtAttribute($value)
+    {
+        return isset($value) ? 1 : 0;
+    }
+
+    public function setDisabledAtAttribute($value)
+    {
+        $this->attributes['disabled_at'] = empty($value) ? null : now();
+    }
 }
