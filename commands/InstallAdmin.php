@@ -43,7 +43,7 @@ class InstallAdmin extends Install
         \Artisan::call('migrate');
         \Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
 
-        \Artisan::call('route:clear');
+        \Artisan::call('route:cache');
 
         $this->info('Admin has been installed successfully.');
         $this->info('Login URL is '.route('login').'.');
