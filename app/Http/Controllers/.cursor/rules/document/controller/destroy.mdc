@@ -27,3 +27,9 @@ alwaysApply: false
 |protected|prepareDestroy|出力のためのデータ処理|
 |protected|executeDestroy|データの削除処理|
 |protected|outputDestroy|ビューの出力処理|
+
+## ベースコントローラーで使用できる主な変数
+
+|変数名|説明|
+|:-----------|:-----------|
+|$this->deletedNum|処理によって削除されたデータの件数を保持する変数です。削除操作の結果として、何件のデータが削除されたかを確認するために使用します。|

@@ -24,10 +24,10 @@ cd laravel-admin
 
 3. Composer で Admin Package をインストール
 ```sh
-laravel-admin % composer require blocs/admin    
+composer require blocs/admin    
 ```
 
 4. Laravel に BLOCS をインストール
 ```sh
-laravel-admin % php artisan blocs:install  
+php artisan blocs:install  
 ```
