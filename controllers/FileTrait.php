@@ -64,7 +64,15 @@ trait FileTrait
             // 画像ファイル
             $thumbnail = $this->createThumbnail($filename, $size);
             if ($thumbnail) {
-                return response(\File::get($thumbnail))->header('Content-Type', $mimeType);
+                $headers = $this->getHeaders($filename);
+                $response = response(\File::get($thumbnail))->header('Content-Type', $mimeType);
+                if ($headers) {
+                    foreach ($headers as $key => $value) {
+                        $response->header($key, $value);
+                    }
+                }
+
+                return $response;
             }
 
             // 画像以外のファイル
@@ -74,7 +82,15 @@ trait FileTrait
         // 画像ファイル
         $thumbnail = $this->createThumbnail($filename, 'thumbnail');
         if ($thumbnail) {
-            return response($storage->get($filename))->header('Content-Type', $mimeType);
+            $headers = $this->getHeaders($filename);
+            $response = response($storage->get($filename))->header('Content-Type', $mimeType);
+            if ($headers) {
+                foreach ($headers as $key => $value) {
+                    $response->header($key, $value);
+                }
+            }
+
+            return $response;
         }
 
         $headers = $this->getHeaders($filename);
