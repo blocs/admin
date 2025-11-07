@@ -8,20 +8,16 @@ trait UserUpdateTrait
     {
         parent::validateUpdate();
 
-        if (empty($this->request->password_new)) {
+        if ($this->shouldSkipPasswordValidation()) {
             return;
         }
 
-        if ($this->tableData->password === '') {
-            return;
-        }
-
-        // 現パスワードをチェック
-        if (empty($this->request->password_old)) {
+        // 現在のパスワード入力の妥当性を確認する
+        if ($this->isCurrentPasswordMissing()) {
             return $this->backEdit('', lang('template:admin_profile_password_incorrect'), 'password_old');
         }
 
-        if (! password_verify($this->request->password_old, $this->tableData->password)) {
+        if ($this->isCurrentPasswordInvalid()) {
             return $this->backEdit('', lang('template:admin_profile_password_incorrect'), 'password_old');
         }
         docs(['POST' => 'password_old', 'データベース' => $this->loopItem], '<password_old>があれば、<'.$this->loopItem.'>をチェック');
@@ -30,27 +26,71 @@ trait UserUpdateTrait
 
     protected function prepareUpdate()
     {
-        $requestData = [];
+        $requestData = [
+            'email' => $this->request->email,
+        ];
 
-        $requestData['email'] = $this->request->email;
-
-        // nameの補完
+        // nameが未入力の場合はemailを利用して補完する
         if ($this->request->has('name')) {
-            $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
-            $requestData['name'] = $this->val['name'];
+            $this->applyNameFallback($requestData);
         }
-        docs('<name>がなければ、<email>を指定する');
 
         if ($this->request->has('role')) {
-            $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);
-            $requestData['role'] = $this->val['role'];
+            $this->applyRoleAggregation($requestData);
         }
 
-        empty($this->request->password_new) || $requestData['password'] = bcrypt($this->request->password_new);
+        $this->applyPasswordRenewal($requestData);
 
         $this->prepareUpdateTrait($requestData);
 
         return $requestData;
+    }
+
+    private function shouldSkipPasswordValidation(): bool
+    {
+        return $this->isPasswordUpdateEmpty() || $this->isStoredPasswordBlank();
+    }
+
+    private function isPasswordUpdateEmpty(): bool
+    {
+        return empty($this->request->password_new);
+    }
+
+    private function isStoredPasswordBlank(): bool
+    {
+        return $this->tableData->password === '';
+    }
+
+    private function isCurrentPasswordMissing(): bool
+    {
+        return empty($this->request->password_old);
+    }
+
+    private function isCurrentPasswordInvalid(): bool
+    {
+        return ! password_verify($this->request->password_old, $this->tableData->password);
+    }
+
+    private function applyNameFallback(array &$requestData): void
+    {
+        $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
+        $requestData['name'] = $this->val['name'];
+        docs('<name>がなければ、<email>を指定する');
+    }
+
+    private function applyRoleAggregation(array &$requestData): void
+    {
+        $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);
+        $requestData['role'] = $this->val['role'];
+    }
+
+    private function applyPasswordRenewal(array &$requestData): void
+    {
+        if ($this->isPasswordUpdateEmpty()) {
+            return;
+        }
+
+        $requestData['password'] = bcrypt($this->request->password_new);
     }
 
     protected function prepareUpdateTrait(&$requestData) {}

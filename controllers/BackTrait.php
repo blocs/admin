@@ -6,99 +6,136 @@ trait BackTrait
 {
     protected function backIndex($category = null, $message = null, ...$msgArgList)
     {
-        $redirectIndex = redirect()->route(prefix().'.index');
-        unset($this->val, $this->request, $this->tableData);
+        $redirect = redirect()->route(prefix().'.index');
+        $this->cleanupBackProperties();
 
+        // メッセージがない場合はそのままリダイレクト
         if (! $category) {
-            return $redirectIndex;
+            return $redirect;
         }
 
-        // langからメッセージを取得
-        $code = $this->generateCode($category, $message, $msgArgList);
-        ($langMessage = $this->getMessage($code)) != false && $message = $this->replaceArg($langMessage, $msgArgList);
-        docs("メッセージをセット\n・".$message);
-        docs(null, '一覧画面に戻る', ['FORWARD' => '!'.prefix().'.index']);
+        // 言語ファイルからメッセージを取得して引数を置換
+        $processedMessage = $this->buildBackMessage($category, $message, $msgArgList);
 
-        return $redirectIndex->with([
+        $this->outputBackRedirectLog($processedMessage, '一覧画面に戻る', '.index');
+
+        return $redirect->with([
             'category' => $category,
-            'message' => $message,
+            'message' => $processedMessage,
         ]);
     }
 
     protected function backCreate($category = null, $message = null, $noticeForm = null, ...$msgArgList)
     {
-        $redirectCreate = redirect()->route(prefix().'.create', $this->val)->withInput();
-        unset($this->val, $this->request, $this->tableData);
-        docs("メッセージをセット\n・".$message);
-        docs(null, '新規作成画面に戻る', ['FORWARD' => '!'.prefix().'.create']);
+        $redirect = redirect()->route(prefix().'.create', $this->val)->withInput();
+        $this->cleanupBackProperties();
 
-        return $this->backCreateEdit($redirectCreate, $category, $message, $noticeForm, $msgArgList);
+        $this->outputBackRedirectLog($message, '新規作成画面に戻る', '.create');
+
+        return $this->buildBackFormRedirect($redirect, $category, $message, $noticeForm, $msgArgList);
     }
 
     protected function backEdit($category = null, $message = null, $noticeForm = null, ...$msgArgList)
     {
-        $redirectEdit = redirect()->route(prefix().'.edit', $this->val)->withInput();
-        unset($this->val, $this->request, $this->tableData);
-        docs("メッセージをセット\n・".$message);
-        docs(null, '編集画面に戻る', ['FORWARD' => '!'.prefix().'.edit']);
+        $redirect = redirect()->route(prefix().'.edit', $this->val)->withInput();
+        $this->cleanupBackProperties();
 
-        return $this->backCreateEdit($redirectEdit, $category, $message, $noticeForm, $msgArgList);
+        $this->outputBackRedirectLog($message, '編集画面に戻る', '.edit');
+
+        return $this->buildBackFormRedirect($redirect, $category, $message, $noticeForm, $msgArgList);
     }
 
-    private function getMessage($code)
+    private function buildBackFormRedirect($redirect, $category, $message, $noticeForm, $msgArgList)
     {
-        $langMessage = lang($code);
-        if ($langMessage == $code) {
-            // langからメッセージを取得できない
-            return false;
-        }
-
-        return $langMessage;
-    }
-
-    private function backCreateEdit($redirect, $category, $message, $noticeForm, $msgArgList)
-    {
+        // カテゴリもフォームエラーも指定されていない場合はそのままリダイレクト
         if (! $category && ! $noticeForm) {
             return $redirect;
         }
 
-        // langからメッセージを取得
-        $code = $this->generateCode($category, $message, $msgArgList);
-        ($langMessage = $this->getMessage($code)) != false && $message = $this->replaceArg($langMessage, $msgArgList);
+        // 言語ファイルからメッセージを取得して引数を置換
+        $processedMessage = $this->buildBackMessage($category, $message, $msgArgList);
 
+        // カテゴリが指定されている場合はセッションにメッセージを保存
         if ($category) {
             return $redirect->with([
                 'category' => $category,
-                'message' => $message,
+                'message' => $processedMessage,
             ]);
         }
 
+        // フォームエラーとして返す
         return $redirect->withErrors([
-            $noticeForm => $message,
+            $noticeForm => $processedMessage,
         ]);
     }
 
-    private function generateCode($category, $message, $msgArgList)
+    private function buildBackMessage($category, $message, $msgArgList)
     {
-        foreach ($msgArgList as $num => $value) {
-            $msgArgList[$num] = '{{'.$num.'}}';
+        // 言語ファイル用のコードを生成
+        $code = $this->buildBackMessageCode($category, $message, $msgArgList);
+
+        // 言語ファイルからメッセージを取得
+        $translatedMessage = $this->fetchBackTranslation($code);
+
+        // 言語ファイルにメッセージがあれば、引数を置換して使用
+        if ($translatedMessage !== false) {
+            return $this->replaceBackMessagePlaceholders($translatedMessage, $msgArgList);
         }
 
-        if ($category) {
-            $msgArgList = array_merge([$category, $message], $msgArgList);
-        } else {
-            $msgArgList = array_merge([$message], $msgArgList);
-        }
-
-        return implode(':', $msgArgList);
+        // 言語ファイルにない場合は元のメッセージを返す
+        return $message;
     }
 
-    private function replaceArg($message, $msgArgList)
+    private function fetchBackTranslation($code)
     {
+        $translatedMessage = lang($code);
+
+        // 翻訳が見つからない場合はコードがそのまま返されるためfalseを返す
+        if ($translatedMessage === $code) {
+            return false;
+        }
+
+        return $translatedMessage;
+    }
+
+    private function buildBackMessageCode($category, $message, $msgArgList)
+    {
+        // 引数をプレースホルダー形式に変換
+        $placeholders = [];
+        foreach ($msgArgList as $num => $value) {
+            $placeholders[] = '{{'.$num.'}}';
+        }
+
+        // カテゴリがある場合は「カテゴリ:メッセージ:プレースホルダー」形式、ない場合は「メッセージ:プレースホルダー」形式
+        if ($category) {
+            $codeParts = array_merge([$category, $message], $placeholders);
+        } else {
+            $codeParts = array_merge([$message], $placeholders);
+        }
+
+        return implode(':', $codeParts);
+    }
+
+    private function replaceBackMessagePlaceholders($message, $msgArgList)
+    {
+        // メッセージ内のプレースホルダーを実際の値に置換
         foreach ($msgArgList as $num => $value) {
             $message = str_replace('{{'.$num.'}}', $value, $message);
         }
 
         return $message;
+    }
+
+    private function cleanupBackProperties()
+    {
+        // リダイレクト前にプロパティをクリーンアップ
+        unset($this->val, $this->request, $this->tableData);
+    }
+
+    private function outputBackRedirectLog($message, $destination, $route)
+    {
+        // ドキュメント用にメッセージとリダイレクト先をログ出力
+        docs("メッセージをセット\n・".$message);
+        docs(null, $destination, ['FORWARD' => '!'.prefix().$route]);
     }
 }

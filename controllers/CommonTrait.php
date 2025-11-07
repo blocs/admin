@@ -11,65 +11,128 @@ trait CommonTrait
 
     protected function keepItem($keyItem)
     {
+        // 既に値が設定されている場合は処理をスキップ
         if (isset($this->val[$keyItem])) {
             return;
         }
 
         $sessionKey = $this->viewPrefix.'_'.$keyItem;
 
-        // 検索条件をclear
-        if (request()->has('clear')) {
+        // クリアリクエストがあればセッションを削除
+        if ($this->shouldKeepClearSession()) {
             session()->forget($sessionKey);
 
             return;
         }
 
-        // viewPrefixが変わるとクリア
-        if (session('viewPrefix') !== $this->viewPrefix) {
+        // viewPrefixが変更された場合はセッションをクリア
+        if ($this->hasKeepViewPrefixChanged()) {
             session()->forget($sessionKey);
         }
 
-        // POST
+        // POSTリクエストから値を取得して保存
+        if ($this->handleKeepPostRequest($keyItem, $sessionKey)) {
+            return;
+        }
+
+        // GETリクエストから値を取得して保存
+        if ($this->handleKeepGetRequest($keyItem, $sessionKey)) {
+            return;
+        }
+
+        // セッションから値を復元
+        $this->restoreKeepItemFromSession($keyItem, $sessionKey);
+    }
+
+    private function shouldKeepClearSession()
+    {
+        // クリアパラメータが存在するかチェック
+        return request()->has('clear');
+    }
+
+    private function hasKeepViewPrefixChanged()
+    {
+        // セッションに保存されているviewPrefixと現在のviewPrefixを比較
+        return session('viewPrefix') !== $this->viewPrefix;
+    }
+
+    private function handleKeepPostRequest($keyItem, $sessionKey)
+    {
+        // POSTリクエストに指定されたキーが存在する場合、セッションに保存
         if (request()->has($keyItem)) {
-            $this->saveItem($keyItem, request()->$keyItem, $sessionKey);
+            $this->saveKeepItemToSession($keyItem, request()->$keyItem, $sessionKey);
             docs(['POST' => $keyItem], 'POSTに<'.$keyItem.'>があれば、セッションに保存', ['セッション' => $keyItem]);
 
-            return;
+            return true;
         }
 
-        // GET
+        return false;
+    }
+
+    private function handleKeepGetRequest($keyItem, $sessionKey)
+    {
+        // GETリクエストに指定されたキーが存在する場合、セッションに保存
         if (request()->query($keyItem)) {
-            $this->saveItem($keyItem, request()->query($keyItem), $sessionKey);
+            $this->saveKeepItemToSession($keyItem, request()->query($keyItem), $sessionKey);
+            docs(['GET' => $keyItem], 'GETに<'.$keyItem.'>があれば、セッションに保存', ['セッション' => $keyItem]);
 
-            return;
+            return true;
         }
-        docs(['GET' => $keyItem], 'GETに<'.$keyItem.'>があれば、セッションに保存', ['セッション' => $keyItem]);
 
+        return false;
+    }
+
+    private function restoreKeepItemFromSession($keyItem, $sessionKey)
+    {
+        // セッションに値が保存されている場合、それを読み込む
         if (session()->has($sessionKey)) {
-            // sessionがあれば読み込む
             $this->val[$keyItem] = session($sessionKey);
         }
         docs(['セッション' => $keyItem], 'セッションに<'.$keyItem.'>があれば、読み込み');
     }
 
-    private function saveItem($keyItem, $keyValue, $sessionKey)
+    private function saveKeepItemToSession($keyItem, $keyValue, $sessionKey)
     {
-        if (is_string($keyValue) && strlen($keyValue)) {
-            // sessionに保存
-            session([$sessionKey => $keyValue]);
-            $this->val[$keyItem] = $keyValue;
-        } elseif (is_array($keyValue) && count($keyValue)) {
-            // 値をマージ
-            if (session()->has($sessionKey)) {
-                $keyValue = array_merge(session($sessionKey), $keyValue);
-            }
-            // sessionに保存
-            session([$sessionKey => $keyValue]);
-            $this->val[$keyItem] = $keyValue;
+        if ($this->isKeepItemValidString($keyValue)) {
+            // 文字列の場合、セッションに保存
+            $this->storeKeepItemToSession($keyItem, $keyValue, $sessionKey);
+        } elseif ($this->isKeepItemValidArray($keyValue)) {
+            // 配列の場合、既存の値とマージしてセッションに保存
+            $mergedValue = $this->mergeKeepItemWithSession($keyValue, $sessionKey);
+            $this->storeKeepItemToSession($keyItem, $mergedValue, $sessionKey);
         } else {
-            // sessionを削除
+            // 無効な値の場合、セッションを削除
             session()->forget($sessionKey);
         }
+    }
+
+    private function isKeepItemValidString($value)
+    {
+        // 空でない文字列かどうかをチェック
+        return is_string($value) && strlen($value);
+    }
+
+    private function isKeepItemValidArray($value)
+    {
+        // 空でない配列かどうかをチェック
+        return is_array($value) && count($value);
+    }
+
+    private function mergeKeepItemWithSession($keyValue, $sessionKey)
+    {
+        // セッションに既存の値がある場合、新しい値とマージ
+        if (session()->has($sessionKey)) {
+            return array_merge(session($sessionKey), $keyValue);
+        }
+
+        return $keyValue;
+    }
+
+    private function storeKeepItemToSession($keyItem, $keyValue, $sessionKey)
+    {
+        // セッションと$this->valの両方に値を保存
+        session([$sessionKey => $keyValue]);
+        $this->val[$keyItem] = $keyValue;
     }
 
     protected function getCurrent($id)
@@ -78,17 +141,21 @@ trait CommonTrait
         $this->tableData = $this->mainTable::findOrFail($id);
     }
 
-    // テーブルのデータと入力値をマージ
+    // テーブルのデータと入力値を再帰的にマージ
     protected static function mergeTable($table, $request)
     {
+        // 両方が配列でない場合はそのまま返す
         if (! is_array($table) || ! is_array($request)) {
             return $table;
         }
 
+        // リクエストの各要素をテーブルデータにマージ
         foreach ($request as $sKey => $mValue) {
             if (isset($table[$sKey]) && is_array($mValue) && is_array($table[$sKey])) {
+                // 両方が配列の場合は再帰的にマージ
                 $table[$sKey] = self::mergeTable($table[$sKey], $mValue);
             } else {
+                // それ以外の場合は値を上書き
                 $table[$sKey] = $mValue;
             }
         }
@@ -98,19 +165,20 @@ trait CommonTrait
 
     protected function setupMenu()
     {
+        // メニュー設定を取得してビューに渡す
         [$menu, $headline, $breadcrumb] = \Blocs\Menu::get();
         $this->val['menu'] = $menu;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
         docs(['設定ファイル' => 'config/menu.php'], 'メニュー表示の設定');
 
-        // keepItemで使用
+        // keepItemメソッドで使用するviewPrefixをセッションに保存
         isset($this->viewPrefix) && session(['viewPrefix' => $this->viewPrefix]);
     }
 
     protected function getLabel($template)
     {
-        // 設定ファイルを読み込み
+        // 設定ファイルからラベル情報を読み込む
         $path = \Blocs\Common::getPath($template);
         $config = \Blocs\Common::readConfig($path);
 
@@ -119,38 +187,76 @@ trait CommonTrait
             return $labels;
         }
 
+        // 各フォーム項目のラベルを処理
         foreach ($config['label'][$path] as $formName => $label) {
-            if (strpos($label, 'data-') === false) {
-                $labels[$formName] = $label;
-            } else {
-                isset($blocsCompiler) || $blocsCompiler = new \Blocs\Compiler\BlocsCompiler;
-                $labels[$formName] = $blocsCompiler->render($label);
-            }
+            $labels[$formName] = $this->processLabel($label);
         }
 
         return $labels;
     }
 
+    protected function processLabel($label)
+    {
+        // data-属性を含まない場合はそのまま返す
+        if (strpos($label, 'data-') === false) {
+            return $label;
+        }
+
+        // data-属性を含む場合はBlocsCompilerでレンダリング
+        static $blocsCompiler;
+        $blocsCompiler = $blocsCompiler ?? new \Blocs\Compiler\BlocsCompiler;
+
+        return $blocsCompiler->render($label);
+    }
+
     protected function getValidate($rules, $messages, $labels)
     {
         $validates = [];
+
+        // 各フォーム項目のバリデーションルールを処理
         foreach ($rules as $formName => $formValidates) {
             foreach ($formValidates as $formValidate) {
-                if (! is_string($formValidate)) {
-                    $formValidate = explode('\\', get_class($formValidate));
-                    $formValidate = array_pop($formValidate);
-                }
-
-                [$messageKey] = explode(':', $formValidate, 2);
-                $messageKey = $formName.'.'.$messageKey;
-                $validates[] = [
-                    'name' => $labels[$formName] ?? $formName,
-                    'validate' => $formValidate,
-                    'message' => isset($messages[$messageKey]) ? $messages[$messageKey] : '',
-                ];
+                $validates[] = $this->buildValidateEntry($formName, $formValidate, $messages, $labels);
             }
         }
 
         return $validates;
+    }
+
+    private function buildValidateEntry($formName, $formValidate, $messages, $labels)
+    {
+        // バリデーションルールの文字列表現を取得
+        $validateString = $this->extractValidateRuleString($formValidate);
+
+        // メッセージキーを生成
+        $messageKey = $this->buildValidateMessageKey($formName, $validateString);
+
+        // バリデーション情報を配列で返す
+        return [
+            'name' => $labels[$formName] ?? $formName,
+            'validate' => $validateString,
+            'message' => $messages[$messageKey] ?? '',
+        ];
+    }
+
+    private function extractValidateRuleString($formValidate)
+    {
+        // 文字列の場合はそのまま返す
+        if (is_string($formValidate)) {
+            return $formValidate;
+        }
+
+        // オブジェクトの場合はクラス名の末尾部分を取得
+        $formValidate = explode('\\', get_class($formValidate));
+
+        return array_pop($formValidate);
+    }
+
+    private function buildValidateMessageKey($formName, $validateString)
+    {
+        // バリデーションルールからメッセージキーを生成（コロン以前の部分を使用）
+        [$messageKey] = explode(':', $validateString, 2);
+
+        return $formName.'.'.$messageKey;
     }
 }

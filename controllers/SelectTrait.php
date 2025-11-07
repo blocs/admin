@@ -14,14 +14,18 @@ trait SelectTrait
     {
         $this->request = $request;
 
+        // 選択データのバリデーションを実行（エラーがあればリダイレクト）
         if ($redirect = $this->validateSelect()) {
             return $redirect;
         }
 
-        session()->flash($this->viewPrefix.'.confirm', $this->request->all());
+        // 確認画面用のデータをセッションに保存
+        $this->saveSelectConfirmToSession();
 
+        // 確認画面の表示データを準備
         $this->prepareConfirmSelect();
 
+        // 確認画面を表示
         docs('# 画面表示');
 
         return $this->outputConfirmSelect();
@@ -29,14 +33,15 @@ trait SelectTrait
 
     protected function validateSelect()
     {
+        // リクエストにループアイテムが存在しない場合はエラー
         if (empty($this->request->{$this->loopItem})) {
             return $this->backIndex('error', 'data_not_selected');
         }
 
-        foreach ($this->request->{$this->loopItem} as $table) {
-            empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'][0];
-        }
+        // リクエストから選択されたIDリストを構築
+        $this->extractSelectIdList();
 
+        // 選択されたIDが1つもない場合はエラー
         if (empty($this->selectedIdList)) {
             return $this->backIndex('error', 'data_not_selected');
         }
@@ -60,25 +65,28 @@ trait SelectTrait
     {
         $this->request = $request;
 
-        if (session()->has($this->viewPrefix.'.confirm')) {
-            // 確認画面からの遷移
-            $this->request->merge(session($this->viewPrefix.'.confirm'));
+        // 確認画面からの遷移かどうかで処理を分岐
+        if ($this->hasSelectConfirmInSession()) {
+            // 確認画面からの遷移の場合、セッションのデータを復元
+            $this->loadSelectConfirmFromSession();
 
-            foreach ($this->request->{$this->loopItem} as $table) {
-                empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'][0];
-            }
+            // セッションから復元したリクエストデータから選択IDリストを構築
+            $this->extractSelectIdList();
         } else {
+            // 直接実行の場合、バリデーションを実行
             docs('# データの検証');
             if ($redirect = $this->validateSelect()) {
                 return $redirect;
             }
         }
 
+        // データ一括処理を実行
         docs('# データの一括処理');
         $this->prepareSelect();
         $this->executeSelect();
         $this->logSelect();
 
+        // 処理完了後の画面遷移
         docs('# 画面遷移');
 
         return $this->outputSelect();
@@ -88,23 +96,65 @@ trait SelectTrait
 
     protected function executeSelect()
     {
+        // 選択されたIDがない場合は処理をスキップ
         if (empty($this->selectedIdList)) {
             return;
         }
 
+        // データベースから選択されたIDのデータを一括削除
+        $this->executeSelectDeletion();
+        docs(['POST' => '選択したデータのid'], '<id>を指定してデータを一括削除', ['データベース' => $this->loopItem]);
+
+        // ログ用のデータを準備
+        $this->buildSelectLogData();
+    }
+
+    protected function outputSelect()
+    {
+        // 削除完了メッセージと共に一覧画面へ戻る
+        return $this->backIndex('success', 'data_deleted', $this->deletedNum);
+    }
+
+    private function saveSelectConfirmToSession()
+    {
+        // 確認画面用にリクエストデータをセッションに保存
+        session()->flash($this->viewPrefix.'.confirm', $this->request->all());
+    }
+
+    private function hasSelectConfirmInSession()
+    {
+        // 確認画面のセッションデータが存在するかチェック
+        return session()->has($this->viewPrefix.'.confirm');
+    }
+
+    private function loadSelectConfirmFromSession()
+    {
+        // セッションから確認画面のデータを復元してリクエストにマージ
+        $this->request->merge(session($this->viewPrefix.'.confirm'));
+    }
+
+    private function extractSelectIdList()
+    {
+        // リクエストのループアイテムから選択されたIDを抽出してリストを構築
+        foreach ($this->request->{$this->loopItem} as $table) {
+            empty($table['selectedRows']) || $this->selectedIdList[] = $table['selectedRows'][0];
+        }
+    }
+
+    private function executeSelectDeletion()
+    {
+        // データ削除を実行（エラーは上位に投げる）
         try {
             $this->deletedNum = $this->mainTable::destroy($this->selectedIdList);
         } catch (\Throwable $e) {
             throw $e;
         }
-        docs(['POST' => '選択したデータのid'], '<id>を指定してデータを一括削除', ['データベース' => $this->loopItem]);
-
-        $this->logData = new \stdClass;
-        $this->logData->id = $this->selectedIdList;
     }
 
-    protected function outputSelect()
+    private function buildSelectLogData()
     {
-        return $this->backIndex('success', 'data_deleted', $this->deletedNum);
+        // ログデータを準備（削除したIDリスト）
+        $this->logData = new \stdClass;
+        $this->logData->id = $this->selectedIdList;
     }
 }

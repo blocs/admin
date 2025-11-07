@@ -8,68 +8,54 @@ use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use \Blocs\Auth\AuthenticatesUsers;
     use \Blocs\Controllers\CommonTrait;
 
     protected $viewPrefix;
 
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
+    // ログイン成功後のリダイレクト先URL
     protected $redirectTo;
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
     public function __construct()
     {
-        // ログイン後の遷移先
-        $this->redirectTo = '/home';
-
         $this->viewPrefix = 'admin.auth';
+
+        // ログイン成功後の遷移先を設定
+        $this->redirectTo = '/home';
     }
 
     public function showLoginForm()
     {
+        // 既にログイン済みの場合は、ホーム画面へリダイレクト
         if ($this->guard()->check()) {
             return redirect($this->redirectTo);
         }
 
+        // ログイン画面のビューを生成
         $view = view($this->viewPrefix.'.login');
-        docs('テンプレートを読み込んで、HTMLを生成');
+        docs('テンプレートを読み込んで、ログイン画面のHTMLを生成');
 
         return $view;
     }
 
     protected function loggedOut(Request $request)
     {
-        // ログアウト後の遷移先
+        // ログアウト後は、ログイン画面へリダイレクト
         return redirect('/login');
     }
 
     protected function validateLogin(Request $request)
     {
-        [$rules, $messages] = \Blocs\Validate::get($this->viewPrefix.'.login', $request);
+        // バリデーションルールとメッセージを取得
+        [$rules, $messages] = $this->getLoginValidationRules($request);
+
+        // バリデーションルールが存在しない場合は処理をスキップ
         if (empty($rules)) {
             return;
         }
 
-        $labels = $this->getLabel($this->viewPrefix.'.login');
+        // ラベルとバリデーション情報を取得してリクエストを検証
+        $labels = $this->getLoginFormLabels();
         $request->validate($rules, $messages, $labels);
         $validates = $this->getValidate($rules, $messages, $labels);
 
@@ -79,6 +65,8 @@ class LoginController extends Controller
 
     protected function credentials(Request $request)
     {
+        // ログイン認証に使用する認証情報を取得
+        // ユーザー名・パスワードに加えて、削除済み・無効化済みのユーザーを除外
         return array_merge(
             $request->only($this->username(), 'password'),
             ['deleted_at' => null, 'disabled_at' => null]
@@ -87,6 +75,19 @@ class LoginController extends Controller
 
     protected function guard()
     {
+        // 認証に使用するガードインスタンスを取得
         return Auth::guard();
+    }
+
+    // ログインフォームのバリデーションルールとメッセージを取得
+    private function getLoginValidationRules(Request $request)
+    {
+        return \Blocs\Validate::get($this->viewPrefix.'.login', $request);
+    }
+
+    // ログインフォームの項目ラベルを取得
+    private function getLoginFormLabels()
+    {
+        return $this->getLabel($this->viewPrefix.'.login');
     }
 }
