@@ -10,8 +10,8 @@ trait StoreTrait
     {
         $this->prepareCreate();
 
-        if (session()->has($this->viewPrefix.'.confirm')) {
-            // 確認画面からの遷移
+        // 確認画面から戻ってきた場合、セッションから入力値を復元
+        if ($this->hasStoreConfirmInSession()) {
             $this->val = array_merge($this->val, session($this->viewPrefix.'.confirm'));
         }
 
@@ -37,14 +37,18 @@ trait StoreTrait
     {
         $this->request = $request;
 
+        // 入力データのバリデーションを実行（エラーがあればリダイレクト）
         if ($redirect = $this->validateStore()) {
             return $redirect;
         }
 
-        session()->flash($this->viewPrefix.'.confirm', $this->request->all());
+        // 確認画面用のデータをセッションに保存
+        $this->saveStoreConfirmToSession();
 
+        // 確認画面の表示データを準備
         $this->prepareConfirmStore();
 
+        // 確認画面を表示
         docs('# 画面表示');
 
         return $this->outputConfirmStore();
@@ -52,11 +56,13 @@ trait StoreTrait
 
     protected function validateStore()
     {
+        // バリデーションルールとメッセージを取得
         [$rules, $messages] = \Blocs\Validate::get($this->viewPrefix.'.create', $this->request);
         if (empty($rules)) {
             return;
         }
 
+        // バリデーションを実行してエラーがあればメッセージをセット
         $labels = $this->getLabel($this->viewPrefix.'.create');
         $this->request->validate($rules, $messages, $labels);
         $validates = $this->getValidate($rules, $messages, $labels);
@@ -84,20 +90,25 @@ trait StoreTrait
     {
         $this->request = $request;
 
-        if (session()->has($this->viewPrefix.'.confirm')) {
-            // 確認画面からの遷移
-            $this->request->merge(session($this->viewPrefix.'.confirm'));
+        // 確認画面からの遷移かどうかで処理を分岐
+        if ($this->hasStoreConfirmInSession()) {
+            // 確認画面からの遷移の場合、セッションのデータを復元
+            $this->loadStoreConfirmFromSession();
         } else {
+            // 直接実行の場合、バリデーションを実行
             docs('# データの検証');
             if ($redirect = $this->validateStore()) {
                 return $redirect;
             }
         }
 
+        // データ登録処理を実行
         docs('# データの追加');
-        $this->executeStore($this->prepareStore());
+        $preparedData = $this->prepareStore();
+        $this->executeStore($preparedData);
         $this->logStore();
 
+        // 登録完了後の画面遷移
         docs('# 画面遷移');
 
         return $this->outputStore();
@@ -110,23 +121,65 @@ trait StoreTrait
 
     protected function executeStore($requestData = [])
     {
+        // 空データの場合は処理をスキップ
         if (empty($requestData)) {
             return;
         }
 
-        \DB::transaction(function () use ($requestData, &$lastInsert) {
-            $lastInsert = $this->mainTable::create($requestData);
-        }, 10);
+        // トランザクション内で新規データを作成
+        $newRecord = $this->insertStoreRecordWithTransaction($requestData);
 
-        $this->val['id'] = $lastInsert->id;
+        if ($newRecord === null) {
+            return;
+        }
+
+        // 作成したレコードのIDを設定
+        $this->val['id'] = $newRecord->id;
         docs(null, 'データを追加', ['データベース' => $this->loopItem]);
 
-        $this->logData = (object) $requestData;
-        $this->logData->id = $lastInsert->id;
+        // ログ用のデータを準備
+        $this->buildStoreLogData($requestData, $newRecord->id);
     }
 
     protected function outputStore()
     {
+        // 登録完了メッセージと共に一覧画面へ戻る
         return $this->backIndex('success', 'data_registered', $this->request->{$this->noticeItem});
+    }
+
+    private function hasStoreConfirmInSession()
+    {
+        // 確認画面のセッションデータが存在するかチェック
+        return session()->has($this->viewPrefix.'.confirm');
+    }
+
+    private function saveStoreConfirmToSession()
+    {
+        // 確認画面用にリクエストデータをセッションに保存
+        session()->flash($this->viewPrefix.'.confirm', $this->request->all());
+    }
+
+    private function loadStoreConfirmFromSession()
+    {
+        // セッションから確認画面のデータを復元してリクエストにマージ
+        $this->request->merge(session($this->viewPrefix.'.confirm'));
+    }
+
+    private function insertStoreRecordWithTransaction($requestData)
+    {
+        // データベーストランザクション内でレコードを作成
+        $newRecord = null;
+        \Illuminate\Support\Facades\DB::transaction(function () use ($requestData, &$newRecord) {
+            $newRecord = $this->mainTable::create($requestData);
+        }, 10);
+
+        return $newRecord;
+    }
+
+    private function buildStoreLogData($requestData, $newId)
+    {
+        // ログデータを準備（登録内容 + 新規ID）
+        $this->logData = (object) $requestData;
+        $this->logData->id = $newId;
     }
 }
