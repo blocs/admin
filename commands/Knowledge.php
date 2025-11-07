@@ -8,44 +8,45 @@ use Illuminate\Support\Facades\File;
 class Knowledge extends Command
 {
     /**
-     * The name and signature of the console command.
+     * コンソールコマンドの署名。
      *
      * @var string
      */
     protected $signature = 'blocs:knowledge';
 
     /**
-     * The console command description.
+     * コンソールコマンドの説明。
      *
      * @var string
      */
     protected $description = 'Copy cursor rules';
 
     /**
-     * Execute the console command.
+     * カーソルルールを所定のディレクトリへコピーする。
      */
-    public function handle()
+    public function handle(): void
     {
-        $sourcePath = base_path('vendor/blocs/admin/resources/views/.cursor');
-        $destinationPath = resource_path('views/.cursor');
+        $directoryPairs = [
+            base_path('vendor/blocs/admin/resources/views/.cursor') => resource_path('views/.cursor'),
+            base_path('vendor/blocs/admin/app/Http/Controllers/.cursor') => app_path('Http/Controllers/.cursor'),
+        ];
 
-        if (File::exists($sourcePath)) {
-            if (File::exists($destinationPath)) {
-                File::deleteDirectory($destinationPath);
-            }
-            File::copyDirectory($sourcePath, $destinationPath);
-            $this->info($sourcePath);
+        foreach ($directoryPairs as $sourcePath => $destinationPath) {
+            $this->copyCursorDirectory($sourcePath, $destinationPath);
+        }
+    }
+
+    private function copyCursorDirectory(string $sourcePath, string $destinationPath): void
+    {
+        if (! File::exists($sourcePath)) {
+            return;
         }
 
-        $sourcePath = base_path('vendor/blocs/admin/app/Http/Controllers/.cursor');
-        $destinationPath = app_path('Http/Controllers/.cursor');
-
-        if (File::exists($sourcePath)) {
-            if (File::exists($destinationPath)) {
-                File::deleteDirectory($destinationPath);
-            }
-            File::copyDirectory($sourcePath, $destinationPath);
-            $this->info($sourcePath);
+        if (File::exists($destinationPath)) {
+            File::deleteDirectory($destinationPath);
         }
+
+        File::copyDirectory($sourcePath, $destinationPath);
+        $this->info($sourcePath);
     }
 }

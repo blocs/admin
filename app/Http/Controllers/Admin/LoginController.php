@@ -11,43 +11,35 @@ class LoginController extends Controller
     use \Blocs\Auth\AuthenticatesUsers;
     use \Blocs\Controllers\CommonTrait;
 
-    protected $viewPrefix;
+    protected string $viewPrefix = 'admin.auth';
 
-    // ログイン成功後のリダイレクト先URL
-    protected $redirectTo;
-
-    public function __construct()
-    {
-        $this->viewPrefix = 'admin.auth';
-
-        // ログイン成功後の遷移先を設定
-        $this->redirectTo = '/home';
-    }
+    // ログイン成功後に誘導するURL
+    protected string $redirectTo = '/home';
 
     public function showLoginForm()
     {
-        // 既にログイン済みの場合は、ホーム画面へリダイレクト
+        // 既に認証済みならホーム画面へリダイレクトして多重ログインを防止
         if ($this->guard()->check()) {
             return redirect($this->redirectTo);
         }
 
-        // ログイン画面のビューを生成
-        $view = view($this->viewPrefix.'.login');
+        // ログイン画面のビューを生成し、表示用データを組み立て
+        $loginView = view($this->viewPrefix.'.login');
         docs('テンプレートを読み込んで、ログイン画面のHTMLを生成');
 
-        return $view;
+        return $loginView;
     }
 
     protected function loggedOut(Request $request)
     {
-        // ログアウト後は、ログイン画面へリダイレクト
+        // ログアウト後はログイン画面に戻し、再ログインを促す
         return redirect('/login');
     }
 
     protected function validateLogin(Request $request)
     {
-        // バリデーションルールとメッセージを取得
-        [$rules, $messages] = $this->getLoginValidationRules($request);
+        // バリデーションルールとメッセージを取得し、入力チェックを準備
+        [$rules, $messages] = $this->fetchLoginValidationConfig($request);
 
         // バリデーションルールが存在しない場合は処理をスキップ
         if (empty($rules)) {
@@ -55,7 +47,7 @@ class LoginController extends Controller
         }
 
         // ラベルとバリデーション情報を取得してリクエストを検証
-        $labels = $this->getLoginFormLabels();
+        $labels = $this->fetchLoginFormLabels();
         $request->validate($rules, $messages, $labels);
         $validates = $this->getValidate($rules, $messages, $labels);
 
@@ -75,18 +67,18 @@ class LoginController extends Controller
 
     protected function guard()
     {
-        // 認証に使用するガードインスタンスを取得
+        // 認証に使用するガードインスタンスを取得し、共通処理に委ねる
         return Auth::guard();
     }
 
     // ログインフォームのバリデーションルールとメッセージを取得
-    private function getLoginValidationRules(Request $request)
+    private function fetchLoginValidationConfig(Request $request)
     {
         return \Blocs\Validate::get($this->viewPrefix.'.login', $request);
     }
 
     // ログインフォームの項目ラベルを取得
-    private function getLoginFormLabels()
+    private function fetchLoginFormLabels()
     {
         return $this->getLabel($this->viewPrefix.'.login');
     }

@@ -10,13 +10,17 @@ if (! function_exists('lang')) {
 if (! function_exists('val')) {
     function val($str, $formName = null, $template = null)
     {
-        isset($template) && Blocs\Option::set($template, $formName);
-
-        if (isset($formName)) {
-            return Blocs\Common::convertDefault($str, $formName);
+        if (isset($template)) {
+            Blocs\Option::set($template, $formName);
         }
 
-        return Blocs\Common::convertDefault($str);
+        $arguments = [$str];
+
+        if (isset($formName)) {
+            $arguments[] = $formName;
+        }
+
+        return Blocs\Common::convertDefault(...$arguments);
     }
 }
 

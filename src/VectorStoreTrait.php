@@ -2,77 +2,99 @@
 
 namespace Blocs;
 
+use Illuminate\Process\ProcessResult;
 use Illuminate\Support\Facades\Process;
 
 trait VectorStoreTrait
 {
-    private static function updateDocument($collectionName, $targetData)
+    private static function updateDocument(string $collectionName, array $targetData): void
     {
-        Process::input(json_encode([$targetData], JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/update.py'), database_path(), $collectionName]);
+        $payload = json_encode([$targetData], JSON_UNESCAPED_UNICODE);
+
+        self::runPythonScript('update.py', [database_path(), $collectionName], $payload);
     }
 
-    private static function updateChunkDocument($collectionName, $targetData, $chunkItem, $chunkSize = 1000, $chunkOverlap = 0)
+    private static function updateChunkDocument(string $collectionName, array $targetData, string $chunkItem, int $chunkSize = 1000, int $chunkOverlap = 0): void
     {
-        Process::input(json_encode(self::chunkDocument([$targetData], $chunkItem, $chunkSize, $chunkOverlap), JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/update.py'), database_path(), $collectionName]);
+        $chunkedDocuments = self::chunkDocument([$targetData], $chunkItem, $chunkSize, $chunkOverlap);
+        $payload = json_encode($chunkedDocuments, JSON_UNESCAPED_UNICODE);
+
+        self::runPythonScript('update.py', [database_path(), $collectionName], $payload);
     }
 
-    private static function deleteDocument($collectionName, $targetIds = [])
+    private static function deleteDocument(string $collectionName, array|string $targetIds = []): void
     {
-        // 全て削除
-        empty($targetIds) && $targetIds = [];
+        // 全件削除の指定は空配列を渡す
+        if (empty($targetIds)) {
+            $targetIds = [];
+        } elseif (! is_array($targetIds)) {
+            $targetIds = [$targetIds];
+        }
 
-        is_array($targetIds) || $targetIds = [$targetIds];
+        $payload = json_encode($targetIds, JSON_UNESCAPED_UNICODE);
 
-        Process::input(json_encode($targetIds))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/delete.py'), database_path(), $collectionName])->output();
+        self::runPythonScript('delete.py', [database_path(), $collectionName], $payload)->output();
     }
 
-    private function similarDocument($collectionName, $targetData, $docsLimit = 5, $scoreThreshold = 0.6)
+    private function similarDocument(string $collectionName, array $targetData, int $docsLimit = 5, float $scoreThreshold = 0.6): array
     {
-        $process = Process::input(json_encode($targetData, JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/similar.py'), database_path(), $collectionName, $scoreThreshold, $docsLimit]);
-        $jsonContent = $process->output();
+        $payload = json_encode($targetData, JSON_UNESCAPED_UNICODE);
+        $processResult = self::runPythonScript('similar.py', [database_path(), $collectionName, $scoreThreshold, $docsLimit], $payload);
+        $jsonContent = trim($processResult->output());
 
-        if (empty(trim($jsonContent))) {
+        if ($jsonContent === '') {
             return [];
         }
 
+        $documents = array_filter(explode("\n", $jsonContent));
+
         $result = [];
-        $jsonContent = explode("\n", $jsonContent);
-        foreach ($jsonContent as $data) {
-            $data = json_decode($data, true);
-            if (empty($data)) {
-                continue;
+        foreach ($documents as $document) {
+            $decodedDocument = json_decode($document, true);
+
+            if (! empty($decodedDocument)) {
+                $result[] = $decodedDocument;
             }
-            $result[] = $data;
         }
 
         return $result;
     }
 
-    private static function chunkDocument($targetData, $chunkItem, $chunkSize = 1000, $chunkOverlap = 0)
+    private static function chunkDocument(array $targetData, string $chunkItem, int $chunkSize = 1000, int $chunkOverlap = 0): array
     {
         $chunkedDocuments = [];
-        foreach ($targetData as $data) {
-            // チャンクして追加
-            $contents = self::chunkString($data[$chunkItem], $chunkSize, $chunkOverlap);
+        foreach ($targetData as $document) {
+            // チャンクした内容を順次追加
+            $contents = self::chunkString($document[$chunkItem], $chunkSize, $chunkOverlap);
             foreach ($contents as $content) {
-                $data[$chunkItem] = $content;
-                $chunkedDocuments[] = $data;
+                $chunkedDocument = $document;
+                $chunkedDocument[$chunkItem] = $content;
+                $chunkedDocuments[] = $chunkedDocument;
             }
         }
 
         return $chunkedDocuments;
     }
 
-    private static function chunkString($string, $chunkSize = 1000, $chunkOverlap = 0)
+    private static function chunkString(string $string, int $chunkSize = 1000, int $chunkOverlap = 0): array
     {
-        $process = Process::input(json_encode($string, JSON_UNESCAPED_UNICODE))->run([config('openai.python_path'), base_path('vendor/blocs/admin/python/chunk.py'), $chunkSize, $chunkOverlap]);
-        $jsonContent = $process->output();
+        $payload = json_encode($string, JSON_UNESCAPED_UNICODE);
+        $processResult = self::runPythonScript('chunk.py', [$chunkSize, $chunkOverlap], $payload);
+        $data = json_decode($processResult->output(), true);
 
-        $data = json_decode($jsonContent, true);
-        if (empty($data)) {
-            return [];
-        }
+        return is_array($data) ? $data : [];
+    }
 
-        return $data;
+    private static function runPythonScript(string $script, array $arguments, string $input = ''): ProcessResult
+    {
+        $command = array_merge(
+            [
+                config('openai.python_path'),
+                base_path("vendor/blocs/admin/python/{$script}"),
+            ],
+            $arguments,
+        );
+
+        return Process::input($input)->run($command);
     }
 }
