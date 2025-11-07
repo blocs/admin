@@ -44,19 +44,19 @@ trait CommonTrait
         $this->restoreKeepItemFromSession($keyItem, $sessionKey);
     }
 
-    private function shouldKeepClearSession()
+    private function shouldKeepClearSession(): bool
     {
         // クリアパラメータが存在するかチェック
         return request()->has('clear');
     }
 
-    private function hasKeepViewPrefixChanged()
+    private function hasKeepViewPrefixChanged(): bool
     {
         // セッションに保存されているviewPrefixと現在のviewPrefixを比較
         return session('viewPrefix') !== $this->viewPrefix;
     }
 
-    private function handleKeepPostRequest($keyItem, $sessionKey)
+    private function handleKeepPostRequest(string $keyItem, string $sessionKey): bool
     {
         // POSTリクエストに指定されたキーが存在する場合、セッションに保存
         if (request()->has($keyItem)) {
@@ -69,7 +69,7 @@ trait CommonTrait
         return false;
     }
 
-    private function handleKeepGetRequest($keyItem, $sessionKey)
+    private function handleKeepGetRequest(string $keyItem, string $sessionKey): bool
     {
         // GETリクエストに指定されたキーが存在する場合、セッションに保存
         if (request()->query($keyItem)) {
@@ -82,7 +82,7 @@ trait CommonTrait
         return false;
     }
 
-    private function restoreKeepItemFromSession($keyItem, $sessionKey)
+    private function restoreKeepItemFromSession(string $keyItem, string $sessionKey): void
     {
         // セッションに値が保存されている場合、それを読み込む
         if (session()->has($sessionKey)) {
@@ -91,7 +91,7 @@ trait CommonTrait
         docs(['セッション' => $keyItem], 'セッションに<'.$keyItem.'>があれば、読み込み');
     }
 
-    private function saveKeepItemToSession($keyItem, $keyValue, $sessionKey)
+    private function saveKeepItemToSession(string $keyItem, $keyValue, string $sessionKey): void
     {
         if ($this->isKeepItemValidString($keyValue)) {
             // 文字列の場合、セッションに保存
@@ -106,29 +106,31 @@ trait CommonTrait
         }
     }
 
-    private function isKeepItemValidString($value)
+    private function isKeepItemValidString($value): bool
     {
         // 空でない文字列かどうかをチェック
         return is_string($value) && strlen($value);
     }
 
-    private function isKeepItemValidArray($value)
+    private function isKeepItemValidArray($value): bool
     {
         // 空でない配列かどうかをチェック
         return is_array($value) && count($value);
     }
 
-    private function mergeKeepItemWithSession($keyValue, $sessionKey)
+    private function mergeKeepItemWithSession(array $keyValue, string $sessionKey): array
     {
         // セッションに既存の値がある場合、新しい値とマージ
         if (session()->has($sessionKey)) {
-            return array_merge(session($sessionKey), $keyValue);
+            $existingValue = session($sessionKey);
+
+            return array_merge(is_array($existingValue) ? $existingValue : [], $keyValue);
         }
 
         return $keyValue;
     }
 
-    private function storeKeepItemToSession($keyItem, $keyValue, $sessionKey)
+    private function storeKeepItemToSession(string $keyItem, $keyValue, string $sessionKey): void
     {
         // セッションと$this->valの両方に値を保存
         session([$sessionKey => $keyValue]);
@@ -223,7 +225,7 @@ trait CommonTrait
         return $validates;
     }
 
-    private function buildValidateEntry($formName, $formValidate, $messages, $labels)
+    private function buildValidateEntry($formName, $formValidate, $messages, $labels): array
     {
         // バリデーションルールの文字列表現を取得
         $validateString = $this->extractValidateRuleString($formValidate);
@@ -239,7 +241,7 @@ trait CommonTrait
         ];
     }
 
-    private function extractValidateRuleString($formValidate)
+    private function extractValidateRuleString($formValidate): string
     {
         // 文字列の場合はそのまま返す
         if (is_string($formValidate)) {
@@ -252,7 +254,7 @@ trait CommonTrait
         return array_pop($formValidate);
     }
 
-    private function buildValidateMessageKey($formName, $validateString)
+    private function buildValidateMessageKey($formName, $validateString): string
     {
         // バリデーションルールからメッセージキーを生成（コロン以前の部分を使用）
         [$messageKey] = explode(':', $validateString, 2);

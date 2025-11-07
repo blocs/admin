@@ -3,157 +3,144 @@
 namespace Blocs\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
 
 class Develop extends Command
 {
     /**
-     * The name and signature of the console command.
+     * コンソールコマンドの署名。
      *
      * @var string
      */
     protected $signature = 'blocs:develop {path}';
 
     /**
-     * The console command description.
+     * コンソールコマンドの説明。
      *
      * @var string
      */
     protected $description = 'Develop application';
 
     /**
-     * Execute the console command.
+     * コマンドを実行する。
      */
-    public function handle()
+    public function handle(): void
     {
         $path = $this->argument('path');
         if (! file_exists($path)) {
             return;
         }
 
-        $developJson = $this->refreshDevelopJson($path);
-        if (empty($developJson['controller'])) {
+        $developConfig = $this->loadDevelopConfiguration($path);
+        if (empty($developConfig['controller'])) {
             return;
         }
 
-        // コントローラー作成
-        empty($developJson['controller']['controllerName']) || $this->makeController($developJson);
+        // コントローラーを生成し、必要なルーティングとメニューを整備
+        empty($developConfig['controller']['controllerName']) || $this->createControllerFile($developConfig);
 
-        // モデル作成
-        empty($developJson['controller']['modelName']) || $this->makeModel($developJson);
+        // モデルを生成し、フォーム項目を反映
+        empty($developConfig['controller']['modelName']) || $this->createModelFile($developConfig);
 
-        // テーブル定義作成
-        empty($developJson['controller']['loopItem']) || $this->makeMigration($developJson);
+        // テーブル定義を生成し、マイグレーションを整備
+        empty($developConfig['controller']['loopItem']) || $this->createMigrationFile($developConfig);
 
-        // ビュー作成
-        empty($developJson['controller']['viewPrefix']) || $this->makeView($developJson);
+        // ビューを生成し、フォーム定義を差し込む
+        empty($developConfig['controller']['viewPrefix']) || $this->createViewTemplates($developConfig);
     }
 
-    private function makeController($developJson)
+    private function createControllerFile(array $developConfig): void
     {
-        $controllerName = $developJson['controller']['controllerName'];
+        $controllerName = $developConfig['controller']['controllerName'];
         $controllerPath = app_path("Http/Controllers/{$controllerName}.php");
 
         if (file_exists($controllerPath)) {
             return;
         }
 
-        // コントローラー作成
-        $controller = file_get_contents(base_path('vendor/blocs/admin/develop/controller.php'));
-        foreach ($developJson['controller'] as $key => $value) {
-            // キーを変換
-            $key = strtoupper(Str::snake($key));
-            $controller = str_replace($key, $value, $controller);
-        }
+        // コントローラーを生成します
+        $controllerTemplate = file_get_contents(base_path('vendor/blocs/admin/develop/controller.php'));
+        $controllerContents = $this->applyPlaceholderValues($controllerTemplate, $developConfig['controller']);
 
-        is_dir(dirname($controllerPath)) || mkdir(dirname($controllerPath), 0777, true);
-        file_put_contents($controllerPath, $controller);
-        $this->outputMessageMake('controller', $controllerPath);
+        $this->ensureDirectoryExists(dirname($controllerPath));
+        file_put_contents($controllerPath, $controllerContents);
+        $this->outputCreationMessage('controller', $controllerPath);
 
-        // Pintでコードフォーマット
+        // Pintでコードを整形します
         exec(base_path('vendor/bin/pint').' '.escapeshellarg($controllerPath));
 
-        // ルート作成
-        isset($developJson['route']) && $this->makeRoute($developJson['route'], $developJson['controller']);
+        // ルートを追加します
+        isset($developConfig['route']) && $this->createRouteDefinition($developConfig['route'], $developConfig['controller']);
 
-        // メニュー作成
-        empty($developJson['menu']) || $this->appendMenu($developJson['menu']);
+        // メニューを更新します
+        empty($developConfig['menu']) || $this->mergeMenuConfiguration($developConfig['menu']);
     }
 
-    private function makeRoute($routeJson, $controllerJson)
+    private function createRouteDefinition(array $routeConfig, array $controllerConfig): void
     {
-        $route = file_get_contents(base_path('vendor/blocs/admin/develop/route.php'));
-        foreach ($routeJson as $key => $value) {
-            // キーを変換
-            $key = strtoupper(Str::snake($key));
-            $route = str_replace($key, $value, $route);
-        }
+        $routeTemplate = file_get_contents(base_path('vendor/blocs/admin/develop/route.php'));
+        $routeContents = $this->applyPlaceholderValues($routeTemplate, $routeConfig);
+        $routeContents = $this->applyPlaceholderValues($routeContents, $controllerConfig);
 
-        foreach ($controllerJson as $key => $value) {
-            // キーを変換
-            $key = strtoupper(Str::snake($key));
-            $route = str_replace($key, $value, $route);
-        }
+        file_put_contents(base_path('routes/web.php'), "\n".$routeContents, FILE_APPEND);
 
-        file_put_contents(base_path('routes/web.php'), "\n".$route, FILE_APPEND);
-
-        // Pintでコードフォーマット
+        // Pintでコードを整形します
         exec(base_path('vendor/bin/pint').' '.escapeshellarg(base_path('routes/web.php')));
     }
 
-    private function appendMenu($menuJson)
+    private function mergeMenuConfiguration(array $menuConfig): void
     {
         $configList = config('menu');
         empty($configList) && $configList = [];
 
-        // メニュー設定をマージ
-        $configList['root'][] = $menuJson;
+        // メニュー設定をマージします
+        $configList['root'][] = $menuConfig;
 
         $laravelMenuPath = config_path('menu.php');
         $code = "<?php\n\nreturn ".var_export($configList, true).";\n";
         file_put_contents($laravelMenuPath, $code) && chmod($laravelMenuPath, 0666);
 
-        // Pintでコードフォーマット
+        // Pintでコードを整形します
         exec(base_path('vendor/bin/pint').' '.escapeshellarg(config_path('menu.php')));
     }
 
-    private function makeModel($developJson)
+    private function createModelFile(array $developConfig): void
     {
-        $modelName = $developJson['controller']['modelName'];
+        $modelName = $developConfig['controller']['modelName'];
         $modelPath = app_path("Models/{$modelName}.php");
 
         if (file_exists($modelPath)) {
             return;
         }
 
-        // モデル作成
-        $model = file_get_contents(base_path('vendor/blocs/admin/develop/model.php'));
-        $model = str_replace('FORM_LIST', $this->getList(array_keys($developJson['form']), ",\n        ", "'"), $model);
+        // モデルを生成します
+        $modelTemplate = file_get_contents(base_path('vendor/blocs/admin/develop/model.php'));
+        $modelTemplate = str_replace(
+            'FORM_LIST',
+            $this->buildDelimitedList(array_keys($developConfig['form']), ",\n        ", "'"),
+            $modelTemplate
+        );
+        $modelContents = $this->applyPlaceholderValues($modelTemplate, $developConfig['controller']);
 
-        foreach ($developJson['controller'] as $key => $value) {
-            // キーを変換
-            $key = strtoupper(Str::snake($key));
-            $model = str_replace($key, $value, $model);
-        }
+        $this->ensureDirectoryExists(dirname($modelPath));
+        file_put_contents($modelPath, $modelContents);
+        $this->outputCreationMessage('model', $modelPath);
 
-        is_dir(dirname($modelPath)) || mkdir(dirname($modelPath), 0777, true);
-        file_put_contents($modelPath, $model);
-        $this->outputMessageMake('model', $modelPath);
-
-        // Pintでコードフォーマット
+        // Pintでコードを整形します
         exec(base_path('vendor/bin/pint').' '.escapeshellarg($modelPath));
     }
 
-    private function makeMigration($developJson)
+    private function createMigrationFile(array $developConfig): void
     {
-        $loopItem = $developJson['controller']['loopItem'];
+        $loopItem = $developConfig['controller']['loopItem'];
         $migrationPath = 'create_'.$loopItem.'_table.php';
 
         if ($migrations = glob(database_path('migrations/*_'.$migrationPath))) {
             $migrationPath = $migrations[0];
             if ($this->confirm('Migrate "'.basename($migrationPath).'" ?')) {
                 // テーブル再作成
-                \Artisan::call('migrate:refresh', ['--path' => 'database/migrations/'.basename($migrationPath)]);
+                Artisan::call('migrate:refresh', ['--path' => 'database/migrations/'.basename($migrationPath)]);
             }
 
             return;
@@ -162,11 +149,11 @@ class Develop extends Command
         $migrationPath = database_path('migrations/'.date('Y_m_d').'_'.sprintf('%06d', rand(0, 9999)).'_'.$migrationPath);
 
         // テーブル定義作成
-        $migration = file_get_contents(base_path('vendor/blocs/admin/develop/migration.php'));
-        $migration = str_replace('LOOP_ITEM', $loopItem, $migration);
+        $migrationTemplate = file_get_contents(base_path('vendor/blocs/admin/develop/migration.php'));
+        $migrationTemplate = str_replace('LOOP_ITEM', $loopItem, $migrationTemplate);
 
         $itemList = [];
-        foreach ($developJson['form'] as $formName => $form) {
+        foreach ($developConfig['form'] as $formName => $form) {
             if ($form['type'] == 'textarea' || $form['type'] == 'upload') {
                 $type = 'text';
             } elseif ($formName == 'disabled_at') {
@@ -180,55 +167,55 @@ class Develop extends Command
             empty($form['required']) && $item .= '->nullable()';
             $itemList[] = $item.';';
         }
-        $migration = str_replace('/* ITEM_LIST */', $this->getList($itemList, "\n            "), $migration);
+        $migrationContents = str_replace('/* ITEM_LIST */', $this->buildDelimitedList($itemList, "\n            "), $migrationTemplate);
 
-        file_put_contents($migrationPath, $migration);
-        $this->outputMessageMake('migration', $migrationPath);
+        file_put_contents($migrationPath, $migrationContents);
+        $this->outputCreationMessage('migration', $migrationPath);
 
-        // Pintでコードフォーマット
+        // Pintでコードを整形します
         exec(base_path('vendor/bin/pint').' '.escapeshellarg($migrationPath));
 
-        // テーブル作成
-        \Artisan::call('migrate:refresh', ['--path' => 'database/migrations/'.basename($migrationPath)]);
+        // テーブルを作成します
+        Artisan::call('migrate:refresh', ['--path' => 'database/migrations/'.basename($migrationPath)]);
     }
 
-    private function makeView($developJson, $refresh = false)
+    private function createViewTemplates(array $developConfig, bool $refresh = false): void
     {
-        $viewPrefix = $developJson['controller']['viewPrefix'];
+        $viewPrefix = $developConfig['controller']['viewPrefix'];
         $viewPath = resource_path('views/'.str_replace('.', '/', $viewPrefix));
 
-        // フォームの追加
-        $replaceItem = [];
-        if (! empty($developJson['controller']['loopItem'])) {
-            $replaceItem['LOOP_ITEM'] = $developJson['controller']['loopItem'];
-            $replaceItem['SINGULAR_ITEM'] = \Str::singular($developJson['controller']['loopItem']);
+        // フォームの定義をテンプレートに反映します
+        $placeholderValues = [];
+        if (! empty($developConfig['controller']['loopItem'])) {
+            $placeholderValues['LOOP_ITEM'] = $developConfig['controller']['loopItem'];
+            $placeholderValues['SINGULAR_ITEM'] = Str::singular($developConfig['controller']['loopItem']);
         }
 
-        $replaceItem['HEAD_HTML'] = '';
-        $replaceItem['BODY_HTML'] = '';
+        $placeholderValues['HEAD_HTML'] = '';
+        $placeholderValues['BODY_HTML'] = '';
 
         $formBlocsHtml = file_get_contents(base_path('vendor/blocs/admin/develop/form.html'));
-        $replaceItem['FORM_HTML'] = "\n";
+        $placeholderValues['FORM_HTML'] = "\n";
         $formHtml = '';
 
         $showBlocsHtml = file_get_contents(base_path('vendor/blocs/admin/develop/show.html'));
-        $replaceItem['SHOW_HTML'] = "\n";
+        $placeholderValues['SHOW_HTML'] = "\n";
         $showHtml = '';
 
         $blocsCompiler = new \Blocs\Compiler\BlocsCompiler;
-        foreach ($developJson['form'] as $formName => $form) {
+        foreach ($developConfig['form'] as $formName => $form) {
             $form['name'] = $formName;
             isset($form['label']) || $form['label'] = '';
 
-            $replaceItem['HEAD_HTML'] .= '                            <!-- data-include="sortHeader" $sortItem="'.$formName.'" -->'."\n";
-            $replaceItem['HEAD_HTML'] .= '                            <th>'."\n";
-            $replaceItem['HEAD_HTML'] .= '                                <!-- data-include="sortHref" -->'."\n";
-            $replaceItem['HEAD_HTML'] .= '                                <a class="dataTable-sorter">'.$form['label']."</a>\n";
-            $replaceItem['HEAD_HTML'] .= '                            </th>'."\n";
+            $placeholderValues['HEAD_HTML'] .= '                            <!-- data-include="sortHeader" $sortItem="'.$formName.'" -->'."\n";
+            $placeholderValues['HEAD_HTML'] .= '                            <th>'."\n";
+            $placeholderValues['HEAD_HTML'] .= '                                <!-- data-include="sortHref" -->'."\n";
+            $placeholderValues['HEAD_HTML'] .= '                                <a class="dataTable-sorter">'.$form['label']."</a>\n";
+            $placeholderValues['HEAD_HTML'] .= '                            </th>'."\n";
 
-            $replaceItem['BODY_HTML'] .= '                            <td class=""><!-- $'.$replaceItem['SINGULAR_ITEM'].'->'.$formName;
-            $form['type'] === 'upload' && $replaceItem['BODY_HTML'] .= ' data-convert="raw_download"';
-            $replaceItem['BODY_HTML'] .= ' --></td>'."\n";
+            $placeholderValues['BODY_HTML'] .= '                            <td class=""><!-- $'.$placeholderValues['SINGULAR_ITEM'].'->'.$formName;
+            $form['type'] === 'upload' && $placeholderValues['BODY_HTML'] .= ' data-convert="raw_download"';
+            $placeholderValues['BODY_HTML'] .= ' --></td>'."\n";
 
             if (! in_array($form['type'], ['textarea', 'datepicker', 'timepicker', 'select', 'select2', 'radio', 'checkbox', 'upload', 'number'])) {
                 $form['inputType'] = $form['type'];
@@ -245,88 +232,60 @@ class Develop extends Command
                 }
             }
 
-            $replaceItem['FORM_HTML'] .= '        <!-- data-include="form_'.$formName.'" -->'."\n";
+            $placeholderValues['FORM_HTML'] .= '        <!-- data-include="form_'.$formName.'" -->'."\n";
             $formHtml .= $blocsCompiler->render($formBlocsHtml, $form);
 
-            $replaceItem['SHOW_HTML'] .= '        <!-- data-include="show_'.$formName.'" -->'."\n";
+            $placeholderValues['SHOW_HTML'] .= '        <!-- data-include="show_'.$formName.'" -->'."\n";
             $showHtml .= $blocsCompiler->render($showBlocsHtml, $form);
         }
 
         if ($refresh) {
-            foreach ([$viewPath.'/include/entry.html', $viewPath.'/include/form.html', $viewPath.'/include/show.html', $viewPath.'/show.blocs.html'] as $file) {
-                unlink($file);
+            foreach ([$viewPath.'/include/entry.html', $viewPath.'/include/form.html', $viewPath.'/include/show.html', $viewPath.'/show.blocs.html'] as $filePath) {
+                unlink($filePath);
             }
         }
 
-        $this->copyDir(base_path('vendor/blocs/admin/develop/views'), $viewPath, $replaceItem);
+        $this->copyDirectoryTree(base_path('vendor/blocs/admin/develop/views'), $viewPath, $placeholderValues);
 
         if (! file_exists($viewPath.'/include/form.html')) {
             $formHtml = str_replace('<#-- ', '<!-- ', $formHtml);
 
             file_put_contents($viewPath.'/include/form.html', trim($formHtml)."\n");
-            $this->outputMessageMake('view', $viewPath.'/include/form.html');
+            $this->outputCreationMessage('view', $viewPath.'/include/form.html');
         }
 
         if (! file_exists($viewPath.'/include/show.html')) {
             $showHtml = str_replace('<#-- ', '<!-- ', $showHtml);
 
             file_put_contents($viewPath.'/include/show.html', trim($showHtml)."\n");
-            $this->outputMessageMake('view', $viewPath.'/include/show.html');
+            $this->outputCreationMessage('view', $viewPath.'/include/show.html');
         }
     }
 
-    private function getList($form, $separator, $quote = '')
+    private function copyDirectoryTree(string $sourceDirectory, string $destinationDirectory, array $placeholderValues): void
     {
-        if (! count($form)) {
-            return '';
-        }
+        $this->ensureDirectoryExists($destinationDirectory);
 
-        return "{$quote}".implode("{$quote}{$separator}{$quote}", $form)."{$quote}";
-    }
-
-    private function copyDir($orgDir, $targetDir, $replaceItem)
-    {
-        is_dir($targetDir) || mkdir($targetDir, 0777, true);
-
-        $fileList = scandir($orgDir);
-        foreach ($fileList as $file) {
-            if (substr($file, 0, 1) == '.' && $file != '.gitkeep') {
+        $fileList = scandir($sourceDirectory);
+        foreach ($fileList as $fileName) {
+            if (substr($fileName, 0, 1) == '.' && $fileName != '.gitkeep') {
                 continue;
             }
 
-            if (is_dir($orgDir.'/'.$file)) {
-                $this->copyDir($orgDir.'/'.$file, $targetDir.'/'.$file, $replaceItem);
+            if (is_dir($sourceDirectory.'/'.$fileName)) {
+                $this->copyDirectoryTree($sourceDirectory.'/'.$fileName, $destinationDirectory.'/'.$fileName, $placeholderValues);
 
                 continue;
             }
 
-            if (! file_exists($targetDir.'/'.$file)) {
-                copy($orgDir.'/'.$file, $targetDir.'/'.$file);
-                $this->replaceViewItem($targetDir.'/'.$file, $replaceItem);
+            if (! file_exists($destinationDirectory.'/'.$fileName)) {
+                copy($sourceDirectory.'/'.$fileName, $destinationDirectory.'/'.$fileName);
+                $this->replaceViewPlaceholders($destinationDirectory.'/'.$fileName, $placeholderValues);
             }
         }
     }
 
-    private function replaceViewItem($viewPath, $replaceItem)
-    {
-        $contents = file_get_contents($viewPath);
-
-        foreach ($replaceItem as $key => $value) {
-            $contents = str_replace('<!-- '.$key.' -->', $value, $contents);
-        }
-
-        file_put_contents($viewPath, $contents);
-        $this->outputMessageMake('view', $viewPath);
-    }
-
-    private function outputMessageMake($type, $path)
-    {
-        $path = str_replace(base_path(), '', $path);
-
-        $this->info("Make {$type} \"{$path}\"");
-    }
-
-    private function refreshDevelopJson($path)
+    private function loadDevelopConfiguration(string $path): array
     {
         $developJson = json_decode(file_get_contents($path), true);
 
@@ -357,5 +316,54 @@ class Develop extends Command
         isset($developJson['form']) || $developJson['form'] = [];
 
         return $developJson;
+    }
+
+    private function applyPlaceholderValues(string $template, array $values): string
+    {
+        foreach ($values as $key => $value) {
+            if (is_array($value)) {
+                continue;
+            }
+
+            $key = strtoupper(Str::snake($key));
+            $template = str_replace($key, $value, $template);
+        }
+
+        return $template;
+    }
+
+    private function ensureDirectoryExists(string $directoryPath): void
+    {
+        if (! is_dir($directoryPath)) {
+            mkdir($directoryPath, 0777, true);
+        }
+    }
+
+    private function buildDelimitedList(array $items, string $separator, string $quote = ''): string
+    {
+        if (! count($items)) {
+            return '';
+        }
+
+        return "{$quote}".implode("{$quote}{$separator}{$quote}", $items)."{$quote}";
+    }
+
+    private function replaceViewPlaceholders(string $viewPath, array $placeholderValues): void
+    {
+        $contents = file_get_contents($viewPath);
+
+        foreach ($placeholderValues as $key => $value) {
+            $contents = str_replace('<!-- '.$key.' -->', $value, $contents);
+        }
+
+        file_put_contents($viewPath, $contents);
+        $this->outputCreationMessage('view', $viewPath);
+    }
+
+    private function outputCreationMessage(string $type, string $path): void
+    {
+        $path = str_replace(base_path(), '', $path);
+
+        $this->info("Make {$type} \"{$path}\"");
     }
 }

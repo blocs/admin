@@ -2,29 +2,31 @@
 
 namespace Blocs;
 
+use Illuminate\Support\Facades\File;
+
 class Thumbnail
 {
     public static function create($tmpLoc, $pWidth, $pHeight, $crop = false)
     {
-        // サムネイルファイル名を取得
+        // サムネイルファイル名を生成
         $thumbCrop = $crop ? '_c' : '';
         $thumbName = $pWidth.'x'.$pHeight.$thumbCrop.'-'.basename($tmpLoc);
         $thumbLoc = BLOCS_CACHE_DIR.'/'.$thumbName;
 
-        // サムネイルファイルの拡張子を取得
-        $thumbExt = \File::extension($tmpLoc);
+        // サムネイルファイルの拡張子を判別
+        $thumbExt = File::extension($tmpLoc);
 
         if (is_file($thumbLoc)) {
-            // すでにサムネイルファイルが存在している時
+            // 既存のサムネイルファイルがある場合はそのまま返却
             return $thumbLoc;
         }
 
         if (! filesize($tmpLoc)) {
-            // ファイルサイズが0の時
+            // ファイルサイズが0の時は処理を中止
             return false;
         }
 
-        [$width, $height, $oWidth, $oHeight] = self::getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop);
+        [$width, $height, $oWidth, $oHeight] = self::calculateThumbnailDimensions($tmpLoc, $pWidth, $pHeight, $crop);
         if ($width === $oWidth && $height === $oHeight) {
             copy($tmpLoc, $thumbLoc) && chmod($thumbLoc, 0666);
 
@@ -35,25 +37,25 @@ class Thumbnail
             return false;
         }
 
-        $oImage = self::imageCreate($tmpLoc, $thumbExt);
+        $oImage = self::createImageResource($tmpLoc, $thumbExt);
         if (! $oImage) {
             return false;
         }
 
-        // HEICが横になる問題に対応
+        // HEICが横になる問題に対応する処理
         $exif = @exif_read_data($tmpLoc);
         if (! empty($exif['Orientation'])) {
             switch ($exif['Orientation']) {
                 case 8:
                     $oImage = imagerotate($oImage, 90, 0);
-                    [$width, $height, $oWidth, $oHeight] = self::getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
+                    [$width, $height, $oWidth, $oHeight] = self::calculateThumbnailDimensions($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
                     break;
                 case 3:
                     $oImage = imagerotate($oImage, 180, 0);
                     break;
                 case 6:
                     $oImage = imagerotate($oImage, -90, 0);
-                    [$width, $height, $oWidth, $oHeight] = self::getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
+                    [$width, $height, $oWidth, $oHeight] = self::calculateThumbnailDimensions($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
                     break;
             }
         }
@@ -61,7 +63,7 @@ class Thumbnail
         if ($crop) {
             $image = imagecreatetruecolor($pWidth, $pHeight);
 
-            // アルファブレンディングを無効
+            // アルファブレンディングを無効化
             imagealphablending($image, false);
 
             // アルファフラグを設定
@@ -71,7 +73,7 @@ class Thumbnail
         } else {
             $image = imagecreatetruecolor($width, $height);
 
-            // アルファブレンディングを無効
+            // アルファブレンディングを無効化
             imagealphablending($image, false);
 
             // アルファフラグを設定
@@ -80,68 +82,68 @@ class Thumbnail
             imagecopyresampled($image, $oImage, 0, 0, 0, 0, $width, $height, $oWidth, $oHeight);
         }
 
-        self::imageOutput($image, $thumbLoc, $thumbExt);
+        self::outputImageResource($image, $thumbLoc, $thumbExt);
 
         return $thumbLoc;
     }
 
-    private static function getThumbnailSize($tmpLoc, $pWidth, $pHeight, $crop, $oWidth = null, $oHeight = null)
+    private static function calculateThumbnailDimensions($sourcePath, $targetWidth, $targetHeight, $crop, $originalWidth = null, $originalHeight = null)
     {
-        if (! isset($oWidth) || ! isset($oHeight)) {
-            [$oWidth, $oHeight] = @getimagesize($tmpLoc);
+        if (! isset($originalWidth) || ! isset($originalHeight)) {
+            [$originalWidth, $originalHeight] = @getimagesize($sourcePath);
         }
-        [$width, $height] = [$oWidth, $oHeight];
+        [$width, $height] = [$originalWidth, $originalHeight];
 
         if ($crop) {
-            // 指定サイズを覆う大きさ
-            if (isset($pWidth)) {
-                $height = $height * $pWidth / $width;
-                $width = $pWidth;
+            // 指定サイズを覆う大きさに調整
+            if (isset($targetWidth)) {
+                $height = $height * $targetWidth / $width;
+                $width = $targetWidth;
             }
-            if (isset($pHeight) && $height < $pHeight) {
-                $width = $width * $pHeight / $height;
-                $height = $pHeight;
+            if (isset($targetHeight) && $height < $targetHeight) {
+                $width = $width * $targetHeight / $height;
+                $height = $targetHeight;
             }
         } else {
-            // 指定サイズに収まる大きさ
-            if (isset($pWidth) && $pWidth < $width) {
-                $height = $height * $pWidth / $width;
-                $width = $pWidth;
+            // 指定サイズに収まる大きさに調整
+            if (isset($targetWidth) && $targetWidth < $width) {
+                $height = $height * $targetWidth / $width;
+                $width = $targetWidth;
             }
-            if (isset($pHeight) && $pHeight < $height) {
-                $width = $width * $pHeight / $height;
-                $height = $pHeight;
+            if (isset($targetHeight) && $targetHeight < $height) {
+                $width = $width * $targetHeight / $height;
+                $height = $targetHeight;
             }
         }
 
-        return [intval($width), intval($height), $oWidth, $oHeight];
+        return [intval($width), intval($height), $originalWidth, $originalHeight];
     }
 
-    private static function imageCreate($tmpLoc, $ext)
+    private static function createImageResource($sourcePath, $extension)
     {
-        switch ($ext) {
+        switch ($extension) {
             case 'gif':
-                return @imagecreatefromgif($tmpLoc);
+                return @imagecreatefromgif($sourcePath);
             case 'jpg':
-                return @imagecreatefromjpeg($tmpLoc);
+                return @imagecreatefromjpeg($sourcePath);
             case 'jpeg':
-                return @imagecreatefromjpeg($tmpLoc);
+                return @imagecreatefromjpeg($sourcePath);
             case 'png':
-                return @imagecreatefrompng($tmpLoc);
+                return @imagecreatefrompng($sourcePath);
             case 'webp':
-                return @imagecreatefromwebp($tmpLoc);
+                return @imagecreatefromwebp($sourcePath);
             case 'wbmp':
-                return @imagecreatefromwbmp($tmpLoc);
+                return @imagecreatefromwbmp($sourcePath);
             case 'xbm':
-                return @imagecreatefromxbm($tmpLoc);
+                return @imagecreatefromxbm($sourcePath);
             case 'xpm':
-                return @imagecreatefromxpm($tmpLoc);
+                return @imagecreatefromxpm($sourcePath);
             default:
                 return false;
         }
     }
 
-    private static function imageOutput($image, $thumbLoc, $thumbExt)
+    private static function outputImageResource($image, $thumbLoc, $thumbExt)
     {
         switch ($thumbExt) {
             case 'gif':

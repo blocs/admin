@@ -5,7 +5,7 @@ namespace Blocs\Auth;
 trait RedirectsUsers
 {
     /**
-     * Get the post register / login redirect path.
+     * ログイン後にリダイレクトするパスを決定する。
      *
      * @return string
      */

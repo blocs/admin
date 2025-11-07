@@ -2,17 +2,19 @@
 
 namespace Blocs\Commands;
 
+use Illuminate\Support\Facades\Artisan;
+
 class InstallAdmin extends Install
 {
     /**
-     * The name and signature of the console command.
+     * コンソールコマンドの署名。
      *
      * @var string
      */
     protected $signature = 'blocs:install';
 
     /**
-     * The console command description.
+     * コンソールコマンドの説明。
      *
      * @var string
      */
@@ -26,24 +28,26 @@ class InstallAdmin extends Install
     }
 
     /**
-     * Execute the console command.
+     * コマンド全体の実行フローを制御する。
      */
-    public function handle()
+    public function handle(): void
     {
         parent::handle();
 
-        // 空のfaviconがあれば削除
+        // 空の favicon が残っていれば削除して不要ファイルを排除
         $faviconPath = public_path('favicon.ico');
-        file_exists($faviconPath) && ! filesize($faviconPath) && unlink($faviconPath);
+        if (file_exists($faviconPath) && ! filesize($faviconPath)) {
+            unlink($faviconPath);
+        }
 
-        // 必要ファイルをpublish
-        \Artisan::call('vendor:publish', ['--provider' => 'Blocs\AdminServiceProvider']);
+        // 必要ファイルを publish してアセットを公開
+        Artisan::call('vendor:publish', ['--provider' => 'Blocs\AdminServiceProvider']);
 
-        // 初期ユーザー登録
-        \Artisan::call('migrate');
-        \Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
+        // 初期ユーザーを登録してすぐにログインできる状態を用意
+        Artisan::call('migrate');
+        Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
 
-        \Artisan::call('route:cache');
+        Artisan::call('route:cache');
 
         $this->info('Admin has been installed successfully.');
         $this->info('Login URL is '.route('login').'.');
