@@ -76,6 +76,8 @@
     "template:resource_blocs_modal_delete_title": "削除",
     "template:resource_blocs_modal_inactivate_message": "選択したデータを無効にする。",
     "template:resource_blocs_modal_inactivate_title": "無効にする",
+    "template:resource_blocs_modal_copy_message": "データをコピーします。",
+    "template:resource_blocs_modal_copy_title": "コピー",
     "template:resource_blocs_modal_new_message": "データを登録します。",
     "template:resource_blocs_modal_new_title": "新規作成",
     "template:resource_blocs_modal_update_button": "更新",

@@ -76,6 +76,8 @@
     "template:resource_blocs_modal_delete_title": "Delete",
     "template:resource_blocs_modal_inactivate_message": "Inactivate selected data",
     "template:resource_blocs_modal_inactivate_title": "Inactivate",
+    "template:resource_blocs_modal_copy_message": "Copy data",
+    "template:resource_blocs_modal_copy_title": "Copy",
     "template:resource_blocs_modal_new_message": "Register new data",
     "template:resource_blocs_modal_new_title": "Add",
     "template:resource_blocs_modal_update_button": "Update",
