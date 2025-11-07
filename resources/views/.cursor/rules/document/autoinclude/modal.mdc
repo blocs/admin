@@ -13,6 +13,7 @@ alwaysApply: false
 |modal_store|新規作成確認用|
 |modal_update|更新確認用|
 |modal_destroy|削除確認用|
+|modal_copy|コピー確認用|
 
 ### サンプルコード
 以下のように、HTMLタグに `data-include` 属性を追加することで、該当のモーダルを自動的に読み込むことができます。以下のコードを挿入すると、「更新確認モーダル」が表示されるようになります。
