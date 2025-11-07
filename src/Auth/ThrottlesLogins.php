@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 trait ThrottlesLogins
 {
     /**
-     * Determine if the user has too many failed login attempts.
+     * ログイン試行回数が上限を超えているか判定する。
      *
      * @return bool
      */
@@ -24,7 +24,7 @@ trait ThrottlesLogins
     }
 
     /**
-     * Increment the login attempts for the user.
+     * ログイン試行回数をインクリメントする。
      *
      * @return void
      */
@@ -36,7 +36,7 @@ trait ThrottlesLogins
     }
 
     /**
-     * Redirect the user after determining they are locked out.
+     * ロックアウトされたユーザーをレスポンスで通知する。
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -52,7 +52,7 @@ trait ThrottlesLogins
     }
 
     /**
-     * Clear the login locks for the given user credentials.
+     * 指定された資格情報に対するロック状態をクリアする。
      *
      * @return void
      */
@@ -62,7 +62,7 @@ trait ThrottlesLogins
     }
 
     /**
-     * Fire an event when a lockout occurs.
+     * ロックアウト発生時のイベントを発火する。
      *
      * @return void
      */
@@ -72,7 +72,7 @@ trait ThrottlesLogins
     }
 
     /**
-     * Get the throttle key for the given request.
+     * 現在のリクエスト用にスロットルキーを生成する。
      *
      * @return string
      */
@@ -82,7 +82,7 @@ trait ThrottlesLogins
     }
 
     /**
-     * Get the rate limiter instance.
+     * レートリミッターのインスタンスを取得する。
      *
      * @return RateLimiter
      */
@@ -92,7 +92,7 @@ trait ThrottlesLogins
     }
 
     /**
-     * Get the maximum number of attempts to allow.
+     * 許可される最大試行回数を取得する。
      *
      * @return int
      */
@@ -102,7 +102,7 @@ trait ThrottlesLogins
     }
 
     /**
-     * Get the number of minutes to throttle for.
+     * ロックアウトが解除されるまでの分数を取得する。
      *
      * @return int
      */

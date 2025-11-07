@@ -8,71 +8,77 @@ class AdminServiceProvider extends ServiceProvider
 {
     public function register()
     {
-        // コマンドの登録
+        // コンソールコマンドの登録処理を実行
         $this->app->runningInConsole() && $this->registerBlocsCommand();
     }
 
     public function boot()
     {
-        // 定数の読み込み
+        // アプリケーション定数の読み込みを実行
         is_file(app_path('Consts/Blocs.php')) && \App\Consts\Blocs::define();
 
-        // ルーティング追加
+        // 管理画面用のルーティングを追加
         is_file(base_path('routes/admin.php')) && $this->loadRoutesFrom(base_path('routes/admin.php'));
 
-        // 必要ファイルを登録
+        // Artisan publish 対象のファイルを登録
         $this->app->runningInConsole() && $this->registerPublish();
     }
 
     public function registerBlocsCommand()
     {
-        $this->app->singleton('command.blocs.install', function ($app) {
-            return new Commands\InstallAdmin;
-        });
+        $consoleCommandBindings = [
+            'command.blocs.install' => Commands\InstallAdmin::class,
+            'command.blocs.develop' => Commands\Develop::class,
+            'command.blocs.knowledge' => Commands\Knowledge::class,
+        ];
 
-        $this->commands('command.blocs.install');
-
-        $this->app->singleton('command.blocs.develop', function ($app) {
-            return new Commands\Develop;
-        });
-
-        $this->commands('command.blocs.develop');
-
-        $this->app->singleton('command.blocs.knowledge', function ($app) {
-            return new Commands\Knowledge;
-        });
-
-        $this->commands('command.blocs.knowledge');
+        foreach ($consoleCommandBindings as $consoleCommandKey => $consoleCommandClass) {
+            $this->registerConsoleCommand($consoleCommandKey, $consoleCommandClass);
+        }
     }
 
     public function registerPublish()
     {
-        $publishList = [];
+        $this->publishes($this->buildPublishMappings());
+    }
+
+    private function registerConsoleCommand(string $consoleCommandKey, string $consoleCommandClass): void
+    {
+        $this->app->singleton($consoleCommandKey, function () use ($consoleCommandClass) {
+            return new $consoleCommandClass;
+        });
+
+        $this->commands($consoleCommandKey);
+    }
+
+    private function buildPublishMappings(): array
+    {
+        $publishMappings = [];
 
         // appをpublish
-        $publishList[base_path('vendor/blocs/admin/app')] = app_path();
+        $publishMappings[base_path('vendor/blocs/admin/app')] = app_path();
 
         // configをpublish
-        $publishList[base_path('vendor/blocs/admin/config')] = config_path();
+        $publishMappings[base_path('vendor/blocs/admin/config')] = config_path();
 
         // databaseをpublish
-        $publishList[base_path('vendor/blocs/admin/database')] = database_path();
+        $publishMappings[base_path('vendor/blocs/admin/database')] = database_path();
 
         // publicをpublish
-        $publishList[base_path('vendor/blocs/admin/public')] = public_path();
+        $publishMappings[base_path('vendor/blocs/admin/public')] = public_path();
 
         // resourceをpublish
-        $publishList[base_path('vendor/blocs/admin/resources')] = resource_path();
+        $publishMappings[base_path('vendor/blocs/admin/resources')] = resource_path();
 
         // routesをpublish
-        $publishList[base_path('vendor/blocs/admin/routes')] = base_path('routes');
+        $publishMappings[base_path('vendor/blocs/admin/routes')] = base_path('routes');
 
         // docsをpublish
-        $publishList[base_path('vendor/blocs/admin/docs')] = base_path('docs');
+        $publishMappings[base_path('vendor/blocs/admin/docs')] = base_path('docs');
 
         // testsをpublish
-        $publishList[base_path('vendor/blocs/admin/tests')] = base_path('tests');
+        $publishMappings[base_path('vendor/blocs/admin/tests')] = base_path('tests');
 
-        $this->publishes($publishList);
+        return $publishMappings;
     }
 }

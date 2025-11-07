@@ -13,7 +13,7 @@ trait AuthenticatesUsers
     use ThrottlesLogins;
 
     /**
-     * Show the application's login form.
+     * ログインフォームのビューを返す。
      *
      * @return \Illuminate\View\View
      */
@@ -23,7 +23,7 @@ trait AuthenticatesUsers
     }
 
     /**
-     * Handle a login request to the application.
+     * ログインリクエストを検証し、認証結果に応じたレスポンスを返す。
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|JsonResponse
      *
@@ -33,34 +33,25 @@ trait AuthenticatesUsers
     {
         $this->validateLogin($request);
 
-        // If the class is using the ThrottlesLogins trait, we can automatically throttle
-        // the login attempts for this application. We'll key this by the username and
-        // the IP address of the client making these requests into this application.
-        if (method_exists($this, 'hasTooManyLoginAttempts')
-            && $this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
-
+        // ThrottlesLogins トレイトが有効な場合は、過剰なログイン試行を直ちに遮断
+        if ($this->shouldThrottleLoginAttempts($request)) {
             return $this->sendLockoutResponse($request);
         }
 
         if ($this->attemptLogin($request)) {
-            if ($request->hasSession()) {
-                $request->session()->put('auth.password_confirmed_at', time());
-            }
+            $this->storePasswordConfirmationTimestamp($request);
 
             return $this->sendLoginResponse($request);
         }
 
-        // If the login attempt was unsuccessful we will increment the number of attempts
-        // to login and redirect the user back to the login form. Of course, when this
-        // user surpasses their maximum number of attempts they will get locked out.
+        // 認証失敗時は試行回数を記録し、エラー応答を返却
         $this->incrementLoginAttempts($request);
 
         return $this->sendFailedLoginResponse($request);
     }
 
     /**
-     * Validate the user login request.
+     * ログイン入力値をバリデーションする。
      *
      * @return void
      *
@@ -75,7 +66,7 @@ trait AuthenticatesUsers
     }
 
     /**
-     * Attempt to log the user into the application.
+     * ガードを通じて認証を試行する。
      *
      * @return bool
      */
@@ -87,7 +78,7 @@ trait AuthenticatesUsers
     }
 
     /**
-     * Get the needed authorization credentials from the request.
+     * リクエストから認証に利用する資格情報を抽出する。
      *
      * @return array
      */
@@ -97,7 +88,7 @@ trait AuthenticatesUsers
     }
 
     /**
-     * Send the response after the user was authenticated.
+     * 認証成功後のセッション更新とレスポンス生成を行う。
      *
      * @return \Illuminate\Http\RedirectResponse|JsonResponse
      */
@@ -117,12 +108,12 @@ trait AuthenticatesUsers
     }
 
     /**
-     * The user has been authenticated.
+     * 認証完了後に任意処理を差し込むためのフック。
      */
     protected function authenticated(Request $request, $user) {}
 
     /**
-     * Get the failed login response instance.
+     * 認証失敗時のレスポンスを生成する。
      *
      * @return \Symfony\Component\HttpFoundation\Response
      *
@@ -134,7 +125,7 @@ trait AuthenticatesUsers
     }
 
     /**
-     * Get the login username to be used by the controller.
+     * ログインに使用するユーザー名のキーを返す。
      *
      * @return string
      */
@@ -144,7 +135,7 @@ trait AuthenticatesUsers
     }
 
     /**
-     * Log the user out of the application.
+     * ログアウト処理を実行し、遷移先レスポンスを返す。
      *
      * @return \Illuminate\Http\RedirectResponse|JsonResponse
      */
@@ -166,17 +157,47 @@ trait AuthenticatesUsers
     }
 
     /**
-     * The user has logged out of the application.
+     * ログアウト完了後に任意処理を差し込むためのフック。
      */
     protected function loggedOut(Request $request) {}
 
     /**
-     * Get the guard to be used during authentication.
+     * 認証に利用するガードインスタンスを取得する。
      *
      * @return \Illuminate\Contracts\Auth\StatefulGuard
      */
     protected function guard()
     {
         return Auth::guard();
+    }
+
+    /**
+     * ログイン試行のスロットルが必要か判定する。
+     */
+    private function shouldThrottleLoginAttempts(Request $request): bool
+    {
+        if (! method_exists($this, 'hasTooManyLoginAttempts')) {
+            return false;
+        }
+
+        if (! $this->hasTooManyLoginAttempts($request)) {
+            return false;
+        }
+
+        $this->fireLockoutEvent($request);
+
+        return true;
+    }
+
+    /**
+     * パスワード確認済みタイムスタンプをセッションへ記録する。
+     */
+    private function storePasswordConfirmationTimestamp(Request $request): void
+    {
+        if (! $request->hasSession()) {
+            return;
+        }
+
+        $request->session()->put('auth.password_confirmed_at', time());
     }
 }

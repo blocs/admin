@@ -2,6 +2,9 @@
 
 namespace Blocs;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 class Menu
 {
     private static $headline;
@@ -12,79 +15,65 @@ class Menu
 
     public static function get($name = 'root', $maxChild = 1)
     {
-        // 設定読み込み
-        $configList = config('menu');
+        // 設定の読み込み
+        $menuConfigMap = config('menu');
 
-        if (! isset($configList[$name])) {
+        if (! isset($menuConfigMap[$name])) {
             return [[], [], []];
         }
-        $configList = $configList[$name];
+        $menuCandidates = $menuConfigMap[$name];
 
-        // メニュー、パンクズリスト
-        $subMenuList = [];
-        $isActive = false;
-        foreach ($configList as $config) {
-            // ラベル
-            isset($config['label']) || $config['label'] = lang($config['lang']);
+        // メニュー一覧とパンくずリストの構築
+        $menuList = [];
+        $hasActiveMenu = false;
+        $currentMaxChild = $maxChild;
 
-            // リンク先
-            if (! isset($config['url']) && isset($config['name'])) {
-                if (empty($config['argv'])) {
-                    $config['url'] = route($config['name']);
-                } else {
-                    $config['url'] = route($config['name'], $config['argv']);
-                }
+        foreach ($menuCandidates as $menuConfig) {
+            // ラベルの解決
+            $menuConfig = self::resolveLabel($menuConfig);
+
+            // リンク先の解決
+            $menuConfig = self::resolveUrl($menuConfig);
+
+            // サブメニューの構築
+            [$menuConfig, $isSubActive, $currentMaxChild, $shouldDisplay] = self::resolveSubmenu($menuConfig, $currentMaxChild, $maxChild);
+
+            // sub が空配列の場合は表示しない
+            if (! $shouldDisplay) {
+                continue;
             }
-
-            // サブメニュー
-            // $maxChild: サブメニューの最大の深さ
-            if (isset($config['sub'])) {
-                [$config['sub'], $buff, $buff, $isSubActive, $child] = self::get($config['sub'], $maxChild);
-
-                // sub が空配列の場合表示しない
-                if (empty($config['sub'])) {
-                    continue;
-                }
-
-                $child > $maxChild && $maxChild = $child;
-            } else {
-                $isSubActive = false;
-            }
-            $config['child'] = $maxChild;
 
             // メニューかサブメニューがactive
-            if ((isset($config['name']) && self::checkActive($config)) || $isSubActive) {
-                $config['active'] = true;
-                $isActive = true;
+            if ((isset($menuConfig['name']) && self::isMatchingActivePrefix($menuConfig)) || $isSubActive) {
+                $menuConfig['active'] = true;
+                $hasActiveMenu = true;
 
                 // headlineを設定
-                empty(self::$headline) && self::$headline = $config;
+                if (empty(self::$headline)) {
+                    self::$headline = $menuConfig;
+                }
 
                 if (empty(self::$breadcrumbList)) {
                     // パンクズリストの最後
-                    self::$breadcrumbList = [$config];
+                    self::$breadcrumbList = [$menuConfig];
                     unset(self::$breadcrumbList[0]['url']);
                 } else {
                     // パンクズリストに階層を追加
-                    array_unshift(self::$breadcrumbList, $config);
+                    array_unshift(self::$breadcrumbList, $menuConfig);
                 }
             } else {
-                $config['active'] = false;
+                $menuConfig['active'] = false;
             }
 
             // 権限があるかチェック
-            if (empty($config['role']) && isset($config['name']) && ! self::checkRole($config['name'])) {
+            if (! self::canDisplayMenu($menuConfig)) {
                 continue;
             }
 
-            if (isset($config['guard']) && ! \Auth::guard($config['guard'])->check()) {
-                continue;
-            }
-
-            $subMenuList[] = $config;
+            $menuList[] = $menuConfig;
         }
 
-        return [$subMenuList, self::$headline, self::$breadcrumbList, $isActive, $maxChild + 1];
+        return [$menuList, self::$headline, self::$breadcrumbList, $hasActiveMenu, $currentMaxChild + 1];
     }
 
     public static function headline($icon, $lang, $activePrefix = null, $menu = null)
@@ -101,31 +90,35 @@ class Menu
             'label' => lang($lang),
         ];
 
-        isset($activePrefix) && self::$activePrefix = $activePrefix;
+        if (isset($activePrefix)) {
+            self::$activePrefix = $activePrefix;
+        }
     }
 
     public static function checkRole($currentName = null)
     {
-        isset($currentName) || $currentName = \Route::currentRouteName();
+        if (! isset($currentName)) {
+            $currentName = Route::currentRouteName();
+        }
 
         // 必要な権限を取得
-        $configRole = config('role');
-        $roleList = [];
-        foreach ($configRole as $roleName => $routeNameList) {
-            foreach ($routeNameList as $routePreg) {
-                if (preg_match('/^'.$routePreg.'/', $currentName)) {
-                    $roleList[] = $roleName;
+        $configuredRoles = config('role');
+        $requiredRoles = [];
+        foreach ($configuredRoles as $roleName => $routeNameList) {
+            foreach ($routeNameList as $routePattern) {
+                if (preg_match('/^'.$routePattern.'/', $currentName)) {
+                    $requiredRoles[] = $roleName;
                     break;
                 }
             }
         }
 
         // 自分の権限を取得
-        $_userData = \Auth::user();
-        $myRoleList = empty($_userData['role']) ? [] : explode("\t", $_userData['role']);
+        $userData = Auth::user();
+        $myRoles = empty($userData['role']) ? [] : explode("\t", $userData['role']);
 
-        foreach ($myRoleList as $myRole) {
-            if (in_array($myRole, $roleList)) {
+        foreach ($myRoles as $myRole) {
+            if (in_array($myRole, $requiredRoles)) {
                 return true;
             }
         }
@@ -133,15 +126,79 @@ class Menu
         return false;
     }
 
-    private static function checkActive($config)
+    private static function resolveLabel(array $menuConfig)
+    {
+        if (! isset($menuConfig['label']) && isset($menuConfig['lang'])) {
+            $menuConfig['label'] = lang($menuConfig['lang']);
+        }
+
+        return $menuConfig;
+    }
+
+    private static function resolveUrl(array $menuConfig)
+    {
+        if (! isset($menuConfig['url']) && isset($menuConfig['name'])) {
+            $menuConfig['url'] = empty($menuConfig['argv'])
+                ? route($menuConfig['name'])
+                : route($menuConfig['name'], $menuConfig['argv']);
+        }
+
+        return $menuConfig;
+    }
+
+    private static function resolveSubmenu(array $menuConfig, int $currentMaxChild, int $maxChild)
+    {
+        if (! isset($menuConfig['sub'])) {
+            $menuConfig['child'] = $currentMaxChild;
+
+            return [$menuConfig, false, $currentMaxChild, true];
+        }
+
+        $subMenuResult = self::get($menuConfig['sub'], $maxChild);
+        $subMenuList = $subMenuResult[0] ?? [];
+        $isSubActive = $subMenuResult[3] ?? false;
+        $childDepth = $subMenuResult[4] ?? $currentMaxChild;
+
+        if (empty($subMenuList)) {
+            return [$menuConfig, $isSubActive, $currentMaxChild, false];
+        }
+
+        $menuConfig['sub'] = $subMenuList;
+        $currentMaxChild = max($currentMaxChild, $childDepth);
+        $menuConfig['child'] = $currentMaxChild;
+
+        return [$menuConfig, $isSubActive, $currentMaxChild, true];
+    }
+
+    private static function canDisplayMenu(array $menuConfig)
+    {
+        if (empty($menuConfig['role']) && isset($menuConfig['name']) && ! self::checkRole($menuConfig['name'])) {
+            return false;
+        }
+
+        if (isset($menuConfig['guard']) && ! Auth::guard($menuConfig['guard'])->check()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private static function resolveActivePrefix()
+    {
+        return self::$activePrefix ?? prefix();
+    }
+
+    private static function resolveRoutePrefix(array $menuConfig)
+    {
+        $configNameList = explode('.', $menuConfig['name']);
+        array_pop($configNameList);
+
+        return implode('.', $configNameList);
+    }
+
+    private static function isMatchingActivePrefix(array $menuConfig)
     {
         // メニューはメソッド以外一致
-        $activetPrefix = self::$activePrefix ?? prefix();
-
-        $configNameList = explode('.', $config['name']);
-        array_pop($configNameList);
-        $configPrefix = implode('.', $configNameList);
-
-        return $configPrefix === $activetPrefix;
+        return self::resolveRoutePrefix($menuConfig) === self::resolveActivePrefix();
     }
 }
