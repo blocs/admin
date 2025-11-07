@@ -6,7 +6,37 @@
         document.querySelectorAll(".ai-datepicker").forEach(function(item, i) {
             flatpickr(item, {
                 disableMobile: true,
-                locale: "ja"
+                locale: "ja",
+                allowInput: true,
+                onOpen: function() {
+                    if (item.focus) {
+                        item.focus();
+                    }
+                    var group = item.closest('.input-group');
+                    if (group) {
+                        group.classList.add('is-focused');
+                    }
+                },
+                onValueUpdate: function(selectedDates, dateStr) {
+                    var group = item.closest('.input-group');
+                    if (group) {
+                        if (dateStr) {
+                            group.classList.add('is-filled');
+                        } else {
+                            group.classList.remove('is-filled');
+                        }
+                    }
+                    item.dispatchEvent(new Event('input', { bubbles: true }));
+                },
+                onClose: function() {
+                    var group = item.closest('.input-group');
+                    if (group) {
+                        if (item.value) {
+                            group.classList.add('is-filled');
+                        }
+                        group.classList.remove('is-focused');
+                    }
+                }
             });
             item.classList.remove("ai-datepicker");
         });
