@@ -143,6 +143,35 @@
     -->
 <!-- data-endbloc -->
 
+<!-- data-bloc="modal_copy" -->
+    <!-- コピー確認モーダル -->
+    <!-- $modalName="modalCopy" data-none -->
+
+    <!-- ボタン設定 -->
+    <!--
+        data-include="button_info"
+        $buttonIcon="fa-solid fa-copy"
+        $buttonLabel=lang("template:resource_blocs_button_copy")
+    -->
+
+    <!-- モーダル設定 -->
+    <!-- data-bloc="modalFooterRight" -->
+        <!--
+            data-include="buttonInfoModal"
+            $modalAction=route(prefix().".copy", ["id" => $id])
+            $buttonModalIcon="fa-solid fa-copy"
+            $buttonModalLabel=lang("template:resource_blocs_button_copy")
+        -->
+    <!-- data-endbloc -->
+
+    <!-- モーダル表示 -->
+    <!--
+        data-include="modal"
+        $modalTitle=lang("template:resource_blocs_modal_copy_title")
+        $modalMessage=lang("template:resource_blocs_modal_copy_message")
+    -->
+<!-- data-endbloc -->
+
 <!-- data-bloc="modal_destroy" -->
     <!-- 削除モーダル -->
     <!-- $modalName="modalDestroy" data-none -->
