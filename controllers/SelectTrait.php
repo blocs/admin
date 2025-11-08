@@ -45,7 +45,7 @@ trait SelectTrait
         if (empty($this->selectedIdList)) {
             return $this->backIndex('error', 'data_not_selected');
         }
-        docs(['POST' => '選択したデータのid'], "データが選択されていなければ、メッセージをセットして一覧画面に戻る\n・".lang('error:data_not_selected'), ['FORWARD' => '!'.$this->viewPrefix.'.index']);
+        docs(null, "データが選ばれていないときは、注意メッセージを付けて一覧画面に戻る\n・".lang('error:data_not_selected'), ['FORWARD' => '!'.$this->viewPrefix.'.index']);
     }
 
     protected function prepareConfirmSelect() {}
@@ -56,7 +56,7 @@ trait SelectTrait
 
         $view = view($this->viewPrefix.'.confirmSelect', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        docs('テンプレートを読み込んで、HTMLを生成');
+        docs('画面テンプレートを読み込み、表示用のHTMLを生成する');
 
         return $view;
     }
@@ -74,14 +74,14 @@ trait SelectTrait
             $this->extractSelectIdList();
         } else {
             // 直接実行の場合、バリデーションを実行
-            docs('# データの検証');
+            docs(['POST' => '入力値'], '# データの検証');
             if ($redirect = $this->validateSelect()) {
                 return $redirect;
             }
         }
 
         // データ一括処理を実行
-        docs('# データの一括処理');
+        docs(['POST' => '入力値'], '# データの一括処理');
         $this->prepareSelect();
         $this->executeSelect();
         $this->logSelect();
@@ -103,7 +103,7 @@ trait SelectTrait
 
         // データベースから選択されたIDのデータを一括削除
         $this->executeSelectDeletion();
-        docs(['POST' => '選択したデータのid'], '<id>を指定してデータを一括削除', ['データベース' => $this->loopItem]);
+        docs(null, '選ばれた<id>を使ってデータをまとめて削除する', ['データベース' => $this->loopItem]);
 
         // ログ用のデータを準備
         $this->buildSelectLogData();

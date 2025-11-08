@@ -25,7 +25,7 @@ class LoginController extends Controller
 
         // ログイン画面のビューを生成し、表示用データを組み立て
         $loginView = view($this->viewPrefix.'.login');
-        docs('テンプレートを読み込んで、ログイン画面のHTMLを生成');
+        docs('画面のテンプレートを読み込み、ログイン画面のHTMLを生成する');
 
         return $loginView;
     }
@@ -52,7 +52,7 @@ class LoginController extends Controller
         $validates = $this->getValidate($rules, $messages, $labels);
 
         docs(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
-        docs(null, 'エラーがあれば、ログイン画面に戻る', ['FORWARD' => '!'.$this->viewPrefix.'.login']);
+        docs(null, '入力に問題があればログイン画面へ戻してやり直してもらう', ['FORWARD' => '!'.$this->viewPrefix.'.login']);
     }
 
     protected function credentials(Request $request)

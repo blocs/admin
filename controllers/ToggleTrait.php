@@ -6,15 +6,19 @@ trait ToggleTrait
 {
     public function toggle($id)
     {
-        docs('# データの更新');
-
         // 対象データを取得してIDを設定
         $this->initializeToggleContext($id);
+
+        docs(['GET' => 'id'], '# データの更新');
 
         // データの有効/無効を切り替える処理を実行
         $this->executeToggleStatusChange();
 
-        docs(['GET' => 'id', 'データベース' => $this->loopItem], "idを指定してデータを更新\nデータ有効ならば無効に、無効ならば有効に変更", ['データベース' => $this->loopItem]);
+        docs(
+            ['データベース' => $this->loopItem],
+            "取得したデータの有効・無効を入れ替えます\n今が有効なら無効にし、無効なら有効にします",
+            ['データベース' => $this->loopItem]
+        );
 
         docs('# 画面遷移');
 
