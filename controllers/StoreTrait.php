@@ -28,7 +28,7 @@ trait StoreTrait
 
         $view = view($this->viewPrefix.'.create', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        docs('テンプレートを読み込んで、HTMLを生成');
+        docs('登録画面のテンプレートを読み込み、表示用のHTMLを生成する');
 
         return $view;
     }
@@ -66,8 +66,8 @@ trait StoreTrait
         $labels = $this->getLabel($this->viewPrefix.'.create');
         $this->request->validate($rules, $messages, $labels);
         $validates = $this->getValidate($rules, $messages, $labels);
-        docs(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
-        docs(null, 'エラーがあれば、新規作成画面に戻る', ['FORWARD' => '!'.$this->viewPrefix.'.create']);
+        docs(null, '入力値を以下の条件で検証して、エラーがあればメッセージをセットする', null, $validates);
+        docs(null, 'エラーが出たときは新規作成画面に戻り、もう一度入力してもらいます', ['FORWARD' => '!'.$this->viewPrefix.'.create']);
     }
 
     protected function prepareConfirmStore()
@@ -81,7 +81,7 @@ trait StoreTrait
 
         $view = view($this->viewPrefix.'.confirmStore', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        docs('テンプレートを読み込んで、HTMLを生成');
+        docs('確認画面のテンプレートを読み込み、確認用のHTMLを生成する');
 
         return $view;
     }
@@ -96,14 +96,14 @@ trait StoreTrait
             $this->loadStoreConfirmFromSession();
         } else {
             // 直接実行の場合、バリデーションを実行
-            docs('# データの検証');
+            docs(['POST' => '入力値'], '# データの検証');
             if ($redirect = $this->validateStore()) {
                 return $redirect;
             }
         }
 
         // データ登録処理を実行
-        docs('# データの追加');
+        docs(['POST' => '入力値'], '# データの追加');
         $preparedData = $this->prepareStore();
         $this->executeStore($preparedData);
         $this->logStore();
@@ -135,7 +135,7 @@ trait StoreTrait
 
         // 作成したレコードのIDを設定
         $this->val['id'] = $newRecord->id;
-        docs(null, 'データを追加', ['データベース' => $this->loopItem]);
+        docs(null, 'データを追加する', ['データベース' => $this->loopItem]);
 
         // ログ用のデータを準備
         $this->buildStoreLogData($requestData, $newRecord->id);

@@ -39,7 +39,8 @@ class UserController extends \Blocs\Controllers\Base
         // nameが未入力ならばemailを代入して補完
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
         $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);
-        docs('<name>がなければ、<email>を指定する');
+        docs('<name>が空なら、かわりに<email>を入れる');
+        docs('<role>の入力は、タブで区切った一つの文字列にまとめる');
 
         return [
             'email' => $this->request->email,
@@ -61,10 +62,11 @@ class UserController extends \Blocs\Controllers\Base
         }
 
         docs([
-            '<search>があれば、<'.$this->loopItem.'>のnameを<search>で部分一致検索',
-            '<search>があれば、<'.$this->loopItem.'>のemailを<search>で部分一致検索',
-            '<search>があれば、<'.$this->loopItem.'>のroleを<search>で部分一致検索',
+            '<search>を受け取ったら、<'.$this->loopItem.'>のnameに同じ文字が入るか探す',
+            '<search>を受け取ったら、<'.$this->loopItem.'>のemailに同じ文字が入るか探す',
+            '<search>を受け取ったら、<'.$this->loopItem.'>のroleに同じ文字が入るか探す',
         ]);
+        docs('<search>が空なら、登録済みの<'.$this->loopItem.'>をそのまま表示する');
     }
 
     private function prepareSortState(): void
@@ -78,6 +80,7 @@ class UserController extends \Blocs\Controllers\Base
         if (empty($this->val['sort'])) {
             $this->val['sort'] = ['email' => 'asc'];
         }
+        docs('<sort>が届かなければ、emailを昇順で並べる');
     }
 
     private function applySortOrders(&$mainTable): void
@@ -90,6 +93,6 @@ class UserController extends \Blocs\Controllers\Base
             }
         }
 
-        docs('指定された条件でソート');
+        docs('並び替えの希望があれば、その順で<'.$this->loopItem.'>を並べる');
     }
 }

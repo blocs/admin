@@ -43,7 +43,7 @@ trait DestroyTrait
 
         $view = view($this->viewPrefix.'.confirmDestroy', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        docs('テンプレートを読み込んで、HTMLを生成');
+        docs('確認画面用のテンプレートを読み込み、HTMLを生成する');
 
         return $view;
     }
@@ -65,7 +65,7 @@ trait DestroyTrait
         }
 
         // データ削除処理を実行
-        docs('# データの削除');
+        docs(['GET' => 'id'], '# 選択されたデータを削除する');
         $this->prepareDestroy();
         $this->executeDestroy();
         $this->logDestroy();
@@ -84,7 +84,7 @@ trait DestroyTrait
         $this->executeDestroyDeletion();
 
         // ドキュメント出力
-        docs(['GET' => 'id'], '<id>を指定してデータを削除', ['データベース' => $this->loopItem]);
+        docs(null, '指定された<id>のデータを一件だけ削除します', ['データベース' => $this->loopItem]);
 
         // ログ用のデータを設定
         $this->buildDestroyLogData();

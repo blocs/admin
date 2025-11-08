@@ -17,43 +17,50 @@ class HomeController extends \Blocs\Controllers\Base
     {
         $this->chart();
 
-        docs('# 画面表示');
+        docs('# ホーム画面の表示準備');
         $this->setupMenu();
 
         $view = view($this->viewPrefix.'.index', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        docs('テンプレートを読み込んで、HTMLを生成');
+        docs('画面のテンプレートを読み込み、ホーム画面のHTMLを生成する');
 
         return $view;
     }
 
     protected function chart()
     {
-        // グラフX軸用の月ラベルを生成（現在月から過去N-1ヶ月分の配列）
+        docs('# ホーム画面の数値づくり');
+
         $monthLabels = $this->generateMonthLabels();
+        docs('画面に並べる月の一覧をつくり、最近の流れを追いやすくする');
 
         // 現在のユーザー総数を取得して、ビューに渡す変数を設定
         $currentUserCount = User::count();
         $this->val['current'] = $currentUserCount;
         $this->val['update'] = date(DATE_ATOM);
+        docs('今の利用者数と更新した時刻を調べ、画面上部に見せる値として保存する');
 
         // 月ごとのユーザー作成数と削除数を集計
         $createCountsByMonth = [];
         $deleteCountsByMonth = [];
         $this->aggregateUserCountsByMonth($monthLabels, $createCountsByMonth, $deleteCountsByMonth);
+        docs('データベースから作成と削除の履歴を取り出し、月ごとの数を数える');
 
         // グラフ描画用のデータ系列（棒グラフ×2、折れ線グラフ×1）を生成
         $graphSeriesData = $this->generateGraphSeriesData($monthLabels, $currentUserCount, $createCountsByMonth, $deleteCountsByMonth);
+        docs('月ごとの数を棒と線のグラフに使いやすい形に並べ替える');
 
         // グラフデータを配列の逆順にしてJSON形式でビューに渡す
         $this->val['graphLabels'] = json_encode(array_reverse($monthLabels));
         $this->val['graphDataBar1'] = json_encode(array_reverse($graphSeriesData['bar1']));
         $this->val['graphDataBar2'] = json_encode(array_reverse($graphSeriesData['bar2']));
         $this->val['graphDataLine1'] = json_encode(array_reverse($graphSeriesData['line1']));
+        docs('並べ替えた数値を文字列に変えて、画面のグラフ部品へ渡せる形にする');
 
         // Y軸の最大値を適切なスケールに調整してビューに渡す
         $this->val['graphYaxisMax'] = self::calculateYaxisMax($graphSeriesData['yaxisMax']);
         $this->val['graphY2axisMax'] = self::calculateYaxisMax($graphSeriesData['y2axisMax']);
+        docs('最大値から縦軸の上限を決めて、数の変化が見やすいように整える');
     }
 
     // グラフX軸用の月ラベルを生成（現在月から過去N-1ヶ月分の配列）

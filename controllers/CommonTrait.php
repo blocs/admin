@@ -61,7 +61,7 @@ trait CommonTrait
         // POSTリクエストに指定されたキーが存在する場合、セッションに保存
         if (request()->has($keyItem)) {
             $this->saveKeepItemToSession($keyItem, request()->$keyItem, $sessionKey);
-            docs(['POST' => $keyItem], 'POSTに<'.$keyItem.'>があれば、セッションに保存', ['セッション' => $keyItem]);
+            docs(['POST' => $keyItem], 'フォーム送信で<'.$keyItem.'>が届いたら、その値を一時保存する', ['セッション' => $keyItem]);
 
             return true;
         }
@@ -74,7 +74,7 @@ trait CommonTrait
         // GETリクエストに指定されたキーが存在する場合、セッションに保存
         if (request()->query($keyItem)) {
             $this->saveKeepItemToSession($keyItem, request()->query($keyItem), $sessionKey);
-            docs(['GET' => $keyItem], 'GETに<'.$keyItem.'>があれば、セッションに保存', ['セッション' => $keyItem]);
+            docs(['GET' => $keyItem], 'URLパラメータで<'.$keyItem.'>を受け取ったら、その値を一時保存する', ['セッション' => $keyItem]);
 
             return true;
         }
@@ -88,7 +88,7 @@ trait CommonTrait
         if (session()->has($sessionKey)) {
             $this->val[$keyItem] = session($sessionKey);
         }
-        docs(['セッション' => $keyItem], 'セッションに<'.$keyItem.'>があれば、読み込み');
+        docs(['セッション' => $keyItem], 'セッションに<'.$keyItem.'>が残っていれば、その値を読み戻す');
     }
 
     private function saveKeepItemToSession(string $keyItem, $keyValue, string $sessionKey): void
@@ -139,7 +139,7 @@ trait CommonTrait
 
     protected function getCurrent($id)
     {
-        docs(['GET' => 'id', 'データベース' => $this->loopItem], '# 現データの取得');
+        docs(['GET' => 'id', 'データベース' => $this->loopItem], '# 対象レコードを取り出す');
         $this->tableData = $this->mainTable::findOrFail($id);
     }
 
@@ -172,7 +172,7 @@ trait CommonTrait
         $this->val['menu'] = $menu;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
-        docs(['設定ファイル' => 'config/menu.php'], 'メニュー表示の設定');
+        docs(['設定ファイル' => 'config/menu.php'], '設定ファイルからメニューや見出しを読み込み、画面に渡す');
 
         // keepItemメソッドで使用するviewPrefixをセッションに保存
         isset($this->viewPrefix) && session(['viewPrefix' => $this->viewPrefix]);

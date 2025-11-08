@@ -135,7 +135,7 @@ trait BackTrait
     private function outputBackRedirectLog($message, $destination, $route)
     {
         // ドキュメント用にメッセージとリダイレクト先をログ出力
-        docs("メッセージをセット\n・".$message);
+        docs("遷移後の画面に表示するメッセージを準備する\n- メッセージ: ".$message);
         docs(null, $destination, ['FORWARD' => '!'.prefix().$route]);
     }
 }

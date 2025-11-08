@@ -14,6 +14,7 @@ class ProfileController extends Base
     {
         $this->viewPrefix = 'admin.profile';
         $this->mainTable = 'App\Models\Admin\User';
+        $this->loopItem = 'users';
         $this->noticeItem = 'email';
 
         // プロフィールメニューのヘッドライン表示を初期化
@@ -31,6 +32,8 @@ class ProfileController extends Base
 
     protected function outputUpdate()
     {
+        docs('ホーム画面に戻して更新が成功したことをお知らせする');
+
         // 更新完了後は一時的に保持していた状態を初期化
         unset($this->val, $this->request, $this->tableData);
 
@@ -45,9 +48,11 @@ class ProfileController extends Base
     {
         // プロフィール更新では役割の更新を許可しないため入力値から除外する
         $this->applyRoleFieldFilter($requestData);
+        docs('役割は変更させないため、送信されたデータからroleを外す');
 
         // プロフィール画像の送信内容に応じて保存値を整形する
         $this->applyProfileImageAdjustment($requestData);
+        docs('プロフィール画像の入力内容を確認して保存する値を整える');
     }
 
     private function applyRoleFieldFilter(array &$requestData): void

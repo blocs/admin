@@ -40,7 +40,7 @@ trait UpdateTrait
 
         $view = view($this->viewPrefix.'.edit', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        docs('テンプレートを読み込んで、HTMLを生成');
+        docs('編集画面のテンプレートを読み込み、表示用のHTMLを生成する');
 
         return $view;
     }
@@ -69,7 +69,7 @@ trait UpdateTrait
 
         $view = view($this->viewPrefix.'.show', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        docs('テンプレートを読み込んで、HTMLを生成');
+        docs('詳細画面のテンプレートを読み込み、表示用のHTMLを生成する');
 
         return $view;
     }
@@ -80,6 +80,7 @@ trait UpdateTrait
         $this->initializeUpdateContext($id, $request);
 
         // 入力データのバリデーションを実行（エラーがあればリダイレクト）
+        docs(['POST' => '入力値'], '# データの検証');
         if ($redirect = $this->validateUpdate()) {
             return $redirect;
         }
@@ -108,7 +109,7 @@ trait UpdateTrait
         $labels = $this->getLabel($this->viewPrefix.'.edit');
         $this->request->validate($rules, $messages, $labels);
         $validates = $this->getValidate($rules, $messages, $labels);
-        docs(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
+        docs(null, '入力値を以下の条件で検証して、エラーがあればメッセージをセットする', null, $validates);
         docs(null, 'エラーがあれば、編集画面に戻る', ['FORWARD' => '!'.$this->viewPrefix.'.edit']);
     }
 
@@ -123,7 +124,7 @@ trait UpdateTrait
 
         $view = view($this->viewPrefix.'.confirmUpdate', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        docs('テンプレートを読み込んで、HTMLを生成');
+        docs('確認画面のテンプレートを読み込み、表示用のHTMLを生成する');
 
         return $view;
     }
@@ -139,7 +140,7 @@ trait UpdateTrait
             $this->loadUpdateConfirmFromSession();
         } else {
             // 直接実行の場合、バリデーションを実行
-            docs('# データの検証');
+            docs(['POST' => '入力値'], '# データの検証');
             if ($redirect = $this->validateUpdate()) {
                 return $redirect;
             }
@@ -151,7 +152,7 @@ trait UpdateTrait
         }
 
         // データ更新処理を実行
-        docs('# データの更新');
+        docs(['GET' => 'id', 'POST' => '入力値'], '# データの更新');
         $preparedData = $this->prepareUpdate();
         $this->executeUpdate($preparedData);
         $this->logUpdate();
@@ -172,7 +173,7 @@ trait UpdateTrait
         $tableData = $this->tableData->toArray();
 
         // 最終更新日時をチェックして衝突を検出
-        docs('データの衝突チェック');
+        docs('ほかの人が同じデータを直していないかを確かめる');
         if ($this->request->updated_at !== $tableData['updated_at']) {
             return $this->backEdit('error', 'collision_happened');
         }
@@ -196,7 +197,7 @@ trait UpdateTrait
             $tableData->fill($requestData)->save();
         }, 10);
 
-        docs(['GET' => 'id', 'POST' => '入力値'], '<id>を指定してデータを更新', ['データベース' => $this->loopItem]);
+        docs(null, '指定した<id>のデータを書きかえる処理を行う', ['データベース' => $this->loopItem]);
 
         // ログ用のデータを準備
         $this->buildUpdateLogData($requestData);
