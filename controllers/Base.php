@@ -42,6 +42,7 @@ class Base extends Controller
 
     public function index()
     {
+        docs('# 検索条件とソート条件の設定');
         $this->prepareIndex();
 
         if (session()->has($this->viewPrefix.'.confirm')) {
@@ -58,12 +59,17 @@ class Base extends Controller
     {
         $this->request = $request;
 
-        return $this->index();
+        docs(['POST' => '入力値'], '# 検索条件とソート条件の設定');
+        $this->prepareIndex();
+
+        docs('# 画面表示');
+
+        return $this->outputIndex();
+
     }
 
     protected function prepareIndex()
     {
-        docs('# 検索条件とソート条件の設定');
         $this->keepItem('search');
 
         // 検索条件の準備
@@ -75,12 +81,13 @@ class Base extends Controller
         // 検索条件の適用（継承先でオーバーライド可能）
         $this->prepareIndexSearch($mainTable);
 
-        docs('# データの取得');
+        docs('# 表示に使うデータを取得');
         // データの取得（ページネーションの有無で分岐）
         $this->fetchIndexTableData($mainTable);
 
         // データの有無をフラグで保持
         $this->val['isLoop'] = ! $this->val[$this->loopItem]->isEmpty();
+        docs('データなし表示のため、データがあるか判断する');
     }
 
     protected function prepareIndexSearch(&$mainTable) {}
@@ -99,7 +106,7 @@ class Base extends Controller
         // ページネーションの実行
         $this->executeIndexPagination($mainTable);
 
-        docs(['データベース' => $this->loopItem], '<'.$this->loopItem.'>から、指定された<'.$this->paginateName.'>の'.$this->paginateNum."件を取得\n<search>を変更すると、<page>は先頭に戻す");
+        docs(['データベース' => $this->loopItem], '<'.$this->loopItem.'>から、表示リスト1ページ分の'.$this->paginateNum."件を読み込む\n検索条件を変えたらページ番号を1に戻す");
 
         // 不正なページ番号の処理（最終ページを超えている場合）
         $this->correctIndexInvalidPageNumber($mainTable);
@@ -117,7 +124,7 @@ class Base extends Controller
 
         $view = view($this->viewPrefix.'.index', $this->val);
         unset($this->val, $this->request, $this->tableData);
-        docs('テンプレートを読み込んで、HTMLを生成');
+        docs('画面のテンプレートを読み込み、HTMLを生成する');
 
         return $view;
     }
@@ -163,7 +170,7 @@ class Base extends Controller
         if (empty($this->paginateNum)) {
             // ページネーションなしで全件取得
             $this->val[$this->loopItem] = $mainTable->get();
-            docs(['データベース' => $this->loopItem], '<'.$this->loopItem.'>から全件取得');
+            docs(['データベース' => $this->loopItem], '表示に使うデータをすべて取り出す');
         } else {
             // ページネーションありで取得
             $this->prepareIndexPaginate($mainTable);

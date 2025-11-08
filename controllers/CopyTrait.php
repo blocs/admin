@@ -13,7 +13,7 @@ trait CopyTrait
         $this->copyId = $id;
 
         // データのコピー処理を実行
-        docs('# データのコピー');
+        docs(['GET' => 'id'], '# データのコピー');
         $preparedData = $this->prepareCopy();
         $this->executeCopy($preparedData);
 
@@ -56,7 +56,7 @@ trait CopyTrait
 
         // 作成したレコードのIDを設定
         $this->val['id'] = $newRecord->id;
-        docs(null, 'データをコピー', ['データベース' => $this->loopItem]);
+        docs(null, '同じ内容の新しいデータを保存する', ['データベース' => $this->loopItem]);
 
         // ログ用のデータを準備
         $this->buildCopyLogData($requestData, $newRecord->id);

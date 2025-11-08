@@ -14,14 +14,18 @@ trait UserUpdateTrait
 
         // 現在のパスワード入力の妥当性を確認する
         if ($this->isCurrentPasswordMissing()) {
+            docs('現在のパスワードが空なら、間違いを知らせて編集画面に戻す');
+
             return $this->backEdit('', lang('template:admin_profile_password_incorrect'), 'password_old');
         }
 
         if ($this->isCurrentPasswordInvalid()) {
+            docs('入力された現在のパスワードが違えば、同じく編集画面に戻す');
+
             return $this->backEdit('', lang('template:admin_profile_password_incorrect'), 'password_old');
         }
-        docs(['POST' => 'password_old', 'データベース' => $this->loopItem], '<password_old>があれば、<'.$this->loopItem.'>をチェック');
-        docs(null, "<password_old>が一致しなければ、メッセージをセットして編集画面に戻る\n・".lang('template:admin_profile_password_incorrect'), ['FORWARD' => '!'.prefix().'.edit']);
+        docs(['POST' => 'password_old', 'データベース' => $this->loopItem], '<password_old>を受け取ったら、保存している<'.$this->loopItem.'>のパスワードと比べる');
+        docs(null, "<password_old>と保存済みのパスワードが違えば、同じ知らせを出して編集画面に戻す\n・".lang('template:admin_profile_password_incorrect'), ['FORWARD' => '!'.prefix().'.edit']);
     }
 
     protected function prepareUpdate()
@@ -75,13 +79,14 @@ trait UserUpdateTrait
     {
         $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
         $requestData['name'] = $this->val['name'];
-        docs('<name>がなければ、<email>を指定する');
+        docs('<name>が空なら、かわりに<email>を入れる');
     }
 
     private function applyRoleAggregation(array &$requestData): void
     {
         $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);
         $requestData['role'] = $this->val['role'];
+        docs('<role>の入力は、タブで区切った一つの文字列にまとめる');
     }
 
     private function applyPasswordRenewal(array &$requestData): void
@@ -91,6 +96,7 @@ trait UserUpdateTrait
         }
 
         $requestData['password'] = bcrypt($this->request->password_new);
+        docs('新しいパスワードが入力されたら、暗号化して保存する');
     }
 
     protected function prepareUpdateTrait(&$requestData) {}
