@@ -11,7 +11,7 @@ alwaysApply: false
 このツールでは、Laravelのコントローラーに処理説明を記述し、対象ルートにアクセスするだけで、Excel形式の処理機能記述書を自動生成できます。以下の手順で設定・利用します。
 
 ### 1. コントローラーに処理説明を書く
-`docs()` 関数を使って、処理内容を順番に記述します。記述された順に、ドキュメントに反映されます。
+**docs()** 関数を使って、処理内容を順番に記述します。記述された順に、ドキュメントに反映されます。
 ```php
 class TestController extends Controller
 {
@@ -115,3 +115,17 @@ $config = [
     ],
 ];
 ```
+
+## 回答例
+- **user**
+artisanコマンドの処理機能記述書を `docs()` を使って自動生成したい。
+- **assistant**
+artisanコマンドのソースコードに `docs()` 関数を使って説明を記述した後、以下のようにルートを追加することで、ブラウザからアクセスして処理機能記述書を自動生成できます。
+- **assistant**
+下記のルートにアクセスすると、指定されたartisanコマンド（この例では `summary:hotlog`）が実行され、`Docs` ミドルウェアによってその処理内容が記述書として生成されます。
+```php
+Route::get('/artisan', function () {
+    \Artisan::call('summary:hotlog');
+    return 'OK';
+})->middleware(Blocs\Middleware\Docs::class);
+---
