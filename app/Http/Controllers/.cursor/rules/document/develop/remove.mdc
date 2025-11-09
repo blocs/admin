@@ -44,23 +44,23 @@ alwaysApply: false
 一覧画面のテンプレートファイル `index.blocs.html` を編集し、以下のような `modalActivate` および `modalInactivate` に関連する処理をすべて削除してください。
 ```html
 <a class="me-3" data-bs-toggle="modal" data-bs-target="#modalActivate" :data-modalaction=route(prefix().".toggle", ["id" => $user->id]) data-exist=$user->disabled_at>
-    <i class="fa-solid fa-check" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:admin_user_valid_title")></i>
+    <i class="fa-solid fa-check" data-bs-toggle="tooltip" :data-bs-original-title=__("template:admin_user_valid_title")></i>
 </a>
 <a class="me-3" data-bs-toggle="modal" data-bs-target="#modalInactivate" :data-modalaction=route(prefix().".toggle", ["id" => $user->id]) data-none=$user->disabled_at>
-    <i class="fa-solid fa-ban" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:admin_user_invalid_title")></i>
+    <i class="fa-solid fa-ban" data-bs-toggle="tooltip" :data-bs-original-title=__("template:admin_user_invalid_title")></i>
 </a>
 
 <!-- data-bloc="modalFooterRight" -->
     <!--
         data-include="buttonSuccessModal"
-        $buttonModalLabel=lang("template:admin_user_button_valid")
+        $buttonModalLabel=__("template:admin_user_button_valid")
     -->
 <!-- data-endbloc -->
 <!--
     data-include="modal"
     $modalName="modalActivate"
-    $modalTitle=lang("template:admin_user_valid_title")
-    $modalMessage=lang("template:admin_user_valid_message")
+    $modalTitle=__("template:admin_user_valid_title")
+    $modalMessage=__("template:admin_user_valid_message")
     data-exist=$isLoop
 -->
 
@@ -68,14 +68,14 @@ alwaysApply: false
     <!--
         data-include="buttonWarningModal"
         $buttonModalIcon="fa-solid fa-ban"
-        $buttonModalLabel=lang("template:admin_user_button_invalid")
+        $buttonModalLabel=__("template:admin_user_button_invalid")
     -->
 <!-- data-endbloc -->
 <!--
     data-include="modal"
     $modalName="modalInactivate"
-    $modalTitle=lang("template:admin_user_invalid_title")
-    $modalMessage=lang("template:admin_user_invalid_message")
+    $modalTitle=__("template:admin_user_invalid_title")
+    $modalMessage=__("template:admin_user_invalid_message")
     data-exist=$isLoop
 -->
 ```
