@@ -10,8 +10,8 @@ alwaysApply: false
 ### 1. テンプレートで入力フォームを作成
 ```html
 <!--
-	$uploadMessage=lang("template:admin_profile_upload_message")
-	$uploadDelete=lang("template:admin_profile_upload_delete")
+	$uploadMessage=__("template:admin_profile_upload_message")
+	$uploadDelete=__("template:admin_profile_upload_delete")
 -->
 <label class="form-label">アップロードファイル</label>
 <input type="hidden" id="file" name="file" class="ai-upload" />
@@ -55,8 +55,8 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
 ファイルのアップロードを必須項目にしたい場合は、以下のようにバリデーションとエラーメッセージの設定を行います。
 ```html
 <!--
-	$uploadMessage=lang("template:admin_profile_upload_message")
-	$uploadDelete=lang("template:admin_profile_upload_delete")
+	$uploadMessage=__("template:admin_profile_upload_message")
+	$uploadDelete=__("template:admin_profile_upload_delete")
 -->
 <label class="form-label">アップロードファイル</label>
 <!-- :class="ai-upload is-invalid" data-exist=$errors->has("file") -->
@@ -71,8 +71,8 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
 アップロードできるファイルの種類を画像ファイル（JPEG、PNG、GIFなど）に限定したい場合は、`mimes` バリデーションを使用します。
 ```html
 <!--
-	$uploadMessage=lang("template:admin_profile_upload_message")
-	$uploadDelete=lang("template:admin_profile_upload_delete")
+	$uploadMessage=__("template:admin_profile_upload_message")
+	$uploadDelete=__("template:admin_profile_upload_delete")
 -->
 <label class="form-label">アップロードファイル</label>
 <input type="hidden" id="file" name="file" class="ai-upload" />
@@ -85,8 +85,8 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
 アップロードできるファイルのサイズに制限を設けたい場合は、`max` バリデーションを使用します。
 ```html
 <!--
-	$uploadMessage=lang("template:admin_profile_upload_message")
-	$uploadDelete=lang("template:admin_profile_upload_delete")
+	$uploadMessage=__("template:admin_profile_upload_message")
+	$uploadDelete=__("template:admin_profile_upload_delete")
 -->
 <label class="form-label">アップロードファイル</label>
 <input type="hidden" id="file" name="file" class="ai-upload" />
@@ -99,8 +99,8 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
 複数のファイルを一度にアップロードできるようにするには、`multiple` 属性を指定します。これにより、ユーザーはファイル選択時に複数のファイルを選べるようになります。
 ```html
 <!--
-	$uploadMessage=lang("template:admin_profile_upload_message")
-	$uploadDelete=lang("template:admin_profile_upload_delete")
+	$uploadMessage=__("template:admin_profile_upload_message")
+	$uploadDelete=__("template:admin_profile_upload_delete")
 -->
 <label class="form-label">アップロードファイル</label>
 <input type="hidden" id="file" name="file" class="ai-upload" multiple />
@@ -125,5 +125,5 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
 <input type="hidden" id="file" name="file" class="ai-upload" />
 ```
 - **assistant**
-これらのメッセージは、ユーザーにとってわかりやすい表現に自由に変更できます。多言語対応が必要な場合は、`lang()` 関数を使って翻訳キーを指定することも可能です。
+これらのメッセージは、ユーザーにとってわかりやすい表現に自由に変更できます。多言語対応が必要な場合は、`__()` 関数を使って翻訳キーを指定することも可能です。
 ---

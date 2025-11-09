@@ -45,7 +45,7 @@ trait SelectTrait
         if (empty($this->selectedIdList)) {
             return $this->backIndex('error', 'data_not_selected');
         }
-        docs(null, "データが選ばれていないときは、注意メッセージを付けて一覧画面に戻る\n・".lang('error:data_not_selected'), ['FORWARD' => '!'.$this->viewPrefix.'.index']);
+        docs(null, "データが選ばれていないときは、注意メッセージを付けて一覧画面に戻る\n・".__('error:data_not_selected'), ['FORWARD' => '!'.$this->viewPrefix.'.index']);
     }
 
     protected function prepareConfirmSelect() {}

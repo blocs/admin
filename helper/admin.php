@@ -1,12 +1,5 @@
 <?php
 
-if (! function_exists('lang')) {
-    function lang(...$messages)
-    {
-        return Blocs\Lang::get(implode(':', $messages));
-    }
-}
-
 if (! function_exists('val')) {
     function val($str, $formName = null, $template = null)
     {

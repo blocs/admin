@@ -18,7 +18,7 @@ class ProfileController extends Base
         $this->noticeItem = 'email';
 
         // プロフィールメニューのヘッドライン表示を初期化
-        Menu::headline('fa-cog', lang('template:admin_menu_profile'));
+        Menu::headline('fa-cog', __('template:admin_menu_profile'));
 
         // プロフィール関連ナビゲーションをアクティブ表示にするフラグ
         $this->val['profileActive'] = true;
@@ -40,7 +40,7 @@ class ProfileController extends Base
         // ホーム画面へ遷移し、更新成功メッセージを通知
         return redirect()->route('home')->with([
             'category' => 'success',
-            'message' => lang('success:admin_profile_updated'),
+            'message' => __('success:admin_profile_updated'),
         ]);
     }
 
