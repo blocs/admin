@@ -31,6 +31,11 @@ trait FileTrait
 
     protected function validateUpload($paramname)
     {
+        // テーブルタイプに対応しているフォーム名を取得
+        if (preg_match('/\[([^][]+)\]$/', $paramname, $matches)) {
+            $paramname = $matches[1];
+        }
+
         // アップロード用のバリデーションルールを取得
         [$rules, $messages] = \Blocs\Validate::upload($this->viewPrefix, $paramname);
         if (empty($rules)) {
