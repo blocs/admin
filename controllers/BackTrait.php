@@ -88,7 +88,7 @@ trait BackTrait
 
     private function fetchBackTranslation($code)
     {
-        $translatedMessage = lang($code);
+        $translatedMessage = __($code);
 
         // 翻訳が見つからない場合はコードがそのまま返されるためfalseを返す
         if ($translatedMessage === $code) {
