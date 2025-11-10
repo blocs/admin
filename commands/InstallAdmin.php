@@ -3,6 +3,7 @@
 namespace Blocs\Commands;
 
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\File;
 
 class InstallAdmin extends Install
 {
@@ -52,5 +53,27 @@ class InstallAdmin extends Install
         $this->info('Admin has been installed successfully.');
         $this->info('Login URL is '.route('login').'.');
         $this->info('Initial ID/Pass is admin/admin.');
+
+        $directoryPairs = [
+            base_path('vendor/blocs/admin/cursor/rules/admin') => base_path('.cursor/rules/admin'),
+            base_path('vendor/blocs/admin/cursor/rules/blocs') => base_path('.cursor/rules/blocs'),
+        ];
+
+        foreach ($directoryPairs as $sourcePath => $destinationPath) {
+            $this->copyCursorDirectory($sourcePath, $destinationPath);
+        }
+    }
+
+    private function copyCursorDirectory(string $sourcePath, string $destinationPath): void
+    {
+        if (! File::exists($sourcePath)) {
+            return;
+        }
+
+        if (File::exists($destinationPath)) {
+            File::deleteDirectory($destinationPath);
+        }
+
+        File::copyDirectory($sourcePath, $destinationPath);
     }
 }

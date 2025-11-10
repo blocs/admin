@@ -29,7 +29,6 @@ class AdminServiceProvider extends ServiceProvider
         $consoleCommandBindings = [
             'command.blocs.install' => Commands\InstallAdmin::class,
             'command.blocs.develop' => Commands\Develop::class,
-            'command.blocs.knowledge' => Commands\Knowledge::class,
         ];
 
         foreach ($consoleCommandBindings as $consoleCommandKey => $consoleCommandClass) {
