@@ -55,8 +55,8 @@ Bootstrapの `tooltip` 機能を使えば、アイコンやボタンなどにマ
 <i class="fa-solid fa-ban" data-bs-toggle="tooltip" data-bs-original-title="ERROR"></i>
 ```
 - **assistant**
-`__()` 関数を使えば、翻訳ファイルに登録された文字列を `tooltip` に表示できます。以下の場合、`template:admin_user_invalid_title` に登録された翻訳文字列が、現在の言語設定に応じて表示されます。
+BLOCSの `lang()` 関数を使えば、翻訳ファイルに登録された文字列を `tooltip` に表示できます。以下の場合、`template:admin_user_invalid_title` に登録された翻訳文字列が、現在の言語設定に応じて表示されます。
 ```html
-<i class="fa-solid fa-ban" data-bs-toggle="tooltip" :data-bs-original-title=__("template:admin_user_invalid_title")></i>
+<i class="fa-solid fa-ban" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:admin_user_invalid_title")></i>
 ```
 ---

@@ -6,7 +6,7 @@
 
 <!-- data-bloc="buttonCardHeader" -->
     <a :href=route(prefix().".create") class="me-3">
-        <i class="fa-solid fa-plus" data-bs-toggle="tooltip" :data-bs-original-title=__("template:resource_blocs_modal_new_title")></i>
+        <i class="fa-solid fa-plus" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:resource_blocs_modal_new_title")></i>
     </a>
 <!-- data-endbloc -->
 
@@ -49,16 +49,16 @@
                             </td>
 <!-- BODY_HTML -->                            <td class="text-nowrap">
                                 <a class="me-3" data-bs-toggle="modal" data-bs-target="#modalActivate" :data-modalaction=route(prefix().".toggle", ["id" => $<!-- SINGULAR_ITEM -->->id]) data-exist=$<!-- SINGULAR_ITEM -->->disabled_at>
-                                    <i class="fa-solid fa-check" data-bs-toggle="tooltip" :data-bs-original-title=__("template:resource_blocs_modal_activate_title")></i>
+                                    <i class="fa-solid fa-check" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:resource_blocs_modal_activate_title")></i>
                                 </a>
                                 <a class="me-3" data-bs-toggle="modal" data-bs-target="#modalInactivate" :data-modalaction=route(prefix().".toggle", ["id" => $<!-- SINGULAR_ITEM -->->id]) data-none=$<!-- SINGULAR_ITEM -->->disabled_at>
-                                    <i class="fa-solid fa-ban" data-bs-toggle="tooltip" :data-bs-original-title=__("template:resource_blocs_modal_inactivate_title")></i>
+                                    <i class="fa-solid fa-ban" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:resource_blocs_modal_inactivate_title")></i>
                                 </a>
                                 <a :href=route(prefix().".edit", ["id" => $<!-- SINGULAR_ITEM -->->id]) class="me-3">
-                                    <i class="fa-solid fa-pen" data-bs-toggle="tooltip" :data-bs-original-title=__("template:resource_blocs_modal_update_title")></i>
+                                    <i class="fa-solid fa-pen" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:resource_blocs_modal_update_title")></i>
                                 </a>
                                 <a :href=route(prefix().".show", ["id" => $<!-- SINGULAR_ITEM -->->id]) class="me-3">
-                                    <i class="fa-solid fa-trash" data-bs-toggle="tooltip" :data-bs-original-title=__("template:resource_blocs_modal_delete_title")></i>
+                                    <i class="fa-solid fa-trash" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:resource_blocs_modal_delete_title")></i>
                                 </a>
                             </td>
                         </tr>
@@ -75,14 +75,14 @@
 <!-- data-bloc="modalFooterRight" -->
     <!--
         data-include="buttonSuccessModal"
-        $buttonModalLabel=__("template:resource_blocs_button_activate")
+        $buttonModalLabel=lang("template:resource_blocs_button_activate")
     -->
 <!-- data-endbloc -->
 <!--
     data-include="modal"
     $modalName="modalActivate"
-    $modalTitle=__("template:resource_blocs_modal_activate_title")
-    $modalMessage=__("template:resource_blocs_modal_activate_message")
+    $modalTitle=lang("template:resource_blocs_modal_activate_title")
+    $modalMessage=lang("template:resource_blocs_modal_activate_message")
     data-exist=$isLoop
 -->
 
@@ -90,14 +90,14 @@
     <!--
         data-include="buttonWarningModal"
         $buttonModalIcon="fa-solid fa-ban"
-        $buttonModalLabel=__("template:resource_blocs_button_inactivate")
+        $buttonModalLabel=lang("template:resource_blocs_button_inactivate")
     -->
 <!-- data-endbloc -->
 <!--
     data-include="modal"
     $modalName="modalInactivate"
-    $modalTitle=__("template:resource_blocs_modal_inactivate_title")
-    $modalMessage=__("template:resource_blocs_modal_inactivate_message")
+    $modalTitle=lang("template:resource_blocs_modal_inactivate_title")
+    $modalMessage=lang("template:resource_blocs_modal_inactivate_message")
     data-exist=$isLoop
 -->
 
