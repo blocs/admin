@@ -16,16 +16,16 @@ trait UserUpdateTrait
         if ($this->isCurrentPasswordMissing()) {
             docs('現在のパスワードが空なら、間違いを知らせて編集画面に戻す');
 
-            return $this->backEdit('', __('template:admin_profile_password_incorrect'), 'password_old');
+            return $this->backEdit('', lang('template:admin_profile_password_incorrect'), 'password_old');
         }
 
         if ($this->isCurrentPasswordInvalid()) {
             docs('入力された現在のパスワードが違えば、同じく編集画面に戻す');
 
-            return $this->backEdit('', __('template:admin_profile_password_incorrect'), 'password_old');
+            return $this->backEdit('', lang('template:admin_profile_password_incorrect'), 'password_old');
         }
         docs(['POST' => 'password_old', 'データベース' => $this->loopItem], '<password_old>を受け取ったら、保存している<'.$this->loopItem.'>のパスワードと比べる');
-        docs(null, "<password_old>と保存済みのパスワードが違えば、同じ知らせを出して編集画面に戻す\n・".__('template:admin_profile_password_incorrect'), ['FORWARD' => '!'.prefix().'.edit']);
+        docs(null, "<password_old>と保存済みのパスワードが違えば、同じ知らせを出して編集画面に戻す\n・".lang('template:admin_profile_password_incorrect'), ['FORWARD' => '!'.prefix().'.edit']);
     }
 
     protected function prepareUpdate()

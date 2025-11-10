@@ -81,13 +81,13 @@ class Menu
         // 指定されたheadlineを設定
         self::$headline = [
             'icon' => $icon,
-            'label' => __($lang),
+            'label' => lang($lang),
             'menu' => $menu ?? '',
         ];
 
         // 指定されたbreadcrumbを設定
         self::$breadcrumbList[] = [
-            'label' => __($lang),
+            'label' => lang($lang),
         ];
 
         if (isset($activePrefix)) {
@@ -129,7 +129,7 @@ class Menu
     private static function resolveLabel(array $menuConfig)
     {
         if (! isset($menuConfig['label']) && isset($menuConfig['lang'])) {
-            $menuConfig['label'] = __($menuConfig['lang']);
+            $menuConfig['label'] = lang($menuConfig['lang']);
         }
 
         return $menuConfig;
