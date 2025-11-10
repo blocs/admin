@@ -6,7 +6,7 @@
         $buttonClass=$buttonModalBackClass
         $buttonModalBackIcon="fa-solid fa-arrow-left"
         $buttonIcon=$buttonModalBackIcon
-        $buttonModalBackLabel=__("template:resource_blocs_button_back")
+        $buttonModalBackLabel=lang("template:resource_blocs_button_back")
         $buttonLabel=$buttonModalBackLabel
     -->
 
@@ -31,7 +31,7 @@
         data-include="buttonModal"
         $buttonModalClass="btn btn-primary"
         $buttonModalIcon="fa-solid fa-arrow-right"
-        $buttonModalLabel=__("template:resource_blocs_button_submit")
+        $buttonModalLabel=lang("template:resource_blocs_button_submit")
     -->
 <!-- data-endbloc -->
 
@@ -40,7 +40,7 @@
         data-include="buttonModal"
         $buttonModalClass="btn btn-info"
         $buttonModalIcon="fa-solid fa-info-circle"
-        $buttonModalLabel=__("template:resource_blocs_button_submit")
+        $buttonModalLabel=lang("template:resource_blocs_button_submit")
     -->
 <!-- data-endbloc -->
 
@@ -49,7 +49,7 @@
         data-include="buttonModal"
         $buttonModalClass="btn btn-success"
         $buttonModalIcon="fa-solid fa-check"
-        $buttonModalLabel=__("template:resource_blocs_button_submit")
+        $buttonModalLabel=lang("template:resource_blocs_button_submit")
     -->
 <!-- data-endbloc -->
 
@@ -58,7 +58,7 @@
         data-include="buttonModal"
         $buttonModalClass="btn btn-danger"
         $buttonModalIcon="fa-solid fa-trash"
-        $buttonModalLabel=__("template:resource_blocs_button_delete")
+        $buttonModalLabel=lang("template:resource_blocs_button_delete")
     -->
 <!-- data-endbloc -->
 
@@ -67,7 +67,7 @@
         data-include="buttonModal"
         $buttonModalClass="btn btn-warning"
         $buttonModalIcon="fa-solid fa-exclamation-triangle"
-        $buttonModalLabel=__("template:resource_blocs_button_warning")
+        $buttonModalLabel=lang("template:resource_blocs_button_warning")
     -->
 <!-- data-endbloc -->
 
@@ -83,7 +83,7 @@
                 data-include="buttonPrimaryModal"
                 $modalAction=route("logout")
                 $buttonModalIcon="fa-solid fa-sign-out-alt"
-                $buttonModalLabel=__("template:resource_blocs_logout_button")
+                $buttonModalLabel=lang("template:resource_blocs_logout_button")
             -->
         </form>
     <!-- data-endbloc -->
@@ -91,8 +91,8 @@
     <!-- モーダル表示 -->
     <!--
         data-include="modal"
-        $modalTitle=__("template:resource_blocs_logout_title")
-        $modalMessage=__("template:resource_blocs_logout_message")
+        $modalTitle=lang("template:resource_blocs_logout_title")
+        $modalMessage=lang("template:resource_blocs_logout_message")
     -->
 <!-- data-endbloc -->
 
@@ -114,8 +114,8 @@
     <!-- モーダル表示 -->
     <!--
         data-include="modal"
-        $modalTitle=__("template:resource_blocs_modal_new_title")
-        $modalMessage=__("template:resource_blocs_modal_new_message")
+        $modalTitle=lang("template:resource_blocs_modal_new_title")
+        $modalMessage=lang("template:resource_blocs_modal_new_message")
     -->
 <!-- data-endbloc -->
 
@@ -131,15 +131,15 @@
         <!--
             data-include="buttonPrimaryModal"
             $modalAction=route(prefix().".update", ["id" => $id])
-            $buttonModalLabel=__("template:resource_blocs_modal_update_button")
+            $buttonModalLabel=lang("template:resource_blocs_modal_update_button")
         -->
     <!-- data-endbloc -->
 
     <!-- モーダル表示 -->
     <!--
         data-include="modal"
-        $modalTitle=__("template:resource_blocs_modal_update_title")
-        $modalMessage=__("template:resource_blocs_modal_update_message")
+        $modalTitle=lang("template:resource_blocs_modal_update_title")
+        $modalMessage=lang("template:resource_blocs_modal_update_message")
     -->
 <!-- data-endbloc -->
 
@@ -151,7 +151,7 @@
     <!--
         data-include="button_info"
         $buttonIcon="fa-solid fa-copy"
-        $buttonLabel=__("template:resource_blocs_button_copy")
+        $buttonLabel=lang("template:resource_blocs_button_copy")
     -->
 
     <!-- モーダル設定 -->
@@ -160,15 +160,15 @@
             data-include="buttonInfoModal"
             $modalAction=route(prefix().".copy", ["id" => $id])
             $buttonModalIcon="fa-solid fa-copy"
-            $buttonModalLabel=__("template:resource_blocs_button_copy")
+            $buttonModalLabel=lang("template:resource_blocs_button_copy")
         -->
     <!-- data-endbloc -->
 
     <!-- モーダル表示 -->
     <!--
         data-include="modal"
-        $modalTitle=__("template:resource_blocs_modal_copy_title")
-        $modalMessage=__("template:resource_blocs_modal_copy_message")
+        $modalTitle=lang("template:resource_blocs_modal_copy_title")
+        $modalMessage=lang("template:resource_blocs_modal_copy_message")
     -->
 <!-- data-endbloc -->
 
@@ -190,8 +190,8 @@
     <!-- モーダル表示 -->
     <!--
         data-include="modal"
-        $modalTitle=__("template:resource_blocs_modal_delete_title")
-        $modalMessage=__("template:resource_blocs_modal_delete_message")
+        $modalTitle=lang("template:resource_blocs_modal_delete_title")
+        $modalMessage=lang("template:resource_blocs_modal_delete_message")
     -->
 <!-- data-endbloc -->
 

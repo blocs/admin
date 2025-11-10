@@ -4,6 +4,12 @@ globs: **/*.php
 alwaysApply: false
 ---
 # ヘルパー関数の使い方
+## lang($str)
+Laravelの翻訳ファイルから、指定したキーに対応する文字列（翻訳文）を取得します。テンプレートやコントローラー内で、言語対応のメッセージを表示したいときに使います。
+```html
+<#-- $uploadMessage=lang("template:admin_profile_upload_message") -->
+```
+
 ## val($str, $formName, $template)
 指定したテンプレートとフォーム名に基づいて、メニューのラベルを取得します。`$str` に渡された値を、対応するラベルに変換します。コントローラーでラベル表示をしたいときに便利です。
 ```php
