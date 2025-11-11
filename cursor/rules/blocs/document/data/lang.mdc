@@ -46,3 +46,16 @@ Bootstrapの `tooltip` は、`data-bs-html="true"` を指定することで、HT
 <i class="fa-solid fa-ban" data-bs-toggle="tooltip" data-bs-html="true" data-bs-original-title="<i>ERROR</i>"></i>
 ```
 ---
+- **user**
+`tooltip` を表示したい。
+- **assistant**
+Bootstrapの `tooltip` 機能を使えば、アイコンやボタンなどにマウスを乗せたときに補足情報を表示できます。Laravel の翻訳機能と組み合わせることで、言語ごとに異なるメッセージを表示することも可能です。以下のように記述することで、ERROR というツールチップが表示されます。
+```html
+<i class="fa-solid fa-ban" data-bs-toggle="tooltip" data-bs-original-title="ERROR"></i>
+```
+- **assistant**
+BLOCSの `lang()` 関数を使えば、翻訳ファイルに登録された文字列を `tooltip` に表示できます。以下の場合、`template:admin_user_invalid_title` に登録された翻訳文字列が、現在の言語設定に応じて表示されます。
+```html
+<i class="fa-solid fa-ban" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:admin_user_invalid_title")></i>
+```
+---
