@@ -87,6 +87,8 @@ class Develop extends Command
 
         // Pintでコードを整形します
         exec(base_path('vendor/bin/pint').' '.escapeshellarg(base_path('routes/web.php')));
+
+        Artisan::call('route:cache');
     }
 
     private function mergeMenuConfiguration(array $menuConfig): void
