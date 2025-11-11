@@ -36,7 +36,7 @@ trait VectorStoreTrait
         self::runPythonScript('delete.py', [database_path(), $collectionName], $payload)->output();
     }
 
-    private function similarDocument(string $collectionName, array $targetData, int $docsLimit = 5, float $scoreThreshold = 0.6): array
+    private function similarDocument(string $collectionName, mixed $targetData, int $docsLimit = 5, float $scoreThreshold = 0.6): array
     {
         $payload = json_encode($targetData, JSON_UNESCAPED_UNICODE);
         $processResult = self::runPythonScript('similar.py', [database_path(), $collectionName, $scoreThreshold, $docsLimit], $payload);
