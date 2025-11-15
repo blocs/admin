@@ -27,7 +27,7 @@ class AdminServiceProvider extends ServiceProvider
     public function registerBlocsCommand()
     {
         $consoleCommandBindings = [
-            'command.blocs.install' => Commands\InstallAdmin::class,
+            'command.blocs.install' => Commands\Install::class,
         ];
 
         foreach ($consoleCommandBindings as $consoleCommandKey => $consoleCommandClass) {
