@@ -1,0 +1,90 @@
+# Excelファイルを手軽に操作する方法
+このツールは、パッケージに組み込まれているExcelファイル操作用の軽量でシンプルな機能です。Excelファイル内のセルの値を取得したり設定したりすることができ、必要に応じてシート名の取得や変更も行えます。
+
+## セルの値を取る方法
+セルの値を取得するには、`get` メソッドを使用します。
+- 第1引数：シート番号またはシート名（例：1 または 'Sheet1'）
+- 第2引数：列番号または列名（例：'A' または 1）
+- 第3引数：行番号または行名（例：'5' または 5）
+
+```php
+use Blocs\Excel;
+
+$excel = new Excel('sample.xlsx');
+$value = $excel->get(1, 'A', '5');
+```
+
+## 全てのセルの値を取る方法
+大量のセル（例：1,000件以上）の値を `get` メソッドで個別に取得すると、処理に時間がかかることがあります。そのような場合は、`all` メソッドを使って、指定したシートの全セルの値を一括で取得するのが効率的です。
+- 第1引数：シート番号またはシート名（例：1 または 'Sheet1'）
+
+```php
+use Blocs\Excel;
+
+$excel = new Excel('sample.xlsx');
+$records = $excel->all('Worksheet');
+```
+
+`all` メソッドの第二引数に「抜き出したい列番号の配列」を指定することで、対象の列だけを効率的に取得できます。これにより、パフォーマンスがさらに向上します。第二引数には 列番号の配列 を指定します（例：[0] は1列目）。列名（例：'A'）は使用できません。この方法は、大量データの中から特定の列だけを抽出したい場合に有効です。
+```php
+$records = $excel->all('Worksheet', [0]);
+```
+
+## メモリを節約して全てのセルの値を取得する方法
+`all` メソッドは便利ですが、大量のデータを扱う場合はメモリ消費が大きくなります。そのような場合は、`open` と `first` を使うことで、1行ずつ効率的にデータを取得できます
+```php
+use Blocs\Excel;
+
+$excel = new Excel('sample.xlsx');
+$excel->open('Worksheet', [0]);
+while ($record = $excel->first()) {
+    ...
+}
+```
+`first` で最後の行まで読み込むと、自動的に `close` が実行されます。処理を途中で終了する場合は、明示的に `close` を呼び出してください
+```php
+$excel->close();
+```
+
+## シート名を取得する方法
+Excelファイルに含まれるすべてのシート名を、配列として取得するには `sheetNames()` メソッドを使用します。戻り値は、Excelファイル内のシート名をすべて含む文字列の配列です。
+```php
+use Blocs\Excel;
+
+$excel = new Excel('sample.xlsx');
+$sheetNames = $excel->sheetNames();
+```
+
+## セルの値をセットする方法
+セルに値をセットするには、`set` メソッドを使用します。その後、`save` メソッドでファイルに保存します。
+- 第1引数：シート番号またはシート名
+- 第2引数：列名または列番号
+- 第3引数：行名または行番号
+- 第4引数：セットする値
+
+```php
+use Blocs\Excel;
+
+$excel = new Excel('sample.xlsx');
+$excel->set(1, 'A', '3', 5);
+$excel->set(1, 'A', '5', $value);
+$excel->save('sample.xlsx');
+```
+
+`download` メソッドを使うことで、WebアプリケーションからExcelファイルを直接ダウンロードさせることができます。引数には、ダウンロード時のファイル名を指定します。
+```php
+return $excel->download('sample.xlsx');
+```
+
+## シート名を変更する方法
+`name` メソッドを使って、既存のシート名を変更できます。
+- 第1引数：シート番号（※シート名は使用できません）
+- 第2引数：新しいシート名
+
+```php
+use Blocs\Excel;
+
+$excel = new Excel('sample.xlsx');
+$excel->name(1, 'newWorksheet');
+return $excel->download('sample.xlsx');
+```
