@@ -30,7 +30,6 @@
     "autoload": {
         "psr-4": {
             "Blocs\\": "src\/",
-            "Blocs\\Commands\\": "commands\/",
             "Blocs\\Controllers\\": "controllers\/"
         },
         "files": [

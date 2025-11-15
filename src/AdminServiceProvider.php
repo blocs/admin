@@ -6,12 +6,6 @@ use Illuminate\Support\ServiceProvider;
 
 class AdminServiceProvider extends ServiceProvider
 {
-    public function register()
-    {
-        // コンソールコマンドの登録処理を実行
-        $this->app->runningInConsole() && $this->registerBlocsCommand();
-    }
-
     public function boot()
     {
         // アプリケーション定数の読み込みを実行
@@ -24,30 +18,9 @@ class AdminServiceProvider extends ServiceProvider
         $this->app->runningInConsole() && $this->registerPublish();
     }
 
-    public function registerBlocsCommand()
-    {
-        $consoleCommandBindings = [
-            'command.blocs.install' => Commands\InstallAdmin::class,
-            'command.blocs.develop' => Commands\Develop::class,
-        ];
-
-        foreach ($consoleCommandBindings as $consoleCommandKey => $consoleCommandClass) {
-            $this->registerConsoleCommand($consoleCommandKey, $consoleCommandClass);
-        }
-    }
-
     public function registerPublish()
     {
         $this->publishes($this->buildPublishMappings());
-    }
-
-    private function registerConsoleCommand(string $consoleCommandKey, string $consoleCommandClass): void
-    {
-        $this->app->singleton($consoleCommandKey, function () use ($consoleCommandClass) {
-            return new $consoleCommandClass;
-        });
-
-        $this->commands($consoleCommandKey);
     }
 
     private function buildPublishMappings(): array

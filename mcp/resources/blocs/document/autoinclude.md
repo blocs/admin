@@ -1,0 +1,20 @@
+# 使いやすい入力インターフェースを実装する方法
+Auto Include 機能を利用することで、日付入力やファイルアップロードなどの入力インターフェースを簡単に実装できます。この機能により、複雑な設定を行うことなく、ユーザーにとって直感的で使いやすいフォームを素早く構築することが可能です。
+
+# **ai-\*** クラス一覧
+入力フォームに `ai-*` クラスを指定するだけで、便利な機能を自動的に追加できます。これにより、ユーザーにとって使いやすいインターフェースを簡単に作成でき、テンプレートの記述もすっきりします。`resources/views/admin/autoinclude` フォルダに、`ai-*` クラス名に対応した `.html` テンプレートを追加することで、独自の `ai-*` クラスを作成できます。`ai-` を除いたクラス名がテンプレートのファイル名になります（例：`ai-datepicker` クラスの場合は `datepicker.html`）。テンプレート内では `data-bloc` 属性を定義せず、ファイルの内容全体がそのまま読み込まれるようにしてください。`data-bloc` を使わず、HTMLの内容がそのまま挿入される形式です。
+
+|クラス|役割|
+|:-----------|:-----------|
+|ai-datepicker|日付選択用のカレンダー入力になります。|
+|ai-timepicker|日付と時間を選べる入力になります。|
+|ai-phone|電話番号の入力時に自動で区切り（ハイフン）を入れます。|
+|ai-select2|検索機能付きのプルダウンメニューになります。選択肢が多い場合に便利です。|
+|ai-upload|ファイルをアップロードできる入力フォームになります。|
+
+## サンプルコード
+```html
+<input type="text" id="date" name="date" class="form-control ai-datepicker" />
+<input type="text" id="date_time" name="date_time" class="form-control ai-timepicker" />
+<input type="text" id="phone" name="phone" class="form-control ai-phone" />
+```
