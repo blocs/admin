@@ -2,99 +2,243 @@
 
 namespace Blocs;
 
-use Illuminate\Process\ProcessResult;
-use Illuminate\Support\Facades\Process;
+use Illuminate\Support\Facades\Http;
+use OpenAI\Laravel\Facades\OpenAI;
 
 class VectorStore
 {
-    public static function update(string $collectionName, array $targetData): void
+    /**
+     * @var array<string, array{id: string, name: string}>
+     */
+    private static array $collections = [];
+
+    /**
+     * ドキュメントを取得
+     *
+     * @param  array<string>|string  $docIds
+     * @return array<string, mixed>
+     */
+    public static function get(string $collectionName, array|string $docIds): array
     {
-        $payload = json_encode([$targetData], JSON_UNESCAPED_UNICODE);
+        $collectionId = self::ensureCollection($collectionName);
 
-        self::runPythonScript('update.py', [database_path(), $collectionName], $payload);
-    }
+        $normalizedDocIds = is_array($docIds) ? $docIds : [$docIds];
 
-    public static function updateChunk(string $collectionName, array $targetData, string $chunkItem, int $chunkSize = 1000, int $chunkOverlap = 0): void
-    {
-        $chunkedDocuments = self::chunkDocument([$targetData], $chunkItem, $chunkSize, $chunkOverlap);
-        $payload = json_encode($chunkedDocuments, JSON_UNESCAPED_UNICODE);
+        $response = Http::post(
+            self::getApiUrl("/collections/{$collectionId}/get"),
+            ['ids' => $normalizedDocIds]
+        );
 
-        self::runPythonScript('update.py', [database_path(), $collectionName], $payload);
-    }
-
-    public static function delete(string $collectionName, array|string $targetIds = []): void
-    {
-        // 全件削除の指定は空配列を渡す
-        if (empty($targetIds)) {
-            $targetIds = [];
-        } elseif (! is_array($targetIds)) {
-            $targetIds = [$targetIds];
-        }
-
-        $payload = json_encode($targetIds, JSON_UNESCAPED_UNICODE);
-
-        self::runPythonScript('delete.py', [database_path(), $collectionName], $payload)->output();
-    }
-
-    public static function similar(string $collectionName, array|string $targetData, int $docsLimit = 5, float $scoreThreshold = 0.6): array
-    {
-        $payload = json_encode($targetData, JSON_UNESCAPED_UNICODE);
-        $processResult = self::runPythonScript('similar.py', [database_path(), $collectionName, $scoreThreshold, $docsLimit], $payload);
-        $jsonContent = trim($processResult->output());
-
-        if ($jsonContent === '') {
+        if (! $response->successful()) {
             return [];
         }
 
-        $documents = array_filter(explode("\n", $jsonContent));
-
-        $result = [];
-        foreach ($documents as $document) {
-            $decodedDocument = json_decode($document, true);
-
-            if (! empty($decodedDocument)) {
-                $result[] = $decodedDocument;
-            }
+        $data = $response->json();
+        if (! isset($data['documents'][0])) {
+            return [];
         }
 
-        return $result;
+        $decoded = json_decode($data['documents'][0], true);
+
+        return is_array($decoded) ? $decoded : [];
     }
 
-    private static function chunkDocument(array $targetData, string $chunkItem, int $chunkSize = 1000, int $chunkOverlap = 0): array
+    /**
+     * ドキュメントを追加または更新
+     *
+     * @param  array<string, mixed>  $targetData
+     */
+    public static function upsert(string $collectionName, array $targetData): bool
     {
-        $chunkedDocuments = [];
-        foreach ($targetData as $document) {
-            // チャンクした内容を順次追加
-            $contents = self::chunkString($document[$chunkItem], $chunkSize, $chunkOverlap);
-            foreach ($contents as $content) {
-                $chunkedDocument = $document;
-                $chunkedDocument[$chunkItem] = $content;
-                $chunkedDocuments[] = $chunkedDocument;
-            }
+        if (empty($targetData['id'])) {
+            return false;
         }
 
-        return $chunkedDocuments;
-    }
+        $collectionId = self::ensureCollection($collectionName);
+        $docId = strval($targetData['id']);
 
-    private static function chunkString(string $string, int $chunkSize = 1000, int $chunkOverlap = 0): array
-    {
-        $payload = json_encode($string, JSON_UNESCAPED_UNICODE);
-        $processResult = self::runPythonScript('chunk.py', [$chunkSize, $chunkOverlap], $payload);
-        $data = json_decode($processResult->output(), true);
+        $dataToStore = $targetData;
 
-        return is_array($data) ? $data : [];
-    }
+        $pageContent = json_encode($dataToStore, JSON_UNESCAPED_UNICODE);
+        $embedding = self::getEmbedding($pageContent);
 
-    private static function runPythonScript(string $script, array $arguments, string $input = ''): ProcessResult
-    {
-        $command = array_merge(
+        $response = Http::post(
+            self::getApiUrl("/collections/{$collectionId}/upsert"),
             [
-                config('openai.python_path'),
-                base_path("vendor/blocs/admin/python/{$script}"),
-            ],
-            $arguments,
+                'ids' => [$docId],
+                'documents' => [$pageContent],
+                'embeddings' => [$embedding],
+            ]
         );
 
-        return Process::input($input)->run($command);
+        return $response->successful();
+    }
+
+    /**
+     * コレクション内のドキュメント数を取得
+     */
+    public static function count(string $collectionName): int
+    {
+        $collectionId = self::ensureCollection($collectionName);
+
+        $response = Http::get(self::getApiUrl("/collections/{$collectionId}/count"));
+
+        if (! $response->successful()) {
+            return 0;
+        }
+
+        $result = $response->json();
+
+        return is_int($result) ? $result : 0;
+    }
+
+    /**
+     * ドキュメントを削除
+     *
+     * @param  array<string>|string  $docIds
+     */
+    public static function delete(string $collectionName, array|string $docIds = []): void
+    {
+        // 全件削除の指定は空配列を渡す
+        if (empty($docIds)) {
+            Http::delete(self::getApiUrl("/collections/{$collectionName}"));
+            unset(self::$collections[$collectionName]);
+
+            return;
+        }
+
+        $collectionId = self::ensureCollection($collectionName);
+        $normalizedDocIds = is_array($docIds) ? $docIds : [$docIds];
+
+        // 一度のリクエストで複数のIDを削除
+        Http::post(
+            self::getApiUrl("/collections/{$collectionId}/delete"),
+            ['ids' => $normalizedDocIds]
+        );
+    }
+
+    /**
+     * 類似ドキュメントを検索
+     *
+     * @param  array<string, mixed>|string  $targetData
+     * @return array<int, array<string, mixed>>
+     */
+    public static function similar(string $collectionName, array|string $targetData, int $docsLimit = 5, float $scoreThreshold = 0.6): array
+    {
+        $collectionId = self::ensureCollection($collectionName);
+
+        $pageContent = is_array($targetData) ? json_encode($targetData, JSON_UNESCAPED_UNICODE) : $targetData;
+        $embedding = self::getEmbedding($pageContent);
+
+        $response = Http::post(
+            self::getApiUrl("/collections/{$collectionId}/query"),
+            [
+                'query_embeddings' => [$embedding],
+                'n_results' => $docsLimit,
+            ]
+        );
+
+        if (! $response->successful()) {
+            return [];
+        }
+
+        $data = $response->json();
+        if (empty($data['ids'][0]) || ! is_array($data['ids'][0])) {
+            return [];
+        }
+
+        $results = [];
+        $ids = $data['ids'][0];
+        $distances = $data['distances'][0] ?? [];
+        $documents = $data['documents'][0] ?? [];
+
+        foreach ($ids as $index => $id) {
+            $distance = $distances[$index] ?? null;
+
+            // 距離が null の場合、または閾値以上の場合はスキップ
+            if ($distance === null || $distance >= $scoreThreshold) {
+                continue;
+            }
+
+            $document = $documents[$index] ?? null;
+            if ($document === null) {
+                continue;
+            }
+
+            $content = json_decode($document, true);
+            if (! is_array($content)) {
+                continue;
+            }
+
+            $content['distance'] = $distance;
+            $results[] = $content;
+        }
+
+        return $results;
+    }
+
+    /**
+     * API URLを生成
+     */
+    private static function getApiUrl(string $path): string
+    {
+        $host = config('chromadb.host', 'http://localhost');
+        $port = config('chromadb.port', 8000);
+        $baseUrl = rtrim($host, '/').':'.$port;
+
+        $tenant = config('chromadb.tenant', 'default_tenant');
+        $database = config('chromadb.database', 'default_database');
+
+        return $baseUrl."/api/v2/tenants/{$tenant}/databases/{$database}{$path}";
+    }
+
+    /**
+     * コレクションの存在確認と作成
+     *
+     * @return string コレクションID
+     */
+    private static function ensureCollection(string $collectionName): string
+    {
+        // キャッシュから取得
+        if (isset(self::$collections[$collectionName])) {
+            return self::$collections[$collectionName]['id'];
+        }
+
+        // コレクションの存在確認と作成
+        $response = Http::post(
+            self::getApiUrl('/collections'),
+            [
+                'name' => $collectionName,
+                'get_or_create' => true,
+            ]
+        );
+
+        if (! $response->successful()) {
+            throw new \RuntimeException("Failed to ensure collection: {$collectionName}");
+        }
+
+        $collection = $response->json();
+        if (! is_array($collection) || empty($collection['id'])) {
+            throw new \RuntimeException("Invalid collection response for: {$collectionName}");
+        }
+
+        self::$collections[$collectionName] = $collection;
+
+        return $collection['id'];
+    }
+
+    /**
+     * テキストから埋め込みベクトルを取得
+     *
+     * @return array<float>
+     */
+    private static function getEmbedding(string $text): array
+    {
+        $response = OpenAI::embeddings()->create([
+            'model' => config('chromadb.embedding_model', 'text-embedding-ada-002'),
+            'input' => $text,
+        ]);
+
+        return $response->embeddings[0]->embedding;
     }
 }
