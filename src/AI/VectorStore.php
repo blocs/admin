@@ -57,9 +57,7 @@ class VectorStore
         $collectionId = self::ensureCollection($collectionName);
         $docId = strval($targetData['id']);
 
-        $dataToStore = $targetData;
-
-        $pageContent = json_encode($dataToStore, JSON_UNESCAPED_UNICODE);
+        $pageContent = json_encode($targetData, JSON_UNESCAPED_UNICODE);
         $embedding = self::getEmbedding($pageContent);
 
         $response = Http::post(
@@ -90,6 +88,43 @@ class VectorStore
         $result = $response->json();
 
         return is_int($result) ? $result : 0;
+    }
+
+    /**
+     * コレクション内の全てのIDを取得
+     *
+     * @return array<string>
+     */
+    public static function getAllIds(string $collectionName): array
+    {
+        $collectionId = self::ensureCollection($collectionName);
+
+        // ChromaDBのgetエンドポイントでidsパラメータを省略すると全件取得できる
+        $response = Http::post(
+            self::getApiUrl("/collections/{$collectionId}/get"),
+            [
+                'include' => [],
+            ]
+        );
+
+        if (! $response->successful()) {
+            return [];
+        }
+
+        $data = $response->json();
+        if (! isset($data['ids']) || ! is_array($data['ids'])) {
+            return [];
+        }
+
+        // 全IDを1次元配列として返す
+        $allIds = [];
+        foreach ($data['ids'] as $id) {
+            if (is_string($id)) {
+                $allIds[] = $id;
+            }
+        }
+
+        return $allIds;
     }
 
     /**
@@ -208,19 +243,23 @@ class VectorStore
         self::ensureTenantAndDatabase();
 
         // コレクションの存在確認と作成
-        $response = Http::post(
-            self::getApiUrl('/collections'),
-            [
-                'name' => $collectionName,
-                'get_or_create' => true,
-            ]
-        );
+        $collectionResponse = Http::get(self::getApiUrl("/collections/{$collectionName}"));
 
-        if (! $response->successful()) {
-            throw new \RuntimeException("Failed to ensure collection: {$collectionName}");
+        if (! $collectionResponse->successful()) {
+            $collectionResponse = Http::post(
+                self::getApiUrl('/collections'),
+                [
+                    'name' => $collectionName,
+                    'get_or_create' => false,
+                ]
+            );
+
+            if (! $collectionResponse->successful()) {
+                throw new \RuntimeException("Failed to ensure collection: {$collectionName}");
+            }
         }
 
-        $collection = $response->json();
+        $collection = $collectionResponse->json();
         if (! is_array($collection) || empty($collection['id'])) {
             throw new \RuntimeException("Invalid collection response for: {$collectionName}");
         }
