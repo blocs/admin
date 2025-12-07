@@ -1,6 +1,6 @@
 <?php
 
-namespace Blocs;
+namespace Blocs\AI;
 
 use Illuminate\Support\Facades\Http;
 use OpenAI\Laravel\Facades\OpenAI;
@@ -204,6 +204,9 @@ class VectorStore
             return self::$collections[$collectionName]['id'];
         }
 
+        // テナントとデータベースを確保
+        self::ensureTenantAndDatabase();
+
         // コレクションの存在確認と作成
         $response = Http::post(
             self::getApiUrl('/collections'),
@@ -225,6 +228,47 @@ class VectorStore
         self::$collections[$collectionName] = $collection;
 
         return $collection['id'];
+    }
+
+    /**
+     * テナントとデータベースの存在確認と作成
+     */
+    private static function ensureTenantAndDatabase(): void
+    {
+        $host = config('chromadb.host', 'http://localhost');
+        $port = config('chromadb.port', 8000);
+        $baseUrl = rtrim($host, '/').':'.$port;
+
+        $tenant = config('chromadb.tenant', 'default_tenant');
+        $database = config('chromadb.database', 'default_database');
+
+        // テナントの存在確認と作成
+        $tenantResponse = Http::get("{$baseUrl}/api/v2/tenants/{$tenant}");
+
+        if (! $tenantResponse->successful()) {
+            $tenantResponse = Http::post(
+                "{$baseUrl}/api/v2/tenants",
+                ['name' => $tenant]
+            );
+
+            if (! $tenantResponse->successful()) {
+                throw new \RuntimeException("Failed to ensure tenant: {$tenant}");
+            }
+        }
+
+        // データベースの存在確認と作成
+        $databaseResponse = Http::get("{$baseUrl}/api/v2/tenants/{$tenant}/databases/{$database}");
+
+        if (! $databaseResponse->successful()) {
+            $databaseResponse = Http::post(
+                "{$baseUrl}/api/v2/tenants/{$tenant}/databases",
+                ['name' => $database]
+            );
+
+            if (! $databaseResponse->successful()) {
+                throw new \RuntimeException("Failed to ensure database: {$database}");
+            }
+        }
     }
 
     /**
