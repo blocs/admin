@@ -8,7 +8,27 @@ use OpenAI\Laravel\Facades\OpenAI;
 class VectorStore
 {
     /**
-     * @var array<string, array{id: string, name: string}>
+     * デフォルトのスコア閾値
+     */
+    private const DEFAULT_SCORE_THRESHOLD = 0.6;
+
+    /**
+     * デフォルトの検索結果数
+     */
+    private const DEFAULT_DOCS_LIMIT = 5;
+
+    /**
+     * デフォルトのベクトルサイズ
+     */
+    private const DEFAULT_VECTOR_SIZE = 1536;
+
+    /**
+     * 距離計算方法
+     */
+    private const DISTANCE_METHOD = 'Cosine';
+
+    /**
+     * @var array<string, bool>
      */
     private static array $collections = [];
 
@@ -16,31 +36,27 @@ class VectorStore
      * ドキュメントを取得
      *
      * @param  array<string>|string  $docIds
-     * @return array<string, mixed>
+     * @return array<string, mixed>|array<int, array<string, mixed>>
      */
     public static function get(string $collectionName, array|string $docIds): array
     {
-        $collectionId = self::ensureCollection($collectionName);
+        self::ensureCollection($collectionName);
 
-        $normalizedDocIds = is_array($docIds) ? $docIds : [$docIds];
+        $normalizedDocIds = self::normalizeDocIds($docIds);
 
-        $response = Http::post(
-            self::getApiUrl("/collections/{$collectionId}/get"),
-            ['ids' => $normalizedDocIds]
-        );
+        $response = self::makeRequest('post', "/collections/{$collectionName}/points", [
+            'ids' => $normalizedDocIds,
+            'with_payload' => true,
+            'with_vectors' => false,
+        ]);
 
-        if (! $response->successful()) {
+        if (! $response) {
             return [];
         }
 
-        $data = $response->json();
-        if (! isset($data['documents'][0])) {
-            return [];
-        }
+        $payloads = self::extractPayloads($response);
 
-        $decoded = json_decode($data['documents'][0], true);
-
-        return is_array($decoded) ? $decoded : [];
+        return is_array($docIds) ? $payloads : ($payloads[0] ?? []);
     }
 
     /**
@@ -54,22 +70,22 @@ class VectorStore
             return false;
         }
 
-        $collectionId = self::ensureCollection($collectionName);
-        $docId = strval($targetData['id']);
+        self::ensureCollection($collectionName);
 
-        $pageContent = json_encode($targetData, JSON_UNESCAPED_UNICODE);
-        $embedding = self::getEmbedding($pageContent);
+        $docId = self::hashDocId($targetData['id']);
+        $embedding = self::getEmbeddingFromData($targetData);
 
-        $response = Http::post(
-            self::getApiUrl("/collections/{$collectionId}/upsert"),
-            [
-                'ids' => [$docId],
-                'documents' => [$pageContent],
-                'embeddings' => [$embedding],
-            ]
-        );
+        $response = self::makeRequest('put', "/collections/{$collectionName}/points", [
+            'points' => [
+                [
+                    'id' => $docId,
+                    'payload' => $targetData,
+                    'vector' => $embedding,
+                ],
+            ],
+        ]);
 
-        return $response->successful();
+        return $response !== null;
     }
 
     /**
@@ -77,17 +93,17 @@ class VectorStore
      */
     public static function count(string $collectionName): int
     {
-        $collectionId = self::ensureCollection($collectionName);
+        self::ensureCollection($collectionName);
 
-        $response = Http::get(self::getApiUrl("/collections/{$collectionId}/count"));
+        $response = self::makeRequest('post', "/collections/{$collectionName}/points/count", [
+            'exact' => true,
+        ]);
 
-        if (! $response->successful()) {
+        if (! $response) {
             return 0;
         }
 
-        $result = $response->json();
-
-        return is_int($result) ? $result : 0;
+        return $response['result']['count'] ?? 0;
     }
 
     /**
@@ -97,32 +113,37 @@ class VectorStore
      */
     public static function getAllIds(string $collectionName): array
     {
-        $collectionId = self::ensureCollection($collectionName);
+        self::ensureCollection($collectionName);
 
-        // ChromaDBのgetエンドポイントでidsパラメータを省略すると全件取得できる
-        $response = Http::post(
-            self::getApiUrl("/collections/{$collectionId}/get"),
-            [
-                'include' => [],
-            ]
-        );
-
-        if (! $response->successful()) {
-            return [];
-        }
-
-        $data = $response->json();
-        if (! isset($data['ids']) || ! is_array($data['ids'])) {
-            return [];
-        }
-
-        // 全IDを1次元配列として返す
         $allIds = [];
-        foreach ($data['ids'] as $id) {
-            if (is_string($id)) {
-                $allIds[] = $id;
+        $offset = null;
+        $limit = 100;
+
+        do {
+            $requestData = [
+                'limit' => $limit,
+                'with_payload' => false,
+                'with_vectors' => false,
+            ];
+
+            if ($offset !== null) {
+                $requestData['offset'] = $offset;
             }
-        }
+
+            $response = self::makeRequest('post', "/collections/{$collectionName}/points/scroll", $requestData);
+
+            if (! $response || ! isset($response['result']['points'])) {
+                break;
+            }
+
+            foreach ($response['result']['points'] as $point) {
+                if (isset($point['id'])) {
+                    $allIds[] = (string) $point['id'];
+                }
+            }
+
+            $offset = $response['result']['next_page_offset'] ?? null;
+        } while ($offset !== null);
 
         return $allIds;
     }
@@ -134,22 +155,18 @@ class VectorStore
      */
     public static function delete(string $collectionName, array|string $docIds = []): void
     {
-        // 全件削除の指定は空配列を渡す
         if (empty($docIds)) {
-            Http::delete(self::getApiUrl("/collections/{$collectionName}"));
-            unset(self::$collections[$collectionName]);
+            self::deleteCollection($collectionName);
 
             return;
         }
 
-        $collectionId = self::ensureCollection($collectionName);
-        $normalizedDocIds = is_array($docIds) ? $docIds : [$docIds];
+        self::ensureCollection($collectionName);
+        $normalizedDocIds = self::normalizeDocIds($docIds);
 
-        // 一度のリクエストで複数のIDを削除
-        Http::post(
-            self::getApiUrl("/collections/{$collectionId}/delete"),
-            ['ids' => $normalizedDocIds]
-        );
+        self::makeRequest('post', "/collections/{$collectionName}/points/delete", [
+            'points' => $normalizedDocIds,
+        ]);
     }
 
     /**
@@ -158,58 +175,29 @@ class VectorStore
      * @param  array<string, mixed>|string  $targetData
      * @return array<int, array<string, mixed>>
      */
-    public static function similar(string $collectionName, array|string $targetData, int $docsLimit = 5, float $scoreThreshold = 0.6): array
-    {
-        $collectionId = self::ensureCollection($collectionName);
+    public static function similar(
+        string $collectionName,
+        array|string $targetData,
+        int $docsLimit = self::DEFAULT_DOCS_LIMIT,
+        float $scoreThreshold = self::DEFAULT_SCORE_THRESHOLD
+    ): array {
+        self::ensureCollection($collectionName);
 
-        $pageContent = is_array($targetData) ? json_encode($targetData, JSON_UNESCAPED_UNICODE) : $targetData;
-        $embedding = self::getEmbedding($pageContent);
+        $embedding = self::getEmbeddingFromData($targetData);
 
-        $response = Http::post(
-            self::getApiUrl("/collections/{$collectionId}/query"),
-            [
-                'query_embeddings' => [$embedding],
-                'n_results' => $docsLimit,
-            ]
-        );
+        $response = self::makeRequest('post', "/collections/{$collectionName}/points/query", [
+            'query' => $embedding,
+            'limit' => $docsLimit,
+            'with_payload' => true,
+            'with_vectors' => false,
+            'score_threshold' => $scoreThreshold,
+        ]);
 
-        if (! $response->successful()) {
+        if (! $response) {
             return [];
         }
 
-        $data = $response->json();
-        if (empty($data['ids'][0]) || ! is_array($data['ids'][0])) {
-            return [];
-        }
-
-        $results = [];
-        $ids = $data['ids'][0];
-        $distances = $data['distances'][0] ?? [];
-        $documents = $data['documents'][0] ?? [];
-
-        foreach ($ids as $index => $id) {
-            $distance = $distances[$index] ?? null;
-
-            // 距離が null の場合、または閾値以上の場合はスキップ
-            if ($distance === null || $distance >= $scoreThreshold) {
-                continue;
-            }
-
-            $document = $documents[$index] ?? null;
-            if ($document === null) {
-                continue;
-            }
-
-            $content = json_decode($document, true);
-            if (! is_array($content)) {
-                continue;
-            }
-
-            $content['distance'] = $distance;
-            $results[] = $content;
-        }
-
-        return $results;
+        return self::extractSimilarResults($response);
     }
 
     /**
@@ -217,97 +205,97 @@ class VectorStore
      */
     private static function getApiUrl(string $path): string
     {
-        $host = config('chromadb.host', 'http://localhost');
-        $port = config('chromadb.port', 8000);
+        $host = config('qdrant.host', 'http://localhost');
+        $port = config('qdrant.port', 6333);
         $baseUrl = rtrim($host, '/').':'.$port;
 
-        $tenant = config('chromadb.tenant', 'default_tenant');
-        $database = config('chromadb.database', 'default_database');
+        return $baseUrl.$path;
+    }
 
-        return $baseUrl."/api/v2/tenants/{$tenant}/databases/{$database}{$path}";
+    /**
+     * HTTPリクエストを実行
+     *
+     * @param  'get'|'post'|'put'|'delete'  $method
+     * @param  array<string, mixed>  $data
+     * @return array<string, mixed>|null
+     */
+    private static function makeRequest(string $method, string $path, array $data = []): ?array
+    {
+        $url = self::getApiUrl($path);
+
+        $response = match ($method) {
+            'get' => Http::get($url),
+            'post' => Http::post($url, $data),
+            'put' => Http::put($url, $data),
+            'delete' => Http::delete($url),
+            default => throw new \InvalidArgumentException("Unsupported HTTP method: {$method}"),
+        };
+
+        if (! $response->successful()) {
+            return null;
+        }
+
+        return $response->json();
     }
 
     /**
      * コレクションの存在確認と作成
-     *
-     * @return string コレクションID
      */
-    private static function ensureCollection(string $collectionName): string
+    private static function ensureCollection(string $collectionName): void
     {
-        // キャッシュから取得
         if (isset(self::$collections[$collectionName])) {
-            return self::$collections[$collectionName]['id'];
+            return;
         }
 
-        // テナントとデータベースを確保
-        self::ensureTenantAndDatabase();
+        $collectionResponse = self::makeRequest('get', "/collections/{$collectionName}");
 
-        // コレクションの存在確認と作成
-        $collectionResponse = Http::get(self::getApiUrl("/collections/{$collectionName}"));
-
-        if (! $collectionResponse->successful()) {
-            $collectionResponse = Http::post(
-                self::getApiUrl('/collections'),
-                [
-                    'name' => $collectionName,
-                    'get_or_create' => false,
-                ]
-            );
-
-            if (! $collectionResponse->successful()) {
-                throw new \RuntimeException("Failed to ensure collection: {$collectionName}");
-            }
+        if (! $collectionResponse) {
+            self::createCollection($collectionName);
         }
 
-        $collection = $collectionResponse->json();
-        if (! is_array($collection) || empty($collection['id'])) {
-            throw new \RuntimeException("Invalid collection response for: {$collectionName}");
-        }
-
-        self::$collections[$collectionName] = $collection;
-
-        return $collection['id'];
+        self::$collections[$collectionName] = true;
     }
 
     /**
-     * テナントとデータベースの存在確認と作成
+     * コレクションを作成
      */
-    private static function ensureTenantAndDatabase(): void
+    private static function createCollection(string $collectionName): void
     {
-        $host = config('chromadb.host', 'http://localhost');
-        $port = config('chromadb.port', 8000);
-        $baseUrl = rtrim($host, '/').':'.$port;
+        $embeddingModel = config('qdrant.embedding_model', 'text-embedding-ada-002');
+        $vectorSize = self::getVectorSize($embeddingModel);
 
-        $tenant = config('chromadb.tenant', 'default_tenant');
-        $database = config('chromadb.database', 'default_database');
+        $response = self::makeRequest('put', "/collections/{$collectionName}", [
+            'vectors' => [
+                'size' => $vectorSize,
+                'distance' => self::DISTANCE_METHOD,
+            ],
+        ]);
 
-        // テナントの存在確認と作成
-        $tenantResponse = Http::get("{$baseUrl}/api/v2/tenants/{$tenant}");
-
-        if (! $tenantResponse->successful()) {
-            $tenantResponse = Http::post(
-                "{$baseUrl}/api/v2/tenants",
-                ['name' => $tenant]
-            );
-
-            if (! $tenantResponse->successful()) {
-                throw new \RuntimeException("Failed to ensure tenant: {$tenant}");
-            }
+        if (! $response) {
+            throw new \RuntimeException("Failed to create collection: {$collectionName}");
         }
+    }
 
-        // データベースの存在確認と作成
-        $databaseResponse = Http::get("{$baseUrl}/api/v2/tenants/{$tenant}/databases/{$database}");
+    /**
+     * コレクションを削除
+     */
+    private static function deleteCollection(string $collectionName): void
+    {
+        self::makeRequest('delete', "/collections/{$collectionName}");
+        unset(self::$collections[$collectionName]);
+    }
 
-        if (! $databaseResponse->successful()) {
-            $databaseResponse = Http::post(
-                "{$baseUrl}/api/v2/tenants/{$tenant}/databases",
-                ['name' => $database]
-            );
-
-            if (! $databaseResponse->successful()) {
-                throw new \RuntimeException("Failed to ensure database: {$database}");
-            }
-        }
+    /**
+     * 埋め込みモデルからベクトルサイズを取得
+     */
+    private static function getVectorSize(string $model): int
+    {
+        return match ($model) {
+            'text-embedding-ada-002' => 1536,
+            'text-embedding-3-small' => 1536,
+            'text-embedding-3-large' => 3072,
+            default => self::DEFAULT_VECTOR_SIZE,
+        };
     }
 
     /**
@@ -317,11 +305,102 @@ class VectorStore
      */
     private static function getEmbedding(string $text): array
     {
+        $model = config('qdrant.embedding_model', 'text-embedding-ada-002');
+
         $response = OpenAI::embeddings()->create([
-            'model' => config('chromadb.embedding_model', 'text-embedding-ada-002'),
+            'model' => $model,
             'input' => $text,
         ]);
 
         return $response->embeddings[0]->embedding;
+    }
+
+    /**
+     * データから埋め込みベクトルを取得
+     *
+     * @param  array<string, mixed>|string  $targetData
+     * @return array<float>
+     */
+    private static function getEmbeddingFromData(array|string $targetData): array
+    {
+        $pageContent = is_array($targetData)
+            ? json_encode($targetData, JSON_UNESCAPED_UNICODE)
+            : $targetData;
+
+        return self::getEmbedding($pageContent);
+    }
+
+    /**
+     * ドキュメントIDを正規化（配列に変換してハッシュ化）
+     *
+     * @param  array<string>|string  $docIds
+     * @return array<string>
+     */
+    private static function normalizeDocIds(array|string $docIds): array
+    {
+        $ids = is_array($docIds) ? $docIds : [$docIds];
+
+        return array_map([self::class, 'hashDocId'], $ids);
+    }
+
+    /**
+     * ドキュメントIDをハッシュ化
+     */
+    private static function hashDocId(string $docId): string
+    {
+        // すでにハッシュ化されている場合はそのまま返す（MD5は32文字の16進数）
+        if (strlen(str_replace('-', '', $docId)) === 32 && ctype_xdigit(str_replace('-', '', $docId))) {
+            return $docId;
+        }
+
+        return md5($docId);
+    }
+
+    /**
+     * レスポンスからペイロードを抽出
+     *
+     * @param  array<string, mixed>  $response
+     * @return array<int, array<string, mixed>>
+     */
+    private static function extractPayloads(array $response): array
+    {
+        if (! isset($response['result']) || ! is_array($response['result'])) {
+            return [];
+        }
+
+        $payloads = [];
+        foreach ($response['result'] as $point) {
+            if (isset($point['payload']) && is_array($point['payload'])) {
+                $payloads[] = $point['payload'];
+            }
+        }
+
+        return $payloads;
+    }
+
+    /**
+     * 類似検索結果を抽出
+     *
+     * @param  array<string, mixed>  $response
+     * @return array<int, array<string, mixed>>
+     */
+    private static function extractSimilarResults(array $response): array
+    {
+        if (! isset($response['result']['points']) || ! is_array($response['result']['points'])) {
+            return [];
+        }
+
+        $results = [];
+        foreach ($response['result']['points'] as $point) {
+            if (! isset($point['payload'], $point['score']) || ! is_array($point['payload'])) {
+                continue;
+            }
+
+            $content = $point['payload'];
+            $content['similarity_score'] = $point['score'];
+            $results[] = $content;
+        }
+
+        return $results;
     }
 }
