@@ -56,9 +56,6 @@ BLOCSでは、`data-val` を使って変数を表示する際に、対応する�
 defined('BLOCS_OPTION_SEPARATOR') || define('BLOCS_OPTION_SEPARATOR', ', ');
 ```
 
-## 回答例
-- **user**
-`addOption` で追加したメニュー項目の値は `data-val` で自動的に変換されますか？
-- **assistant**
+# QA
+## `addOption` で追加したメニュー項目の値は `data-val` で自動的に変換されますか？
 はい。`addOption` で追加した項目も、他のメニュー項目と同様に `data-val` で自動的に変換されます。例えば、コントローラーで `addOption("type", ["foreign" => "外国のお客様"]);` を追加していれば、テンプレート内で `<!-- $type -->` と書くと、自動的に「外国のお客様」と表示されます。変換を行わずにvalue値（foreign）を表示したい場合は、`data-convert="raw"`を指定します
----

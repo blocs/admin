@@ -43,20 +43,16 @@
 |between|指定した最小値と最大値の範囲内であることを確認します。|
 |digits|指定した桁数の整数であることを確認します。|
 
-## 回答例
-- **user**
-入力フォームの文字数を制限したい。
-- **assistant**
+# QA
+## 入力フォームの文字数を制限したい。
 以下のように記述することで、`name` フィールドの文字数を 最大50文字まで に制限できます。
 ```html
 <input type="text" name="name" />
 <!-- !name="nullable|max:50" data-lang="名前は50文字以下にしてください。" -->
 @error("name") <div class="invalid-feedback">{{ $message }}</div> @enderror
 ```
----
-- **user**
-入力値の重複チェックをしたい。
-- **assistant**
+
+## 入力値の重複チェックをしたい。
 論理削除されたレコードを除外して、メールアドレスの重複をチェックしたい場合は、以下のように記述します。`softUnique` は、Laravelの標準の `unique` ルールとは異なり、論理削除（Soft Delete）されたレコードを除外して重複を判定します。これにより、削除済みのユーザーが再登録される場合でも、同じメールアドレスを使用することが可能になります。
 ```html
 <input type="text" name="email" />
@@ -64,4 +60,3 @@
 <!-- !email="softUnique:users" data-lang="メールアドレスはすでに登録されています。" -->
 @error("email") <div class="invalid-feedback">{{ $message }}</div> @enderror
 ```
----

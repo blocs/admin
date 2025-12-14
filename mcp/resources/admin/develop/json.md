@@ -303,14 +303,11 @@ public function setDisabledAtAttribute($value)
 }
 ```
 
-# 回答例
-- **user**
-必須入力にしたい。
-- **assistant**
+# QA
+## 入力フォームを必須項目にしたい。
 以下のように記述することで、`name` フィールドを必須項目としてバリデーションできます。
 ```html
 <input type="text" name="name" />
 <!-- !name="required" data-lang="必須入力です。" -->
 @error("name") <div class="invalid-feedback">{{ $message }}</div> @enderror
 ```
----
