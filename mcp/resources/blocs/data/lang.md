@@ -26,30 +26,25 @@
 <div><!--  data-lang="success:data_registered:test" --></div>
 ```
 
-## 回答例
-- **user**
-言語ごとに `tooltip` での表示を切り替えたい。
-- **assistant**
+# QA
+## 言語ごとに `tooltip` での表示を切り替えたい。
 Bootstrapの `tooltip` に Laravel の翻訳機能を組み合わせることで、言語ごとに異なるメッセージを表示できます。BLOCSの `lang()` 関数を使えば、`data-lang` と同様に翻訳ファイルから文字列を取得できます。以下のように記述することで、`template:admin_user_invalid_title` に登録された翻訳文字列が、現在の言語設定に応じて `tooltip` に表示されます。
 ```html
 <i class="fa-solid fa-ban" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:admin_user_invalid_title")></i>
 ```
-- **assistant**
+
 Bootstrapの `tooltip` は、`data-bs-html="true"` を指定することで、HTMLタグを含む内容をレンダリングできます。以下の場合、ツールチップ内で `i` タグが有効になり、スタイル付きの表示が可能になります。
 ```html
 <i class="fa-solid fa-ban" data-bs-toggle="tooltip" data-bs-html="true" data-bs-original-title="<i>ERROR</i>"></i>
 ```
----
-- **user**
-`tooltip` を表示したい。
-- **assistant**
+
+## `tooltip` を表示したい。
 Bootstrapの `tooltip` 機能を使えば、アイコンやボタンなどにマウスを乗せたときに補足情報を表示できます。Laravel の翻訳機能と組み合わせることで、言語ごとに異なるメッセージを表示することも可能です。以下のように記述することで、ERROR というツールチップが表示されます。
 ```html
 <i class="fa-solid fa-ban" data-bs-toggle="tooltip" data-bs-original-title="ERROR"></i>
 ```
-- **assistant**
+
 BLOCSの `lang()` 関数を使えば、翻訳ファイルに登録された文字列を `tooltip` に表示できます。以下の場合、`template:admin_user_invalid_title` に登録された翻訳文字列が、現在の言語設定に応じて表示されます。
 ```html
 <i class="fa-solid fa-ban" data-bs-toggle="tooltip" :data-bs-original-title=lang("template:admin_user_invalid_title")></i>
 ```
----

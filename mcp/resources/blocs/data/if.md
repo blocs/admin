@@ -19,15 +19,13 @@
 <!-- data-endunless -->
 ```
 
-## 回答例
-- **user**
-条件を満たす時にタグに属性を追加したい。
-- **assistant**
+# QA
+## 条件を満たす時にタグに属性を追加したい。
 指定した条件が真（true）の場合に、HTMLタグへ特定の属性（この例では `readonly`）を動的に追加します。
 ```html
 <!-- :readonly data-if="true == $isReadonly" -->
 <input type="text" value="今日はいい天気">
 ```
-- **assistant**
+
 `data-if="true == $isReadonly"` の条件が成立すると、`readonly` 属性が `input` タグに追加されます。`$isReadonly` が `true` の場合、`input` タグに `readonly` 属性が付与され、編集不可になります。`$isReadonly` が `false` の場合、`readonly` 属性は付与されません。
----
+
