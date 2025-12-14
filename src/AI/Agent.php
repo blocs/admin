@@ -65,6 +65,38 @@ class Agent
         return trim($result->choices[0]->message->content);
     }
 
+    public function answer($developer, $messages, $question, $knowledge)
+    {
+        array_unshift($messages, [
+            'role' => 'developer',
+            'content' => $developer,
+        ]);
+
+        $userContent = [];
+        $userContent[] = [
+            'type' => 'text',
+            'text' => "# 質問\n".$question,
+        ];
+        $userContent[] = [
+            'type' => 'text',
+            'text' => "# ナレッジ\n```json\n".json_encode($knowledge, JSON_UNESCAPED_UNICODE)."\n```",
+        ];
+
+        $messages[] = [
+            'role' => 'user',
+            'content' => $userContent,
+        ];
+
+        $chatOpenAI = [
+            'model' => $this->model,
+            'messages' => $messages,
+        ];
+
+        $result = OpenAI::chat()->create($chatOpenAI);
+
+        return trim($result->choices[0]->message->content);
+    }
+
     public function translate($question, $answer, $questionLang = null)
     {
         if (empty($questionLang)) {
