@@ -50,11 +50,9 @@ php artisan make:rule myRule
 @error("multiples_of_five") <div class="invalid-feedback">{{ $message }}</div> @enderror
 ```
 
-## 回答例
-- **user**
-ルールクラスにパラメータを2個以上渡したい場合は、どのようにテンプレートに記述すれば良いでしょうか？
-- **assistant**
-ルールクラスに2個以上のパラメータを渡したい場合は、コロン `:` で区切って記述します。`myRangeRule:10:100` の部分が、ルールクラスに渡すパラメータです。以下の場合、`myRangeRule` に `10`, `100` の2つの値が渡されます。ルールクラス側では、これらの値を `$parameter1`, `$parameter2` のように受け取って処理できます。
+# QA
+## ルールクラスにパラメータを渡したい場合は、どのようにテンプレートに記述すれば良いでしょうか？
+ルールクラスにパラメータを渡したい場合は、コロン `:` で区切って記述します。`myRangeRule:10:100` の部分が、ルールクラスに渡すパラメータです。以下の場合、`myRangeRule` に `10`, `100` の2つの値が渡されます。ルールクラス側では、これらの値を `$parameter1`, `$parameter2` のように受け取って処理できます。
 ```html
 <input type="number" name="range_value" />
 <!--
@@ -63,4 +61,3 @@ php artisan make:rule myRule
 -->
 @error("range_value") <div class="invalid-feedback">{{ $message }}</div> @enderror
 ```
----

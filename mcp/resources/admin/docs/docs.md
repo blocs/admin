@@ -110,16 +110,14 @@ $config = [
 ];
 ```
 
-## 回答例
-- **user**
-artisanコマンドの処理機能記述書を `docs()` を使って自動生成したい。
-- **assistant**
+# QA
+## artisanコマンドの処理機能記述書を `docs()` を使って自動生成したい。
 artisanコマンドのソースコードに `docs()` 関数を使って説明を記述した後、以下のようにルートを追加することで、ブラウザからアクセスして処理機能記述書を自動生成できます。
-- **assistant**
+
 下記のルートにアクセスすると、指定したartisanコマンド（この例では `summary:hotlog`）が実行され、`Docs` ミドルウェアによってその処理内容が記述書として生成されます。
 ```php
 Route::get('/artisan', function () {
     \Artisan::call('summary:hotlog');
     return 'OK';
 })->middleware(Blocs\Middleware\Docs::class);
----
+```

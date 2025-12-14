@@ -165,28 +165,21 @@ BLOCSを使うと、以下のようにシンプルな記述で動的なHTMLを�
 <canvas :id=$graphId class="chart-canvas" height="300"></canvas>
 ```
 
-# 回答例
-- **user**
-タグ記法とコメント記法を併用できますか？
-- **assistant**
+# QA
+## タグ記法とコメント記法を併用できますか？
 同じ内容をタグ記法とコメント記法で同時に記述することはできません。特に `data-val` を使って、タグの表示内容とコメントの両方を制御しようとする記述は **誤り** です。以下のような記述は避けてください。タグの表示を制御したい時は、`data-exist`、`data-none`、`data-if`、`data-unless` を使います。
 ```html
 <div data-val=$name><!-- data-val=$name --></div>
 ```
----
-- **user**
-jQueryを使いたい。
-- **assistant**
+
+## jQueryを使いたい。
 テンプレート内で以下のように記述することで、Auto Include により jQuery が読み込まれ、使用可能になります。
 ```html
 <!-- data-include="jquery" -->
 ```
----
-- **user**
-JavaScriptの読み込むを、HTMLの一番最後にしたい。
-- **assistant**
+
+## JavaScriptの読み込むを、HTMLの一番最後にしたい。
 JavaScriptをページの最後（`</body>` の直前）で読み込みたい場合は、以下のように `data-bloc="script"` を指定します。
 ```html
 <script data-bloc="script"></script>
 ```
----

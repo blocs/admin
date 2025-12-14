@@ -35,20 +35,16 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
 ```
 この記述を使うと、アップロードされたファイルのダウンロードリンクが自動で生成されます。ユーザーはリンクをクリックすることで、ファイルを開いたり保存したりできます。
 
-## 回答例
-- **user**
-アップロードした画像ファイルのサムネイルを表示したい。
-- **assistant**
+# QA
+## アップロードした画像ファイルのサムネイルを表示したい。
 画像ファイルをアップロードした後、画面上にサムネイル（縮小画像）を表示したい場合は、以下の記述を使います。
 ```html
 <!-- $file data-convert="raw_thumbnail" -->
 ```
-- **assistant**
+
 この記述を使うことで、アップロードされた画像のサムネイルが自動的に生成され、画面上に表示されます。ユーザーは画像の内容を一覧で確認できるため、視認性が向上します。
----
-- **user**
-ファイルアップロードを必須にしたい。
-- **assistant**
+
+## ファイルアップロードを必須にしたい。
 ファイルのアップロードを必須項目にしたい場合は、以下のようにバリデーションとエラーメッセージの設定を行います。
 ```html
 <!--
@@ -61,10 +57,7 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
 <!-- !file="required" data-lang="ファイルをアップロードしてください。" -->
 @error("file") <div class="invalid-feedback">{{ $message }}</div> @enderror
 ```
----
-- **user**
-画像ファイル以外をアップロード不可にしたい。
-- **assistant**
+## 画像ファイル以外をアップロード不可にしたい。
 アップロードできるファイルの種類を画像ファイル（JPEG、PNG、GIFなど）に限定したい場合は、`mimes` バリデーションを使用します。
 ```html
 <!--
@@ -75,10 +68,8 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
 <input type="hidden" id="file" name="file" class="ai-upload" />
 <!-- !file="mimes:jpg,jpeg,gif,png" data-lang="画像ファイルを選んでください。" -->
 ```
----
-- **user**
-ファイルサイズに上限値を設定したい。
-- **assistant**
+
+## ファイルサイズに上限値を設定したい。
 アップロードできるファイルのサイズに制限を設けたい場合は、`max` バリデーションを使用します。
 ```html
 <!--
@@ -89,10 +80,8 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
 <input type="hidden" id="file" name="file" class="ai-upload" />
 <!-- !file="max:200" data-lang="アップロードファイルが大きすぎます。" -->
 ```
----
-- **user**
-複数のファイルをアップロードしたい。
-- **assistant**
+
+## 複数のファイルをアップロードしたい。
 複数のファイルを一度にアップロードできるようにするには、`multiple` 属性を指定します。これにより、ユーザーはファイル選択時に複数のファイルを選べるようになります。
 ```html
 <!--
@@ -102,10 +91,8 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
 <label class="form-label">アップロードファイル</label>
 <input type="hidden" id="file" name="file" class="ai-upload" multiple />
 ```
----
-- **user**
-ファイルアップロードのメッセージを変更したい。
-- **assistant**
+
+## ファイルアップロードのメッセージを変更したい。
 ファイルアップロードのUIに表示されるメッセージは、変数 `$uploadMessage` と `$uploadDelete` を使ってカスタマイズできます。
 
 |変数|役割|
@@ -121,6 +108,5 @@ Route::middleware(['web', 'auth', Blocs\Middleware\Role::class])
 <label class="form-label">アップロードファイル</label>
 <input type="hidden" id="file" name="file" class="ai-upload" />
 ```
-- **assistant**
+
 これらのメッセージは、ユーザーにとってわかりやすい表現に自由に変更できます。多言語対応が必要な場合は、`lang()` 関数を使って翻訳キーを指定することも可能です。
----
