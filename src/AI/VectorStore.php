@@ -36,19 +36,26 @@ class VectorStore
      * ドキュメントを取得
      *
      * @param  array<string>|string  $docIds
+     * @param  array<string, mixed>|null  $filter
      * @return array<string, mixed>|array<int, array<string, mixed>>
      */
-    public static function get(string $collectionName, array|string $docIds): array
+    public static function get(string $collectionName, array|string $docIds, ?array $filter = null): array
     {
         self::ensureCollection($collectionName);
 
         $normalizedDocIds = self::normalizeDocIds($docIds);
 
-        $response = self::makeRequest('post', "/collections/{$collectionName}/points", [
+        $requestData = [
             'ids' => $normalizedDocIds,
             'with_payload' => true,
             'with_vectors' => false,
-        ]);
+        ];
+
+        if ($filter !== null) {
+            $requestData['filter'] = $filter;
+        }
+
+        $response = self::makeRequest('post', "/collections/{$collectionName}/points", $requestData);
 
         if (! $response) {
             return [];
@@ -64,15 +71,11 @@ class VectorStore
      *
      * @param  array<string, mixed>  $targetData
      */
-    public static function upsert(string $collectionName, array $targetData): bool
+    public static function upsert(string $collectionName, string $docId, array $targetData): bool
     {
-        if (empty($targetData['id'])) {
-            return false;
-        }
-
         self::ensureCollection($collectionName);
 
-        $docId = self::hashDocId($targetData['id']);
+        $docId = self::hashDocId($docId);
         $embedding = self::getEmbeddingFromData($targetData);
 
         $response = self::makeRequest('put', "/collections/{$collectionName}/points", [
@@ -152,8 +155,9 @@ class VectorStore
      * ドキュメントを削除
      *
      * @param  array<string>|string  $docIds
+     * @param  array<string, mixed>|null  $filter
      */
-    public static function delete(string $collectionName, array|string $docIds = []): void
+    public static function delete(string $collectionName, array|string $docIds = [], ?array $filter = null): void
     {
         if (empty($docIds)) {
             self::deleteCollection($collectionName);
@@ -164,34 +168,48 @@ class VectorStore
         self::ensureCollection($collectionName);
         $normalizedDocIds = self::normalizeDocIds($docIds);
 
-        self::makeRequest('post', "/collections/{$collectionName}/points/delete", [
+        $requestData = [
             'points' => $normalizedDocIds,
-        ]);
+        ];
+
+        if ($filter !== null) {
+            $requestData['filter'] = $filter;
+        }
+
+        self::makeRequest('post', "/collections/{$collectionName}/points/delete", $requestData);
     }
 
     /**
      * 類似ドキュメントを検索
      *
      * @param  array<string, mixed>|string  $targetData
+     * @param  array<string, mixed>|null  $filter
      * @return array<int, array<string, mixed>>
      */
     public static function similar(
         string $collectionName,
         array|string $targetData,
         int $docsLimit = self::DEFAULT_DOCS_LIMIT,
-        float $scoreThreshold = self::DEFAULT_SCORE_THRESHOLD
+        float $scoreThreshold = self::DEFAULT_SCORE_THRESHOLD,
+        ?array $filter = null
     ): array {
         self::ensureCollection($collectionName);
 
         $embedding = self::getEmbeddingFromData($targetData);
 
-        $response = self::makeRequest('post', "/collections/{$collectionName}/points/query", [
+        $requestData = [
             'query' => $embedding,
             'limit' => $docsLimit,
             'with_payload' => true,
             'with_vectors' => false,
             'score_threshold' => $scoreThreshold,
-        ]);
+        ];
+
+        if ($filter !== null) {
+            $requestData['filter'] = $filter;
+        }
+
+        $response = self::makeRequest('post', "/collections/{$collectionName}/points/query", $requestData);
 
         if (! $response) {
             return [];
