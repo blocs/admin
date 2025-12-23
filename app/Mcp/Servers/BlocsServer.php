@@ -37,13 +37,6 @@ class BlocsServer extends Server
     protected array $resources = [];
 
     /**
-     * Files to exclude from resource scanning.
-     *
-     * @var array<int, string>
-     */
-    private const EXCLUDED_FILES = ['developer.md'];
-
-    /**
      * Base path for Blocs manual resources.
      */
     private const RESOURCES_BASE_PATH = 'vendor/blocs/admin/mcp/resources';
@@ -97,10 +90,6 @@ class BlocsServer extends Server
 
         foreach ($items as $item) {
             if ($item === '.' || $item === '..') {
-                continue;
-            }
-
-            if (in_array($item, self::EXCLUDED_FILES, true)) {
                 continue;
             }
 
