@@ -10,8 +10,6 @@ class Agent
 
     private $model;
 
-    private $developer;
-
     private bool $isLogging;
 
     public function __construct($collectionName = null, $model = 'gpt-5-chat-latest')
@@ -20,38 +18,19 @@ class Agent
         $this->model = $model;
     }
 
-    public function developer($developer = null)
-    {
-        if (isset($developer)) {
-            $this->developer = $developer;
-        } else {
-            unset($this->developer);
-        }
-
-        return $this;
-    }
-
     public function question()
     {
-        $messages = [
-            [
-                'role' => 'developer',
-                'content' => file_get_contents(resource_path('prompt/question.md')),
-            ],
-        ];
-
         $allIds = VectorStore::getAllIds($this->collectionName);
         $knowledge = VectorStore::get($this->collectionName, $allIds[array_rand($allIds)])['content'];
 
-        $userContent = [];
-        $userContent[] = [
-            'type' => 'text',
-            'text' => "# ナレッジ\n".$knowledge,
-        ];
-
+        $messages = [];
         $messages[] = [
-            'role' => 'user',
-            'content' => $userContent,
+            'role' => 'developer',
+            'content' => file_get_contents(resource_path('prompt/question.md')),
+        ];
+        $messages[] = [
+            'role' => 'developer',
+            'content' => "# ナレッジ\n".$knowledge,
         ];
 
         $chatOpenAI = [
@@ -67,24 +46,21 @@ class Agent
 
     public function answer($developer, $messages, $question, $knowledge)
     {
-        array_unshift($messages, [
+        $developerContent = [];
+        $developerContent[] = [
             'role' => 'developer',
             'content' => $developer,
-        ]);
+        ];
+        $developerContent[] = [
+            'role' => 'developer',
+            'content' => "# ナレッジ\n```json\n".json_encode($knowledge, JSON_UNESCAPED_UNICODE)."\n```",
+        ];
 
-        $userContent = [];
-        $userContent[] = [
-            'type' => 'text',
-            'text' => "# 質問\n".$question,
-        ];
-        $userContent[] = [
-            'type' => 'text',
-            'text' => "# ナレッジ\n```json\n".json_encode($knowledge, JSON_UNESCAPED_UNICODE)."\n```",
-        ];
+        $messages = array_merge($developerContent, $messages);
 
         $messages[] = [
             'role' => 'user',
-            'content' => $userContent,
+            'content' => $question,
         ];
 
         $chatOpenAI = [
@@ -112,22 +88,14 @@ class Agent
         $developer = file_get_contents(resource_path('prompt/translate.md'));
         $developer = str_replace('{{language}}', trim($questionLang), $developer);
 
-        $messages = [
-            [
-                'role' => 'developer',
-                'content' => $developer,
-            ],
-        ];
-
-        $userContent = [];
-        $userContent[] = [
-            'type' => 'text',
-            'text' => "# 翻訳したい文章\n".$answer,
-        ];
-
+        $messages = [];
         $messages[] = [
-            'role' => 'user',
-            'content' => $userContent,
+            'role' => 'developer',
+            'content' => $developer,
+        ];
+        $messages[] = [
+            'role' => 'developer',
+            'content' => "# 翻訳したい文章\n".$answer,
         ];
 
         $chatOpenAI = [
@@ -158,35 +126,20 @@ class Agent
         return app()->getLocale();
     }
 
-    public function log($isLogging)
-    {
-        $this->isLogging = $isLogging;
-
-        return $this;
-    }
-
     private function detectLanguage($question, $answer)
     {
-        $messages = [
-            [
-                'role' => 'developer',
-                'content' => file_get_contents(resource_path('prompt/detectLanguage.md')),
-            ],
-        ];
-
-        $userContent = [];
-        $userContent[] = [
-            'type' => 'text',
-            'text' => "# 言語を特定するための文章\n".$question,
-        ];
-        $userContent[] = [
-            'type' => 'text',
-            'text' => "# 翻訳したい文章\n".$answer,
-        ];
-
+        $messages = [];
         $messages[] = [
-            'role' => 'user',
-            'content' => $userContent,
+            'role' => 'developer',
+            'content' => file_get_contents(resource_path('prompt/detectLanguage.md')),
+        ];
+        $messages[] = [
+            'role' => 'developer',
+            'content' => "# 言語を特定するための文章\n".$question,
+        ];
+        $messages[] = [
+            'role' => 'developer',
+            'content' => "# 翻訳したい文章\n".$answer,
         ];
 
         $chatOpenAI = [
@@ -198,6 +151,13 @@ class Agent
         $result = OpenAI::chat()->create($chatOpenAI);
 
         return trim($result->choices[0]->message->content);
+    }
+
+    public function log($isLogging)
+    {
+        $this->isLogging = $isLogging;
+
+        return $this;
     }
 
     private function storeLog($chatOpenAI)
