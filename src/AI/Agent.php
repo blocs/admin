@@ -67,6 +67,7 @@ class Agent
             'model' => $this->model,
             'messages' => $messages,
         ];
+        empty($this->isLogging) || $this->storeLog($chatOpenAI);
 
         $result = OpenAI::chat()->create($chatOpenAI);
 
