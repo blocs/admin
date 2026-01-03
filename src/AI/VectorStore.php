@@ -262,7 +262,7 @@ class VectorStore
      */
     private static function createCollection(string $collectionName): void
     {
-        $embeddingModel = config('qdrant.embedding_model', 'text-embedding-ada-002');
+        $embeddingModel = config('qdrant.embedding_model', 'text-embedding-3-small');
         $vectorSize = self::getVectorSize($embeddingModel);
 
         $response = self::makeRequest('put', "/collections/{$collectionName}", [
@@ -289,9 +289,9 @@ class VectorStore
     /**
      * 埋め込みモデルからベクトルサイズを取得
      */
-    private static function getVectorSize(string $model): int
+    private static function getVectorSize(string $embeddingModel): int
     {
-        return match ($model) {
+        return match ($embeddingModel) {
             'text-embedding-ada-002' => 1536,
             'text-embedding-3-small' => 1536,
             'text-embedding-3-large' => 3072,
@@ -306,10 +306,10 @@ class VectorStore
      */
     private static function getEmbedding(string $text): array
     {
-        $model = config('qdrant.embedding_model', 'text-embedding-ada-002');
+        $embeddingModel = config('qdrant.embedding_model', 'text-embedding-3-small');
 
         $response = OpenAI::embeddings()->create([
-            'model' => $model,
+            'model' => $embeddingModel,
             'input' => $text,
         ]);
 
