@@ -18,20 +18,22 @@ class Agent
         $this->model = $model;
     }
 
-    public function question()
+    public function question($messages = [])
     {
         $allIds = VectorStore::getAllIds($this->collectionName);
         $knowledge = VectorStore::get($this->collectionName, $allIds[array_rand($allIds)])['content'];
 
-        $messages = [];
-        $messages[] = [
+        $developerContent = [];
+        $developerContent[] = [
             'role' => 'developer',
             'content' => file_get_contents(resource_path('prompt/question.md')),
         ];
-        $messages[] = [
+        $developerContent[] = [
             'role' => 'developer',
             'content' => "# ナレッジ\n".$knowledge,
         ];
+
+        $messages = array_merge($developerContent, $messages);
 
         $chatOpenAI = [
             'model' => $this->model,
