@@ -8,11 +8,6 @@ use OpenAI\Laravel\Facades\OpenAI;
 class VectorStore
 {
     /**
-     * デフォルトのスコア閾値
-     */
-    private const DEFAULT_SCORE_THRESHOLD = 0.6;
-
-    /**
      * デフォルトの検索結果数
      */
     private const DEFAULT_DOCS_LIMIT = 5;
@@ -180,19 +175,21 @@ class VectorStore
         string $collectionName,
         array|string $targetData,
         int $docsLimit = self::DEFAULT_DOCS_LIMIT,
-        float $scoreThreshold = self::DEFAULT_SCORE_THRESHOLD
+        ?float $scoreThreshold = null
     ): array {
         self::ensureCollection($collectionName);
 
         $embedding = self::getEmbeddingFromData($targetData);
 
-        $response = self::makeRequest('post', "/collections/{$collectionName}/points/query", [
+        $query = [
             'query' => $embedding,
             'limit' => $docsLimit,
             'with_payload' => true,
             'with_vectors' => false,
-            'score_threshold' => $scoreThreshold,
-        ]);
+        ];
+        isset($scoreThreshold) && $query['score_threshold'] = $scoreThreshold;
+
+        $response = self::makeRequest('post', "/collections/{$collectionName}/points/query", $query);
 
         if (! $response) {
             return [];
@@ -262,7 +259,7 @@ class VectorStore
      */
     private static function createCollection(string $collectionName): void
     {
-        $embeddingModel = config('qdrant.embedding_model', 'text-embedding-3-small');
+        $embeddingModel = config('qdrant.embedding_model');
         $vectorSize = self::getVectorSize($embeddingModel);
 
         $response = self::makeRequest('put', "/collections/{$collectionName}", [
@@ -306,7 +303,7 @@ class VectorStore
      */
     private static function getEmbedding(string $text): array
     {
-        $embeddingModel = config('qdrant.embedding_model', 'text-embedding-3-small');
+        $embeddingModel = config('qdrant.embedding_model');
 
         $response = OpenAI::embeddings()->create([
             'model' => $embeddingModel,
