@@ -212,6 +212,7 @@ class VectorStore
 
     /**
      * HTTPリクエストを実行
+     * Qdrant Cloud 用 API キーが設定されている場合のみ api-key ヘッダーを付与する。
      *
      * @param  'get'|'post'|'put'|'delete'  $method
      * @param  array<string, mixed>  $data
@@ -220,12 +221,13 @@ class VectorStore
     private static function makeRequest(string $method, string $path, array $data = []): ?array
     {
         $url = self::getApiUrl($path);
+        $http = self::httpClient();
 
         $response = match ($method) {
-            'get' => Http::get($url),
-            'post' => Http::post($url, $data),
-            'put' => Http::put($url, $data),
-            'delete' => Http::delete($url),
+            'get' => $http->get($url),
+            'post' => $http->post($url, $data),
+            'put' => $http->put($url, $data),
+            'delete' => $http->delete($url),
             default => throw new \InvalidArgumentException("Unsupported HTTP method: {$method}"),
         };
 
@@ -234,6 +236,21 @@ class VectorStore
         }
 
         return $response->json();
+    }
+
+    /**
+     * API キーが設定されている場合に api-key ヘッダーを付与した HTTP クライアントを返す
+     */
+    private static function httpClient(): \Illuminate\Http\Client\PendingRequest
+    {
+        $request = Http::timeout(30);
+        $apiKey = config('qdrant.api_key');
+
+        if ($apiKey !== null && $apiKey !== '') {
+            $request = $request->withHeaders(['api-key' => $apiKey]);
+        }
+
+        return $request;
     }
 
     /**
