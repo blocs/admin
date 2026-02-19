@@ -28,6 +28,11 @@ class VectorStore
     private static array $collections = [];
 
     /**
+     * 埋め込み API から取得したベクトル次元数のキャッシュ（getVectorSize 用）
+     */
+    private static ?int $cachedVectorSize = null;
+
+    /**
      * ドキュメントを取得
      *
      * @param  array<string>|string  $docIds
@@ -301,16 +306,25 @@ class VectorStore
     }
 
     /**
-     * 埋め込みモデルからベクトルサイズを取得
+     * 埋め込み API のレスポンスからベクトルサイズを取得（1 回のみ API 呼び出しし、結果をキャッシュ）
      */
     private static function getVectorSize(string $embeddingModel): int
     {
-        return match ($embeddingModel) {
-            'text-embedding-ada-002' => 1536,
-            'text-embedding-3-small' => 1536,
-            'text-embedding-3-large' => 3072,
-            default => self::DEFAULT_VECTOR_SIZE,
-        };
+        if (self::$cachedVectorSize !== null) {
+            return self::$cachedVectorSize;
+        }
+
+        try {
+            $embedding = self::getEmbedding('x');
+            if ($embedding === []) {
+                return self::DEFAULT_VECTOR_SIZE;
+            }
+            self::$cachedVectorSize = count($embedding);
+
+            return self::$cachedVectorSize;
+        } catch (\Throwable) {
+            return self::DEFAULT_VECTOR_SIZE;
+        }
     }
 
     /**
@@ -321,6 +335,29 @@ class VectorStore
     private static function getEmbedding(string $text): array
     {
         $embeddingModel = config('qdrant.embedding_model');
+        $baseUri = config('qdrant.embedding_base_uri');
+
+        if ($baseUri !== null && $baseUri !== '') {
+            $url = rtrim($baseUri, '/').'/v1/embeddings';
+            $http = Http::timeout(30);
+            $apiKey = config('qdrant.embedding_api_key');
+            if ($apiKey !== null && $apiKey !== '') {
+                $http = $http->withToken($apiKey);
+            }
+            $response = $http->post($url, [
+                'model' => $embeddingModel,
+                'input' => $text,
+            ]);
+
+            if (! $response->successful()) {
+                throw new \RuntimeException('Embedding API request failed: '.$response->status());
+            }
+
+            $json = $response->json();
+            $embedding = $json['data'][0]['embedding'] ?? null;
+
+            return is_array($embedding) ? $embedding : [];
+        }
 
         $response = OpenAI::embeddings()->create([
             'model' => $embeddingModel,
