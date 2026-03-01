@@ -12,7 +12,7 @@ class Agent
 
     private bool $isLogging;
 
-    public function __construct($collectionName = null, $model = 'gpt-5-chat-latest')
+    public function __construct($collectionName = null, $model)
     {
         $this->collectionName = $collectionName;
         $this->model = $model;
