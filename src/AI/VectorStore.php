@@ -23,6 +23,11 @@ class VectorStore
     private const DISTANCE_METHOD = 'Cosine';
 
     /**
+     * トークン数推定時のデフォルト文字数/トークン比（OpenAI 等の目安）
+     */
+    private const DEFAULT_CHARS_PER_TOKEN = 4.0;
+
+    /**
      * @var array<string, bool>
      */
     private static array $collections = [];
@@ -201,6 +206,88 @@ class VectorStore
         }
 
         return self::extractSimilarResults($response);
+    }
+
+    /**
+     * テキストを指定トークン数以下でチャンクに分割する
+     *
+     * トークン数は文字数ベースの近似で算出する（依存関係を増やさないため）。
+     * 文や改行の境界で分割を試みる。
+     *
+     * @return array<int, string>
+     */
+    public static function chunkByTokens(
+        string $text,
+        int $maxTokens,
+        ?float $charsPerToken = null
+    ): array {
+        $charsPerToken ??= self::DEFAULT_CHARS_PER_TOKEN;
+        $maxChars = (int) floor($maxTokens * $charsPerToken);
+
+        if ($maxChars <= 0 || mb_strlen($text) === 0) {
+            return $text === '' ? [] : [$text];
+        }
+
+        $chunks = [];
+        $offset = 0;
+        $len = mb_strlen($text);
+
+        while ($offset < $len) {
+            $slice = mb_substr($text, $offset, $maxChars);
+
+            if (mb_strlen($slice) < $maxChars) {
+                $chunks[] = $slice;
+                break;
+            }
+
+            $breakAt = self::findChunkBreak($slice, $maxChars);
+            $chunk = mb_substr($text, $offset, $breakAt);
+            $chunks[] = $chunk;
+            $offset += $breakAt;
+        }
+
+        return $chunks;
+    }
+
+    /**
+     * 文字数ベースでトークン数を推定する
+     */
+    public static function estimateTokenCount(string $text, ?float $charsPerToken = null): int
+    {
+        $charsPerToken ??= self::DEFAULT_CHARS_PER_TOKEN;
+
+        return (int) ceil(mb_strlen($text) / $charsPerToken);
+    }
+
+    /**
+     * チャンクの分割位置（文・改行境界を優先）
+     */
+    private static function findChunkBreak(string $slice, int $maxChars): int
+    {
+        $search = mb_substr($slice, 0, $maxChars);
+        $sentenceEnd = ['。', '．', '.', '!', '?', "\n", "\r\n"];
+        $pos = mb_strlen($search);
+
+        foreach ($sentenceEnd as $end) {
+            $last = mb_strrpos($search, $end);
+            if ($last !== false && $last < $maxChars - 1) {
+                $candidate = $last + mb_strlen($end);
+                if ($candidate < $pos) {
+                    $pos = $candidate;
+                }
+            }
+        }
+
+        if ($pos < mb_strlen($search)) {
+            return $pos;
+        }
+
+        $spacePos = mb_strrpos($search, ' ');
+        if ($spacePos !== false && $spacePos > (int) ($maxChars * 0.5)) {
+            return $spacePos + 1;
+        }
+
+        return $maxChars;
     }
 
     /**
