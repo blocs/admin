@@ -138,11 +138,11 @@ class Agent
         ];
         $messages[] = [
             'role' => 'developer',
-            'content' => "# 言語を特定するための文章\n".mb_substr($question, 0, 200),
+            'content' => "# 言語を特定するための文章\n".mb_substr($question, 0, 1000),
         ];
         $messages[] = [
             'role' => 'developer',
-            'content' => "# 翻訳したい文章\n".mb_substr($answer, 0, 200),
+            'content' => "# 翻訳したい文章\n".mb_substr($answer, 0, 1000),
         ];
 
         $chatOpenAI = [
