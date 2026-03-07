@@ -12,7 +12,7 @@ class Agent
 
     private bool $isLogging;
 
-    public function __construct($collectionName = null, $model)
+    public function __construct($collectionName, $model)
     {
         $this->collectionName = $collectionName;
         $this->model = $model;
