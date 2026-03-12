@@ -205,6 +205,36 @@ class VectorStore
     }
 
     /**
+     * コレクションからランダムにドキュメントを取得
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public static function sample(string $collectionName, int $limit = self::DEFAULT_DOCS_LIMIT): array
+    {
+        self::ensureCollection($collectionName);
+
+        $response = self::makeRequest('post', "/collections/{$collectionName}/points/query", [
+            'query' => ['sample' => 'random'],
+            'limit' => $limit,
+            'with_payload' => true,
+            'with_vectors' => false,
+        ]);
+
+        if (! $response || ! isset($response['result']['points'])) {
+            return [];
+        }
+
+        $payloads = [];
+        foreach ($response['result']['points'] as $point) {
+            if (isset($point['payload']) && is_array($point['payload'])) {
+                $payloads[] = $point['payload'];
+            }
+        }
+
+        return $payloads;
+    }
+
+    /**
      * API URLを生成
      */
     private static function getApiUrl(string $path): string
