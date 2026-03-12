@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
-class UserController extends \Blocs\Controllers\Base
+use Blocs\Controllers\Base;
+
+class UserController extends Base
 {
     use UserUpdateTrait;
 

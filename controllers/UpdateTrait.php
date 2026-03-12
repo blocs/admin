@@ -2,7 +2,9 @@
 
 namespace Blocs\Controllers;
 
+use Blocs\Validate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 trait UpdateTrait
 {
@@ -100,7 +102,7 @@ trait UpdateTrait
     protected function validateUpdate()
     {
         // バリデーションルールとメッセージを取得
-        [$rules, $messages] = \Blocs\Validate::get($this->viewPrefix.'.edit', $this->request);
+        [$rules, $messages] = Validate::get($this->viewPrefix.'.edit', $this->request);
         if (empty($rules)) {
             return;
         }
@@ -193,7 +195,7 @@ trait UpdateTrait
 
         // トランザクション内でデータを更新
         $tableData = $this->tableData;
-        \Illuminate\Support\Facades\DB::transaction(function () use ($tableData, $requestData) {
+        DB::transaction(function () use ($tableData, $requestData) {
             $tableData->fill($requestData)->save();
         }, 10);
 

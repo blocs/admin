@@ -2,6 +2,7 @@
 
 namespace Blocs\Middleware;
 
+use Blocs\Menu;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -19,6 +20,6 @@ class Role
 
     private function hasRequiredRole(): bool
     {
-        return \Blocs\Menu::checkRole();
+        return Menu::checkRole();
     }
 }

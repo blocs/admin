@@ -1,9 +1,13 @@
 <?php
 
+use Blocs\Common;
+use Blocs\Lang;
+use Blocs\Option;
+
 if (! function_exists('lang')) {
     function lang(...$messages)
     {
-        return Blocs\Lang::get(implode(':', $messages));
+        return Lang::get(implode(':', $messages));
     }
 }
 
@@ -11,7 +15,7 @@ if (! function_exists('val')) {
     function val($str, $formName = null, $template = null)
     {
         if (isset($template)) {
-            Blocs\Option::set($template, $formName);
+            Option::set($template, $formName);
         }
 
         $arguments = [$str];
@@ -20,14 +24,14 @@ if (! function_exists('val')) {
             $arguments[] = $formName;
         }
 
-        return Blocs\Common::convertDefault(...$arguments);
+        return Common::convertDefault(...$arguments);
     }
 }
 
 if (! function_exists('prefix')) {
     function prefix()
     {
-        return Blocs\Common::routePrefix();
+        return Common::routePrefix();
     }
 }
 
@@ -41,20 +45,20 @@ if (! function_exists('path')) {
 if (! function_exists('getOption')) {
     function getOption($formName, $template)
     {
-        return Blocs\Option::get($template, $formName);
+        return Option::get($template, $formName);
     }
 }
 
 if (! function_exists('addOption')) {
     function addOption($formName, $optionList)
     {
-        Blocs\Option::add($formName, $optionList);
+        Option::add($formName, $optionList);
     }
 }
 
 if (! function_exists('setOption')) {
     function setOption($formName, $template)
     {
-        Blocs\Option::set($template, $formName);
+        Option::set($template, $formName);
     }
 }
