@@ -20,8 +20,8 @@ class Chat
 
     public function question($messages = [])
     {
-        $allIds = VectorStore::getAllIds($this->collectionName);
-        $knowledge = VectorStore::get($this->collectionName, $allIds[array_rand($allIds)])['content'];
+        $samples = VectorStore::sample($this->collectionName, 1);
+        $knowledge = $samples[0]['content'] ?? '';
 
         $developerContent = [];
         $developerContent[] = [
