@@ -4,7 +4,7 @@ namespace Blocs\AI;
 
 use OpenAI\Laravel\Facades\OpenAI;
 
-class Agent
+class Chat
 {
     private $collectionName;
 
