@@ -2,10 +2,14 @@
 
 namespace Blocs\Auth;
 
+use Illuminate\Contracts\Auth\StatefulGuard;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Illuminate\View\View;
 
 trait AuthenticatesUsers
 {
@@ -15,7 +19,7 @@ trait AuthenticatesUsers
     /**
      * ログインフォームのビューを返す。
      *
-     * @return \Illuminate\View\View
+     * @return View
      */
     public function showLoginForm()
     {
@@ -25,7 +29,7 @@ trait AuthenticatesUsers
     /**
      * ログインリクエストを検証し、認証結果に応じたレスポンスを返す。
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\Response|JsonResponse
+     * @return RedirectResponse|Response|JsonResponse
      *
      * @throws ValidationException
      */
@@ -90,7 +94,7 @@ trait AuthenticatesUsers
     /**
      * 認証成功後のセッション更新とレスポンス生成を行う。
      *
-     * @return \Illuminate\Http\RedirectResponse|JsonResponse
+     * @return RedirectResponse|JsonResponse
      */
     protected function sendLoginResponse(Request $request)
     {
@@ -137,7 +141,7 @@ trait AuthenticatesUsers
     /**
      * ログアウト処理を実行し、遷移先レスポンスを返す。
      *
-     * @return \Illuminate\Http\RedirectResponse|JsonResponse
+     * @return RedirectResponse|JsonResponse
      */
     public function logout(Request $request)
     {
@@ -164,7 +168,7 @@ trait AuthenticatesUsers
     /**
      * 認証に利用するガードインスタンスを取得する。
      *
-     * @return \Illuminate\Contracts\Auth\StatefulGuard
+     * @return StatefulGuard
      */
     protected function guard()
     {

@@ -2,7 +2,9 @@
 
 namespace App\Http\ControllersCONTROLLER_DIRNAME;
 
-class CONTROLLER_BASENAME extends \Blocs\Controllers\Base
+use Blocs\Controllers\Base;
+
+class CONTROLLER_BASENAME extends Base
 {
     public function __construct()
     {

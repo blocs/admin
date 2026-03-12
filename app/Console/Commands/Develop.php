@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Blocs\Compiler\BlocsCompiler;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Str;
@@ -204,7 +205,7 @@ class Develop extends Command
         $placeholderValues['SHOW_HTML'] = "\n";
         $showHtml = '';
 
-        $blocsCompiler = new \Blocs\Compiler\BlocsCompiler;
+        $blocsCompiler = new BlocsCompiler;
         foreach ($developConfig['form'] as $formName => $form) {
             $form['name'] = $formName;
             isset($form['label']) || $form['label'] = '';

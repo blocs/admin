@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Blocs\Auth\AuthenticatesUsers;
+use Blocs\Controllers\CommonTrait;
+use Blocs\Validate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    use \Blocs\Auth\AuthenticatesUsers;
-    use \Blocs\Controllers\CommonTrait;
+    use AuthenticatesUsers;
+    use CommonTrait;
 
     protected string $viewPrefix = 'admin.auth';
 
@@ -74,7 +77,7 @@ class LoginController extends Controller
     // ログインフォームのバリデーションルールとメッセージを取得
     private function fetchLoginValidationConfig(Request $request)
     {
-        return \Blocs\Validate::get($this->viewPrefix.'.login', $request);
+        return Validate::get($this->viewPrefix.'.login', $request);
     }
 
     // ログインフォームの項目ラベルを取得

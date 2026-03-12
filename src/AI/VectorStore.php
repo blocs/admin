@@ -2,6 +2,7 @@
 
 namespace Blocs\AI;
 
+use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 use OpenAI\Laravel\Facades\OpenAI;
 
@@ -246,7 +247,7 @@ class VectorStore
     /**
      * API キーが設定されている場合に api-key ヘッダーを付与した HTTP クライアントを返す
      */
-    private static function httpClient(): \Illuminate\Http\Client\PendingRequest
+    private static function httpClient(): PendingRequest
     {
         $request = Http::timeout(30);
         $apiKey = config('qdrant.api_key');

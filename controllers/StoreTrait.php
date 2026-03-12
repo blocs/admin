@@ -2,7 +2,9 @@
 
 namespace Blocs\Controllers;
 
+use Blocs\Validate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 trait StoreTrait
 {
@@ -57,7 +59,7 @@ trait StoreTrait
     protected function validateStore()
     {
         // バリデーションルールとメッセージを取得
-        [$rules, $messages] = \Blocs\Validate::get($this->viewPrefix.'.create', $this->request);
+        [$rules, $messages] = Validate::get($this->viewPrefix.'.create', $this->request);
         if (empty($rules)) {
             return;
         }
@@ -169,7 +171,7 @@ trait StoreTrait
     {
         // データベーストランザクション内でレコードを作成
         $newRecord = null;
-        \Illuminate\Support\Facades\DB::transaction(function () use ($requestData, &$newRecord) {
+        DB::transaction(function () use ($requestData, &$newRecord) {
             $newRecord = $this->mainTable::create($requestData);
         }, 10);
 

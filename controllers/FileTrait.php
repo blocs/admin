@@ -2,7 +2,12 @@
 
 namespace Blocs\Controllers;
 
+use Blocs\Thumbnail;
+use Blocs\Validate;
+use Illuminate\Filesystem\FilesystemAdapter;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
 
 trait FileTrait
 {
@@ -37,7 +42,7 @@ trait FileTrait
         }
 
         // アップロード用のバリデーションルールを取得
-        [$rules, $messages] = \Blocs\Validate::upload($this->viewPrefix, $paramname);
+        [$rules, $messages] = Validate::upload($this->viewPrefix, $paramname);
         if (empty($rules)) {
             return;
         }
@@ -60,8 +65,8 @@ trait FileTrait
         $fullPath = $this->buildFileStoragePath($filename);
 
         // ファイルの存在確認とMIMEタイプを取得
-        /** @var \Illuminate\Filesystem\FilesystemAdapter $storage */
-        $storage = \Illuminate\Support\Facades\Storage::disk();
+        /** @var FilesystemAdapter $storage */
+        $storage = Storage::disk();
         $this->abortFileIfNotExists($storage, $fullPath);
         $mimeType = $storage->mimeType($fullPath);
 
@@ -85,8 +90,8 @@ trait FileTrait
         $fullPath = $this->buildFileStoragePath($filename);
 
         // ファイルの存在確認とMIMEタイプを取得
-        /** @var \Illuminate\Filesystem\FilesystemAdapter $storage */
-        $storage = \Illuminate\Support\Facades\Storage::disk();
+        /** @var FilesystemAdapter $storage */
+        $storage = Storage::disk();
         $this->abortFileIfNotExists($storage, $fullPath);
         $mimeType = $storage->mimeType($fullPath);
 
@@ -194,7 +199,7 @@ trait FileTrait
         $headers = $this->getHeaders($filename);
 
         // 画像レスポンスを作成
-        $response = response(\Illuminate\Support\Facades\File::get($thumbnail))->header('Content-Type', $mimeType);
+        $response = response(File::get($thumbnail))->header('Content-Type', $mimeType);
 
         // カスタムヘッダーが設定されている場合は追加
         return $this->addFileCustomHeaders($response, $headers);
@@ -246,11 +251,11 @@ trait FileTrait
     private function createFileThumbnail($filename, $size)
     {
         // サムネイルサイズの設定を取得（幅、高さ、クロップの有無）
-        $path = \Illuminate\Support\Facades\Storage::path($filename);
+        $path = Storage::path($filename);
         [$width, $height, $crop] = $this->getSize($size);
 
         // ストレージのファイルからサムネイルを生成して返す
-        $thumbnail = \Blocs\Thumbnail::create($path, $width, $height, $crop);
+        $thumbnail = Thumbnail::create($path, $width, $height, $crop);
 
         return $thumbnail;
     }

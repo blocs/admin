@@ -2,6 +2,7 @@
 
 namespace Blocs;
 
+use App\Consts\Blocs;
 use Illuminate\Support\ServiceProvider;
 
 class AdminServiceProvider extends ServiceProvider
@@ -15,7 +16,7 @@ class AdminServiceProvider extends ServiceProvider
     public function boot()
     {
         // アプリケーション定数の読み込みを実行
-        is_file(app_path('Consts/Blocs.php')) && \App\Consts\Blocs::define();
+        is_file(app_path('Consts/Blocs.php')) && Blocs::define();
 
         // 管理画面用のルーティングを追加
         is_file(base_path('routes/admin.php')) && $this->loadRoutesFrom(base_path('routes/admin.php'));

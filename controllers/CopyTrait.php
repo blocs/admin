@@ -2,6 +2,8 @@
 
 namespace Blocs\Controllers;
 
+use Illuminate\Support\Facades\DB;
+
 trait CopyTrait
 {
     protected $copyId;
@@ -82,7 +84,7 @@ trait CopyTrait
     {
         // データベーストランザクション内でコピーレコードを作成
         $newRecord = null;
-        \Illuminate\Support\Facades\DB::transaction(function () use ($requestData, &$newRecord) {
+        DB::transaction(function () use ($requestData, &$newRecord) {
             $newRecord = $this->mainTable::create($requestData);
         }, 10);
 

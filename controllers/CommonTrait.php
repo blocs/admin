@@ -2,11 +2,16 @@
 
 namespace Blocs\Controllers;
 
+use Blocs\Common;
+use Blocs\Compiler\BlocsCompiler;
+use Blocs\Menu;
+use Blocs\Option;
+
 trait CommonTrait
 {
     protected function addOption($formName, $optionList)
     {
-        \Blocs\Option::add($formName, $optionList);
+        Option::add($formName, $optionList);
     }
 
     protected function keepItem($keyItem)
@@ -168,7 +173,7 @@ trait CommonTrait
     protected function setupMenu()
     {
         // メニュー設定を取得してビューに渡す
-        [$menu, $headline, $breadcrumb] = \Blocs\Menu::get();
+        [$menu, $headline, $breadcrumb] = Menu::get();
         $this->val['menu'] = $menu;
         $this->val['headline'] = $headline;
         $this->val['breadcrumb'] = $breadcrumb;
@@ -181,8 +186,8 @@ trait CommonTrait
     protected function getLabel($template)
     {
         // 設定ファイルからラベル情報を読み込む
-        $path = \Blocs\Common::getPath($template);
-        $config = \Blocs\Common::readConfig($path);
+        $path = Common::getPath($template);
+        $config = Common::readConfig($path);
 
         $labels = [];
         if (! isset($config['label'][$path])) {
@@ -206,7 +211,7 @@ trait CommonTrait
 
         // data-属性を含む場合はBlocsCompilerでレンダリング
         static $blocsCompiler;
-        $blocsCompiler = $blocsCompiler ?? new \Blocs\Compiler\BlocsCompiler;
+        $blocsCompiler = $blocsCompiler ?? new BlocsCompiler;
 
         return $blocsCompiler->render($label);
     }
