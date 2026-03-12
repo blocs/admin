@@ -2,6 +2,8 @@
 
 namespace Blocs\Controllers;
 
+use Illuminate\Support\Facades\DB;
+
 trait ToggleTrait
 {
     public function toggle($id)
@@ -49,7 +51,7 @@ trait ToggleTrait
     {
         // トランザクション内でデータの有効/無効を切り替える
         $tableData = $this->tableData;
-        \Illuminate\Support\Facades\DB::transaction(function () use ($tableData) {
+        DB::transaction(function () use ($tableData) {
             $tableData->disabled_at = empty($tableData->disabled_at);
             $tableData->save();
         }, 10);

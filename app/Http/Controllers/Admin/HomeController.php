@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Admin\User;
+use Blocs\Controllers\Base;
 
-class HomeController extends \Blocs\Controllers\Base
+class HomeController extends Base
 {
     private $adminTopUserMonth = 5;
 
