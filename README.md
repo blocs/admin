@@ -1,6 +1,6 @@
 <div align="center"><img src="logo.svg" width="400" /></div>
 
-# Laravel Admin Package
+# Laravel Admin Package！
 Laravel で管理画面を簡単に作れる支援ツール
 
 [![Latest stable version](https://img.shields.io/packagist/v/blocs/admin)](https://packagist.org/packages/blocs/admin)
