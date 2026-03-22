@@ -14,7 +14,7 @@ Laravel で管理画面を簡単に作れる支援ツール
 [**Website**](https://blocs.jp/)
 | [**iknow**](https://linear.iknow.dev/?category=2)
 
-## 導入方法?
+## 導入方法!
 1. PHP と Composer をセットアップ
 2. Composer で Laravel をインストール
 ```sh
