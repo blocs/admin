@@ -63,21 +63,25 @@ class VectorStore
     /**
      * ドキュメントを追加または更新
      *
-     * @param  array<string, mixed>  $targetData
+     * @param  array<string, mixed>|string|null  $embeddingSource  省略時は $payload を埋め込み元にする
      */
-    public static function upsert(string $collectionName, string $docId, array $targetData): bool
-    {
+    public static function upsert(
+        string $collectionName,
+        string $docId,
+        array $payload,
+        array|string|null $embeddingSource = null
+    ): bool {
         self::ensureCollection($collectionName);
 
-        $docId = self::hashDocId($docId);
-        $embedding = self::getEmbeddingFromData($targetData);
+        $pointId = self::hashDocId($docId);
+        $dataForEmbedding = $embeddingSource ?? $payload;
 
         $response = self::makeRequest('put', "/collections/{$collectionName}/points", [
             'points' => [
                 [
-                    'id' => $docId,
-                    'payload' => $targetData,
-                    'vector' => $embedding,
+                    'id' => $pointId,
+                    'payload' => $payload,
+                    'vector' => self::getEmbeddingFromData($dataForEmbedding),
                 ],
             ],
         ]);
@@ -174,18 +178,18 @@ class VectorStore
     /**
      * 類似ドキュメントを検索
      *
-     * @param  array<string, mixed>|string  $targetData
+     * @param  array<string, mixed>|string  $dataForEmbedding
      * @return array<int, array<string, mixed>>
      */
     public static function similar(
         string $collectionName,
-        array|string $targetData,
+        array|string $dataForEmbedding,
         int $docsLimit = self::DEFAULT_DOCS_LIMIT,
         ?float $scoreThreshold = null
     ): array {
         self::ensureCollection($collectionName);
 
-        $embedding = self::getEmbeddingFromData($targetData);
+        $embedding = self::getEmbeddingFromData($dataForEmbedding);
 
         $query = [
             'query' => $embedding,
@@ -401,14 +405,14 @@ class VectorStore
     /**
      * データから埋め込みベクトルを取得
      *
-     * @param  array<string, mixed>|string  $targetData
+     * @param  array<string, mixed>|string  $dataForEmbedding
      * @return array<float>
      */
-    private static function getEmbeddingFromData(array|string $targetData): array
+    private static function getEmbeddingFromData(array|string $dataForEmbedding): array
     {
-        $pageContent = is_array($targetData)
-            ? json_encode($targetData, JSON_UNESCAPED_UNICODE)
-            : $targetData;
+        $pageContent = is_array($dataForEmbedding)
+            ? json_encode($dataForEmbedding, JSON_UNESCAPED_UNICODE)
+            : $dataForEmbedding;
 
         return self::getEmbedding($pageContent);
     }
