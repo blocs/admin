@@ -185,7 +185,8 @@ class VectorStore
         string $collectionName,
         array|string $dataForEmbedding,
         int $docsLimit = self::DEFAULT_DOCS_LIMIT,
-        ?float $scoreThreshold = null
+        ?float $scoreThreshold = null,
+        ?array $filter = null
     ): array {
         self::ensureCollection($collectionName);
 
@@ -198,6 +199,7 @@ class VectorStore
             'with_vectors' => false,
         ];
         isset($scoreThreshold) && $query['score_threshold'] = $scoreThreshold;
+        isset($filter) && $query['filter'] = $filter;
 
         $response = self::makeRequest('post', "/collections/{$collectionName}/points/query", $query);
 
@@ -213,16 +215,19 @@ class VectorStore
      *
      * @return array<int, array<string, mixed>>
      */
-    public static function sample(string $collectionName, int $limit = self::DEFAULT_DOCS_LIMIT): array
+    public static function sample(string $collectionName, int $limit = self::DEFAULT_DOCS_LIMIT, ?array $filter = null): array
     {
         self::ensureCollection($collectionName);
 
-        $response = self::makeRequest('post', "/collections/{$collectionName}/points/query", [
+        $query = [
             'query' => ['sample' => 'random'],
             'limit' => $limit,
             'with_payload' => true,
             'with_vectors' => false,
-        ]);
+        ];
+        isset($filter) && $query['filter'] = $filter;
+
+        $response = self::makeRequest('post', "/collections/{$collectionName}/points/query", $query);
 
         if (! $response || ! isset($response['result']['points'])) {
             return [];
