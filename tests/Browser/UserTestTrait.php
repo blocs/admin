@@ -8,10 +8,10 @@ trait UserTestTrait
     {
         // サイドメニューにユーザー管理が非表示の時は、管理メニューをクリックした後に、ユーザー管理をクリックする
         try {
-            $browser->click('a[href="http://localhost/admin/user"]')->pause(500);
+            $browser->click('a[href="/admin/user"]')->pause(500);
         } catch (\Throwable $e) {
             $browser->clickLink('管理メニュー')->pause(500)
-                ->click('a[href="http://localhost/admin/user"]')->pause(500);
+                ->click('a[href="/admin/user"]')->pause(500);
         }
     }
 
