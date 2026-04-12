@@ -11,8 +11,8 @@ trait LoginTestTrait
             $password = 'admin';
         */
 
-        // http://localhost/login に移動する
-        $browser->visit('http://localhost/login')->pause(500);
+        // /login に移動する
+        $browser->visit('/login')->pause(500);
 
         // ユーザーID $email, パスワード $password を入力して、ログインする
         $browser->type('email', $email)
