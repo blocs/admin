@@ -71,22 +71,67 @@ class VectorStore
         array $payload,
         array|string|null $embeddingSource = null
     ): bool {
+        return self::upsertMany($collectionName, [[
+            'doc_id' => $docId,
+            'payload' => $payload,
+            'embedding_source' => $embeddingSource,
+        ]]);
+    }
+
+    /**
+     * 複数ドキュメントをバッチで追加または更新する。
+     *
+     * 埋め込み API と Qdrant PUT を config('qdrant.embedding_batch_size', 64) 件ずつ
+     * 1 回にまとめる。バッチ境界をまたいだ原子性はない（先行バッチが成功・後続バッチが
+     * 失敗した場合、先行分は Qdrant に永続化されたまま false を返す）。
+     *
+     * @param  array<int, array{
+     *     doc_id: string,
+     *     payload: array<string, mixed>,
+     *     embedding_source?: array<string, mixed>|string|null
+     * }>  $items
+     */
+    public static function upsertMany(string $collectionName, array $items): bool
+    {
+        if ($items === []) {
+            return true;
+        }
+
         self::ensureCollection($collectionName);
 
-        $pointId = self::hashDocId($docId);
-        $dataForEmbedding = $embeddingSource ?? $payload;
+        $batchSize = (int) config('qdrant.embedding_batch_size', 64);
+        if ($batchSize < 1) {
+            $batchSize = 64;
+        }
 
-        $response = self::makeRequest('put', "/collections/{$collectionName}/points", [
-            'points' => [
-                [
-                    'id' => $pointId,
-                    'payload' => $payload,
-                    'vector' => self::getEmbeddingFromData($dataForEmbedding),
-                ],
-            ],
-        ]);
+        foreach (array_chunk($items, $batchSize) as $batch) {
+            $texts = [];
+            foreach ($batch as $item) {
+                $dataForEmbedding = $item['embedding_source'] ?? $item['payload'];
+                $texts[] = self::toEmbeddingText($dataForEmbedding);
+            }
 
-        return $response !== null;
+            $vectors = self::getEmbeddings($texts);
+
+            $points = [];
+            foreach (array_values($batch) as $i => $item) {
+                $points[] = [
+                    'id' => self::hashDocId($item['doc_id']),
+                    'payload' => $item['payload'],
+                    'vector' => $vectors[$i],
+                ];
+            }
+
+            $response = self::makeRequest('put', "/collections/{$collectionName}/points", [
+                'points' => $points,
+            ]);
+
+            if ($response === null) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -374,6 +419,21 @@ class VectorStore
      */
     private static function getEmbedding(string $text): array
     {
+        return self::getEmbeddings([$text])[0] ?? [];
+    }
+
+    /**
+     * 複数テキストから埋め込みベクトルを一括取得
+     *
+     * @param  array<int, string>  $texts
+     * @return array<int, array<float>>  入力と同じ順序・同じインデックス
+     */
+    private static function getEmbeddings(array $texts): array
+    {
+        if ($texts === []) {
+            return [];
+        }
+
         $embeddingModel = config('qdrant.embedding_model');
         $baseUri = config('qdrant.embedding_base_uri');
 
@@ -386,25 +446,60 @@ class VectorStore
             }
             $response = $http->post($url, [
                 'model' => $embeddingModel,
-                'input' => $text,
+                'input' => $texts,
             ]);
 
             if (! $response->successful()) {
                 throw new \RuntimeException('Embedding API request failed: '.$response->status());
             }
 
-            $json = $response->json();
-            $embedding = $json['data'][0]['embedding'] ?? null;
+            $data = $response->json('data');
 
-            return is_array($embedding) ? $embedding : [];
+            return is_array($data) ? self::sortEmbeddingsByIndex($data) : [];
         }
 
         $response = OpenAI::embeddings()->create([
             'model' => $embeddingModel,
-            'input' => $text,
+            'input' => $texts,
         ]);
 
-        return $response->embeddings[0]->embedding;
+        $embeddings = [];
+        foreach ($response->embeddings as $embedding) {
+            $embeddings[$embedding->index] = $embedding->embedding;
+        }
+        ksort($embeddings);
+
+        return array_values($embeddings);
+    }
+
+    /**
+     * 埋め込み API レスポンスの data[] を index 順に並べ替えてベクトル配列を返す。
+     * index が欠落している場合は配列順を維持する（OpenAI 互換実装への保険）。
+     *
+     * @param  array<int, array<string, mixed>>  $data
+     * @return array<int, array<float>>
+     */
+    private static function sortEmbeddingsByIndex(array $data): array
+    {
+        $hasIndex = true;
+        foreach ($data as $row) {
+            if (! isset($row['index'])) {
+                $hasIndex = false;
+                break;
+            }
+        }
+
+        if ($hasIndex) {
+            usort($data, fn ($a, $b) => $a['index'] <=> $b['index']);
+        }
+
+        $vectors = [];
+        foreach ($data as $row) {
+            $embedding = $row['embedding'] ?? null;
+            $vectors[] = is_array($embedding) ? $embedding : [];
+        }
+
+        return $vectors;
     }
 
     /**
@@ -415,11 +510,19 @@ class VectorStore
      */
     private static function getEmbeddingFromData(array|string $dataForEmbedding): array
     {
-        $pageContent = is_array($dataForEmbedding)
+        return self::getEmbeddings([self::toEmbeddingText($dataForEmbedding)])[0] ?? [];
+    }
+
+    /**
+     * 埋め込み元データをテキストに変換する（API 呼び出しはしない）。
+     *
+     * @param  array<string, mixed>|string  $dataForEmbedding
+     */
+    private static function toEmbeddingText(array|string $dataForEmbedding): string
+    {
+        return is_array($dataForEmbedding)
             ? json_encode($dataForEmbedding, JSON_UNESCAPED_UNICODE)
             : $dataForEmbedding;
-
-        return self::getEmbedding($pageContent);
     }
 
     /**
