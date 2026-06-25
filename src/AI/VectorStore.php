@@ -426,7 +426,7 @@ class VectorStore
      * 複数テキストから埋め込みベクトルを一括取得
      *
      * @param  array<int, string>  $texts
-     * @return array<int, array<float>>  入力と同じ順序・同じインデックス
+     * @return array<int, array<float>> 入力と同じ順序・同じインデックス
      */
     private static function getEmbeddings(array $texts): array
     {
