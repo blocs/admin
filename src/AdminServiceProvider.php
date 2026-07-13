@@ -72,12 +72,6 @@ class AdminServiceProvider extends ServiceProvider
         // routesをpublish
         $publishMappings[base_path('vendor/blocs/admin/routes')] = base_path('routes');
 
-        // docsをpublish
-        $publishMappings[base_path('vendor/blocs/admin/docs')] = base_path('docs');
-
-        // testsをpublish
-        $publishMappings[base_path('vendor/blocs/admin/tests')] = base_path('tests');
-
         return $publishMappings;
     }
 }
