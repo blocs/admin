@@ -31,7 +31,8 @@
         "psr-4": {
             "Blocs\\": "src\/",
             "Blocs\\Commands\\": "commands\/",
-            "Blocs\\Controllers\\": "controllers\/"
+            "Blocs\\Controllers\\": "controllers\/",
+            "Tests\\Browser\\": "tests\/Browser\/"
         },
         "files": [
             "helper\/admin.php"
