@@ -363,6 +363,9 @@ class VectorStore
 
     /**
      * コレクションを作成
+     *
+     * 複数ワーカーが同時に「未作成」を見て PUT すると、後続は 409 等で失敗する。
+     * その場合は GET で存在確認し、既に作成済みなら成功扱いとする。
      */
     private static function createCollection(string $collectionName): void
     {
@@ -376,9 +379,22 @@ class VectorStore
             ],
         ]);
 
-        if (! $response) {
-            throw new \RuntimeException("Failed to create collection: {$collectionName}");
+        if ($response) {
+            return;
         }
+
+        // 競合・作成直後の可視遅延に備え、短く再確認する。
+        for ($attempt = 0; $attempt < 3; $attempt++) {
+            if ($attempt > 0) {
+                usleep(50_000 * $attempt);
+            }
+
+            if (self::makeRequest('get', "/collections/{$collectionName}")) {
+                return;
+            }
+        }
+
+        throw new \RuntimeException("Failed to create collection: {$collectionName}");
     }
 
     /**
