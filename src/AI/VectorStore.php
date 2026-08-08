@@ -14,11 +14,6 @@ class VectorStore
     private const DEFAULT_DOCS_LIMIT = 5;
 
     /**
-     * デフォルトのベクトルサイズ
-     */
-    private const DEFAULT_VECTOR_SIZE = 1536;
-
-    /**
      * 距離計算方法
      */
     private const DISTANCE_METHOD = 'Cosine';
@@ -27,11 +22,6 @@ class VectorStore
      * @var array<string, bool>
      */
     private static array $collections = [];
-
-    /**
-     * 埋め込み API から取得したベクトル次元数のキャッシュ（getVectorSize 用）
-     */
-    private static ?int $cachedVectorSize = null;
 
     /**
      * ドキュメントを取得
@@ -369,8 +359,12 @@ class VectorStore
      */
     private static function createCollection(string $collectionName): void
     {
-        $embeddingModel = config('qdrant.embedding_model');
-        $vectorSize = self::getVectorSize($embeddingModel);
+        $vectorSize = (int) config('qdrant.vector_size');
+        if ($vectorSize < 1) {
+            throw new \InvalidArgumentException(
+                "config('qdrant.vector_size') must be a positive integer matching the embedding dimensions."
+            );
+        }
 
         $response = self::makeRequest('put', "/collections/{$collectionName}", [
             'vectors' => [
@@ -404,38 +398,6 @@ class VectorStore
     {
         self::makeRequest('delete', "/collections/{$collectionName}");
         unset(self::$collections[$collectionName]);
-    }
-
-    /**
-     * 埋め込み API のレスポンスからベクトルサイズを取得（1 回のみ API 呼び出しし、結果をキャッシュ）
-     */
-    private static function getVectorSize(string $embeddingModel): int
-    {
-        if (self::$cachedVectorSize !== null) {
-            return self::$cachedVectorSize;
-        }
-
-        try {
-            $embedding = self::getEmbedding('x');
-            if ($embedding === []) {
-                return self::DEFAULT_VECTOR_SIZE;
-            }
-            self::$cachedVectorSize = count($embedding);
-
-            return self::$cachedVectorSize;
-        } catch (\Throwable) {
-            return self::DEFAULT_VECTOR_SIZE;
-        }
-    }
-
-    /**
-     * テキストから埋め込みベクトルを取得
-     *
-     * @return array<float>
-     */
-    private static function getEmbedding(string $text): array
-    {
-        return self::getEmbeddings([$text])[0] ?? [];
     }
 
     /**
