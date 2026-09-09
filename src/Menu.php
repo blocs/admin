@@ -13,6 +13,20 @@ class Menu
 
     private static $activePrefix;
 
+    /**
+     * 見出し・パンくずリスト・active 判定用プレフィックスを初期化する。
+     *
+     * Octane / RoadRunner のような常駐ワーカーでは静的プロパティがリクエストをまたいで残り、
+     * パンくずが閲覧履歴のように積み上がり、見出しは最初に処理した画面のものに固定される。
+     * リクエスト開始時（Octane の RequestReceived）に呼び出す。
+     */
+    public static function flush(): void
+    {
+        self::$headline = null;
+        self::$breadcrumbList = [];
+        self::$activePrefix = null;
+    }
+
     public static function get($name = 'root', $maxChild = 1)
     {
         // 設定の読み込み
