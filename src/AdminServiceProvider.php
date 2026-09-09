@@ -23,6 +23,27 @@ class AdminServiceProvider extends ServiceProvider
 
         // Artisan publish 対象のファイルを登録
         $this->app->runningInConsole() && $this->registerPublish();
+
+        // 常駐ワーカー（Octane）でリクエストごとにメニューの静的な状態を初期化
+        $this->registerMenuStateFlush();
+    }
+
+    /**
+     * Laravel Octane のリクエスト開始イベントで Menu の静的プロパティを初期化する。
+     *
+     * PHP-FPM ではリクエスト終了とともに消えるが、Octane ではワーカーが生きている間
+     * 見出しとパンくずリストが残り続ける。Octane が導入されていない環境では何もしない。
+     */
+    private function registerMenuStateFlush(): void
+    {
+        $requestReceived = 'Laravel\\Octane\\Events\\RequestReceived';
+        if (! class_exists($requestReceived)) {
+            return;
+        }
+
+        $this->app['events']->listen($requestReceived, function (): void {
+            Menu::flush();
+        });
     }
 
     public function registerBlocsCommand()
