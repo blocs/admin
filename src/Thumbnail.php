@@ -14,7 +14,7 @@ class Thumbnail
         $thumbLoc = BLOCS_CACHE_DIR.'/'.$thumbName;
 
         // サムネイルファイルの拡張子を判別
-        $thumbExt = File::extension($tmpLoc);
+        $thumbExt = strtolower(File::extension($tmpLoc));
 
         if (is_file($thumbLoc)) {
             // 既存のサムネイルファイルがある場合はそのまま返却
@@ -167,7 +167,7 @@ class Thumbnail
                 return;
             case 'webp':
                 defined('ADMIN_IMAGE_WEBP_QUALITY') || define('ADMIN_IMAGE_WEBP_QUALITY', -1);
-                imagepng($image, $thumbLoc, ADMIN_IMAGE_WEBP_QUALITY);
+                imagewebp($image, $thumbLoc, ADMIN_IMAGE_WEBP_QUALITY);
 
                 return;
             case 'wbmp':
