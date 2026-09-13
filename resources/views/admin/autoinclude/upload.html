@@ -19,8 +19,7 @@
     };
 
     Dropzone.autoDiscover = false;
-    new MutationObserver((mutations) => {
-        document.querySelectorAll(".ai-upload").forEach(function(item, i) {
+    observeAi(".ai-upload", function(item) {
             item.classList.remove("ai-upload");
             var dropzoneDiv = document.createElement("div");
             dropzoneDiv.classList.add("dropzone");
@@ -137,9 +136,5 @@
                     }
                 }
             });
-        });
-    }).observe(document, {
-        childList: true,
-        subtree: true
     });
 </script>
