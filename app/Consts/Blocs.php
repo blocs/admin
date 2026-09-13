@@ -27,6 +27,7 @@ class Blocs
         // サムネイルの品質
         defined('ADMIN_IMAGE_JPEG_QUALITY') || define('ADMIN_IMAGE_JPEG_QUALITY', -1);
         defined('ADMIN_IMAGE_PNG_QUALITY') || define('ADMIN_IMAGE_PNG_QUALITY', -1);
+        defined('ADMIN_IMAGE_WEBP_QUALITY') || define('ADMIN_IMAGE_WEBP_QUALITY', -1);
 
         // autoincludeのディレクトリ
         $GLOBALS['BLOCS_AUTOINCLUDE_DIR'] = resource_path('views/admin/autoinclude');
