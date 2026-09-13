@@ -2,8 +2,6 @@
 
 namespace Blocs;
 
-use Illuminate\Support\Facades\File;
-
 class Thumbnail
 {
     public static function create($tmpLoc, $pWidth, $pHeight, $crop = false)
@@ -13,22 +11,26 @@ class Thumbnail
         $thumbName = $pWidth.'x'.$pHeight.$thumbCrop.'-'.basename($tmpLoc);
         $thumbLoc = BLOCS_CACHE_DIR.'/'.$thumbName;
 
-        // サムネイルファイルの拡張子を判別
-        $thumbExt = strtolower(File::extension($tmpLoc));
+        $thumbExt = strtolower(pathinfo($tmpLoc, PATHINFO_EXTENSION));
 
         if (is_file($thumbLoc)) {
-            // 既存のサムネイルファイルがある場合はそのまま返却
             return $thumbLoc;
         }
 
         if (! filesize($tmpLoc)) {
-            // ファイルサイズが0の時は処理を中止
             return false;
         }
 
         [$width, $height, $oWidth, $oHeight] = self::calculateThumbnailDimensions($tmpLoc, $pWidth, $pHeight, $crop);
+        if ($oWidth < 1 || $oHeight < 1) {
+            return false;
+        }
+
         if ($width === $oWidth && $height === $oHeight) {
-            copy($tmpLoc, $thumbLoc) && chmod($thumbLoc, 0666);
+            if (! copy($tmpLoc, $thumbLoc)) {
+                return false;
+            }
+            chmod($thumbLoc, 0666);
 
             return $thumbLoc;
         }
@@ -61,28 +63,44 @@ class Thumbnail
         }
 
         if ($crop) {
+            if ($pWidth < 1 || $pHeight < 1 || $width < 1 || $height < 1) {
+                return false;
+            }
+
             $image = imagecreatetruecolor($pWidth, $pHeight);
-
-            // アルファブレンディングを無効化
             imagealphablending($image, false);
-
-            // アルファフラグを設定
             imagesavealpha($image, true);
 
-            imagecopyresampled($image, $oImage, 0, 0, intval(($width - $pWidth) / 2), intval(($height - $pHeight) / 2), $width, $height, $oWidth, $oHeight);
+            $srcWidth = $oWidth * $pWidth / $width;
+            $srcHeight = $oHeight * $pHeight / $height;
+            $srcX = ($oWidth - $srcWidth) / 2;
+            $srcY = ($oHeight - $srcHeight) / 2;
+
+            imagecopyresampled(
+                $image,
+                $oImage,
+                0,
+                0,
+                intval($srcX),
+                intval($srcY),
+                $pWidth,
+                $pHeight,
+                intval($srcWidth),
+                intval($srcHeight)
+            );
         } else {
             $image = imagecreatetruecolor($width, $height);
-
-            // アルファブレンディングを無効化
             imagealphablending($image, false);
-
-            // アルファフラグを設定
             imagesavealpha($image, true);
 
             imagecopyresampled($image, $oImage, 0, 0, 0, 0, $width, $height, $oWidth, $oHeight);
         }
 
-        self::outputImageResource($image, $thumbLoc, $thumbExt);
+        if (! self::outputImageResource($image, $thumbLoc, $thumbExt)) {
+            is_file($thumbLoc) && unlink($thumbLoc);
+
+            return false;
+        }
 
         return $thumbLoc;
     }
@@ -90,12 +108,15 @@ class Thumbnail
     private static function calculateThumbnailDimensions($sourcePath, $targetWidth, $targetHeight, $crop, $originalWidth = null, $originalHeight = null)
     {
         if (! isset($originalWidth) || ! isset($originalHeight)) {
-            [$originalWidth, $originalHeight] = @getimagesize($sourcePath);
+            $imageSize = @getimagesize($sourcePath);
+            if (! is_array($imageSize) || empty($imageSize[0]) || empty($imageSize[1])) {
+                return [0, 0, 0, 0];
+            }
+            [$originalWidth, $originalHeight] = $imageSize;
         }
         [$width, $height] = [$originalWidth, $originalHeight];
 
         if ($crop) {
-            // 指定サイズを覆う大きさに調整
             if (isset($targetWidth)) {
                 $height = $height * $targetWidth / $width;
                 $width = $targetWidth;
@@ -105,7 +126,6 @@ class Thumbnail
                 $height = $targetHeight;
             }
         } else {
-            // 指定サイズに収まる大きさに調整
             if (isset($targetWidth) && $targetWidth < $width) {
                 $height = $height * $targetWidth / $width;
                 $width = $targetWidth;
@@ -143,41 +163,53 @@ class Thumbnail
         }
     }
 
-    private static function outputImageResource($image, $thumbLoc, $thumbExt)
+    private static function outputImageResource($image, $thumbLoc, $thumbExt): bool
     {
+        $written = false;
+
         switch ($thumbExt) {
             case 'gif':
-                imagegif($image, $thumbLoc);
-
-                return;
+                $written = imagegif($image, $thumbLoc);
+                break;
             case 'jpg':
-                defined('ADMIN_IMAGE_JPEG_QUALITY') || define('ADMIN_IMAGE_JPEG_QUALITY', -1);
-                imagejpeg($image, $thumbLoc, ADMIN_IMAGE_JPEG_QUALITY);
-
-                return;
             case 'jpeg':
                 defined('ADMIN_IMAGE_JPEG_QUALITY') || define('ADMIN_IMAGE_JPEG_QUALITY', -1);
-                imagejpeg($image, $thumbLoc, ADMIN_IMAGE_JPEG_QUALITY);
-
-                return;
+                $written = imagejpeg($image, $thumbLoc, ADMIN_IMAGE_JPEG_QUALITY);
+                break;
             case 'png':
-                defined('ADMIN_IMAGE_PNG_QUALITY') || define('ADMIN_IMAGE_PNG_QUALITY', -1);
-                imagepng($image, $thumbLoc, ADMIN_IMAGE_PNG_QUALITY);
-
-                return;
+                $written = imagepng($image, $thumbLoc, self::pngQuality());
+                break;
             case 'webp':
                 defined('ADMIN_IMAGE_WEBP_QUALITY') || define('ADMIN_IMAGE_WEBP_QUALITY', -1);
-                imagewebp($image, $thumbLoc, ADMIN_IMAGE_WEBP_QUALITY);
-
-                return;
+                $written = imagewebp($image, $thumbLoc, ADMIN_IMAGE_WEBP_QUALITY);
+                break;
             case 'wbmp':
-                imagewbmp($image, $thumbLoc);
-
-                return;
+                $written = imagewbmp($image, $thumbLoc);
+                break;
             case 'xbm':
-                imagexbm($image, $thumbLoc);
-
-                return;
+                $written = imagexbm($image, $thumbLoc);
+                break;
+            default:
+                return false;
         }
+
+        if (! $written || ! is_file($thumbLoc)) {
+            return false;
+        }
+
+        chmod($thumbLoc, 0666);
+
+        return true;
+    }
+
+    private static function pngQuality(): int
+    {
+        defined('ADMIN_IMAGE_PNG_QUALITY') || define('ADMIN_IMAGE_PNG_QUALITY', -1);
+        $quality = ADMIN_IMAGE_PNG_QUALITY;
+        if ($quality < -1 || $quality > 9) {
+            return -1;
+        }
+
+        return (int) $quality;
     }
 }
