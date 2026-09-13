@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Blocs\Controllers\Base;
 use Blocs\Menu;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Base
@@ -28,6 +29,16 @@ class ProfileController extends Base
     {
         // プロフィール編集は常にログインユーザー自身を対象とする
         return parent::edit(Auth::id());
+    }
+
+    public function update($id, Request $request)
+    {
+        // プロフィール更新も自分自身のレコードだけを対象とする
+        if ((string) $id !== (string) Auth::id()) {
+            abort(403);
+        }
+
+        return parent::update($id, $request);
     }
 
     protected function outputUpdate()
@@ -76,6 +87,21 @@ class ProfileController extends Base
         }
 
         // 新しい画像が送信された場合はその値を反映する
-        $requestData['file'] = $this->request->file;
+        $requestData['file'] = $this->sanitizeProfileFilePayload($this->request->file);
+    }
+
+    private function sanitizeProfileFilePayload(mixed $filePayload): mixed
+    {
+        $decoded = is_string($filePayload) ? json_decode($filePayload, true) : $filePayload;
+        if (! is_array($decoded) || ! isset($decoded['filename']) || ! is_string($decoded['filename'])) {
+            return $filePayload;
+        }
+
+        $normalized = str_replace('\\', '/', $decoded['filename']);
+        if ($normalized !== basename($normalized) || str_contains($normalized, '..')) {
+            abort(403);
+        }
+
+        return $filePayload;
     }
 }

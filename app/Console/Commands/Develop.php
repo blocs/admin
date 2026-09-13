@@ -187,12 +187,17 @@ class Develop extends Command
         $viewPrefix = $developConfig['controller']['viewPrefix'];
         $viewPath = resource_path('views/'.str_replace('.', '/', $viewPrefix));
 
+        if (empty($developConfig['controller']['loopItem'])) {
+            // 一覧画面のテンプレートはloopItemから変数名を組み立てるため、未指定では生成できない
+            $this->error('Can not make view without "loopItem".');
+
+            return;
+        }
+
         // フォームの定義をテンプレートに反映します
         $placeholderValues = [];
-        if (! empty($developConfig['controller']['loopItem'])) {
-            $placeholderValues['LOOP_ITEM'] = $developConfig['controller']['loopItem'];
-            $placeholderValues['SINGULAR_ITEM'] = Str::singular($developConfig['controller']['loopItem']);
-        }
+        $placeholderValues['LOOP_ITEM'] = $developConfig['controller']['loopItem'];
+        $placeholderValues['SINGULAR_ITEM'] = Str::singular($developConfig['controller']['loopItem']);
 
         $placeholderValues['HEAD_HTML'] = '';
         $placeholderValues['BODY_HTML'] = '';

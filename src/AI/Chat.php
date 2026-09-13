@@ -119,14 +119,72 @@ class Chat
             return app()->getLocale();
         }
 
-        $languages = explode(',', $acceptLanguage);
-        foreach ($languages as $language) {
-            $langCode = explode('-', trim($language))[0];
+        $langCode = self::preferredLanguage($acceptLanguage);
 
-            return $langCode;
+        return $langCode ?? app()->getLocale();
+    }
+
+    /**
+     * Accept-Languageヘッダーから優先度の高い言語コードを取り出す。
+     * 品質値（;q=）は並べ替えに使うだけで言語コードには含めない。
+     */
+    private static function preferredLanguage(string $acceptLanguage): ?string
+    {
+        $candidates = [];
+
+        foreach (explode(',', $acceptLanguage) as $order => $language) {
+            $parameters = explode(';', $language);
+            $languageRange = strtolower(trim(array_shift($parameters)));
+
+            // ワイルドカードや空の指定は候補にしない
+            if ($languageRange === '' || $languageRange === '*') {
+                continue;
+            }
+
+            $langCode = explode('-', $languageRange)[0];
+            if (! preg_match('/^[a-z]{1,8}$/', $langCode)) {
+                continue;
+            }
+
+            $quality = self::extractLanguageQuality($parameters);
+            if ($quality <= 0) {
+                // q=0 は「受け入れない」という意味なので除外する
+                continue;
+            }
+
+            $candidates[] = ['code' => $langCode, 'quality' => $quality, 'order' => $order];
         }
 
-        return app()->getLocale();
+        if (empty($candidates)) {
+            return null;
+        }
+
+        // 品質値の降順、同値ならヘッダーの記載順を保つ
+        usort($candidates, function ($left, $right) {
+            return [$right['quality'], $left['order']] <=> [$left['quality'], $right['order']];
+        });
+
+        return $candidates[0]['code'];
+    }
+
+    /**
+     * @param  array<int, string>  $parameters  ";" で分割した品質値などの指定
+     */
+    private static function extractLanguageQuality(array $parameters): float
+    {
+        foreach ($parameters as $parameter) {
+            [$name, $value] = array_pad(explode('=', $parameter, 2), 2, null);
+
+            if (strtolower(trim((string) $name)) !== 'q') {
+                continue;
+            }
+
+            $value = trim((string) $value);
+
+            return is_numeric($value) ? (float) $value : 1.0;
+        }
+
+        return 1.0;
     }
 
     private function detectLanguage($question, $answer)

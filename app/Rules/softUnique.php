@@ -88,7 +88,8 @@ class softUnique implements ValidationRule
             return null;
         }
 
-        $requestId = $request->id;
+        // 入力値はリクエストボディで差し替えられるため、ルートパラメータだけを使う
+        $requestId = $request->route('id');
 
         return $requestId !== null && $requestId !== '' ? (string) $requestId : null;
     }
