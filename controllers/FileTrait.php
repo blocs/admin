@@ -21,6 +21,9 @@ trait FileTrait
         $this->validateUpload(request()->get('name'));
 
         $fileupload = $this->request->file('upload');
+        if ($fileupload === null || ! $fileupload->isValid()) {
+            abort(422);
+        }
 
         // ファイルのハッシュ値を元にファイル名を生成
         $filename = $this->buildFileHashedName($fileupload);
@@ -36,6 +39,10 @@ trait FileTrait
 
     protected function validateUpload($paramname)
     {
+        if (! is_string($paramname) || $paramname === '') {
+            abort(403);
+        }
+
         // テーブルタイプに対応しているフォーム名を取得
         if (preg_match('/\[([^][]+)\]$/', $paramname, $matches)) {
             $paramname = $matches[1];
@@ -44,7 +51,7 @@ trait FileTrait
         // アップロード用のバリデーションルールを取得
         [$rules, $messages] = Validate::upload($this->viewPrefix, $paramname);
         if (empty($rules)) {
-            return;
+            abort(403);
         }
 
         // バリデーションを実行してエラーがあればメッセージをセット
@@ -120,6 +127,11 @@ trait FileTrait
             'l@2x' => [2400, 10000, false],
         ];
 
+        // 未定義のサイズで原本を返してしまわないよう、ここで弾く
+        if (! isset($downloadSize[$size])) {
+            abort(404);
+        }
+
         return $downloadSize[$size];
     }
 
@@ -127,7 +139,10 @@ trait FileTrait
     {
         // ファイルの内容をハッシュ化して一意なファイル名を生成
         $hash = md5(file_get_contents($fileupload->getPathname()));
-        $extension = $fileupload->getClientOriginalExtension();
+        $extension = strtolower((string) $fileupload->guessExtension());
+        if ($extension === '' || preg_match('/[^a-z0-9]/', $extension)) {
+            abort(422);
+        }
 
         return $hash.'.'.$extension;
     }
@@ -168,7 +183,22 @@ trait FileTrait
         // アップロードストレージのパスを解決して完全なパスを返す
         $this->ensureFileUploadStorageInitialized();
 
-        return $this->uploadStorage.'/'.$filename;
+        return $this->uploadStorage.'/'.$this->sanitizeStoredFilename($filename);
+    }
+
+    private function sanitizeStoredFilename($filename): string
+    {
+        $normalized = str_replace('\\', '/', (string) $filename);
+        if ($normalized !== basename($normalized) || str_contains($normalized, '..')) {
+            abort(404);
+        }
+
+        $safe = basename($normalized);
+        if ($safe === '' || $safe === '.' || $safe === '..') {
+            abort(404);
+        }
+
+        return $safe;
     }
 
     private function abortFileIfNotExists($storage, $filename)

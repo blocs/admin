@@ -63,8 +63,8 @@ trait CommonTrait
 
     private function handleKeepPostRequest(string $keyItem, string $sessionKey): bool
     {
-        // POSTリクエストに指定されたキーが存在する場合、セッションに保存
-        if (request()->has($keyItem)) {
+        // URLパラメータはGET側で扱うため、ここでは本文から届いた値だけを対象にする
+        if (! request()->query->has($keyItem) && request()->has($keyItem)) {
             $this->saveKeepItemToSession($keyItem, request()->$keyItem, $sessionKey);
             docs(['POST' => $keyItem], 'フォーム送信で<'.$keyItem.'>が届いたら、その値を一時保存する', ['セッション' => $keyItem]);
 
@@ -76,8 +76,9 @@ trait CommonTrait
 
     private function handleKeepGetRequest(string $keyItem, string $sessionKey): bool
     {
-        // GETリクエストに指定されたキーが存在する場合、セッションに保存
-        if (request()->query($keyItem)) {
+        // URLパラメータに指定されたキーがある場合、セッションに保存
+        // 「0」や空文字も届いた値として扱うため、真偽ではなく有無で判定する
+        if (request()->query->has($keyItem)) {
             $this->saveKeepItemToSession($keyItem, request()->query($keyItem), $sessionKey);
             docs(['GET' => $keyItem], 'URLパラメータで<'.$keyItem.'>を受け取ったら、その値を一時保存する', ['セッション' => $keyItem]);
 

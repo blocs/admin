@@ -16,6 +16,7 @@ trait LoginTestTrait
 
     private function logout(Browser $browser): void
     {
-        $browser->visit('/logout')->pause(500);
+        $browser->driver->manage()->deleteAllCookies();
+        $browser->visit('/login')->pause(500);
     }
 }

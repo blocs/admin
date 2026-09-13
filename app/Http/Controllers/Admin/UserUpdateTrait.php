@@ -52,17 +52,21 @@ trait UserUpdateTrait
 
     private function shouldSkipPasswordValidation(): bool
     {
-        return $this->isPasswordUpdateEmpty() || $this->isStoredPasswordBlank();
+        if ($this->isPasswordUpdateEmpty()) {
+            return true;
+        }
+
+        return ! $this->requiresCurrentPasswordForUpdate();
+    }
+
+    private function requiresCurrentPasswordForUpdate(): bool
+    {
+        return $this->viewPrefix === 'admin.profile';
     }
 
     private function isPasswordUpdateEmpty(): bool
     {
         return empty($this->request->password_new);
-    }
-
-    private function isStoredPasswordBlank(): bool
-    {
-        return $this->tableData->password === '';
     }
 
     private function isCurrentPasswordMissing(): bool
