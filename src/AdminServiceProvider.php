@@ -4,6 +4,7 @@ namespace Blocs;
 
 use App\Consts\Blocs;
 use Illuminate\Support\ServiceProvider;
+use Laravel\Octane\Events\RequestReceived;
 
 class AdminServiceProvider extends ServiceProvider
 {
@@ -29,19 +30,16 @@ class AdminServiceProvider extends ServiceProvider
     }
 
     /**
-     * Laravel Octane のリクエスト開始イベントで Menu の静的プロパティを初期化する。
-     *
-     * PHP-FPM ではリクエスト終了とともに消えるが、Octane ではワーカーが生きている間
-     * 見出しとパンくずリストが残り続ける。Octane が導入されていない環境では何もしない。
+     * 常駐ワーカー（Laravel Octane）ではリクエストをまたいで static が残るため、
+     * リクエスト開始時に見出しとパンくずリストを初期化する。Octane 未導入なら何もしない。
      */
     private function registerMenuStateFlush(): void
     {
-        $requestReceived = 'Laravel\\Octane\\Events\\RequestReceived';
-        if (! class_exists($requestReceived)) {
+        if (! class_exists(RequestReceived::class)) {
             return;
         }
 
-        $this->app['events']->listen($requestReceived, function (): void {
+        $this->app['events']->listen(RequestReceived::class, function (): void {
             Menu::flush();
         });
     }

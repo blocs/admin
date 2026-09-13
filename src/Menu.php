@@ -15,10 +15,7 @@ class Menu
 
     /**
      * 見出し・パンくずリスト・active 判定用プレフィックスを初期化する。
-     *
-     * Octane / RoadRunner のような常駐ワーカーでは静的プロパティがリクエストをまたいで残り、
-     * パンくずが閲覧履歴のように積み上がり、見出しは最初に処理した画面のものに固定される。
-     * リクエスト開始時（Octane の RequestReceived）に呼び出す。
+     * 常駐ワーカー（Octane）でリクエストをまたいで残らないよう、リクエスト開始時に呼ぶ。
      */
     public static function flush(): void
     {
