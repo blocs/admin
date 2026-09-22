@@ -49,9 +49,16 @@ trait FileTrait
         }
 
         // アップロード用のバリデーションルールを取得
-        [$rules, $messages] = Validate::upload($this->viewPrefix, $paramname);
-        if (empty($rules)) {
+        // null = config['upload'] に無い未知フィールド → 403
+        // [[], []] = ai-upload 宣言済みだが validate 無し → 従来どおりスキップ
+        $uploadValidation = Validate::upload($this->viewPrefix, $paramname);
+        if ($uploadValidation === null) {
             abort(403);
+        }
+
+        [$rules, $messages] = $uploadValidation;
+        if (empty($rules)) {
+            return;
         }
 
         // バリデーションを実行してエラーがあればメッセージをセット
