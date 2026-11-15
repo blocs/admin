@@ -127,4 +127,26 @@
     <!-- data-include="button_create" -->
 <!-- data-endbloc -->
 
+<!-- data-bloc="script" -->
+    <script>
+    (function() {
+        const selectButton = document.querySelector("button[data-bs-target='#modalDestroy']");
+        if (!selectButton) {
+            return;
+        }
+
+        // 1件も選択されていない間は、一括削除ボタンを押せないようにする
+        const syncSelectButton = function() {
+            selectButton.disabled = !document.querySelector("input[name$='[selectedRows][]']:checked");
+        };
+
+        document.addEventListener("change", function(event) {
+            event.target.matches("table input[type=checkbox]") && syncSelectButton();
+        });
+        window.addEventListener("pageshow", syncSelectButton);
+        syncSelectButton();
+    })();
+    </script>
+<!-- data-endbloc -->
+
 <!-- data-include="/admin/base/index/footer.html" -->
