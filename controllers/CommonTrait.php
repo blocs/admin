@@ -207,14 +207,22 @@ trait CommonTrait
     {
         // data-属性を含まない場合はそのまま返す
         if (strpos($label, 'data-') === false) {
-            return $label;
+            return $this->normalizeLabel($label);
         }
 
         // data-属性を含む場合はBlocsCompilerでレンダリング
         static $blocsCompiler;
         $blocsCompiler = $blocsCompiler ?? new BlocsCompiler;
 
-        return $blocsCompiler->render($label);
+        return $this->normalizeLabel($blocsCompiler->render($label));
+    }
+
+    // 項目名として使えるよう、タグと末尾の必須マーク（*）を取り除く
+    private function normalizeLabel(string $label): string
+    {
+        $labelText = trim(strip_tags($label));
+
+        return preg_replace('/\s*[*＊]+$/u', '', $labelText) ?? $labelText;
     }
 
     protected function getValidate($rules, $messages, $labels)
