@@ -11,15 +11,11 @@ class Role
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $this->hasRequiredRole()) {
+        // 現在のルートに必要な役割を持たないユーザーを拒否する
+        if (! Menu::checkRole()) {
             abort(403);
         }
 
         return $next($request);
-    }
-
-    private function hasRequiredRole(): bool
-    {
-        return Menu::checkRole();
     }
 }

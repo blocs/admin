@@ -113,11 +113,11 @@ class Menu
         }
 
         // 必要な権限を取得
-        $configuredRoles = config('role');
+        $configuredRoles = config('role') ?? [];
         $requiredRoles = [];
         foreach ($configuredRoles as $roleName => $routeNameList) {
             foreach ($routeNameList as $routePattern) {
-                if (preg_match('/^'.$routePattern.'/', $currentName)) {
+                if (self::isRouteNameMatchingPattern($routePattern, (string) $currentName)) {
                     $requiredRoles[] = $roleName;
                     break;
                 }
@@ -135,6 +135,17 @@ class Menu
         }
 
         return false;
+    }
+
+    /**
+     * ルート名が設定のパターンに前方一致するか判定する。
+     * 「*」だけをワイルドカードとして扱い、「.」などは文字そのものとして比べる。
+     */
+    private static function isRouteNameMatchingPattern(string $routePattern, string $routeName): bool
+    {
+        $quotedPattern = str_replace('\\*', '.*', preg_quote($routePattern, '/'));
+
+        return preg_match('/^'.$quotedPattern.'/', $routeName) === 1;
     }
 
     private static function resolveLabel(array $menuConfig)

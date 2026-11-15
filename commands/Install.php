@@ -24,7 +24,7 @@ class Install extends Command
     /**
      * コマンド全体の実行フローを制御する。
      */
-    public function handle(): void
+    public function handle(): int
     {
         // 言語設定を同期して翻訳リソースを最新化
         $this->synchronizeLanguageFiles(base_path('vendor/blocs/admin/lang'));
@@ -42,14 +42,25 @@ class Install extends Command
         Artisan::call('vendor:publish', ['--provider' => 'Blocs\AdminServiceProvider']);
 
         // 初期ユーザーを登録してすぐにログインできる状態を用意
-        Artisan::call('migrate');
-        Artisan::call('db:seed', ['--class' => 'AdminSeeder']);
+        // 本番環境では確認が入るため、中止や失敗を見逃さないよう結果を確かめる
+        if ($this->call('migrate') !== self::SUCCESS) {
+            $this->error('Migration was not completed. Admin has not been installed.');
+
+            return self::FAILURE;
+        }
+        if ($this->call('db:seed', ['--class' => 'AdminSeeder']) !== self::SUCCESS) {
+            $this->error('The initial user was not created. Admin has not been installed.');
+
+            return self::FAILURE;
+        }
 
         Artisan::call('route:cache');
 
         $this->info('Admin has been installed successfully.');
         $this->info('Login URL is '.route('login').'.');
         $this->info('Initial ID/Pass is admin/admin.');
+
+        return self::SUCCESS;
     }
 
     private function synchronizeLanguageFiles(string $sourceLanguageDirectory): void
@@ -58,10 +69,11 @@ class Install extends Command
             return;
         }
 
-        $targetLanguageDirectory = resource_path('lang');
+        // Laravel の言語ディレクトリ（resources/lang があればそこ、無ければ lang）に合わせる
+        $targetLanguageDirectory = lang_path();
         if (! is_dir($targetLanguageDirectory)) {
-            mkdir($targetLanguageDirectory, 0777, true);
-            chmod($targetLanguageDirectory, 0777);
+            mkdir($targetLanguageDirectory, 0755, true);
+            chmod($targetLanguageDirectory, 0755);
         }
 
         foreach (scandir($sourceLanguageDirectory) as $fileName) {
@@ -74,7 +86,7 @@ class Install extends Command
 
             if (! is_file($targetFile)) {
                 copy($sourceFile, $targetFile);
-                chmod($targetFile, 0666);
+                chmod($targetFile, 0644);
 
                 continue;
             }
@@ -89,7 +101,7 @@ class Install extends Command
                 $targetFile,
                 json_encode($mergedTranslations, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)."\n"
             );
-            chmod($targetFile, 0666);
+            chmod($targetFile, 0644);
         }
     }
 
@@ -131,6 +143,7 @@ class Install extends Command
         $menuFilePath = config_path('menu.php');
         $code = "<?php\n\nreturn ".var_export($currentMenu, true).";\n";
         file_put_contents($menuFilePath, $code);
-        chmod($menuFilePath, 0666);
+        // 実行されるPHPファイルなので、所有者以外は書き込めないようにする
+        chmod($menuFilePath, 0644);
     }
 }

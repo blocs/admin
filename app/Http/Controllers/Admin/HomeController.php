@@ -19,13 +19,8 @@ class HomeController extends Base
         $this->chart();
 
         docs('# ホーム画面の表示準備');
-        $this->setupMenu();
 
-        $view = view($this->viewPrefix.'.index', $this->val);
-        unset($this->val, $this->request, $this->tableData);
-        docs('画面のテンプレートを読み込み、ホーム画面のHTMLを生成する');
-
-        return $view;
+        return $this->outputView('index', '画面のテンプレートを読み込み、ホーム画面のHTMLを生成する');
     }
 
     protected function chart()
@@ -42,9 +37,7 @@ class HomeController extends Base
         docs('今の利用者数と更新した時刻を調べ、画面上部に見せる値として保存する');
 
         // 月ごとのユーザー作成数と削除数を集計
-        $createCountsByMonth = [];
-        $deleteCountsByMonth = [];
-        $this->aggregateUserCountsByMonth($monthLabels, $createCountsByMonth, $deleteCountsByMonth);
+        [$createCountsByMonth, $deleteCountsByMonth] = $this->aggregateUserCountsByMonth($monthLabels);
         docs('データベースから作成と削除の履歴を取り出し、月ごとの数を数える');
 
         // グラフ描画用のデータ系列（棒グラフ×2、折れ線グラフ×1）を生成
@@ -64,53 +57,55 @@ class HomeController extends Base
         docs('最大値から縦軸の上限を決めて、数の変化が見やすいように整える');
     }
 
-    // グラフX軸用の月ラベルを生成（現在月から過去N-1ヶ月分の配列）
-    private function generateMonthLabels()
+    /**
+     * グラフX軸用の月ラベルを生成（現在月から過去N-1ヶ月分、新しい順）
+     *
+     * @return array<int, string>
+     */
+    private function generateMonthLabels(): array
     {
-        $currentDate = date(DATE_ATOM);
-        $monthLabels = [substr($currentDate, 0, 7)];
-        [$year, $month] = explode('-', $monthLabels[0], 2);
-
-        for ($i = 0; $i < $this->adminTopUserMonth - 1; $i++) {
-            $month--;
-            if (! $month) {
-                $month = 12;
-                $year--;
-            }
-            $monthLabels[] = sprintf('%d-%02d', $year, $month);
+        $monthLabels = [];
+        for ($monthsAgo = 0; $monthsAgo < $this->adminTopUserMonth; $monthsAgo++) {
+            $monthLabels[] = now()->startOfMonth()->subMonths($monthsAgo)->format('Y-m');
         }
 
         return $monthLabels;
     }
 
-    // 月ごとのユーザー作成数と削除数を集計
-    private function aggregateUserCountsByMonth($monthLabels, &$createCountsByMonth, &$deleteCountsByMonth)
+    /**
+     * 月ごとのユーザー作成数と削除数を集計
+     *
+     * @param  array<int, string>  $monthLabels
+     * @return array{0: array<string, int>, 1: array<string, int>}
+     */
+    private function aggregateUserCountsByMonth(array $monthLabels): array
     {
         $createCountsByMonth = [];
         $deleteCountsByMonth = [];
 
         // 集計対象期間の最古の月を基準にデータを取得
-        $oldestMonth = $monthLabels[count($monthLabels) - 1];
+        $oldestMonthStart = end($monthLabels).'-01 00:00:00';
         $userRecords = User::where(
-            'created_at', '>', $oldestMonth.'-00'
+            'created_at', '>=', $oldestMonthStart
         )->orWhere(
-            'deleted_at', '>', $oldestMonth.'-00'
-        )->withTrashed()->select('created_at', 'deleted_at')->get()->toArray();
+            'deleted_at', '>=', $oldestMonthStart
+        )->withTrashed()->select('created_at', 'deleted_at')->get();
 
         // 各ユーザーレコードの作成日・削除日を月単位で集計
+        // 配列化するとUTCの文字列になり月がずれるため、アプリのタイムゾーンのまま月を取り出す
         foreach ($userRecords as $record) {
-            $createdMonth = substr($record['created_at'], 0, 7);
-            isset($createCountsByMonth[$createdMonth]) || $createCountsByMonth[$createdMonth] = 0;
-            $createCountsByMonth[$createdMonth]++;
-
-            if (empty($record['deleted_at'])) {
-                continue;
+            if ($record->created_at !== null) {
+                $createdMonth = $record->created_at->format('Y-m');
+                $createCountsByMonth[$createdMonth] = ($createCountsByMonth[$createdMonth] ?? 0) + 1;
             }
 
-            $deletedMonth = substr($record['deleted_at'], 0, 7);
-            isset($deleteCountsByMonth[$deletedMonth]) || $deleteCountsByMonth[$deletedMonth] = 0;
-            $deleteCountsByMonth[$deletedMonth]++;
+            if ($record->deleted_at !== null) {
+                $deletedMonth = $record->deleted_at->format('Y-m');
+                $deleteCountsByMonth[$deletedMonth] = ($deleteCountsByMonth[$deletedMonth] ?? 0) + 1;
+            }
         }
+
+        return [$createCountsByMonth, $deleteCountsByMonth];
     }
 
     // グラフ描画用のデータ系列（棒グラフ×2、折れ線グラフ×1）を生成
@@ -130,13 +125,13 @@ class HomeController extends Base
             $y2axisMaxValue < $userCountAtMonth && $y2axisMaxValue = $userCountAtMonth;
 
             // 棒グラフ1用：その月の作成数
-            $createCountAtMonth = isset($createCountsByMonth[$monthLabel]) ? $createCountsByMonth[$monthLabel] : 0;
+            $createCountAtMonth = $createCountsByMonth[$monthLabel] ?? 0;
             $yaxisMaxValue < $createCountAtMonth && $yaxisMaxValue = $createCountAtMonth;
             $bar1SeriesData[] = $createCountAtMonth;
             $userCountAtMonth -= $createCountAtMonth;
 
             // 棒グラフ2用：その月の削除数
-            $deleteCountAtMonth = isset($deleteCountsByMonth[$monthLabel]) ? $deleteCountsByMonth[$monthLabel] : 0;
+            $deleteCountAtMonth = $deleteCountsByMonth[$monthLabel] ?? 0;
             $yaxisMaxValue < $deleteCountAtMonth && $yaxisMaxValue = $deleteCountAtMonth;
             $bar2SeriesData[] = $deleteCountAtMonth;
             $userCountAtMonth += $deleteCountAtMonth;
