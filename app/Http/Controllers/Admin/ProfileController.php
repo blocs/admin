@@ -58,50 +58,39 @@ class ProfileController extends Base
     protected function prepareUpdateTrait(&$requestData)
     {
         // プロフィール更新では役割の更新を許可しないため入力値から除外する
-        $this->applyRoleFieldFilter($requestData);
+        unset($requestData['role']);
         docs('役割は変更させないため、送信されたデータからroleを外す');
 
-        // プロフィール画像の送信内容に応じて保存値を整形する
-        $this->applyProfileImageAdjustment($requestData);
+        // プロフィール画像は、送信されたときだけ保存値を入れ替える（空文字などが送信された場合は既存画像を削除）
+        if ($this->request->has('file')) {
+            $filePayload = $this->request->file;
+            $this->abortIfProfileFileNameIsUnsafe($filePayload);
+            $requestData['file'] = empty($filePayload) ? null : $filePayload;
+        }
         docs('プロフィール画像の入力内容を確認して保存する値を整える');
     }
 
-    private function applyRoleFieldFilter(array &$requestData): void
-    {
-        // 役割は固定のため、入力データからroleを除外する
-        unset($requestData['role']);
-    }
-
-    private function applyProfileImageAdjustment(array &$requestData): void
-    {
-        // 画像入力が送信されていない場合は処理なし
-        if (! $this->request->has('file')) {
-            return;
-        }
-
-        if (empty($this->request->file)) {
-            // 空文字などが送信された場合は既存画像を削除する
-            $requestData['file'] = null;
-
-            return;
-        }
-
-        // 新しい画像が送信された場合はその値を反映する
-        $requestData['file'] = $this->sanitizeProfileFilePayload($this->request->file);
-    }
-
-    private function sanitizeProfileFilePayload(mixed $filePayload): mixed
+    /**
+     * 画像の入力値（ファイル情報のJSON）に、ディレクトリをさかのぼるファイル名が無いことを確かめる。
+     * 入力値は1件のファイル情報、またはその一覧のどちらでも受け付ける。
+     */
+    private function abortIfProfileFileNameIsUnsafe(mixed $filePayload): void
     {
         $decoded = is_string($filePayload) ? json_decode($filePayload, true) : $filePayload;
-        if (! is_array($decoded) || ! isset($decoded['filename']) || ! is_string($decoded['filename'])) {
-            return $filePayload;
+        if (! is_array($decoded)) {
+            return;
         }
 
-        $normalized = str_replace('\\', '/', $decoded['filename']);
-        if ($normalized !== basename($normalized) || str_contains($normalized, '..')) {
-            abort(403);
-        }
+        foreach (isset($decoded['filename']) ? [$decoded] : $decoded as $file) {
+            $filename = is_array($file) ? ($file['filename'] ?? null) : null;
+            if (! is_string($filename)) {
+                continue;
+            }
 
-        return $filePayload;
+            $normalized = str_replace('\\', '/', $filename);
+            if ($normalized !== basename($normalized) || str_contains($normalized, '..')) {
+                abort(403);
+            }
+        }
     }
 }

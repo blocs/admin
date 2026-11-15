@@ -111,6 +111,21 @@ class ThumbnailTest extends TestCase
         $this->tempFiles[] = $thumbnail;
     }
 
+    #[Test]
+    public function test_extremely_wide_image_creates_thumbnail_instead_of_failing(): void
+    {
+        if (! function_exists('imagecreatetruecolor')) {
+            $this->markTestSkipped('GD is not available');
+        }
+
+        $source = $this->createImageFile(3000, 5, 'png');
+        $thumbnail = Thumbnail::create($source, 120, 10000);
+
+        $this->assertIsString($thumbnail);
+        $this->tempFiles[] = $thumbnail;
+        $this->assertSame([120, 1], array_slice(getimagesize($thumbnail), 0, 2));
+    }
+
     private function createImageFile(int $width, int $height, string $extension): string
     {
         $image = imagecreatetruecolor($width, $height);

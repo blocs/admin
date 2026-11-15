@@ -17,7 +17,7 @@ class Thumbnail
             return $thumbLoc;
         }
 
-        if (! filesize($tmpLoc)) {
+        if (! is_file($tmpLoc) || ! filesize($tmpLoc)) {
             return false;
         }
 
@@ -39,26 +39,29 @@ class Thumbnail
             return false;
         }
 
+        // 画素数が大きすぎる画像は、読み込み時のメモリ不足を避けるため縮小しない
+        if ($oWidth * $oHeight > self::maxPixels()) {
+            return false;
+        }
+
         $oImage = self::createImageResource($tmpLoc, $thumbExt);
         if (! $oImage) {
             return false;
         }
 
         // HEICが横になる問題に対応する処理
-        $exif = @exif_read_data($tmpLoc);
-        if (! empty($exif['Orientation'])) {
-            switch ($exif['Orientation']) {
-                case 8:
-                    $oImage = imagerotate($oImage, 90, 0);
-                    [$width, $height, $oWidth, $oHeight] = self::calculateThumbnailDimensions($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
-                    break;
-                case 3:
-                    $oImage = imagerotate($oImage, 180, 0);
-                    break;
-                case 6:
-                    $oImage = imagerotate($oImage, -90, 0);
-                    [$width, $height, $oWidth, $oHeight] = self::calculateThumbnailDimensions($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
-                    break;
+        $exif = function_exists('exif_read_data') ? @exif_read_data($tmpLoc) : false;
+        $orientation = is_array($exif) && is_int($exif['Orientation'] ?? null) ? $exif['Orientation'] : 0;
+        $rotateAngle = [8 => 90, 3 => 180, 6 => -90][$orientation] ?? 0;
+        if ($rotateAngle !== 0) {
+            $oImage = imagerotate($oImage, $rotateAngle, 0);
+            if (! $oImage) {
+                return false;
+            }
+
+            if ($rotateAngle !== 180) {
+                // 90度回すと縦横が入れ替わるため、入れ替えた大きさで計算し直す
+                [$width, $height, $oWidth, $oHeight] = self::calculateThumbnailDimensions($tmpLoc, $pWidth, $pHeight, $crop, $oHeight, $oWidth);
             }
         }
 
@@ -136,62 +139,42 @@ class Thumbnail
             }
         }
 
-        return [intval($width), intval($height), $originalWidth, $originalHeight];
+        // 極端に細長い画像でも幅・高さが0にならないようにする（0だと画像を作れずエラーになる）
+        return [max(1, intval($width)), max(1, intval($height)), $originalWidth, $originalHeight];
     }
 
     private static function createImageResource($sourcePath, $extension)
     {
-        switch ($extension) {
-            case 'gif':
-                return @imagecreatefromgif($sourcePath);
-            case 'jpg':
-                return @imagecreatefromjpeg($sourcePath);
-            case 'jpeg':
-                return @imagecreatefromjpeg($sourcePath);
-            case 'png':
-                return @imagecreatefrompng($sourcePath);
-            case 'webp':
-                return @imagecreatefromwebp($sourcePath);
-            case 'wbmp':
-                return @imagecreatefromwbmp($sourcePath);
-            case 'xbm':
-                return @imagecreatefromxbm($sourcePath);
-            case 'xpm':
-                return @imagecreatefromxpm($sourcePath);
-            default:
-                return false;
+        $createFunction = [
+            'gif' => 'imagecreatefromgif',
+            'jpg' => 'imagecreatefromjpeg',
+            'jpeg' => 'imagecreatefromjpeg',
+            'png' => 'imagecreatefrompng',
+            'webp' => 'imagecreatefromwebp',
+            'wbmp' => 'imagecreatefromwbmp',
+            'xbm' => 'imagecreatefromxbm',
+            'xpm' => 'imagecreatefromxpm',
+        ][$extension] ?? null;
+
+        // GDのビルドによっては対応していない形式があるため、関数の有無も確かめる
+        if ($createFunction === null || ! function_exists($createFunction)) {
+            return false;
         }
+
+        return @$createFunction($sourcePath);
     }
 
     private static function outputImageResource($image, $thumbLoc, $thumbExt): bool
     {
-        $written = false;
-
-        switch ($thumbExt) {
-            case 'gif':
-                $written = imagegif($image, $thumbLoc);
-                break;
-            case 'jpg':
-            case 'jpeg':
-                defined('ADMIN_IMAGE_JPEG_QUALITY') || define('ADMIN_IMAGE_JPEG_QUALITY', -1);
-                $written = imagejpeg($image, $thumbLoc, ADMIN_IMAGE_JPEG_QUALITY);
-                break;
-            case 'png':
-                $written = imagepng($image, $thumbLoc, self::pngQuality());
-                break;
-            case 'webp':
-                defined('ADMIN_IMAGE_WEBP_QUALITY') || define('ADMIN_IMAGE_WEBP_QUALITY', -1);
-                $written = imagewebp($image, $thumbLoc, ADMIN_IMAGE_WEBP_QUALITY);
-                break;
-            case 'wbmp':
-                $written = imagewbmp($image, $thumbLoc);
-                break;
-            case 'xbm':
-                $written = imagexbm($image, $thumbLoc);
-                break;
-            default:
-                return false;
-        }
+        $written = match ($thumbExt) {
+            'gif' => imagegif($image, $thumbLoc),
+            'jpg', 'jpeg' => imagejpeg($image, $thumbLoc, self::definedConstant('ADMIN_IMAGE_JPEG_QUALITY', -1)),
+            'png' => imagepng($image, $thumbLoc, self::pngQuality()),
+            'webp' => imagewebp($image, $thumbLoc, self::definedConstant('ADMIN_IMAGE_WEBP_QUALITY', -1)),
+            'wbmp' => imagewbmp($image, $thumbLoc),
+            'xbm' => imagexbm($image, $thumbLoc),
+            default => false,
+        };
 
         if (! $written || ! is_file($thumbLoc)) {
             return false;
@@ -202,14 +185,29 @@ class Thumbnail
         return true;
     }
 
+    private static function maxPixels(): int
+    {
+        return (int) self::definedConstant('ADMIN_IMAGE_MAX_PIXELS', 40000000);
+    }
+
     private static function pngQuality(): int
     {
-        defined('ADMIN_IMAGE_PNG_QUALITY') || define('ADMIN_IMAGE_PNG_QUALITY', -1);
-        $quality = ADMIN_IMAGE_PNG_QUALITY;
+        // PNGの圧縮レベルは -1（既定）〜 9。範囲外の指定は既定に戻す
+        $quality = self::definedConstant('ADMIN_IMAGE_PNG_QUALITY', -1);
         if ($quality < -1 || $quality > 9) {
             return -1;
         }
 
         return (int) $quality;
+    }
+
+    /**
+     * 定数の値を返す。未定義なら既定値で定義してから返す。
+     */
+    private static function definedConstant(string $name, int $default)
+    {
+        defined($name) || define($name, $default);
+
+        return constant($name);
     }
 }

@@ -8,13 +8,14 @@ trait ToggleTrait
 {
     public function toggle($id)
     {
-        // 対象データを取得してIDを設定
-        $this->initializeToggleContext($id);
+        $this->loadCurrent($id);
 
+        // トランザクション内でデータの有効/無効を切り替える
         docs(['GET' => 'id'], '# データの更新');
-
-        // データの有効/無効を切り替える処理を実行
-        $this->executeToggleStatusChange();
+        DB::transaction(function () {
+            $this->tableData->disabled_at = empty($this->tableData->disabled_at);
+            $this->tableData->save();
+        }, 10);
 
         docs(
             ['データベース' => $this->loopItem],
@@ -29,31 +30,9 @@ trait ToggleTrait
 
     protected function outputToggle()
     {
-        // データが有効な場合は有効化のメッセージと共に一覧画面へ戻る
-        if (empty($this->tableData->disabled_at)) {
-            return $this->backIndex('success', 'data_valid', $this->tableData->{$this->noticeItem});
-        }
+        // 有効になったか無効になったかに応じたメッセージと共に一覧画面へ戻る
+        $message = empty($this->tableData->disabled_at) ? 'data_valid' : 'data_invalid';
 
-        // データが無効な場合は無効化のメッセージと共に一覧画面へ戻る
-        return $this->backIndex('success', 'data_invalid', $this->tableData->{$this->noticeItem});
-    }
-
-    private function initializeToggleContext($id)
-    {
-        // 切り替え対象のデータをデータベースから取得
-        $this->getCurrent($id);
-
-        // IDを設定
-        $this->val['id'] = $id;
-    }
-
-    private function executeToggleStatusChange()
-    {
-        // トランザクション内でデータの有効/無効を切り替える
-        $tableData = $this->tableData;
-        DB::transaction(function () use ($tableData) {
-            $tableData->disabled_at = empty($tableData->disabled_at);
-            $tableData->save();
-        }, 10);
+        return $this->backIndex('success', $message, $this->tableData->{$this->noticeItem});
     }
 }

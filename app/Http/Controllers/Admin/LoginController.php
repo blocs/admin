@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Blocs\Auth\AuthenticatesUsers;
 use Blocs\Controllers\CommonTrait;
-use Blocs\Validate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -41,21 +40,25 @@ class LoginController extends Controller
 
     protected function validateLogin(Request $request)
     {
-        // バリデーションルールとメッセージを取得し、入力チェックを準備
-        [$rules, $messages] = $this->fetchLoginValidationConfig($request);
-
-        // バリデーションルールが存在しない場合は処理をスキップ
-        if (empty($rules)) {
-            return;
+        // テンプレートのバリデーションルールとメッセージ、ラベルを使ってリクエストを検証（ルールが無ければスキップ）
+        $validated = $this->validateWithTemplate(
+            $request,
+            $this->viewPrefix.'.login',
+            ['POST' => '入力値'],
+            '入力値を以下の条件で検証して、エラーがあればメッセージをセット'
+        );
+        if ($validated) {
+            docs(null, '入力に問題があればログイン画面へ戻してやり直してもらう', ['FORWARD' => '!'.$this->viewPrefix.'.login']);
         }
 
-        // ラベルとバリデーション情報を取得してリクエストを検証
-        $labels = $this->fetchLoginFormLabels();
-        $request->validate($rules, $messages, $labels);
-        $validates = $this->getValidate($rules, $messages, $labels);
-
-        docs(['POST' => '入力値'], '入力値を以下の条件で検証して、エラーがあればメッセージをセット', null, $validates);
-        docs(null, '入力に問題があればログイン画面へ戻してやり直してもらう', ['FORWARD' => '!'.$this->viewPrefix.'.login']);
+        // 配列が送られても認証処理でエラーにならないよう、入力エラーとして扱う
+        $rejectArray = function (string $attribute, mixed $value, \Closure $fail): void {
+            is_array($value) && $fail(trans('auth.failed'));
+        };
+        $request->validate([
+            $this->username() => $rejectArray,
+            'password' => $rejectArray,
+        ]);
     }
 
     protected function credentials(Request $request)
@@ -72,17 +75,5 @@ class LoginController extends Controller
     {
         // 認証に使用するガードインスタンスを取得し、共通処理に委ねる
         return Auth::guard();
-    }
-
-    // ログインフォームのバリデーションルールとメッセージを取得
-    private function fetchLoginValidationConfig(Request $request)
-    {
-        return Validate::get($this->viewPrefix.'.login', $request);
-    }
-
-    // ログインフォームの項目ラベルを取得
-    private function fetchLoginFormLabels()
-    {
-        return $this->getLabel($this->viewPrefix.'.login');
     }
 }

@@ -2,6 +2,8 @@
 
 namespace Blocs\Controllers;
 
+use Illuminate\Support\Facades\Route;
+
 trait BackTrait
 {
     protected function backIndex($category = null, $message = null, ...$msgArgList)
@@ -16,8 +18,7 @@ trait BackTrait
 
         // 言語ファイルからメッセージを取得して引数を置換
         $processedMessage = $this->buildBackMessage($category, $message, $msgArgList);
-
-        $this->outputBackRedirectLog($processedMessage, '一覧画面に戻る', '.index');
+        $this->outputBackRedirectLog($processedMessage, '一覧画面に戻る', 'index');
 
         return $redirect->with([
             'category' => $category,
@@ -27,26 +28,28 @@ trait BackTrait
 
     protected function backCreate($category = null, $message = null, $noticeForm = null, ...$msgArgList)
     {
-        $redirect = redirect()->route(prefix().'.create', $this->val)->withInput();
-        $this->cleanupBackProperties();
-
-        $this->outputBackRedirectLog($message, '新規作成画面に戻る', '.create');
-
-        return $this->buildBackFormRedirect($redirect, $category, $message, $noticeForm, $msgArgList);
+        return $this->backForm('create', '新規作成画面に戻る', $category, $message, $noticeForm, $msgArgList);
     }
 
     protected function backEdit($category = null, $message = null, $noticeForm = null, ...$msgArgList)
     {
-        $redirect = redirect()->route(prefix().'.edit', $this->val)->withInput();
-        $this->cleanupBackProperties();
-
-        $this->outputBackRedirectLog($message, '編集画面に戻る', '.edit');
-
-        return $this->buildBackFormRedirect($redirect, $category, $message, $noticeForm, $msgArgList);
+        return $this->backForm('edit', '編集画面に戻る', $category, $message, $noticeForm, $msgArgList);
     }
 
-    private function buildBackFormRedirect($redirect, $category, $message, $noticeForm, $msgArgList)
+    /**
+     * 入力値を保ったまま入力画面へ戻す。
+     * メッセージは、カテゴリがあれば画面上部の通知として、項目名があればその項目のエラーとして表示する。
+     */
+    private function backForm(string $screen, string $destination, $category, $message, $noticeForm, array $msgArgList)
     {
+        $routeName = prefix().'.'.$screen;
+        $redirect = redirect()
+            ->route($routeName, $this->buildBackRouteParameters($routeName))
+            ->withInput(request()->except($this->getDontFlashInputs()));
+        $this->cleanupBackProperties();
+
+        $this->outputBackRedirectLog($message, $destination, $screen);
+
         // カテゴリもフォームエラーも指定されていない場合はそのままリダイレクト
         if (! $category && ! $noticeForm) {
             return $redirect;
@@ -69,61 +72,58 @@ trait BackTrait
         ]);
     }
 
+    /**
+     * 入力画面へ戻すときにセッションへ残さない項目。
+     * パスワード類を平文でセッションに保存しないために除外する。
+     *
+     * @return array<int, string>
+     */
+    protected function getDontFlashInputs(): array
+    {
+        return [
+            'current_password',
+            'password',
+            'password_confirmation',
+            'password_new',
+            'password_old',
+            'repassword',
+            'repassword_new',
+        ];
+    }
+
+    /**
+     * 戻り先のURLに必要なルートパラメータだけを取り出す。
+     * それ以外の値までクエリ文字列としてURLに出さないようにする。
+     *
+     * @return array<string, mixed>
+     */
+    private function buildBackRouteParameters(string $routeName): array
+    {
+        $route = Route::getRoutes()->getByName($routeName);
+        if ($route === null) {
+            return [];
+        }
+
+        return array_intersect_key($this->val ?? [], array_flip($route->parameterNames()));
+    }
+
+    /**
+     * 言語ファイルからメッセージを取得し、引数を埋め込む。言語ファイルに無ければ渡された文言をそのまま使う。
+     * 引数の値に「:」が含まれても区切りと誤解されないよう、いったん {{0}} などの目印に置き換えて取得する。
+     */
     private function buildBackMessage($category, $message, $msgArgList)
     {
-        // 言語ファイル用のコードを生成
-        $code = $this->buildBackMessageCode($category, $message, $msgArgList);
+        // 「カテゴリ:メッセージ:目印…」（カテゴリが無ければ「メッセージ:目印…」）の形で言語ファイルを引く
+        $placeholders = array_map(fn ($num) => '{{'.$num.'}}', array_keys($msgArgList));
+        $code = implode(':', array_merge($category ? [$category, $message] : [$message], $placeholders));
 
-        // 言語ファイルからメッセージを取得
-        $translatedMessage = $this->fetchBackTranslation($code);
-
-        // 言語ファイルにメッセージがあれば、引数を置換して使用
-        if ($translatedMessage !== false) {
-            return $this->replaceBackMessagePlaceholders($translatedMessage, $msgArgList);
-        }
-
-        // 言語ファイルにない場合は元のメッセージを返す
-        return $message;
-    }
-
-    private function fetchBackTranslation($code)
-    {
+        // 翻訳が見つからない場合はコードがそのまま返される
         $translatedMessage = lang($code);
-
-        // 翻訳が見つからない場合はコードがそのまま返されるためfalseを返す
         if ($translatedMessage === $code) {
-            return false;
+            return $message;
         }
 
-        return $translatedMessage;
-    }
-
-    private function buildBackMessageCode($category, $message, $msgArgList)
-    {
-        // 引数をプレースホルダー形式に変換
-        $placeholders = [];
-        foreach ($msgArgList as $num => $value) {
-            $placeholders[] = '{{'.$num.'}}';
-        }
-
-        // カテゴリがある場合は「カテゴリ:メッセージ:プレースホルダー」形式、ない場合は「メッセージ:プレースホルダー」形式
-        if ($category) {
-            $codeParts = array_merge([$category, $message], $placeholders);
-        } else {
-            $codeParts = array_merge([$message], $placeholders);
-        }
-
-        return implode(':', $codeParts);
-    }
-
-    private function replaceBackMessagePlaceholders($message, $msgArgList)
-    {
-        // メッセージ内のプレースホルダーを実際の値に置換
-        foreach ($msgArgList as $num => $value) {
-            $message = str_replace('{{'.$num.'}}', $value, $message);
-        }
-
-        return $message;
+        return str_replace($placeholders, $msgArgList, $translatedMessage);
     }
 
     private function cleanupBackProperties()
@@ -132,10 +132,10 @@ trait BackTrait
         unset($this->val, $this->request, $this->tableData);
     }
 
-    private function outputBackRedirectLog($message, $destination, $route)
+    private function outputBackRedirectLog($message, $destination, $screen)
     {
         // ドキュメント用にメッセージとリダイレクト先をログ出力
         docs("遷移後の画面に表示するメッセージを準備する\n- メッセージ: ".$message);
-        docs(null, $destination, ['FORWARD' => '!'.prefix().$route]);
+        docs(null, $destination, ['FORWARD' => '!'.prefix().'.'.$screen]);
     }
 }
