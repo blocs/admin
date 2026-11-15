@@ -57,7 +57,6 @@ class Install extends Command
         Artisan::call('route:cache');
 
         $this->info('Admin has been installed successfully.');
-        $this->info('Login URL is '.route('login').'.');
         $this->info('Initial ID/Pass is admin/admin.');
 
         return self::SUCCESS;
