@@ -33,19 +33,20 @@ class CONTROLLER_BASENAME extends Base
     private function applySearchFilters(&$mainTable): void
     {
         $searchKeywords = $this->searchItems ?? [];
+        $searchColumns = [SEARCH_LIST];
 
         foreach ($searchKeywords as $searchKeyword) {
-            $mainTable->where(function ($query) use ($searchKeyword) {
-                $query
-                    ->where('item1', 'LIKE', '%'.$searchKeyword.'%')
-                    ->orWhere('item2', 'LIKE', '%'.$searchKeyword.'%');
+            $mainTable->where(function ($query) use ($searchKeyword, $searchColumns) {
+                foreach ($searchColumns as $searchColumn) {
+                    $query->orWhere($searchColumn, 'LIKE', '%'.$searchKeyword.'%');
+                }
             });
         }
 
-        docs([
-            '<search>があれば、<'.$this->loopItem.'>のitem1を<search>で部分一致検索',
-            '<search>があれば、<'.$this->loopItem.'>のitem2を<search>で部分一致検索',
-        ]);
+        empty($searchColumns) || docs(array_map(
+            fn ($searchColumn) => '<search>があれば、<'.$this->loopItem.'>の'.$searchColumn.'を<search>で部分一致検索',
+            $searchColumns
+        ));
     }
 
     private function prepareSortState(): void
@@ -53,17 +54,21 @@ class CONTROLLER_BASENAME extends Base
         if (empty($this->val['sort']) || ! is_array($this->val['sort'])) {
             $this->val['sort'] = [];
         } else {
-            $this->val['sort'] = array_filter($this->val['sort'], 'strlen');
+            // 並び順は asc / desc だけを受け付ける（不正な値で一覧が開けなくなるのを防ぐ）
+            $this->val['sort'] = array_filter(
+                $this->val['sort'],
+                fn ($direction) => is_string($direction) && in_array(strtolower($direction), ['asc', 'desc'], true)
+            );
         }
 
         if (empty($this->val['sort'])) {
-            $this->val['sort'] = ['item1' => 'asc'];
+            $this->val['sort'] = DEFAULT_SORT;
         }
     }
 
     private function applySortOrders(&$mainTable): void
     {
-        $sortableColumns = ['item1', 'item2', 'item3'];
+        $sortableColumns = [SORT_LIST];
 
         foreach ($sortableColumns as $sortableColumn) {
             if (! empty($this->val['sort'][$sortableColumn])) {

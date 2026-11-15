@@ -3,7 +3,9 @@
 namespace Blocs\AI;
 
 use Illuminate\Http\Client\PendingRequest;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use OpenAI\Laravel\Facades\OpenAI;
 
 class VectorStore
@@ -145,8 +147,13 @@ class VectorStore
     /**
      * コレクション内の全てのIDを取得
      *
+     * 途中で取得に失敗したときは例外を投げる。一部だけの一覧を返すと、
+     * 呼び出し側が「存在しない」と判断して誤って削除や再登録をしてしまうため。
+     *
      * @param  array<string, mixed>|null  $filter
      * @return array<string>
+     *
+     * @throws \RuntimeException
      */
     public static function getAllIds(string $collectionName, ?array $filter = null): array
     {
@@ -173,7 +180,11 @@ class VectorStore
 
             $response = self::makeRequest('post', "/collections/{$collectionName}/points/scroll", $requestData);
 
-            if (! $response || ! isset($response['result']['points'])) {
+            if ($response === null) {
+                throw new \RuntimeException("Failed to list point ids of collection: {$collectionName}");
+            }
+
+            if (! isset($response['result']['points'])) {
                 break;
             }
 
@@ -192,13 +203,15 @@ class VectorStore
     /**
      * ドキュメントを削除
      *
+     * ID が空のときは何もしない。差分計算の結果が空だった場合などに、
+     * コレクションごと消してしまわないようにするため。
+     * コレクション自体を削除するときは deleteCollection() を使う。
+     *
      * @param  array<string>|string  $docIds
      */
     public static function delete(string $collectionName, array|string $docIds = []): void
     {
-        if (empty($docIds)) {
-            self::deleteCollection($collectionName);
-
+        if ($docIds === [] || $docIds === '') {
             return;
         }
 
@@ -300,22 +313,38 @@ class VectorStore
      */
     private static function makeRequest(string $method, string $path, array $data = []): ?array
     {
+        $response = self::sendRequest($method, $path, $data);
+
+        if (! $response->successful()) {
+            // 失敗は null で返すため、「0件」と区別できるようログに残す
+            Log::warning('Qdrant request failed', [
+                'method' => $method,
+                'path' => $path,
+                'status' => $response->status(),
+            ]);
+
+            return null;
+        }
+
+        return $response->json();
+    }
+
+    /**
+     * @param  'get'|'post'|'put'|'delete'  $method
+     * @param  array<string, mixed>  $data
+     */
+    private static function sendRequest(string $method, string $path, array $data = []): Response
+    {
         $url = self::getApiUrl($path);
         $http = self::httpClient();
 
-        $response = match ($method) {
+        return match ($method) {
             'get' => $http->get($url),
             'post' => $http->post($url, $data),
             'put' => $http->put($url, $data),
             'delete' => $http->delete($url),
             default => throw new \InvalidArgumentException("Unsupported HTTP method: {$method}"),
         };
-
-        if (! $response->successful()) {
-            return null;
-        }
-
-        return $response->json();
     }
 
     /**
@@ -342,9 +371,11 @@ class VectorStore
             return;
         }
 
-        $collectionResponse = self::makeRequest('get', "/collections/{$collectionName}");
+        $collectionResponse = self::sendRequest('get', "/collections/{$collectionName}");
 
-        if (! $collectionResponse) {
+        // 確認できなかったとき（未作成・一時的な失敗・中身が空）は作成を試みる
+        // 既に存在していた場合や作成に失敗した場合の扱いは createCollection() に任せる
+        if (! $collectionResponse->successful() || ! $collectionResponse->json()) {
             self::createCollection($collectionName);
         }
 
@@ -394,7 +425,7 @@ class VectorStore
     /**
      * コレクションを削除
      */
-    private static function deleteCollection(string $collectionName): void
+    public static function deleteCollection(string $collectionName): void
     {
         self::makeRequest('delete', "/collections/{$collectionName}");
         unset(self::$collections[$collectionName]);
@@ -522,7 +553,8 @@ class VectorStore
     private static function hashDocId(string $docId): string
     {
         // すでにハッシュ化されている場合はそのまま返す（MD5は32文字の16進数）
-        if (strlen(str_replace('-', '', $docId)) === 32 && ctype_xdigit(str_replace('-', '', $docId))) {
+        $hexDigits = str_replace('-', '', $docId);
+        if (strlen($hexDigits) === 32 && ctype_xdigit($hexDigits)) {
             return $docId;
         }
 

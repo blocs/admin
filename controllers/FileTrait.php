@@ -25,16 +25,24 @@ trait FileTrait
             abort(422);
         }
 
-        // ファイルのハッシュ値を元にファイル名を生成
-        $filename = $this->buildFileHashedName($fileupload);
+        // 同じ内容のファイルは同じ名前になるよう、内容のハッシュ値をファイル名にする
+        $extension = strtolower((string) $fileupload->guessExtension());
+        if ($extension === '' || preg_match('/[^a-z0-9]/', $extension)) {
+            abort(422);
+        }
+        $filename = md5_file($fileupload->getPathname()).'.'.$extension;
 
-        // アップロードストレージにファイルを保存
-        $storagePath = $this->storeFileToUploadStorage($fileupload, $filename);
+        // アップロードストレージ（未設定なら upload）にファイルを保存
+        $this->uploadStorage ??= 'upload';
+        $fileupload->storeAs($this->uploadStorage, $filename);
 
-        // レスポンス用のファイル情報を構築
-        $file = $this->buildFileUploadResponse($fileupload, $filename, $storagePath);
-
-        return json_encode($file);
+        // レスポンス用のファイル情報（サムネイルが作成可能かどうかを含む）を返す
+        return json_encode([
+            'filename' => $filename,
+            'name' => $fileupload->getClientOriginalName(),
+            'size' => $fileupload->getSize(),
+            'thumbnail' => $this->createFileThumbnail($this->uploadStorage.'/'.$filename, 'thumbnail') ? 1 : 0,
+        ]);
     }
 
     protected function validateUpload($paramname)
@@ -57,60 +65,19 @@ trait FileTrait
         }
 
         [$rules, $messages] = $uploadValidation;
-        if (empty($rules)) {
-            return;
+        if (! empty($rules)) {
+            $this->validateWithRules($this->request, $rules, $messages, $this->viewPrefix.'.create');
         }
-
-        // バリデーションを実行してエラーがあればメッセージをセット
-        $labels = $this->getLabel($this->viewPrefix.'.create');
-        $this->request->validate($rules, $messages, $labels);
-        $validates = $this->getValidate($rules, $messages, $labels);
-        docs(null, '入力値を以下の条件で検証して、エラーがあればメッセージをセットする', null, $validates);
     }
 
     public function download($filename, $size = null)
     {
-        // ダウンロード前のチェック処理（必要に応じてオーバーライド）
-        if ($redirect = $this->checkDownload($filename)) {
-            return $redirect;
-        }
-
-        // アップロードストレージのパスを解決
-        $fullPath = $this->buildFileStoragePath($filename);
-
-        // ファイルの存在確認とMIMEタイプを取得
-        /** @var FilesystemAdapter $storage */
-        $storage = Storage::disk();
-        $this->abortFileIfNotExists($storage, $fullPath);
-        $mimeType = $storage->mimeType($fullPath);
-
-        // サイズ指定がある場合はサムネイル画像として返す
-        if (isset($size)) {
-            return $this->buildFileResizedResponse($fullPath, $size, $mimeType);
-        }
-
-        // サイズ指定がない場合は元のファイルを返す
-        return $this->buildFileOriginalResponse($storage, $fullPath, $mimeType);
+        return $this->respondFile($filename, $size);
     }
 
     public function thumbnail($filename, $size)
     {
-        // サムネイル取得前のチェック処理（必要に応じてオーバーライド）
-        if ($redirect = $this->checkDownload($filename)) {
-            return $redirect;
-        }
-
-        // アップロードストレージのパスを解決
-        $fullPath = $this->buildFileStoragePath($filename);
-
-        // ファイルの存在確認とMIMEタイプを取得
-        /** @var FilesystemAdapter $storage */
-        $storage = Storage::disk();
-        $this->abortFileIfNotExists($storage, $fullPath);
-        $mimeType = $storage->mimeType($fullPath);
-
-        // 指定サイズのサムネイル画像を返す
-        return $this->buildFileResizedResponse($fullPath, $size, $mimeType);
+        return $this->respondFile($filename, $size);
     }
 
     protected function checkDownload($filename)
@@ -120,6 +87,15 @@ trait FileTrait
     }
 
     protected function getHeaders($filename) {}
+
+    /**
+     * 画像以外のファイルを返すときの Content-Disposition。
+     * ブラウザ内で表示させたい種類（PDFなど）があれば、継承先で inline を返す。
+     */
+    protected function getDisposition($filename, $mimeType): string
+    {
+        return 'attachment';
+    }
 
     protected function getSize($size)
     {
@@ -142,158 +118,72 @@ trait FileTrait
         return $downloadSize[$size];
     }
 
-    private function buildFileHashedName($fileupload)
+    /**
+     * 保存済みのファイルを返す。サイズ指定があれば、その大きさのサムネイル画像を返す。
+     */
+    private function respondFile($filename, $size)
     {
-        // ファイルの内容をハッシュ化して一意なファイル名を生成
-        $hash = md5(file_get_contents($fileupload->getPathname()));
-        $extension = strtolower((string) $fileupload->guessExtension());
-        if ($extension === '' || preg_match('/[^a-z0-9]/', $extension)) {
-            abort(422);
+        // ダウンロード前のチェック処理（必要に応じてオーバーライド）
+        if ($redirect = $this->checkDownload($filename)) {
+            return $redirect;
         }
 
-        return $hash.'.'.$extension;
+        // アップロードストレージのパスを解決
+        $this->uploadStorage ??= 'upload';
+        $path = $this->uploadStorage.'/'.$this->sanitizeStoredFilename($filename);
+
+        // ファイルの存在確認とMIMEタイプを取得
+        /** @var FilesystemAdapter $storage */
+        $storage = Storage::disk();
+        if (! $storage->exists($path)) {
+            abort(404);
+        }
+        $mimeType = $storage->mimeType($path);
+
+        if (isset($size)) {
+            $thumbnail = $this->createFileThumbnail($path, $size);
+            if (! $thumbnail) {
+                // サムネイルが生成できない場合（画像以外など）は1x1の透明なGIF画像を返す
+                $transparentGif = base64_decode('R0lGODlhAQABAGAAACH5BAEKAP8ALAAAAAABAAEAAAgEAP8FBAA7');
+
+                return response($transparentGif, 200)->header('Content-Type', 'image/gif');
+            }
+
+            return response(File::get($thumbnail))->header('Content-Type', $mimeType)->withHeaders($this->getHeaders($path) ?: []);
+        }
+
+        // サムネイルが作成できるファイルは画像とみなし、ストレージから読み込んでそのまま表示する
+        $isImage = (bool) $this->createFileThumbnail($path, 'thumbnail');
+
+        // カスタムヘッダーを取得（継承先の指定を優先する）
+        $headers = array_merge(['X-Content-Type-Options' => 'nosniff'], $this->getHeaders($path) ?: []);
+
+        if ($isImage) {
+            return response($storage->get($path))->header('Content-Type', $mimeType)->withHeaders($headers);
+        }
+
+        // 画像以外は、HTMLなどが管理画面と同じオリジンで開かれないよう、既定では添付として返す
+        return $storage->response($path, basename($path), $headers, $this->getDisposition($path, $mimeType));
     }
 
-    private function storeFileToUploadStorage($fileupload, $filename)
-    {
-        // アップロードストレージが未設定の場合はデフォルト値を設定
-        $this->ensureFileUploadStorageInitialized();
-
-        // ファイルをストレージに保存
-        $fileupload->storeAs($this->uploadStorage, $filename);
-
-        return $this->uploadStorage.'/'.$filename;
-    }
-
-    private function buildFileUploadResponse($fileupload, $filename, $storagePath)
-    {
-        // サムネイルが作成可能かチェック
-        $existThumbnail = $this->createFileThumbnail($storagePath, 'thumbnail') ? 1 : 0;
-
-        // レスポンス用のファイル情報を配列で返す
-        return [
-            'filename' => $filename,
-            'name' => $fileupload->getClientOriginalName(),
-            'size' => $fileupload->getSize(),
-            'thumbnail' => $existThumbnail,
-        ];
-    }
-
-    private function ensureFileUploadStorageInitialized()
-    {
-        // アップロードストレージが未設定の場合はデフォルトの'upload'を設定
-        isset($this->uploadStorage) || $this->uploadStorage = 'upload';
-    }
-
-    private function buildFileStoragePath($filename)
-    {
-        // アップロードストレージのパスを解決して完全なパスを返す
-        $this->ensureFileUploadStorageInitialized();
-
-        return $this->uploadStorage.'/'.$this->sanitizeStoredFilename($filename);
-    }
-
+    /**
+     * ディレクトリをさかのぼる指定などを弾き、ファイル名だけを受け付ける。
+     */
     private function sanitizeStoredFilename($filename): string
     {
         $normalized = str_replace('\\', '/', (string) $filename);
-        if ($normalized !== basename($normalized) || str_contains($normalized, '..')) {
+        if ($normalized === '' || $normalized === '.' || $normalized !== basename($normalized) || str_contains($normalized, '..')) {
             abort(404);
         }
 
-        $safe = basename($normalized);
-        if ($safe === '' || $safe === '.' || $safe === '..') {
-            abort(404);
-        }
-
-        return $safe;
+        return $normalized;
     }
 
-    private function abortFileIfNotExists($storage, $filename)
+    private function createFileThumbnail($path, $size)
     {
-        // ファイルが存在しない場合は404エラーを返す
-        if (! $storage->exists($filename)) {
-            abort(404);
-        }
-    }
-
-    private function buildFileResizedResponse($filename, $size, $mimeType)
-    {
-        // 指定サイズのサムネイルを生成
-        $thumbnail = $this->createFileThumbnail($filename, $size);
-
-        if ($thumbnail) {
-            // サムネイルが生成できた場合は画像レスポンスを返す
-            return $this->buildFileImageResponse($thumbnail, $filename, $mimeType);
-        }
-
-        // サムネイルが生成できない場合は透明なGIF画像を返す
-        return $this->buildFileTransparentGifResponse();
-    }
-
-    private function buildFileImageResponse($thumbnail, $filename, $mimeType)
-    {
-        // カスタムヘッダーを取得
-        $headers = $this->getHeaders($filename);
-
-        // 画像レスポンスを作成
-        $response = response(File::get($thumbnail))->header('Content-Type', $mimeType);
-
-        // カスタムヘッダーが設定されている場合は追加
-        return $this->addFileCustomHeaders($response, $headers);
-    }
-
-    private function buildFileOriginalResponse($storage, $filename, $mimeType)
-    {
-        // サムネイルが作成可能かチェック
-        $thumbnail = $this->createFileThumbnail($filename, 'thumbnail');
-
-        if ($thumbnail) {
-            // 画像ファイルの場合はストレージから読み込んでレスポンスを返す
-            $headers = $this->getHeaders($filename);
-            $response = response($storage->get($filename))->header('Content-Type', $mimeType);
-
-            return $this->addFileCustomHeaders($response, $headers);
-        }
-
-        // 画像以外のファイルの場合はストレージのレスポンスを使用
-        $headers = $this->getHeaders($filename);
-
-        if (empty($headers)) {
-            return $storage->response($filename, basename($filename));
-        }
-
-        return $storage->response($filename, basename($filename), $headers);
-    }
-
-    private function addFileCustomHeaders($response, $headers)
-    {
-        // カスタムヘッダーが設定されている場合はレスポンスに追加
-        if ($headers) {
-            foreach ($headers as $key => $value) {
-                $response->header($key, $value);
-            }
-        }
-
-        return $response;
-    }
-
-    private function buildFileTransparentGifResponse()
-    {
-        // 画像以外のファイル用に1x1の透明なGIF画像を返す
-        $transparentGif = base64_decode('R0lGODlhAQABAGAAACH5BAEKAP8ALAAAAAABAAEAAAgEAP8FBAA7');
-
-        return response($transparentGif, 200)->header('Content-Type', 'image/gif');
-    }
-
-    private function createFileThumbnail($filename, $size)
-    {
-        // サムネイルサイズの設定を取得（幅、高さ、クロップの有無）
-        $path = Storage::path($filename);
+        // サムネイルサイズの設定を取得（幅、高さ、クロップの有無）して、ストレージのファイルから生成する
         [$width, $height, $crop] = $this->getSize($size);
 
-        // ストレージのファイルからサムネイルを生成して返す
-        $thumbnail = Thumbnail::create($path, $width, $height, $crop);
-
-        return $thumbnail;
+        return Thumbnail::create(Storage::path($path), $width, $height, $crop);
     }
 }

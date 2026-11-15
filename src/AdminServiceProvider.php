@@ -87,51 +87,25 @@ class AdminServiceProvider extends ServiceProvider
 
     public function registerBlocsCommand()
     {
-        $consoleCommandBindings = [
-            'command.blocs.install' => Commands\Install::class,
-        ];
+        $this->app->singleton('command.blocs.install', fn () => new Commands\Install);
 
-        foreach ($consoleCommandBindings as $consoleCommandKey => $consoleCommandClass) {
-            $this->registerConsoleCommand($consoleCommandKey, $consoleCommandClass);
-        }
+        $this->commands('command.blocs.install');
     }
 
+    /**
+     * パッケージのファイルを、アプリの対応するディレクトリへ publish できるよう登録する。
+     */
     public function registerPublish()
     {
-        $this->publishes($this->buildPublishMappings());
-    }
+        $packagePath = dirname(__DIR__);
 
-    private function registerConsoleCommand(string $consoleCommandKey, string $consoleCommandClass): void
-    {
-        $this->app->singleton($consoleCommandKey, function () use ($consoleCommandClass) {
-            return new $consoleCommandClass;
-        });
-
-        $this->commands($consoleCommandKey);
-    }
-
-    private function buildPublishMappings(): array
-    {
-        $publishMappings = [];
-
-        // appをpublish
-        $publishMappings[base_path('vendor/blocs/admin/app')] = app_path();
-
-        // configをpublish
-        $publishMappings[base_path('vendor/blocs/admin/config')] = config_path();
-
-        // databaseをpublish
-        $publishMappings[base_path('vendor/blocs/admin/database')] = database_path();
-
-        // publicをpublish
-        $publishMappings[base_path('vendor/blocs/admin/public')] = public_path();
-
-        // resourceをpublish
-        $publishMappings[base_path('vendor/blocs/admin/resources')] = resource_path();
-
-        // routesをpublish
-        $publishMappings[base_path('vendor/blocs/admin/routes')] = base_path('routes');
-
-        return $publishMappings;
+        $this->publishes([
+            $packagePath.'/app' => app_path(),
+            $packagePath.'/config' => config_path(),
+            $packagePath.'/database' => database_path(),
+            $packagePath.'/public' => public_path(),
+            $packagePath.'/resources' => resource_path(),
+            $packagePath.'/routes' => base_path('routes'),
+        ]);
     }
 }

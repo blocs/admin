@@ -62,20 +62,51 @@ class Develop extends Command
 
         // コントローラーを生成します
         $controllerTemplate = file_get_contents(base_path('vendor/blocs/admin/develop/controller.php'));
+        $controllerTemplate = $this->applySearchAndSortColumns($controllerTemplate, $developConfig['form']);
         $controllerContents = $this->applyPlaceholderValues($controllerTemplate, $developConfig['controller']);
 
         $this->ensureDirectoryExists(dirname($controllerPath));
         file_put_contents($controllerPath, $controllerContents);
         $this->outputCreationMessage('controller', $controllerPath);
 
-        // Pintでコードを整形します
-        exec(base_path('vendor/bin/pint').' '.escapeshellarg($controllerPath));
+        $this->formatWithPint($controllerPath);
 
         // ルートを追加します
         isset($developConfig['route']) && $this->createRouteDefinition($developConfig['route'], $developConfig['controller']);
 
         // メニューを更新します
         empty($developConfig['menu']) || $this->mergeMenuConfiguration($developConfig['menu']);
+    }
+
+    /**
+     * 一覧の検索対象と並び替えできる列を、フォームの定義から埋め込む。
+     * 検索はファイルと有効・無効の項目を除き、並び替えは一覧の見出しに出る全項目を対象にする。
+     *
+     * @param  array<string, array<string, mixed>>  $formConfig
+     */
+    private function applySearchAndSortColumns(string $controllerTemplate, array $formConfig): string
+    {
+        $sortColumns = array_keys($formConfig);
+        $searchColumns = [];
+        foreach ($formConfig as $formName => $form) {
+            if (($form['type'] ?? '') === 'upload' || $formName === 'disabled_at') {
+                continue;
+            }
+
+            $searchColumns[] = $formName;
+        }
+
+        $defaultSort = count($sortColumns) ? "['".$sortColumns[0]."' => 'asc']" : '[]';
+
+        return str_replace(
+            ['SEARCH_LIST', 'SORT_LIST', 'DEFAULT_SORT'],
+            [
+                $this->buildDelimitedList($searchColumns, ', ', "'"),
+                $this->buildDelimitedList($sortColumns, ', ', "'"),
+                $defaultSort,
+            ],
+            $controllerTemplate
+        );
     }
 
     private function createRouteDefinition(array $routeConfig, array $controllerConfig): void
@@ -86,8 +117,7 @@ class Develop extends Command
 
         file_put_contents(base_path('routes/web.php'), "\n".$routeContents, FILE_APPEND);
 
-        // Pintでコードを整形します
-        exec(base_path('vendor/bin/pint').' '.escapeshellarg(base_path('routes/web.php')));
+        $this->formatWithPint(base_path('routes/web.php'));
 
         Artisan::call('route:cache');
     }
@@ -102,10 +132,9 @@ class Develop extends Command
 
         $laravelMenuPath = config_path('menu.php');
         $code = "<?php\n\nreturn ".var_export($configList, true).";\n";
-        file_put_contents($laravelMenuPath, $code) && chmod($laravelMenuPath, 0666);
+        file_put_contents($laravelMenuPath, $code) && chmod($laravelMenuPath, 0644);
 
-        // Pintでコードを整形します
-        exec(base_path('vendor/bin/pint').' '.escapeshellarg(config_path('menu.php')));
+        $this->formatWithPint($laravelMenuPath);
     }
 
     private function createModelFile(array $developConfig): void
@@ -130,8 +159,7 @@ class Develop extends Command
         file_put_contents($modelPath, $modelContents);
         $this->outputCreationMessage('model', $modelPath);
 
-        // Pintでコードを整形します
-        exec(base_path('vendor/bin/pint').' '.escapeshellarg($modelPath));
+        $this->formatWithPint($modelPath);
     }
 
     private function createMigrationFile(array $developConfig): void
@@ -175,8 +203,7 @@ class Develop extends Command
         file_put_contents($migrationPath, $migrationContents);
         $this->outputCreationMessage('migration', $migrationPath);
 
-        // Pintでコードを整形します
-        exec(base_path('vendor/bin/pint').' '.escapeshellarg($migrationPath));
+        $this->formatWithPint($migrationPath);
 
         // テーブルを作成します
         Artisan::call('migrate:refresh', ['--path' => 'database/migrations/'.basename($migrationPath)]);
@@ -249,24 +276,21 @@ class Develop extends Command
 
         if ($refresh) {
             foreach ([$viewPath.'/include/entry.html', $viewPath.'/include/form.html', $viewPath.'/include/show.html', $viewPath.'/show.blocs.html'] as $filePath) {
-                unlink($filePath);
+                is_file($filePath) && unlink($filePath);
             }
         }
 
         $this->copyDirectoryTree(base_path('vendor/blocs/admin/develop/views'), $viewPath, $placeholderValues);
 
-        if (! file_exists($viewPath.'/include/form.html')) {
-            $formHtml = str_replace('<#-- ', '<!-- ', $formHtml);
+        // 生成用テンプレートの中で目印にしていたコメントを、テンプレートエンジンの記法に戻して保存する
+        foreach (['form.html' => $formHtml, 'show.html' => $showHtml] as $fileName => $html) {
+            $filePath = $viewPath.'/include/'.$fileName;
+            if (file_exists($filePath)) {
+                continue;
+            }
 
-            file_put_contents($viewPath.'/include/form.html', trim($formHtml)."\n");
-            $this->outputCreationMessage('view', $viewPath.'/include/form.html');
-        }
-
-        if (! file_exists($viewPath.'/include/show.html')) {
-            $showHtml = str_replace('<#-- ', '<!-- ', $showHtml);
-
-            file_put_contents($viewPath.'/include/show.html', trim($showHtml)."\n");
-            $this->outputCreationMessage('view', $viewPath.'/include/show.html');
+            file_put_contents($filePath, trim(str_replace('<#-- ', '<!-- ', $html))."\n");
+            $this->outputCreationMessage('view', $filePath);
         }
     }
 
@@ -297,31 +321,25 @@ class Develop extends Command
     {
         $developJson = json_decode(file_get_contents($path), true);
 
-        if (! empty($developJson['controller']['controllerName'])) {
-            $developJson['controller']['controllerBasename'] = basename($developJson['controller']['controllerName']);
-
-            if ($developJson['controller']['controllerBasename'] == $developJson['controller']['controllerName']) {
-                $developJson['controller']['controllerDirname'] = '';
-            } else {
-                $developJson['controller']['controllerDirname'] = dirname($developJson['controller']['controllerName']);
-                $developJson['controller']['controllerDirname'] = str_replace('/', '\\', $developJson['controller']['controllerDirname']);
-                $developJson['controller']['controllerDirname'] = '\\'.$developJson['controller']['controllerDirname'];
+        // 「Admin/ArticleController」のような指定を、クラス名と名前空間の後半に分ける
+        foreach (['controller', 'model'] as $classType) {
+            $className = $developJson['controller'][$classType.'Name'] ?? '';
+            if (empty($className)) {
+                continue;
             }
-        }
 
-        if (! empty($developJson['controller']['modelName'])) {
-            $developJson['controller']['modelBasename'] = basename($developJson['controller']['modelName']);
-
-            if ($developJson['controller']['modelBasename'] == $developJson['controller']['modelName']) {
-                $developJson['controller']['modelDirname'] = '';
-            } else {
-                $developJson['controller']['modelDirname'] = dirname($developJson['controller']['modelName']);
-                $developJson['controller']['modelDirname'] = str_replace('/', '\\', $developJson['controller']['modelDirname']);
-                $developJson['controller']['modelDirname'] = '\\'.$developJson['controller']['modelDirname'];
-            }
+            $developJson['controller'][$classType.'Basename'] = basename($className);
+            $developJson['controller'][$classType.'Dirname'] = basename($className) == $className
+                ? ''
+                : '\\'.str_replace('/', '\\', dirname($className));
         }
 
         isset($developJson['form']) || $developJson['form'] = [];
+
+        // 種類が省略された項目はテキスト入力として扱う
+        foreach ($developJson['form'] as $formName => $form) {
+            $developJson['form'][$formName]['type'] = $form['type'] ?? 'text';
+        }
 
         return $developJson;
     }
@@ -366,6 +384,14 @@ class Develop extends Command
 
         file_put_contents($viewPath, $contents);
         $this->outputCreationMessage('view', $viewPath);
+    }
+
+    /**
+     * Pintでコードを整形します
+     */
+    private function formatWithPint(string $path): void
+    {
+        exec(base_path('vendor/bin/pint').' '.escapeshellarg($path));
     }
 
     private function outputCreationMessage(string $type, string $path): void

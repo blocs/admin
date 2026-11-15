@@ -38,11 +38,8 @@ class UserController extends Base
 
     protected function prepareStore()
     {
-        // nameが未入力ならばemailを代入して補完
-        $this->val['name'] = strlen($this->request->name) ? $this->request->name : $this->request->email;
-        $this->val['role'] = empty($this->request->role) ? '' : implode("\t", $this->request->role);
-        docs('<name>が空なら、かわりに<email>を入れる');
-        docs('<role>の入力は、タブで区切った一つの文字列にまとめる');
+        $this->val['name'] = $this->resolveUserName();
+        $this->val['role'] = $this->aggregateRoles();
 
         return [
             'email' => $this->request->email,
@@ -76,7 +73,11 @@ class UserController extends Base
         if (empty($this->val['sort']) || ! is_array($this->val['sort'])) {
             $this->val['sort'] = [];
         } else {
-            $this->val['sort'] = array_filter($this->val['sort'], 'strlen');
+            // 並び順は asc / desc だけを受け付ける（不正な値で一覧が開けなくなるのを防ぐ）
+            $this->val['sort'] = array_filter(
+                $this->val['sort'],
+                fn ($direction) => is_string($direction) && in_array(strtolower($direction), ['asc', 'desc'], true)
+            );
         }
 
         if (empty($this->val['sort'])) {
