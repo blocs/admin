@@ -29,7 +29,9 @@ class AdminTest extends DuskTestCase
             $name = fake()->name();
             $this->updateUser($browser, $email, $name);
             $this->updateAvatar($browser, $email);
+            $this->logout($browser);
 
+            $this->login($browser, 'admin', 'admin');
             $this->invalidUser($browser, $email);
             $this->validUser($browser, $email);
             $this->deleteUser($browser, $email);

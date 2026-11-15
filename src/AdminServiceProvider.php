@@ -3,6 +3,8 @@
 namespace Blocs;
 
 use App\Consts\Blocs;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Octane\Events\RequestReceived;
 
@@ -27,6 +29,45 @@ class AdminServiceProvider extends ServiceProvider
 
         // 常駐ワーカー（Octane）でリクエストごとにメニューの静的な状態を初期化
         $this->registerMenuStateFlush();
+
+        // 削除・無効化されたユーザーを認証対象から除外
+        is_file(base_path('routes/admin.php')) && $this->excludeInactiveUsersFromAuthentication();
+    }
+
+    /**
+     * 認証に使うモデルに、削除・無効化されたユーザーを除外するスコープを追加する。
+     * ログイン済みのセッションも、削除・無効化された時点で認証済みではなくなる。
+     */
+    private function excludeInactiveUsersFromAuthentication(): void
+    {
+        $authModel = $this->resolveAuthModel();
+        if ($authModel === null) {
+            return;
+        }
+
+        $authModel::addGlobalScope('blocsActiveUser', function (Builder $builder): void {
+            $builder
+                ->whereNull($builder->qualifyColumn('deleted_at'))
+                ->whereNull($builder->qualifyColumn('disabled_at'));
+        });
+    }
+
+    /**
+     * 既定のガードが使う Eloquent モデルのクラス名を返す。
+     * ユーザー管理画面のモデルは無効化されたユーザーも扱うため、対象にしない。
+     *
+     * @return class-string<Model>|null
+     */
+    private function resolveAuthModel(): ?string
+    {
+        $provider = config('auth.guards.'.config('auth.defaults.guard').'.provider');
+        $authModel = config('auth.providers.'.$provider.'.model');
+
+        if (! is_string($authModel) || ! is_subclass_of($authModel, Model::class)) {
+            return null;
+        }
+
+        return is_a($authModel, 'App\\Models\\Admin\\User', true) ? null : $authModel;
     }
 
     /**
