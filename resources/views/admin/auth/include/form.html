@@ -1,7 +1,7 @@
 <!-- data-bloc="form_email" -->
     <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("email") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- data-lang='template:admin_login_user_id' --></label>
+        <label class="form-label" for="email"><!-- data-lang='template:admin_login_user_id' --></label>
         <input type="text" class="form-control" value="" required id="email" name="email" />
 
         @error("email") <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -11,7 +11,7 @@
 <!-- data-bloc="form_password" -->
     <!-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("password") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- data-lang='template:admin_login_password' --></label>
+        <label class="form-label" for="password"><!-- data-lang='template:admin_login_password' --></label>
         <input type="password" class="form-control" value="" required id="password" name="password" />
 
         @error("password") <div class="invalid-feedback">{{ $message }}</div> @enderror

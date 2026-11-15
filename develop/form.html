@@ -2,7 +2,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label" :for=$name><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><!-- :placeholder=$placeholder data-exist=$placeholder --><!-- data-attribute="disabled" data-exist=$disabled --><!-- data-attribute="readonly" data-exist=$readonly --><input :type=$inputType :id=$name :name=$name class="form-control" :value=$value />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
@@ -13,7 +13,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label" :for=$name><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><!-- :placeholder=$placeholder data-exist=$placeholder --><!-- data-attribute="disabled" data-exist=$disabled --><!-- data-attribute="readonly" data-exist=$readonly --><textarea :id=$name :name=$name class="form-control" rows="5"><!-- $value --></textarea>
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
@@ -24,7 +24,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label" :for=$name><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><!-- :placeholder=$placeholder data-exist=$placeholder --><!-- data-attribute="disabled" data-exist=$disabled --><!-- data-attribute="readonly" data-exist=$readonly --><input type="text" :id=$name :name=$name class="form-control ai-datepicker" :value=$value />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
@@ -35,7 +35,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label" :for=$name><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><!-- :placeholder=$placeholder data-exist=$placeholder --><!-- data-attribute="disabled" data-exist=$disabled --><!-- data-attribute="readonly" data-exist=$readonly --><input type="text" :id=$name :name=$name class="form-control ai-timepicker" :value=$value />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
@@ -46,7 +46,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label" :for=$name><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><select :id=$name :name=$name class="form-control">
 <!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><!-- data-loop=$option_ -->            <option :value=$value><!-- $label --></option>
 <!-- data-endloop -->        </select>
@@ -59,7 +59,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label" :for=$name><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- :name=$name data-none=$multiple --><!-- :name=$name."[]" data-exist=$multiple --><!-- data-attribute="required" data-exist=$required --><!-- data-attribute="multiple" data-exist=$multiple --><select :id=$name class="form-control ai-select2">
 <!-- data-attribute="selected" data-if="isset($default) && ((!is_array($default) && $default == $value) || (is_array($default) && in_array($value, $default)))" --><!-- data-loop=$option_ -->            <option :value=$value><!-- $label --></option>
 <!-- data-endloop -->        </select>
@@ -121,7 +121,7 @@
 <#-- data-bloc="form_<!-- $name -->" -->
     <#-- :class="input-group input-group-outline is-invalid" data-exist=$errors->has("<!-- $name -->") -->
     <div class="input-group input-group-outline">
-        <label class="form-label"><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
+        <label class="form-label" :for=$name><!-- $label data-convert="raw" --><!-- data-val=" *" data-exist=$required --></label>
         <!-- data-attribute="required" data-exist=$required --><!-- :placeholder=$placeholder data-exist=$placeholder --><!-- data-attribute="disabled" data-exist=$disabled --><!-- data-attribute="readonly" data-exist=$readonly --><input type="number" :id=$name :name=$name class="form-control text-end" :value=$value min="1" />
 
         <!-- data-exist=$required --><#-- !<!-- $name -->="required" data-lang="validate:required:<!-- $name -->" --><!-- data-endexist -->
